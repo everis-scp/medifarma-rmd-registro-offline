@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" items="{aListProcessAssignResponsive>/}" updateFinished="onUpdateFinish">
+			<columns>
+				<Column width="55%" hAlign="Left" vAlign="Middle" popinDisplay="Inline">
+					<Text text="" width="auto"/>
+					<footer>
+						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>
+					</footer>
+				</Column>
+				<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+					<Text text="" width="auto"/>
+					<footer>
+						<Text text="{i18n>ftTFecha}{aFooter>/fecha}"/>
+					</footer>
+				</Column>
+				<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+					<Text text="" width="auto"/>
+				</Column>
+				<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+					<Text text="" width="auto"/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<Label text="{aListProcessAssignResponsive>descripcion}" design="{aListProcessAssignResponsive>designLabel}" width="auto" wrapping="true"/>
+					<HBox>
+						<Text text="{aListProcessAssignResponsive>generalInput}" visible="{aListProcessAssignResponsive>generalVisibleText}" width="auto"/>
+						<Input enabled="{=${aListProcessAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}" value="{aListProcessAssignResponsive>generalInput}" type="{aListProcessAssignResponsive>generalType}" visible="{aListProcessAssignResponsive>generalVisibleInput}" width="auto" change="onGetFormat"/>
+						<VBox>
+							<ObjectStatus text="{i18n>lblDoFor1}" visible="{aListProcessAssignResponsive>generalVisibleToggleButton}" />
+							<Button enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" icon="sap-icon://accidental-leave" visible="{=${aListProcessAssignResponsive>generalVisibleToggleButton} || ${aListProcessAssignResponsive>onFormatoTipoDatoVisibleToggleButtonMultiCheck}}" press="abrirSeleccionUsuarios" />
+							<!-- <ObjectStatus text="{aListProcessAssignResponsive>realizadoPorUser}" state="Indication06" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
+							<ObjectStatus text="{aListProcessAssignResponsive>multiCheckUser}" state="Indication06" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/> -->
+							
+							<!--OFFLINE Por alguna Razon el state Indication06 no lo admite -Kapsel libreria solo cuenta con 5 indicadores-->
+							<ObjectStatus text="{aListProcessAssignResponsive>realizadoPorUser}" state="Indication04" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
+							<ObjectStatus text="{aListProcessAssignResponsive>multiCheckUser}" state="Indication04" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/>
+						</VBox>
+					</HBox>
+					<VBox>
+						<ObjectStatus text="{i18n>lblVcheck}" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 440 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}" />
+						<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBox}" select="onConfirmUpdateRmdCheckBoxValid"/>
+						<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButton}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}"/>
+						<Button icon="sap-icon://refresh" tooltip="{i18n>btnRefresh}" press="onRefrescarCC" visible="{aListProcessAssignResponsive>generalVisibleRefresh}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${generalModelState>/state}}"/>
+						<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
+						<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
+					</VBox>
+					<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" visible="{aListProcessAssignResponsive>generalVisibleMenuButton}">
+						<menu>
+							<Menu itemSelected="onMenuAction">
+								<MenuItem text="{i18n>mnObservationXStep}" icon="sap-icon://show" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+								<MenuItem text="{i18n>mnHistoryXStep}" icon="sap-icon://activity-items" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionHistorialPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+								<MenuItem text="{=${aListProcessAssignResponsive>aplica} === true ? 'No aplica paso' : 'Si aplica paso'}" icon="{=${aListProcessAssignResponsive>aplica} === true ? 'sap-icon://less' : 'sap-icon://add'}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/aplicaNoAplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+							</Menu>
+						</menu>
+					</MenuButton>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</core:FragmentDefinition>

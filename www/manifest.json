@@ -1,0 +1,257 @@
+{
+    "_version": "1.32.0",
+    "sap.app": {
+        "id": "mif.rmd.registro",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "ach": "ach",
+        "dataSources": {
+            "mainModelv2": {
+                "uri": "/srv_api/v2/browse/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "/v2/browse/metadata.xml"
+                }
+            },
+            "mainService": {
+                "uri": "/srv_api/browse/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "NECESIDADESRMD_SRV": {
+                "uri": "/saperp/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_NECESIDADESRMD_SRV/metadata.xml"
+                }
+            },
+            "IMPRESIONORD_SRV": {
+                "uri": "/saperp/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_IMPRESIONORD_SRV/metadata.xml"
+                }
+            },
+            "PRODUCCION_SRV": {
+                "uri": "/saperp/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_PRODUCCION_SRV/metadata.xml"
+                }
+            },
+            "CENTRALPESADAS_SRV": {
+                "uri": "/saperp/sap/opu/odata/sap/Z_PP_CENTRALPESADAS_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_CENTRALPESADAS_SRV/metadata.xml"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "mif-rmd-registro-inbound": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "registro",
+                    "action": "display",
+                    "title": "{{flpTitle}}",
+                    "subTitle": "{{flpSubtitle}}",
+                    "icon": "sap-icon://add-activity"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "sap-icon://task",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "rootView": {
+            "viewName": "mif.rmd.registro.view.MainView",
+            "type": "XML",
+            "async": true,
+            "id": "MainView"
+        },
+        "dependencies": {
+            "minUI5Version": "1.93.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "mif.rmd.registro.i18n.i18n"
+                },
+                "preload": true
+            },
+            "modelGeneral": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {},
+                "uri": "model/modelGeneral.json",
+                "preload": true
+            },
+            "modelEstructura": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {}
+            },
+            "mainModelv2": {
+                "dataSource": "mainModelv2",
+                "preload": true
+            },
+            "mainModel": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true,
+                    "updateGroupId": "updateGroup"
+                }
+            },
+			"NECESIDADESRMD_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "NECESIDADESRMD_SRV",
+				"preload": true
+			},
+            "IMPRESIONORD_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "IMPRESIONORD_SRV",
+				"preload": true
+			},
+            "PRODUCCION_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "PRODUCCION_SRV",
+				"preload": true
+			},
+			"CENTRALPESADAS_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "CENTRALPESADAS_SRV",
+				"preload": true
+			}
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ],
+            "js": [
+                {
+                    "uri": "libs/pdfmaker/pdfmake.min.js"
+                },
+                {
+                    "uri": "libs/pdfmaker/fonts/Roboto.js"
+                },
+                {
+                    "uri":"libs/moment.min.js"
+                },
+                {
+                    "uri":"libs/barcode/jsbarcode.js"
+                }
+                
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "mif.rmd.registro.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteMainView",
+                    "pattern": "",
+                    "target": ["TargetMainView"]
+                },
+                {
+                    "name": "RouteDetailMainView",
+                    "pattern": "RouteDetailMainView",
+                    "target": ["TargetDetailMainView"]
+                }
+            ],
+            "targets": {
+                "TargetMainView": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewName": "MainView"
+                },
+                "TargetDetailMainView": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewName": "DetailMainView"
+                }
+            }
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "mif-apps-rmd-bs"
+    },
+    "sap.platform.cf": {
+        "ui5VersionNumber": "1.84.20"
+    }
+}

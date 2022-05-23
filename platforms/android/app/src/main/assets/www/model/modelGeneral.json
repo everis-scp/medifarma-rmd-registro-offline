@@ -1,0 +1,280 @@
+{
+  "oDataFilterEquipoUtensilio": {},
+  "addLapsoEnabled": false,
+  "ordenesAbap": [],
+  "loteFilter": "",
+  "usuariosRmd": [],
+  "usuariosAbap": [],
+  "estructuras": [],
+  "tblCuadros": [],
+  "tblEquipos": [],
+  "tblVerificaFirmas": [],
+  "motivosLapso": [],
+  "observacionesRMD": [],
+  "LineaActualRMD": {},
+  "CantidadConHUOp": {},
+  "LineaActualMD": {},
+  "bAvisoMant": false,
+  "bNoAvisoMant": false,
+  "aObjetosEquipo": [],
+  "aSintomasEquipo": [],
+  "aCausasEquipo": [],
+  "oObjObjetoEquipo": {},
+  "oObjSintomaEquipo": {},
+  "oObjCausaEquipo": {},
+  "Mds": [],
+  "ObservacionRMD": "",
+  "ComentarioLapso": "",
+  "EtiquetaSinEnlace": {},
+  "EtiquetaSinEnlaceAdd": {},
+  "ImprimirRango" : false,
+  "bFlagNotifFinal": false,
+  "equipoSelected": {},
+  "oDataImpresion" : {},
+  "selectedPrinterKey": "",
+  "tipoDatoId_iMaestraId": null,
+  "Impresoras": null,
+  "cuadrosColumn": [
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    }
+  ],
+  "equiposColumn": [
+    {
+      "text": "Descripción"
+    },
+    {
+      "text": "Tipo"
+    },
+    {
+      "text": "Calificaciones/Calibracion"
+    },
+    {
+      "text": "Código"
+    },
+    {
+      "text": "Check",
+      "Cod": "chk"
+    },
+    {
+      "text": "Opción"
+    }
+  ],
+  "especificacionColumn": [
+    {
+      "text": "Ensayo"
+    },
+    {
+      "text": "Especificaciones"
+    },
+    {
+      "text": "Resultados"
+    },
+    {
+      "text": ""
+    }
+  ],
+  "condicionesAmbientalesColumn": [
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    },
+    {
+      "text": ""
+    }
+  ],
+  "verificacionFirmasColumn": [
+    {
+      "text": "Realizado por (R)"
+    },
+    {
+      "text": "Supervisado por (S)"
+    },
+    {
+      "text": "Nombres y Apellidos"
+    },
+    {
+      "text": "Firma"
+    }
+  ],
+  "fragments": [
+    {
+      "fragment": "Cuadros",
+      "tipo": 4
+    },
+    {
+      "fragment": "Equipos",
+      "tipo": 5
+    },
+    {
+      "fragment": "Formulas",
+      "tipo": 8
+    },
+    {
+      "fragment": "CondicionesAmbientales",
+      "tipo": 3
+    },
+    {
+      "fragment": "Procesos",
+      "tipo": 7
+    },
+    {
+      "fragment": "Especificaciones",
+      "tipo": 6
+    },
+    {
+      "fragment": "VerificacionFirmas",
+      "tipo": 9
+    }
+  ],
+  "tiposDatos": [
+    {
+      "control": "Texto",
+      "tipo": 43
+    },
+    {
+      "control": "Cantidad",
+      "tipo": 44
+    },
+    {
+      "control": "Fecha",
+      "tipo": 45
+    },
+    {
+      "control": "FechaHora",
+      "tipo": 46
+    },
+    {
+      "control": "Hora",
+      "tipo": 47
+    },
+    {
+      "control": "Numeros",
+      "tipo": 48
+    },
+    {
+      "control": "RealizadoPor",
+      "tipo": 49
+    },
+    {
+      "control": "VistoBueno",
+      "tipo": 50
+    },
+    {
+      "control": "RealizadoPorVistoBueno",
+      "tipo": 51
+    },
+    {
+      "control": "VerificacionCheck",
+      "tipo": 52
+    },
+    {
+      "control": "MultipleCheck",
+      "tipo": 53
+    },
+    {
+      "control": "Rango",
+      "tipo": 54
+    },
+    {
+      "control": "DatoFijo",
+      "tipo": 55
+    },
+    {
+      "control": "Formula",
+      "tipo": 56
+    },
+    {
+      "control": "Sin tipo de dato",
+      "tipo": 57
+    },
+    {
+      "control": "Notificacion",
+      "tipo": 137
+    }
+  ],
+  "Estructura": [
+    {
+      "equipoId": "1",
+      "codigo": "Eqp1",
+      "descripcion": "Materiales",
+      "codigoGaci": "S",
+      "estadoId": 27,
+      "estado": "ok",
+      "sucursalId": "Plnata 01",
+      "tipo": "Equipo",
+      "area": "Area 1"
+    },
+    {
+      "equipoId": "2",
+      "codigo": "Eqp2",
+      "descripcion": "PC",
+      "codigoGaci": "S",
+      "estadoId": 27,
+      "estado": "ok",
+      "sucursalId": "Plnata 01",
+      "tipo": "Equipo",
+      "area": "Area 1"
+    }
+  ],
+  "formulaColumn":[
+    {
+        "text": "Descripción"
+    },
+    {
+        "text": "Código"
+    },
+    {
+        "text": "UM"
+    },
+    {
+        "text": "Cantidad"
+    },
+    {
+        "text": "Cantidad Entregada"
+    },
+    {
+        "text": "N Bultos"
+    },
+    {
+        "text": ""
+    },
+    {
+        "text": ""
+    }
+  ],
+  "procesoColumn": [
+    {
+      "text": "Código",
+      "Cod": "code"
+    },
+    {
+      "text": "Descripción"
+    },
+    {
+      "text": "Check",
+      "Cod": "codeCenter"
+    },
+    {
+      "text": "Opcion",
+      "Cod": "codeCenter"
+    }
+  ]
+}

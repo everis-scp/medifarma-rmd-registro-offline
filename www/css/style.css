@@ -1,0 +1,44 @@
+/* Enter your custom styles here */
+.MyAcceptButton.sapMBtn:not(.sapMBtnDisabled)>span.sapMBtnInner.sapMBtnAccept.sapMBtnActive {
+    background-color: Orange !important;
+  }  
+
+  .TextStyleJefe{
+    color: #0000ff !important;
+  }
+
+  .TextStyleAuxiliar{
+    color: #5dc1b9 !important;
+  }
+
+  .TextStyleSupervisor{
+    color: #8c004b !important;
+  }
+
+  .TextStyleControlCalidad{
+    color: #FF0000 !important;
+  }
+
+  .TextStyleControlProcesos{
+    color: #000000 !important;
+  }
+
+  .TextStyleNone{
+    color: #000000 !important;
+  }
+
+  .TextStyleModificar{
+    color: #ff8000 !important;
+  }
+
+  .TextStyleNoAplica{
+    color: #ffc400 !important;
+  }
+
+  .sapMListTblCell.cellBorderRight {
+    border-right: 1px solid lightgray;
+  }
+  
+  .sapMListTblCell.cellBorderLeft {
+    border-left: 1px solid lightgray;
+  }

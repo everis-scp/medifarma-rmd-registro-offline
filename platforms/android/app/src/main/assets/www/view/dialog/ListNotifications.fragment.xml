@@ -1,0 +1,101 @@
+<core:FragmentDefinition
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+  xmlns:layout="sap.ui.layout">
+  <Dialog class="sapUiContentPadding sapUiSizeCompact" contentWidth="100%">
+		<content>
+			<layout:VerticalLayout>
+				<Table width="auto" sticky="ColumnHeaders" items="{
+                    path:'tblListNotifications>/',
+                    sorter: {
+                        path: 'fechaRegistro'
+                    }
+                    }" growing="true"
+                     growingScrollToLoad="true" noDataText="{i18n>tblNoData}">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="{i18n>tlListNotifications}"/>
+                            <ToolbarSpacer/>
+                            <ToolbarSeparator/>
+                            <Switch state="{modelGeneral>/bFlagNotifFinal}" customTextOn="FIN" customTextOff="PRC" enabled="false">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>
+                            <OverflowToolbarButton tooltip="{i18n>mnNotificar}" icon="sap-icon://ui-notifications" press="onPressNotifications" enabled="{path: 'modelGeneral>/lapsoManual/0', formatter: '.formatter.onEnabledNotificationManual'}"/>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <!-- <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clPosicion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column> -->
+                        <Column width="auto" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clOrden}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clOperacion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clPuestoTrabajo}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clCantidadBuena}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clCantidadRechazo}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clMotivoDesv}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clUsuarioNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clFechaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clUsuarioEliminaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clFechaEliminaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clEstadoNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clMotivoAnulacion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <Text text="{i18n>clAcc}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <!-- <Text text="{tblListNotifications>Rmzhl}"/> -->
+                            <Text text="{parts:[{path:'tblListNotifications>orden'},{path:'tblListNotifications>Rueck'}],formatter:'.formatter.onSincrorniceOffline2'}"/>
+                            <Text text="{tblListNotifications>fase}"/>
+                            <Text text="{tblListNotifications>puestoTrabajo}"/>
+                            <Text text="{tblListNotifications>cantBuena}"/>
+                            <Text text="{tblListNotifications>cantRechazo}"/>
+                            <Text text="{tblListNotifications>motivoDesv}"/>
+                            <Text text="{tblListNotifications>usuarioRegistro}"/>
+                            <Text text="{path: 'tblListNotifications>fechaRegistro', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd', UTC: false }}"/>
+                            <Text text="{tblListNotifications>usuarioActualiza}"/>
+                            <Text text="{path: 'tblListNotifications>fechaActualiza', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd', UTC: false }}"/>
+                            <Text text="{ path:'tblListNotifications>activo', formatter: '.formatter.onStatusNotifica'}"/>
+                            <Text text="{tblListNotifications>ConfTextAnulac}"/>
+                            <HBox>
+                            <!--OFFLINE CAMBIO-->
+                                <Button icon="sap-icon://delete" press="onDeleteNotificacion" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD} === true &amp;&amp; ${tblListNotifications>activo}=== true &amp;&amp; ${tblListNotifications>Rueck}!== '' ? true : false}"/>    
+                            </HBox>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+			</layout:VerticalLayout>
+		</content>
+		<endButton>
+			<Button text="{i18n>btnClose}" press="onCancelNotificationsList" type="Reject"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

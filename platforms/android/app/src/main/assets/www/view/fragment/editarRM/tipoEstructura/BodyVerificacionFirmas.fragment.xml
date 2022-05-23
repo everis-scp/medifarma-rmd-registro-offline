@@ -1,0 +1,37 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListVerifFirmasAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
+		growingScrollToLoad="true">
+        <headerToolbar>
+				<OverflowToolbar>
+					<!-- <Title text="{i18n>tltEquipos} ({=${aListEquipoAssignResponsive>/}.length})"></Title> -->
+					<ToolbarSpacer/>
+					<ToolbarSeparator/>
+					<Button text="{i18n>btnAddUsuarios}" tooltip="{i18n>btnAddUsuarios}" icon="sap-icon://add" press="onOpenAddUsers" type="Transparent" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/asignarUsuarioRMD} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+		<columns>
+			<Column width="15%" hAlign="Center" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+				<Text text="Realizado por (R)" width="auto"/>
+			</Column>
+			<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Text text="Supervisado por (S)" width="auto"/>
+			</Column>
+			<Column width="55%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Text text="Nombres y Apellidos" width="auto"/>
+			</Column>
+			<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Text text="Firma" width="auto"/>
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem>
+				<CheckBox selected="{=${aListVerifFirmasAssignResponsive>rol} === 'JEFE DE PRODUCCION' || ${aListVerifFirmasAssignResponsive>rol} === 'SUPERVISOR' ? false : true}" enabled="false" valueState="{=${aListVerifFirmasAssignResponsive>rol} === 'CONTROL CALIDAD' || ${aListVerifFirmasAssignResponsive>rol} === '' ? 'Error' : None}"/>
+                <CheckBox selected="{=${aListVerifFirmasAssignResponsive>rol} === 'JEFE DE PRODUCCION' || ${aListVerifFirmasAssignResponsive>rol} === 'SUPERVISOR' ? true : false}" enabled="false"/>
+				<ObjectStatus text="{aListVerifFirmasAssignResponsive>usuarioId/nombre} {aListVerifFirmasAssignResponsive>usuarioId/apellidoPaterno} {aListVerifFirmasAssignResponsive>usuarioId/apellidoMaterno}" state="{=${aListVerifFirmasAssignResponsive>rol} === 'CONTROL CALIDAD' || ${aListVerifFirmasAssignResponsive>rol} === '' ? 'Indication01' : None}"/>
+                <!-- <Text text="{aListVerifFirmasAssignResponsive>usuarioId/nombre} {aListVerifFirmasAssignResponsive>usuarioId/apellidoPaterno} {aListVerifFirmasAssignResponsive>usuarioId/apellidoMaterno}" width="auto"/> -->
+				<ObjectStatus text="{=${aListVerifFirmasAssignResponsive>usuarioSap} ? ${aListVerifFirmasAssignResponsive>usuarioSap} : ${aListVerifFirmasAssignResponsive>usuarioId/usuario}}" state="{=${aListVerifFirmasAssignResponsive>rol} === 'CONTROL CALIDAD' || ${aListVerifFirmasAssignResponsive>rol} === '' ? 'Indication01' : None}"/>
+				<!-- <Text text="{=${aListVerifFirmasAssignResponsive>usuarioSap} ? ${aListVerifFirmasAssignResponsive>usuarioSap} : ${aListVerifFirmasAssignResponsive>usuarioId/usuario}}" width="auto"/> -->
+			</ColumnListItem>
+		</items>
+	</Table>
+</core:FragmentDefinition>

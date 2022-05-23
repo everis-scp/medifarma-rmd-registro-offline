@@ -1,0 +1,62 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<!-- <Dialog title="{asociarDatos>/codigo} - {asociarDatos>/descripcion}" afterClose="onCancelCuadroResponsive"> -->
+		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListInsumosAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
+			growingScrollToLoad="true">
+			<headerToolbar>
+				<OverflowToolbar>
+					<!-- <Title text="{i18n>tltEquipos} ({=${aListEquipoAssignResponsive>/}.length})"></Title> -->
+					<ToolbarSpacer/>
+					<ToolbarSeparator/>
+					<Button icon="sap-icon://bar-code" tooltip="{i18n>btnBarcode}" press="onOpenBarcode" type="Emphasized" enabled="{aListInsumosAssignResponsive>/0/generalEnabledSaveButton}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column width="25%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clDescription}" width="auto"/>
+					<footer>
+						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>
+					</footer>
+				</Column>
+				<Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clCodigo}" width="auto"/>
+				</Column>
+				<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clUM}" width="auto"/>
+				</Column>
+				<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clCount}" width="auto"/>
+                    <footer>
+						<Text text="{i18n>ftTFecha}{aFooter>/fecha}"/>
+					</footer>
+				</Column>
+                <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clCountGive}" width="auto"/>
+				</Column>
+                <Column width="10%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clBulto}" width="auto"/>
+				</Column>
+                <Column width="10%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="" width="auto"/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<Text text="{aListInsumosAssignResponsive>Maktx}" width="auto"/>
+                    <Text text="{aListInsumosAssignResponsive>Component}" width="auto"/>
+					<Text text="{aListInsumosAssignResponsive>CompUnit}" width="auto"/>
+                    <Text text="{aListInsumosAssignResponsive>CompQty}" width="auto"/>
+                    <Text text="{aListInsumosAssignResponsive>cantidadBarCode}" width="auto"/>
+					<Text text="{aListInsumosAssignResponsive>numeroBultos}" width="auto"/>
+					<VBox>
+						<CheckBox selected="{aListInsumosAssignResponsive>verifCheck}" enabled="false"/>
+						<ObjectStatus text="{aListInsumosAssignResponsive>usuarioActualiza}" visible="{aListInsumosAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListInsumosAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
+						<!-- <ObjectStatus text="{parts: [{path: 'aListInsumosAssignResponsive>aplica'}, {path: 'aListInsumosAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListInsumosAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListInsumosAssignResponsive>aplica'}, {path: 'aListInsumosAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/> -->
+					</VBox>
+				</ColumnListItem>
+			</items>
+		</Table>
+		<!-- <endButton>
+			<Button text="{i18n>btnClose}" press="onCancelCuadroResponsive" type="Transparent"/>
+		</endButton>
+	</Dialog> -->
+	</core:FragmentDefinition>

@@ -1,0 +1,85 @@
+<core:FragmentDefinition
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+  xmlns:layout="sap.ui.layout">
+  <Dialog class="sapUiContentPadding sapUiSizeCompact" contentWidth="100%" afterClose="onCancelLapsoList">
+		<content>
+			<layout:VerticalLayout>
+				<Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/tblListLapso', sorter: {path: 'modelGeneral>fechaRegistro', descending: true}}" updateFinished="onUpdateFinish" growing="true"
+          growingScrollToLoad="true" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd" mode="None">
+          <headerToolbar>
+            <OverflowToolbar>
+              <Title text="{i18n>tlListLapsos}"></Title>
+              <ToolbarSpacer/>
+              <ToolbarSeparator/>
+              <OverflowToolbarButton tooltip="{i18n>btnAddUser}" icon="sap-icon://add" press="onAddLapsoGeneral"/>
+            </OverflowToolbar>
+          </headerToolbar>
+          <columns>
+            <Column width="7%" hAlign="Left" vAlign="Middle" popinDisplay="Inline">
+              <Text text="{i18n>clLapso}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clEquipo}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clDateInic}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="7%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clDateInicUser}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clDateFin}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="7%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clDateFinUser}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clComment}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="6%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clNroNotif}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clMotivoEdit}" width="auto" maxLines="5"/>
+            </Column>
+            <Column width="11%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+              <Text text="{i18n>clAcc}" width="auto" maxLines="5"/>
+            </Column>
+          </columns>
+          <items>
+            <ColumnListItem type="Inactive">
+              <Text text="{= ${modelGeneral>descripcion} !== null  ? ${modelGeneral>descripcion} : ${modelGeneral>tipoLapsoId/descripcion} }" width="auto"/>
+              <Text text="{modelGeneral>equipoId/eqktx}" width="auto"/>
+              <Text text="{path: 'modelGeneral>fechaInicio', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy HH:mm:ss', UTC: false }}" width="auto" maxLines="3" wrapping="true"/>
+              <Text text="{=${modelGeneral>fechaInicio} === null ? '' : ${modelGeneral>usuarioRegistro}}" width="auto" wrapping="true"/>
+              <!-- <Text text="{path: 'modelGeneral>fechaFin', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy HH:mm:ss', UTC: false }}" width="auto" maxLines="3" wrapping="true"/> -->
+              <DateTimePicker
+                value="{path: 'modelGeneral>fechaFin', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy HH:mm:ss', UTC: false }}"
+                displayFormat="dd/MM/yyyy HH:mm:ss"
+                change="handleChange"
+                class="sapUiSmallMarginBottom"
+                enabled="{=(${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'rmd_jefe_prod'|| ${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'RMD_SUPERVISOR')  &amp;&amp;  ${modelGeneral>fechaFin} &amp;&amp; ${modelGeneral>Qmnum}!== '' ? true : false}"/>
+				      <Text text="{modelGeneral>usuarioActualiza}" width="auto" wrapping="true"/>
+              <Text text="{modelGeneral>comentario}" width="auto"/>
+               <!--OFFLINE CAMBIO FORMATTER-->
+              <Text text="{path:'modelGeneral>Qmnum', formatter:'.formatter.onSincrorniceOffline'}" width="auto"/>
+              <Text text="{modelGeneral>MotivoEdit}" width="auto"/>
+              <HBox>
+                <!--OFFLINE-->
+                <Button icon="sap-icon://create-entry-time" tooltip="{i18n>lpsFinalizar}" enabled="{=${modelGeneral>fechaFin} === null &amp;&amp; (${modelGeneral>Qmnum}!== '' &amp;&amp; ${modelGeneral>Qmnum}!==null) ? true : false}" press="onAgregarFechaFin" visible="{=${modelGeneral>pasoId_mdEstructuraPasoId} !== null ? false : true}"/>
+                <Button icon="sap-icon://save" tooltip="{i18n>lpsEditar}" enabled="{=(${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'rmd_jefe_prod'|| ${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'RMD_SUPERVISOR')  &amp;&amp;  ${modelGeneral>fechaFin} ? true : false}" press="onGuardarMotivoCierre" visible="{=${modelGeneral>pasoId_mdEstructuraPasoId} !== null ? false : true}"/>
+                <Button icon="sap-icon://edit" tooltip="{i18n>tlEdit}" visible="{= ${modelGeneral>tipo} === 'Pendiente' ? true : false}" enabled="{=${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'rmd_jefe_prod'|| ${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'RMD_SUPERVISOR' ? true : false}" press="onEditLapsoCatalogo"/>
+                <Button icon="sap-icon://paper-plane" tooltip="{i18n>tlAvisoMantenimiento}" visible="{= ${modelGeneral>tipo} === 'Pendiente' ? true : false}" enabled="{=${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'rmd_jefe_prod'|| ${modelGeneral>/oInfoUsuario/rol/0/codigo} === 'RMD_SUPERVISOR' ? true : false}" press="onSaveAvisoMant"/>  
+              </HBox>
+              </ColumnListItem>
+          </items>
+        </Table>
+			</layout:VerticalLayout>
+		</content>
+		<endButton>
+			<Button text="{i18n>btnClose}" press="onCancelLapsoList" type="Reject"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

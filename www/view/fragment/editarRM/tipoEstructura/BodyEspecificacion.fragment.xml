@@ -1,0 +1,45 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<!-- <Dialog title="{asociarDatos>/codigo} - {asociarDatos>/descripcion}" afterClose="onCancelCuadroResponsive"> -->
+		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{path: 'aListEspecificacionAssignResponsive>/',
+				sorter: {
+					path: 'Merknr'
+				}}" updateFinished="onUpdateFinish" growing="true"
+			growingScrollToLoad="true">
+			<columns>
+				<Column width="30%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clEnsayo}" width="auto"/>
+					<footer>
+						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>
+					</footer>
+				</Column>
+				<Column width="30%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clEspecificaciones}" width="auto"/>
+				</Column>
+				<Column width="30%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="{i18n>clResultados}" width="auto"/>
+					<footer>
+						<Text text="{i18n>ftTFecha}{aFooter>/fecha}"/>
+					</footer>
+				</Column>
+				<Column width="10%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+					<Text text="" width="auto"/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<ObjectIdentifier title="{aListEspecificacionAssignResponsive>ensayoPadreId/descripcion}" text="{aListEspecificacionAssignResponsive>ensayoHijo}"/>
+                    <Text text="{aListEspecificacionAssignResponsive>especificacion}" width="auto"/>
+                    <TextArea value="{aListEspecificacionAssignResponsive>resultados}" showExceededText="true" maxLength="200" width="100%" valueState="{= ${aListEspecificacionAssignResponsive>resultados}.length > 200 ? 'Warning' : 'None' }" valueLiveUpdate="false" liveChange="handleLiveChange" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
+					<VBox>
+						<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
+						<ObjectStatus text="{aListEspecificacionAssignResponsive>usuarioActualiza}" visible="{aListEspecificacionAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListEspecificacionAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
+						<ObjectStatus text="{parts: [{path: 'aListEspecificacionAssignResponsive>aplica'}, {path: 'aListEspecificacionAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListEspecificacionAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListEspecificacionAssignResponsive>aplica'}, {path: 'aListEspecificacionAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
+					</VBox>
+				</ColumnListItem>
+			</items>
+		</Table>
+		<!-- <endButton>
+			<Button text="{i18n>btnClose}" press="onCancelCuadroResponsive" type="Transparent"/>
+		</endButton>
+	</Dialog> -->
+	</core:FragmentDefinition>
