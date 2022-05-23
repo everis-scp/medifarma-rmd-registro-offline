@@ -9,7 +9,7 @@ var fiori_client_appConfig = {
 	"appName": "registro",
 	"appVersion": "1.6",
 	"appID": "mif.rmd.registro",
-	"fioriURL": "https://medifarmadevqas-dev-mif-rmd-registro.cfapps.us10.hana.ondemand.com:443",
+	"fioriURL": "https://medifarmaqas-qas-mif-rmd-registro.cfapps.us10.hana.ondemand.com:443",
 	"auth": [
 		{
 			"type": "saml2.web.post",
