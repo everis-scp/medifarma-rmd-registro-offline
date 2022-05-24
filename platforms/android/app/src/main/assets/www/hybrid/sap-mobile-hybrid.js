@@ -123,7 +123,7 @@ sap.hybrid = {
 				"OrdenSet": "/OrdenSet",
 				"CalibracionSet": "/CalibracionSet",
 				//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
-				"HuOfflineSet": "/HUSet?$filter=Vpobjkey eq ''",
+				"HuOfflSet": "/HUSet?$filter=Vpobjkey eq ''",
 				"MotivosNotSet": "/MotivosNotSet?$filter=Werks eq ''",
 				"EANSet": "/EANSet?$filter=Matnr eq '' and Eantp eq ''",
 				"NotificacionSet": "/NotificacionSet",
@@ -134,7 +134,7 @@ sap.hybrid = {
 				"FaseNotSet": "/FaseNotSet?$filter=Aufnr eq '' and Arbpl eq '' and Ktsch eq ''",
 				"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
 				"CatalogoSet":"/CatalogoSet",
-				"AvisoOfflineSet":"/AvisoOfflineSet"
+				//"AvisoOfflSet":"/AvisoOfflSet"
 				//Por el momento estoy utilizando un registro para FaseNoSet , pero se tendra que modificar para que traiga todos los registros(Se corrigio)
 				//"AvisoSet":"/AvisoSet",
 				//"AvisoMensajeSet":"/AvisoMensajeSet",
@@ -216,7 +216,7 @@ sap.hybrid = {
 			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
 
 			//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet 
-			var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD";  //JSON format is less verbose than atom/xml
+			var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true";  //JSON format is less verbose than atom/xml
 			var oHeaders = {};
 			var request = {
 					headers: oHeaders,

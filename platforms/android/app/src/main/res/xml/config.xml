@@ -87,7 +87,7 @@
         <param name="onload" value="true" />
     </feature>
     <name>registro</name>
-    <description>DEV</description>
+    <description>QAS</description>
     <author href="http://cordova.io">SAP hybrid mobile solution</author>
     <content src="index.html" />
     <access origin="*" />

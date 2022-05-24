@@ -134,7 +134,7 @@ sap.hybrid = {
 				"FaseNotSet": "/FaseNotSet?$filter=Aufnr eq '' and Arbpl eq '' and Ktsch eq ''",
 				"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
 				"CatalogoSet":"/CatalogoSet",
-				"AvisoOfflSet":"/AvisoOfflSet"
+				//"AvisoOfflSet":"/AvisoOfflSet"
 				//Por el momento estoy utilizando un registro para FaseNoSet , pero se tendra que modificar para que traiga todos los registros(Se corrigio)
 				//"AvisoSet":"/AvisoSet",
 				//"AvisoMensajeSet":"/AvisoMensajeSet",
