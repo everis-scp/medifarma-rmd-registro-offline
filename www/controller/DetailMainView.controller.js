@@ -5355,9 +5355,9 @@ sap.ui.define([
                             //let oNewJsonCatalogo = JSON.parse(JSON.stringify(oParam.CatalogoSet));
                             oParam.Catalogoset = "" + JSON.stringify(oParam.Catalogoset);
 
-                            let oAvisoResponse = await registroService.createData(oThat.modelNecesidad, "/AvisoOfflineSet", oParam);
+                            let oAvisoResponse = await registroService.createData(oThat.modelNecesidad, "/AvisoOfflSet", oParam);
 
-                            await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflineSet", sKeyAviso);
+                            await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflSet", sKeyAviso);
 
                             let selectMotivo = oThat.modelGeneral.getProperty("/selectMotivo");
                             let ComentarioLapso = sap.ui.core.Fragment.byId("frgAddLapso", "tAreaMotivo").getProperty("value");
@@ -5605,9 +5605,9 @@ sap.ui.define([
                     System: ""
                 }); */
                 //await registroService.createData(oThat.modelNecesidad, "/AvisoSet", oParam);
-                await registroService.createData(oThat.modelNecesidad, "/AvisoOfflineSet", oParam);
+                await registroService.createData(oThat.modelNecesidad, "/AvisoOfflSet", oParam);
 
-                await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflineSet", sKeyAviso);
+                await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflSet", sKeyAviso);
 
                 let LineaActual = oThat.modelGeneral.getProperty("/LineaActualMD"); 
                 let selectMotivo = oThat.modelGeneral.getProperty("/selectMotivo"); 
@@ -9695,7 +9695,7 @@ sap.ui.define([
                             var oModel = oThat.getOwnerComponent().getModel("NECESIDADESRMD_SRV");
 
                             //registroService.createData(oModel, "/HUSet", oData).then(async function(result) {
-                            registroService.createData(oModel, "/HuOfflineSet", oData).then(async function(result) {
+                            registroService.createData(oModel, "/HuOfflSet", oData).then(async function(result) {
                                 console.log(result);
                                 //OFFLINE CAMBIO
                                 // var aMessage = result.HUMensajeSet.results;
@@ -10322,7 +10322,7 @@ sap.ui.define([
             sap.ui.core.BusyIndicator.show(0);
             //OFFLINE CAMBIO
             //await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HUSet", aFilters).then(async function (aHu) {
-            await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflineSet", aFilters).then(async function (aHu) {
+            await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflSet", aFilters).then(async function (aHu) {
                 for await (const oItem of aHu.results) {
                     var aFilter = [];
                     aFilter.push(new Filter("hu", "EQ", oItem.Exidv));
@@ -10462,7 +10462,7 @@ sap.ui.define([
             var oModel = oThat.getOwnerComponent().getModel("NECESIDADESRMD_SRV");
             sap.ui.core.BusyIndicator.show(0);
             //await registroService.onSaveDataGeneral(oModel, "/HUSet", oData).then(async function (result) {
-            await registroService.onSaveDataGeneral(oModel, "/HuOfflineSet", oData).then(async function (result) {
+            await registroService.onSaveDataGeneral(oModel, "/HuOfflSet", oData).then(async function (result) {
                 sap.ui.core.BusyIndicator.hide();
                 console.log(result);
                 // var aMessage = result.HUMensajeSet.results;
@@ -10535,7 +10535,7 @@ sap.ui.define([
                                 //     ]
                             }
                             //await registroService.onSaveDataGeneral(oModel, "/HUSet", oData).then(async function (result) {
-                            await registroService.onSaveDataGeneral(oModel, "/HuOfflineSet", oData).then(async function (result) {    
+                            await registroService.onSaveDataGeneral(oModel, "/HuOfflSet", oData).then(async function (result) {    
                                 //Elimina la etiqueta en Hana si es que existe
                                 await oThat.onDeleteHana(oThat.mainModelv2, oDataFila);
 
@@ -10596,7 +10596,7 @@ sap.ui.define([
                         }
                         sap.ui.core.BusyIndicator.show(0);
                         //await registroService.onSaveDataGeneral(oModel, "/HUSet", oData).then(async function (result) {
-                        await registroService.onSaveDataGeneral(oModel, "/HuOfflineSet", oData).then(async function (result) {
+                        await registroService.onSaveDataGeneral(oModel, "/HuOfflSet", oData).then(async function (result) {
                             console.log(result);
                             MessageToast.show("Registro Eliminado");
                             sap.ui.core.BusyIndicator.hide();
@@ -10654,7 +10654,7 @@ sap.ui.define([
                         var oModel = oThat.getOwnerComponent().getModel("NECESIDADESRMD_SRV");
                         sap.ui.core.BusyIndicator.show(0);
                         //registroService.onSaveDataGeneral(oModel, "/HUSet", oData).then(async function (result) {
-                        registroService.onSaveDataGeneral(oModel, "/HuOfflineSet", oData).then(async function (result) {
+                        registroService.onSaveDataGeneral(oModel, "/HuOfflSet", oData).then(async function (result) {
                             sap.ui.core.BusyIndicator.hide();
                             console.log(result);
                             // var aMessage = result.HUMensajeSet.results;
@@ -10825,7 +10825,7 @@ sap.ui.define([
                 aFilters.push(new Filter("Vpobjkey", "EQ", oLineaActualRMD.Aufnr));
                 // aFilters.push(new Filter("Vpobjkey", "EQ", "200000580"));//TEST_ETIQUETA
                 //registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HUSet", aFilters).then(async function(result) {
-                registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflineSet", aFilters).then(async function(result) {
+                registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflSet", aFilters).then(async function(result) {
                     let aListHus = result.results;
                     let oHuCreado = aListHus[aListHus.length-1];
                     let aSecuencia = [];
@@ -14078,9 +14078,9 @@ sap.ui.define([
                         }); */
                         //let oAvisoResponse = await registroService.createData(oThat.modelNecesidad, "/AvisoSet", oParam);
                         oParam.Catalogoset = "" + JSON.stringify(oParam.Catalogoset);                        
-                        let oAvisoResponse = await registroService.createData(oThat.modelNecesidad, "/AvisoOfflineSet", oParam);
+                        let oAvisoResponse = await registroService.createData(oThat.modelNecesidad, "/AvisoOfflSet", oParam);
 
-                        await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflineSet", oContext.rmdLapsoId);
+                        await registroService.oDataRemove(oThat.modelNecesidad, "/AvisoOfflSet", oContext.rmdLapsoId);
 
                         let oObj = {
                             tipo: "Completado",
@@ -14737,7 +14737,7 @@ sap.ui.define([
                 aFilters.push(new Filter("Vpobjkey", "EQ", oLineaActualRMD.Aufnr));
                 // aFilters.push(new Filter("Vpobjkey", "EQ", "200000580"));//TEST_ETIQUETA
                 //registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HUSet", aFilters).then(async function(result) {
-                registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflineSet", aFilters).then(async function(result) {
+                registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "HuOfflSet", aFilters).then(async function(result) {
                     let aListHus = result.results;
                     let oHuCreado = aListHus[aListHus.length-1];
                     let aSecuencia = [];
@@ -14787,7 +14787,7 @@ sap.ui.define([
                             });
 
                         }else{
-                            registroService.oDataRemove(oThat.modelNecesidad, "/HuOfflineSet", aListHus[nSec].Hukey).then((res)=>{
+                            registroService.oDataRemove(oThat.modelNecesidad, "/HuOfflSet", aListHus[nSec].Hukey).then((res)=>{
                                 console.log("remove succes");
                             });
                         }
@@ -14848,7 +14848,7 @@ sap.ui.define([
             
             let aFilterAvisoSap = [];
             aFilterAvisoSap.push(new Filter("Sincronizado", "EQ", "0"));
-            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad,"AvisoOfflineSet",aFilterAvisoSap);
+            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad,"AvisoOfflSet",aFilterAvisoSap);
 
             BusyIndicator.show(0);
             
@@ -14860,19 +14860,21 @@ sap.ui.define([
                 
                     let oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
 
-                    oNotifiHana.results[0].Rmzhl = oNotification.Rmzhl;
-                    oNotifiHana.results[0].Rueck = oNotification.Rueck;
-                    delete oNotifiHana.results[0].__metadata;
-                    delete oNotifiHana.results[0].rmdId;
+                    if(oNotifiHana.results.length > 0){
+                        oNotifiHana.results[0].Rmzhl = oNotification.Rmzhl;
+                        oNotifiHana.results[0].Rueck = oNotification.Rueck;
+                        delete oNotifiHana.results[0].__metadata;
+                        delete oNotifiHana.results[0].rmdId;
 
-                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
 
-                    oNotification.Sincronizado = "1";
+                        oNotification.Sincronizado = "1";
                 
-                    delete oNotification.__metadata;
-                    oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
+                        delete oNotification.__metadata;
+                        oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
 
-                    await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                    }
                 }
             }
 
@@ -14884,25 +14886,27 @@ sap.ui.define([
                 
                     let oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilter);
 
-                    oLapsoHana.results[0].Qmnum = oAviso.Qmnum;
+                    if(oLapsoHana.results.length>0){
+                        oLapsoHana.results[0].Qmnum = oAviso.Qmnum;
 
-                    delete oLapsoHana.results[0].__metadata;
-                    delete oLapsoHana.results[0].aListCatalogFalla;
-                    delete oLapsoHana.results[0].equipoId;
-                    delete oLapsoHana.results[0].pasoId;
-                    delete oLapsoHana.results[0].pasoIdFin;
-                    delete oLapsoHana.results[0].rmdId;
-                    delete oLapsoHana.results[0].tipoLapsoId;
+                        delete oLapsoHana.results[0].__metadata;
+                        delete oLapsoHana.results[0].aListCatalogFalla;
+                        delete oLapsoHana.results[0].equipoId;
+                        delete oLapsoHana.results[0].pasoId;
+                        delete oLapsoHana.results[0].pasoIdFin;
+                        delete oLapsoHana.results[0].rmdId;
+                        delete oLapsoHana.results[0].tipoLapsoId;
 
-                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
 
-                    oAviso.Sincronizado = "1";
+                        oAviso.Sincronizado = "1";
                 
-                    delete oAviso.__metadata;
-                    if( oAviso.Valid){
-                        oAviso.Valid = formatter.onFormatDateSAP(oAviso.Valid);
+                        delete oAviso.__metadata;
+                        if( oAviso.Valid){
+                            oAviso.Valid = formatter.onFormatDateSAP(oAviso.Valid);
+                        }
+                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
                     }
-                    await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "AvisoOfflineSet", oAviso, oAviso.Keyaviso);
                 }
             }
             //Nuevamente un flush
