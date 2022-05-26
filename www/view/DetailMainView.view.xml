@@ -8,6 +8,9 @@
     <App id="appDetail">
       <pages>
         <Page id="page" title="{i18n>title}" showNavButton="true" navButtonPress="onNavPress">
+          <headerContent>
+            <Label text="{oTypeLine>type}"/>
+          </headerContent>
           <content>
             <f:DynamicPage class="sapUiNoContentPadding">
               <f:title>

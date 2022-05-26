@@ -8,6 +8,9 @@
   <App id="app">
     <pages>
       <Page id="page" title="{i18n>title}">
+        <headerContent>
+          <Label text="{oTypeLine>type}"/>
+        </headerContent>
         <content>
           <core:Fragment fragmentName="mif.rmd.registro.view.fragment.master.Filter" type="XML"/>
           <core:Fragment fragmentName="mif.rmd.registro.view.fragment.master.Body" type="XML"/>
