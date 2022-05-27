@@ -7,7 +7,10 @@
 		height="100%">
     <App id="appDetail">
       <pages>
-        <Page id="page" title="{i18n>title}" showNavButton="true" navButtonPress="onNavPress">
+        <Page id="page" title="{i18n>title}" showNavButton="true" navButtonPress="onNavPress" class="sapUiContentPadding sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+          <headerContent>
+            <Label text="{oModelOffline>/type}"/>
+          </headerContent>
           <content>
             <f:DynamicPage class="sapUiNoContentPadding">
               <f:title>

@@ -172,9 +172,21 @@ sap.ui.define([
                     lstItems.addItem(ictfEstructuras);
                 }
                 //OFFLINE se quita este intervalo
-                sInterval = setInterval(function(){
-                    oThat.onGetRefresh();
-                }, 60000);
+                // sInterval = setInterval(function(){
+                // oThat.onGetRefresh();
+                // }, 90000);
+                 let oTypeLine = {}; 
+                 if (navigator.onLine) {
+                     $.sap.internetInit = true;
+                     oTypeLine.type = "ONLINE";
+                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                    //oThat.onFlushButton(); 
+                 } else {
+                     $.sap.internetInit = false;
+                     oTypeLine.type = "OFFLINE";
+                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                 }
+                
             }
         },
 

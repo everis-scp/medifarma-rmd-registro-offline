@@ -112,35 +112,6 @@ sap.hybrid = {
 	openStore: function () {
 		console.log("In openStore");
 		jQuery.sap.require("sap.ui.thirdparty.datajs"); //Required when using SAPUI5 and the Kapsel Offline Store
-		var SAP_NecesidadesRMD_properties = {
-			"name": "store_SAP_Necesidades",
-			"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-			"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-			"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-			"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
-
-			"definingRequests": {
-				"OrdenSet": "/OrdenSet",
-				"CalibracionSet": "/CalibracionSet",
-				//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
-				"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
-				"MotivosNotSet": "/MotivosNotSet?$filter=Werks eq ''",
-				"EANSet": "/EANSet?$filter=Matnr eq '' and Eantp eq ''",
-				"NotificacionSet": "/NotificacionSet",
-				"NotificacionMensajeSet": "/NotificacionMensajeSet",
-				"FechaProdSet":"/FechaProdSet",
-				"ActividadOfflineSet":"/ActividadOfflineSet",
-				"NotificacionOfflineSet": "/NotificacionOfflineSet",
-				"FaseNotSet": "/FaseNotSet?$filter=Aufnr eq '' and Arbpl eq '' and Ktsch eq ''",
-				"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
-				"CatalogoSet":"/CatalogoSet",
-				"AvisoOfflSet":"/AvisoOfflSet"
-				//Por el momento estoy utilizando un registro para FaseNoSet , pero se tendra que modificar para que traiga todos los registros(Se corrigio)
-				//"AvisoSet":"/AvisoSet",
-				//"AvisoMensajeSet":"/AvisoMensajeSet",
-				//Por el momento este filtro trae todos los registros pero se tendra que configurar ....
-			}
-		};
 
 		var HANAproperties = {
 			"name": "store_HANA",
@@ -150,193 +121,231 @@ sap.hybrid = {
 			"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
 
 			"definingRequests": {
-				"MD": "/MD",
-				"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId",
-				"MAESTRA": "/MAESTRA?$expand=oMaestraTipo",
-				"MD_RECETA": "/MD_RECETA",
-				"RMD_RECETA": "/RMD_RECETA",
-				"RMD_OBSERVACION": "/RMD_OBSERVACION",
-				"MD_ESTRUCTURA": "/MD_ESTRUCTURA",
-				"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId",
-				"USUARIO":"/USUARIO",
-				"UsuarioRol":"UsuarioRol?$expand=oRol",
-				"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion",
-				"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)",
-				"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)",
-				"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION",
-				"MD_ES_PASO":"/MD_ES_PASO",
-				"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)",
-				"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO",
-				"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA",
-				"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO",
-				"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId",
-				"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId",
-				"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId",
-				"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId",
-				"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId",
-				"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)",
-				"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))",
-				"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla",
-				"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO",
-				"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId",
+				"MD": "/MD?$filter=activo eq true",
+				"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true",
+				"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
+				"MD_RECETA": "/MD_RECETA?$filter=activo eq true",
+				"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true",
+				"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true",
+				"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true",
+				"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true",
+				"USUARIO":"/USUARIO?$filter=activo eq true",
+				"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
+				"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+				"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true",
+				"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true",
+				"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true",
+				"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true",
+				"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true",
+				"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true",
+				"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true",
+				"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true",
+				"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true",
+				"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true",
+				"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true",
+				"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true",
+				"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true",
+				"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true",
+				"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true",
+				"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true",
+				"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true",
+				"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
 				//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
-				"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS",
-				"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO",
-				"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL",
+				"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true",
+				"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true",
+				"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true",
 				//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
 				//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
-				"MOTIVO_LAPSO":"/MOTIVO_LAPSO",
+				"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",
 				//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
 				//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
 				//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
 				//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
-				"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL",
+				"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true",
 				//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
-				"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL",
-				"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId",
-				"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA"
+				"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true",
+				"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true",
+				"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true"
 				//"ABAP_USUARIO": "/ABAP_USUARIO",
 				//"ABAP_ORDEN":"/ABAP_ORDEN",
 				//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
 			}
 		};
 
-		storeSAPNecesidadesRMD = sap.OData.createOfflineStore(SAP_NecesidadesRMD_properties);
 		storeHANA = sap.OData.createOfflineStore(HANAproperties);
-
-		var openStoreNecesidadesRMDSuccessCallback = function () {
-			console.log("In openStoreSuccessCallback");
-			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-		}
 
 		var openStoreHANASuccessCallback = function () {
 			console.log("In openStoreSuccessCallback");
 			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
 			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+		};
 
-			//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet 
-			var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true";  //JSON format is less verbose than atom/xml
-			var oHeaders = {};
-			var request = {
-					headers: oHeaders,
-					requestUri: uri,
-					method: "GET"
-				};
+		///PRODUCCION_SRV ------------------------------------------
+		var uriProduccion = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/MAESTRA?$filter=oMaestraTipo_maestraTipoId eq 18";  //JSON format is less verbose than atom/xml
+		var oHeadersProduccion = {};
+		var requestProduccion = {
+			headers: oHeadersProduccion,
+			requestUri: uriProduccion,
+			method: "GET"
+		};
 
-			OData.read(request, function (odata) {
-				console.log("RMD");
-				console.log(odata);
-				var aOrdenes = odata.results;
-				var filterOrdenes = "";
-
-				var aOrdenArray = [];
-
-				for (var i = 0; i < aOrdenes.length; i++) {
-					aOrdenArray.push(aOrdenes[i].ordenSAP);
+		OData.read(requestProduccion, function (odataMaestra) {
+			console.log("RMD");
+			console.log(odataMaestra);
+			var aPlantas = odataMaestra.results;
+			var filterPlantas = "";
+					
+	
+			for (var i = 0; i < aPlantas.length; i++) {
+				filterPlantas += " Werks eq '" + aPlantas[i].codigoSap + "'";
+	
+				if (i != aPlantas.length - 1) {
+					filterPlantas += " or";
 				}
-
-				aOrdenArray = aOrdenArray.sort();
-				let aResultOrden = aOrdenArray.filter((item,index)=>{
-					return aOrdenArray.indexOf(item) === index;
-				});
-
-				for (var i = 0; i < aResultOrden.length; i++) {
-					filterOrdenes += " Aufnr eq '" + aResultOrden[i] + "'";
-
-					if (i != aResultOrden.length - 1) {
-						filterOrdenes += " or";
-					}
-				}
-
-				var SAP_ImpresionOrd_properties = {
-					"name": "store_SAP_Impresion",
+			}
+	
+			var SAP_Produccion_properties = {
+					"name": "store_SAP_Produccion",
 					"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
 					"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
 					"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-					"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
-		
+					"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
+			
 					"definingRequests": {
-						"OrdenSet": "/OrdenSet?$filter="+filterOrdenes
+						"ProduccionSet": "/ProduccionSet?$filter="+filterPlantas
 					}
 				};
-
-				storeSAPImpresion = sap.OData.createOfflineStore(SAP_ImpresionOrd_properties);
-				
-				sap.ui.core.BusyIndicator.show(0);
-				storeSAPImpresion.open( function (res){
-					sap.ui.core.BusyIndicator.hide();
-					console.log("In openStoreSuccessCallback Z_PP_IMPRESION_SRV");
-					sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-					sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-					sap.hybrid.startApp();
-				}, openStoreErrorCallback);
-				
+	
+			storeSAPProduccion = sap.OData.createOfflineStore(SAP_Produccion_properties);
+			//sap.ui.core.BusyIndicator.show(0);
+			storeSAPProduccion.open(function (res){
+				//sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+			} , openStoreErrorCallback);
+					
 			}, function (error) {
-				console.log("odataError OrdenSet");
+				console.log("odataError ProduccionSet");
 			});
 
-			var uriProduccion = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/MAESTRA?$filter=oMaestraTipo_maestraTipoId eq 18";  //JSON format is less verbose than atom/xml
-			var oHeadersProduccion = {};
-			var requestProduccion = {
-				headers: oHeadersProduccion,
-				requestUri: uriProduccion,
+		//----------------------------------------------------------------------------------------------------------------------------------------
+		//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet y NecidadesRMD_SRV ----------------------------------
+		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478";  //JSON format is less verbose than atom/xml
+		var oHeaders = {};
+		var request = {
+				headers: oHeaders,
+				requestUri: uri,
 				method: "GET"
 			};
 
-			OData.read(requestProduccion, function (odataMaestra) {
-					console.log("RMD");
-					console.log(odataMaestra);
-					var aPlantas = odataMaestra.results;
-					var filterPlantas = "";
-					
-	
-					for (var i = 0; i < aPlantas.length; i++) {
-						filterPlantas += " Werks eq '" + aPlantas[i].codigoSap + "'";
-	
-						if (i != aPlantas.length - 1) {
-							filterPlantas += " or";
-						}
-					}
-	
-					var SAP_Produccion_properties = {
-						"name": "store_SAP_Produccion",
-						"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-						"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-						"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-						"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
-			
-						"definingRequests": {
-							"ProduccionSet": "/ProduccionSet?$filter="+filterPlantas
-						}
-					};
-	
-					storeSAPProduccion = sap.OData.createOfflineStore(SAP_Produccion_properties);
-					sap.ui.core.BusyIndicator.show(0);
-					storeSAPProduccion.open(function (res){
-						sap.ui.core.BusyIndicator.hide();
-						console.log("In openStoreSuccessCallback");
-						sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-						sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-					} , openStoreErrorCallback);
-					
-				}, function (error) {
-					console.log("odataError ProduccionSet");
-				});
-			//sap.hybrid.startApp();
-		}
+		OData.read(request, function (odata) {
+			console.log("RMD");
+			console.log(odata);
+			var aOrdenes = odata.results;
+			var filterOrdenes = "";
+			var filterOrdenesActividades= "";
 
-		var openStoreSAPImpresionSuccessCallback = function () {
-			console.log("In openStoreSuccessCallback");
-			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-			sap.hybrid.startApp();
-		}
-		var openStoreSAPProduccionSuccessCallback= function(){
-			console.log("In openStoreSuccessCallback");
-			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-		}
+			var aOrdenArray = [];
+
+			for (var i = 0; i < aOrdenes.length; i++) {
+				aOrdenArray.push(aOrdenes[i].ordenSAP);
+			}
+
+			aOrdenArray = aOrdenArray.sort();
+			let aResultOrden = aOrdenArray.filter((item,index)=>{
+				return aOrdenArray.indexOf(item) === index;
+			});
+
+			for (var i = 0; i < aResultOrden.length; i++) {
+				filterOrdenes += " Aufnr eq '" + aResultOrden[i] + "'";
+
+				if (i != aResultOrden.length - 1) {
+					filterOrdenes += " or";
+				}
+			}
+
+			for (var i = 0; i < aResultOrden.length; i++) {
+				filterOrdenesActividades += " Orderid eq '" + aResultOrden[i] + "'";
+
+				if (i != aResultOrden.length - 1) {
+					filterOrdenesActividades += " or";
+				}
+			}
+
+			var SAP_ImpresionOrd_properties = {
+				"name": "store_SAP_Impresion",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
+	
+				"definingRequests": {
+					"OrdenSet": "/OrdenSet?$filter="+filterOrdenes
+				}
+			};
+
+			storeSAPImpresion = sap.OData.createOfflineStore(SAP_ImpresionOrd_properties);
+			
+			//sap.ui.core.BusyIndicator.show(0);
+			storeSAPImpresion.open( function (res){
+				//sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback Z_PP_IMPRESION_SRV");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+				//sap.hybrid.startApp();
+			}, openStoreErrorCallback);
+
+			//Cargar tienda fuera de linea de SAP NECESIDADES RMD
+
+			var SAP_NecesidadesRMD_properties = {
+				"name": "store_SAP_Necesidades",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
+	
+				"definingRequests": {
+					"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					"CalibracionSet": "/CalibracionSet",
+					//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
+					"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
+					"MotivosNotSet": "/MotivosNotSet?$filter=Werks eq ''",
+					"EANSet": "/EANSet?$filter=Matnr eq '' and Eantp eq ''",
+					"NotificacionSet": "/NotificacionSet",
+					"NotificacionMensajeSet": "/NotificacionMensajeSet",
+					"FechaProdSet":"/FechaProdSet",
+					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
+					"NotificacionOfflineSet": "/NotificacionOfflineSet",
+					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
+					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
+					"CatalogoSet":"/CatalogoSet",
+					"AvisoOfflSet":"/AvisoOfflSet"
+				}
+			};
+			storeSAPNecesidadesRMD = sap.OData.createOfflineStore(SAP_NecesidadesRMD_properties);
+
+			var openStoreErrorCallback = function (error) {
+				console.log("In openStoreErrorCallback");
+				console.log(error);
+				alert("An error occurred" + JSON.stringify(error))
+			}
+
+			sap.ui.core.BusyIndicator.show(0);
+			storeSAPNecesidadesRMD.open(function (result){
+				sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+				sap.hybrid.startApp();
+			}, openStoreErrorCallback);
+
+			
+		}, function (error) {
+			console.log("odataError OrdenSet");
+		});
+
+		//-----------------------------------------------------------------------------------------------------
 
 		var openStoreErrorCallback = function (error) {
 			console.log("In openStoreErrorCallback");
@@ -345,7 +354,6 @@ sap.hybrid = {
 		}
 
 		storeHANA.open(openStoreHANASuccessCallback, openStoreErrorCallback);
-		storeSAPNecesidadesRMD.open(openStoreNecesidadesRMDSuccessCallback, openStoreErrorCallback);
 	},
 
 	//USAR POST DELETE ,ACTUALIZAR 
@@ -408,7 +416,7 @@ sap.hybrid = {
 		}
 		return new Promise(function (resolve, reject){
 		
-			sap.ui.core.BusyIndicator.show();
+			//sap.ui.core.BusyIndicator.show();
 			//storeSAPNecesidadesRMD.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
 			//storeHANA.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
 			storeSAPImpresion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
@@ -420,24 +428,24 @@ sap.hybrid = {
 				storeHANA.flush(function (res){
 					console.log("Offline events: HANA flushStoreCallback");
 					resolve(true);
-					sap.ui.core.BusyIndicator.hide();
+					//sap.ui.core.BusyIndicator.hide();
 				}, function (err){
 					console.log("Offline events: HANA flushStoreCallback");
 					reject(false);
-					sap.ui.core.BusyIndicator.hide();	
+					//sap.ui.core.BusyIndicator.hide();	
 				}, null, sap.hybrid.progressCallback);
 
 			}, function (error) {
 				console.log("Offline events: SAP flushStoreCallback");
 				reject(false);
-				sap.ui.core.BusyIndicator.hide();
+				//sap.ui.core.BusyIndicator.hide();
 
 			}, null, sap.hybrid.progressCallback);
 		});
 	},
 
 	flushStoreCallback: function () {
-		sap.ui.core.BusyIndicator.hide();
+		//sap.ui.core.BusyIndicator.hide();
 		console.log("Offline events: flushStoreCallback");
 	},
 

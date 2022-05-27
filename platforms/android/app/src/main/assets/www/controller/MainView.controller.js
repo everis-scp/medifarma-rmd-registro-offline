@@ -51,6 +51,18 @@ sap.ui.define([
                         return groups
                     }, {})
                 }
+
+                let oTypeLine = {}; 
+                if (navigator.onLine) {
+                    $.sap.internetInit = true;
+                    oTypeLine.type = "ONLINE";
+                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                    //oThat.onFlushButton(); 
+                } else {
+                    $.sap.internetInit = false;
+                    oTypeLine.type = "OFFLINE";
+                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                }
             },
 
             onAfterRendering: async function () {

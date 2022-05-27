@@ -178,175 +178,174 @@ sap.hybrid = {
 			console.log("In openStoreSuccessCallback");
 			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
 			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+		};
 
-			//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet 
-			var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478";  //JSON format is less verbose than atom/xml
-			var oHeaders = {};
-			var request = {
-					headers: oHeaders,
-					requestUri: uri,
-					method: "GET"
-				};
+		///PRODUCCION_SRV ------------------------------------------
+		var uriProduccion = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/MAESTRA?$filter=oMaestraTipo_maestraTipoId eq 18";  //JSON format is less verbose than atom/xml
+		var oHeadersProduccion = {};
+		var requestProduccion = {
+			headers: oHeadersProduccion,
+			requestUri: uriProduccion,
+			method: "GET"
+		};
 
-			OData.read(request, function (odata) {
-				console.log("RMD");
-				console.log(odata);
-				var aOrdenes = odata.results;
-				var filterOrdenes = "";
-
-				var aOrdenArray = [];
-
-				for (var i = 0; i < aOrdenes.length; i++) {
-					aOrdenArray.push(aOrdenes[i].ordenSAP);
+		OData.read(requestProduccion, function (odataMaestra) {
+			console.log("RMD");
+			console.log(odataMaestra);
+			var aPlantas = odataMaestra.results;
+			var filterPlantas = "";
+					
+	
+			for (var i = 0; i < aPlantas.length; i++) {
+				filterPlantas += " Werks eq '" + aPlantas[i].codigoSap + "'";
+	
+				if (i != aPlantas.length - 1) {
+					filterPlantas += " or";
 				}
-
-				aOrdenArray = aOrdenArray.sort();
-				let aResultOrden = aOrdenArray.filter((item,index)=>{
-					return aOrdenArray.indexOf(item) === index;
-				});
-
-				for (var i = 0; i < aResultOrden.length; i++) {
-					filterOrdenes += " Aufnr eq '" + aResultOrden[i] + "'";
-
-					if (i != aResultOrden.length - 1) {
-						filterOrdenes += " or";
-					}
-				}
-
-				var SAP_ImpresionOrd_properties = {
-					"name": "store_SAP_Impresion",
+			}
+	
+			var SAP_Produccion_properties = {
+					"name": "store_SAP_Produccion",
 					"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
 					"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
 					"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-					"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
-		
+					"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
+			
 					"definingRequests": {
-						"OrdenSet": "/OrdenSet?$filter="+filterOrdenes
+						"ProduccionSet": "/ProduccionSet?$filter="+filterPlantas
 					}
 				};
-
-				storeSAPImpresion = sap.OData.createOfflineStore(SAP_ImpresionOrd_properties);
-				
-				sap.ui.core.BusyIndicator.show(0);
-				storeSAPImpresion.open( function (res){
-					sap.ui.core.BusyIndicator.hide();
-					console.log("In openStoreSuccessCallback Z_PP_IMPRESION_SRV");
-					sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-					sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-					sap.hybrid.startApp();
-				}, openStoreErrorCallback);
-
-				//Cargar tienda fuera de linea de SAP NECESIDADES RMD
-
-				var SAP_NecesidadesRMD_properties = {
-					"name": "store_SAP_Necesidades",
-					"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-					"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-					"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-					"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
-		
-					"definingRequests": {
-						"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
-						"CalibracionSet": "/CalibracionSet",
-						//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
-						"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
-						"MotivosNotSet": "/MotivosNotSet?$filter=Werks eq ''",
-						"EANSet": "/EANSet?$filter=Matnr eq '' and Eantp eq ''",
-						"NotificacionSet": "/NotificacionSet",
-						"NotificacionMensajeSet": "/NotificacionMensajeSet",
-						"FechaProdSet":"/FechaProdSet",
-						"ActividadOfflineSet":"/ActividadOfflineSet",
-						"NotificacionOfflineSet": "/NotificacionOfflineSet",
-						"FaseNotSet": "/FaseNotSet?$filter=Aufnr eq '' and Arbpl eq '' and Ktsch eq ''",
-						"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
-						"CatalogoSet":"/CatalogoSet",
-						"AvisoOfflSet":"/AvisoOfflSet"
-						//"AvisoSet":"/AvisoSet",
-						//"AvisoMensajeSet":"/AvisoMensajeSet",
-						//Por el momento este filtro trae todos los registros pero se tendra que configurar ....
-					}
-				};
-				storeSAPNecesidadesRMD = sap.OData.createOfflineStore(SAP_NecesidadesRMD_properties);
-
-				var openStoreNecesidadesRMDSuccessCallback = function () {
-					console.log("In openStoreSuccessCallback");
-					sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-					sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-				}
-				var openStoreErrorCallback = function (error) {
-					console.log("In openStoreErrorCallback");
-					console.log(error);
-					alert("An error occurred" + JSON.stringify(error));
-				}
-
-				storeSAPNecesidadesRMD.open(openStoreNecesidadesRMDSuccessCallback, openStoreErrorCallback);
-
-				
+	
+			storeSAPProduccion = sap.OData.createOfflineStore(SAP_Produccion_properties);
+			//sap.ui.core.BusyIndicator.show(0);
+			storeSAPProduccion.open(function (res){
+				//sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+			} , openStoreErrorCallback);
+					
 			}, function (error) {
-				console.log("odataError OrdenSet");
+				console.log("odataError ProduccionSet");
 			});
 
-			var uriProduccion = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/MAESTRA?$filter=oMaestraTipo_maestraTipoId eq 18";  //JSON format is less verbose than atom/xml
-			var oHeadersProduccion = {};
-			var requestProduccion = {
-				headers: oHeadersProduccion,
-				requestUri: uriProduccion,
+		//----------------------------------------------------------------------------------------------------------------------------------------
+		//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet y NecidadesRMD_SRV ----------------------------------
+		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478";  //JSON format is less verbose than atom/xml
+		var oHeaders = {};
+		var request = {
+				headers: oHeaders,
+				requestUri: uri,
 				method: "GET"
 			};
 
-			OData.read(requestProduccion, function (odataMaestra) {
-					console.log("RMD");
-					console.log(odataMaestra);
-					var aPlantas = odataMaestra.results;
-					var filterPlantas = "";
-					
-	
-					for (var i = 0; i < aPlantas.length; i++) {
-						filterPlantas += " Werks eq '" + aPlantas[i].codigoSap + "'";
-	
-						if (i != aPlantas.length - 1) {
-							filterPlantas += " or";
-						}
-					}
-	
-					var SAP_Produccion_properties = {
-						"name": "store_SAP_Produccion",
-						"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-						"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-						"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-						"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
-			
-						"definingRequests": {
-							"ProduccionSet": "/ProduccionSet?$filter="+filterPlantas
-						}
-					};
-	
-					storeSAPProduccion = sap.OData.createOfflineStore(SAP_Produccion_properties);
-					sap.ui.core.BusyIndicator.show(0);
-					storeSAPProduccion.open(function (res){
-						sap.ui.core.BusyIndicator.hide();
-						console.log("In openStoreSuccessCallback");
-						sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-						sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-					} , openStoreErrorCallback);
-					
-				}, function (error) {
-					console.log("odataError ProduccionSet");
-				});
-			//sap.hybrid.startApp();
-		}
+		OData.read(request, function (odata) {
+			console.log("RMD");
+			console.log(odata);
+			var aOrdenes = odata.results;
+			var filterOrdenes = "";
+			var filterOrdenesActividades= "";
 
-		var openStoreSAPImpresionSuccessCallback = function () {
-			console.log("In openStoreSuccessCallback");
-			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-			sap.hybrid.startApp();
-		}
-		var openStoreSAPProduccionSuccessCallback= function(){
-			console.log("In openStoreSuccessCallback");
-			sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-			sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-		}
+			var aOrdenArray = [];
+
+			for (var i = 0; i < aOrdenes.length; i++) {
+				aOrdenArray.push(aOrdenes[i].ordenSAP);
+			}
+
+			aOrdenArray = aOrdenArray.sort();
+			let aResultOrden = aOrdenArray.filter((item,index)=>{
+				return aOrdenArray.indexOf(item) === index;
+			});
+
+			for (var i = 0; i < aResultOrden.length; i++) {
+				filterOrdenes += " Aufnr eq '" + aResultOrden[i] + "'";
+
+				if (i != aResultOrden.length - 1) {
+					filterOrdenes += " or";
+				}
+			}
+
+			for (var i = 0; i < aResultOrden.length; i++) {
+				filterOrdenesActividades += " Orderid eq '" + aResultOrden[i] + "'";
+
+				if (i != aResultOrden.length - 1) {
+					filterOrdenesActividades += " or";
+				}
+			}
+
+			var SAP_ImpresionOrd_properties = {
+				"name": "store_SAP_Impresion",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
+	
+				"definingRequests": {
+					"OrdenSet": "/OrdenSet?$filter="+filterOrdenes
+				}
+			};
+
+			storeSAPImpresion = sap.OData.createOfflineStore(SAP_ImpresionOrd_properties);
+			
+			//sap.ui.core.BusyIndicator.show(0);
+			storeSAPImpresion.open( function (res){
+				//sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback Z_PP_IMPRESION_SRV");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+				//sap.hybrid.startApp();
+			}, openStoreErrorCallback);
+
+			//Cargar tienda fuera de linea de SAP NECESIDADES RMD
+
+			var SAP_NecesidadesRMD_properties = {
+				"name": "store_SAP_Necesidades",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
+	
+				"definingRequests": {
+					"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					"CalibracionSet": "/CalibracionSet",
+					//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
+					"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
+					"MotivosNotSet": "/MotivosNotSet?$filter=Werks eq ''",
+					"EANSet": "/EANSet?$filter=Matnr eq '' and Eantp eq ''",
+					"NotificacionSet": "/NotificacionSet",
+					"NotificacionMensajeSet": "/NotificacionMensajeSet",
+					"FechaProdSet":"/FechaProdSet",
+					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
+					"NotificacionOfflineSet": "/NotificacionOfflineSet",
+					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
+					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
+					"CatalogoSet":"/CatalogoSet",
+					"AvisoOfflSet":"/AvisoOfflSet"
+				}
+			};
+			storeSAPNecesidadesRMD = sap.OData.createOfflineStore(SAP_NecesidadesRMD_properties);
+
+			var openStoreErrorCallback = function (error) {
+				console.log("In openStoreErrorCallback");
+				console.log(error);
+				alert("An error occurred" + JSON.stringify(error))
+			}
+
+			sap.ui.core.BusyIndicator.show(0);
+			storeSAPNecesidadesRMD.open(function (result){
+				sap.ui.core.BusyIndicator.hide();
+				console.log("In openStoreSuccessCallback");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+				sap.hybrid.startApp();
+			}, openStoreErrorCallback);
+
+			
+		}, function (error) {
+			console.log("odataError OrdenSet");
+		});
+
+		//-----------------------------------------------------------------------------------------------------
 
 		var openStoreErrorCallback = function (error) {
 			console.log("In openStoreErrorCallback");
