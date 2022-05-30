@@ -15,7 +15,7 @@ sap.ui.define([
 		sIdRealizadoporyVistobueno = 441,
 		sIdMultiplecheck = 442,
 		sIdRango = 443,
-		sIdDatoFijo = 449,
+		sIdDatoFijo = 0,
 		sIdFormula = 445,
 		sIdSintipodedato = 446,
 		sIdNotificacion = 447,
@@ -90,6 +90,12 @@ sap.ui.define([
 			// 	nameClass = "TextStyleControlProcesos";
 			// }
 		}, 
+		formatDateTime : function (oDate) {
+			return (`${
+                oDate.getHours().toString().padStart(2, '0')}:${
+				oDate.getMinutes().toString().padStart(2, '0')}:${
+				oDate.getSeconds().toString().padStart(2, '0')}`);
+		},
 		
 		formatDateFooter : function (oDate) {
             return (`${
@@ -124,9 +130,9 @@ sap.ui.define([
 			if (aPaso.tipoDatoId_iMaestraId === sIdTexto) {
 				sDato = aPaso.texto === null ? '' : aPaso.texto;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdCantidad) {
-				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 3);
+				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 0);
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdNumeros) {
-				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 3);
+				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 0);
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdFecha) {
 				sDato = aPaso.fecha === null ? '' : `${
 					aPaso.fecha.getFullYear().toString().padStart(4, '0')}/${
@@ -146,9 +152,9 @@ sap.ui.define([
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdDatoFijo) {
 				sDato = aPaso.datoFijo === null ? '' : aPaso.datoFijo;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdRango) {
-				sDato = aPaso.rango === null ? '' : (parseFloat(aPaso.rango)).toFixed(aPaso.decimales ? aPaso.decimales : 3);
+				sDato = aPaso.rango === null ? '' : (parseFloat(aPaso.rango)).toFixed(aPaso.decimales ? aPaso.decimales : 0);
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdFormula) {
-				sDato = aPaso.formula === null ? '' : (parseFloat(aPaso.formula)).toFixed(3);
+				sDato = aPaso.formula === null ? '' : (parseFloat(aPaso.formula)).toFixed(0);
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdSintipodedato) {
 				sDato = '';
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdNotificacion) {
@@ -159,18 +165,16 @@ sap.ui.define([
 					aPaso.fechaHora.getHours().toString().padStart(2, '0')}:${
 					aPaso.fechaHora.getMinutes().toString().padStart(2, '0')}`;
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdMuestraCC){
-				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 3);
+				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 0);
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdEntrega){
-				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 3);
+				sDato = aPaso.cantidad === null ? '' : (parseFloat(aPaso.cantidad)).toFixed(aPaso.decimales ? aPaso.decimales : 0);
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdLote) {
 				sDato = aPaso.texto === null ? '' : aPaso.texto;
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdFechaVencimiento ) {
-				sDato = aPaso.fechaHora === null ? '' : `${
-					aPaso.fechaHora.getFullYear().toString().padStart(4, '0')}/${
-					(aPaso.fechaHora.getMonth()+1).toString().padStart(2, '0')}/${
-					aPaso.fechaHora.getDate().toString().padStart(2, '0')} ${
-					aPaso.fechaHora.getHours().toString().padStart(2, '0')}:${
-					aPaso.fechaHora.getMinutes().toString().padStart(2, '0')}`;
+				sDato = aPaso.fecha === null ? '' : `${
+					aPaso.fecha.getUTCFullYear().toString().padStart(4, '0')}/${
+					(aPaso.fecha.getUTCMonth()+1).toString().padStart(2, '0')}/${
+					aPaso.fecha.getUTCDate().toString().padStart(2, '0')}`;
 			}
 
 			return sDato;
@@ -226,6 +230,14 @@ sap.ui.define([
 				sDato = true;
 			}
 
+			return sDato;
+		},
+
+		onFormatoVisibleDeleteAuto: function (oPaso) {
+			let sDato = false;
+			if (oPaso.tipoDatoId_iMaestraId === sIdNotificacion || oPaso.tipoDatoId_iMaestraId === sIdFechayHora) {
+				sDato = true;
+			}
 			return sDato;
 		},
 
@@ -373,17 +385,9 @@ sap.ui.define([
 		},
 
 		onFormatoEnabledSaveButton: function (oPaso, oFuncionUsuario, aListPasos) {
-			let sResponse = false;
+			let sResponse = true;
 			let responseAnt = false;
-			if (oFuncionUsuario.registroCC) {
-				sResponse = oPaso.estadoCC ? true : false; 
-			}
-			if (oFuncionUsuario.registroCP) {
-				sResponse = oPaso.estadoMov ? true : false; 
-			}
-			if (oFuncionUsuario.registroP) {
-				sResponse = true; 
-			}
+
 			if (oPaso.pasoId.tipoCondicionId_iMaestraId === 482 || oPaso.pasoId.tipoCondicionId_iMaestraId === 481) {
 				if (oPaso.clvModelo === "SETPRE" && oPaso.pasoId.tipoCondicionId_iMaestraId === 481) { // setup pre inicio
 					let pasoEncontrado = aListPasos.find(itm=>itm.clvModelo === "SETPRE" && itm.pasoId.tipoCondicionId_iMaestraId === 482 && itm.puestoTrabajo === oPaso.puestoTrabajo);
@@ -483,6 +487,17 @@ sap.ui.define([
 					sResponse = (sResponse && responseAnt) ? true : false;
 				}
 			}
+			if (sResponse) {
+				if (oFuncionUsuario.registroCC) {
+					sResponse = oPaso.estadoCC ? true : false; 
+				}
+				if (oFuncionUsuario.registroCP) {
+					sResponse = oPaso.estadoMov ? true : false; 
+				}
+				if (oFuncionUsuario.registroP) {
+					sResponse = true; 
+				}
+			}
 			return sResponse;
 		},
 
@@ -530,14 +545,17 @@ sap.ui.define([
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
 				sDato = aPaso.multiCheckUser === null || aPaso.multiCheckUser === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdVistobueno) {
-				sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" ? false : true;
+				//sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" ? false : true;
+				sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" || aPaso.vistoBueno === false ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck) {
-				sDato = aPaso.verifCheck === null || aPaso.verifCheck === "" ? false : true;
+				//sDato = aPaso.verifCheck === null || aPaso.verifCheck === "" ? false : true;
+				sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" || aPaso.vistoBueno === false ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdNotificacion) {
 				sDato = aPaso.fechaHora === null || aPaso.fechaHora === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdRealizadoporyVistobueno) {
 				let sDato1 = aPaso.realizadoPorUser !== null || aPaso.realizadoPorUser !== "" ? true : false;
-				let sDato2 = aPaso.vistoBueno !== null || aPaso.vistoBueno !== "" ? true : false;
+				//let sDato2 = aPaso.vistoBueno !== null || aPaso.vistoBueno !== "" ? true : false;
+				let sDato2 = aPaso.vistoBueno !== null || aPaso.vistoBueno !== "" || aPaso.vistoBueno !== false ? true : false;
 				if (sDato1 && sDato2) {
 					sDato = true;
 				} else {
@@ -550,7 +568,8 @@ sap.ui.define([
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdLote) {
 				sDato = aPaso.texto === null || aPaso.texto === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdFechaVencimiento) {
-				sDato = aPaso.fechaHora === null || aPaso.fechaHora === "" ? false : true;
+				//sDato = aPaso.fechaHora === null || aPaso.fechaHora === "" ? false : true;
+				sDato = aPaso.fecha === null || aPaso.fecha === "" ? false : true;
 			}
 
 			return sDato;
@@ -558,7 +577,13 @@ sap.ui.define([
 
 		onFormatoEnabledPredecesor: function (pasoPredecesor)  {
 			let sDato = true;
-			let bPasoCompletado = this.onValidatePaso(pasoPredecesor);
+			//let bPasoCompletado = this.onValidatePaso(pasoPredecesor);
+			let bPasoCompletado = false;
+			if(!pasoPredecesor.aplica) {
+				bPasoCompletado = true;
+			} else if (pasoPredecesor.aplica) {
+				bPasoCompletado = this.onValidatePaso(pasoPredecesor);
+			}
 			if(bPasoCompletado) {
 				sDato = true;
 			} else {
@@ -579,15 +604,20 @@ sap.ui.define([
 
 		numberUserInterval: function (aListPasosInterval) {
 			let iNumberUser = [];
+			let bFlagError = true;
 			aListPasosInterval.forEach(function(oPaso){
 				if (oPaso.tipoDatoId_iMaestraId === sIdRealizadopor) {
-					let aUsers = oPaso.realizadoPorUser.split(",");
-					aUsers.forEach(function(oUser){
-						let findUser = iNumberUser.find(itm=>itm === oUser);
-						if (!findUser){
-							iNumberUser.push(oUser);
-						}
-					});
+					if (oPaso.realizadoPorUser) {
+						let aUsers = oPaso.realizadoPorUser.split(",");
+						aUsers.forEach(function(oUser){
+							let findUser = iNumberUser.find(itm=>itm === oUser);
+							if (!findUser){
+								iNumberUser.push(oUser);
+							}
+						});
+					} else {
+						bFlagError = false;
+					}
 				} else if (oPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
 					//OFFLINE MULTICHECK
 					if(oPaso.multiCheckUser){
@@ -599,6 +629,9 @@ sap.ui.define([
 						}
 					});
 					}
+					//else {
+					//	bFlagError = false;
+					//}
 				} else {
 					if(oPaso.styleUser === "TextStyleAuxiliar"){
 						if (oPaso.usuarioActualiza) {
@@ -610,8 +643,12 @@ sap.ui.define([
 					}
 				}
 			});
-			iNumberUser = iNumberUser.filter((value, index, self) => self.indexOf(value) === index);
-			return iNumberUser.length;
+			//if(bFlagError){
+				iNumberUser = iNumberUser.filter((value, index, self) => self.indexOf(value) === index);
+				return iNumberUser.length;
+			//} else {
+			//	return false;
+			//}
 		},
 
 		obtenerCorrelativoMuestra: function(iLastCorrelativo, width) {
@@ -664,6 +701,93 @@ sap.ui.define([
 			}
 
 			return sReturn;
+		},
+		onGetAplicaPrincipalAndPM: function (aList, oPrincipal) {
+			if (oPrincipal) {
+				let sResponse;
+				let aPrincipal = aList.find(itm=>itm.descripcion === oPrincipal);
+				let bFlag = true;
+				bFlag = aPrincipal.aplica;
+				let aProcesosMenores;
+				if (aPrincipal.rmdEstructuraPasoId) {
+					aProcesosMenores = aList.filter(itm=>itm.pasoId_rmdEstructuraPasoId === aPrincipal.rmdEstructuraPasoId);
+					aProcesosMenores.forEach(function(oPM){
+						bFlag = oPM.aplica;
+					});
+				}
+				return sResponse = bFlag ? 'No aplica paso' : 'Si aplica paso';
+			}
+		},
+		onGetAplicaPrincipalAndPMSigno: function (aList, oPrincipal) {
+			if (oPrincipal) {
+				let sResponse;
+				let aPrincipal = aList.find(itm=>itm.descripcion === oPrincipal);
+				let bFlag = true;
+				bFlag = aPrincipal.aplica;
+				let aProcesosMenores;
+				if (aPrincipal.rmdEstructuraPasoId) {
+					aProcesosMenores = aList.filter(itm=>itm.pasoId_rmdEstructuraPasoId === aPrincipal.rmdEstructuraPasoId);
+					aProcesosMenores.forEach(function(oPM){
+						bFlag = oPM.aplica;
+					});
+				}
+				return sResponse = bFlag ? 'sap-icon://less' : 'sap-icon://add';
+			}
+		},
+		onGetTableFormatterLines: function(TipoTable){
+			switch(TipoTable){
+				case "PROCEDIMIENTO": 
+					var aProcesoTable = {};
+					aProcesoTable.aProcedimiento = [{
+								width: "55%",
+								hAlign: "Left",
+								vAlign: "Middle",
+								minScreenWidth: "Tablet",
+								demandPopin: "true",
+								popinDisplay: "Inline",
+								header: "Product Name",
+								demandPopin: false,
+								minScreenWidth: "",
+								styleClass: "cellBorderLeft cellBorderRight"
+							}, {
+								width: "15%",
+								hAlign: "Center",
+								vAlign: "Middle",
+								minScreenWidth: "Tablet",
+								demandPopin: "true",
+								popinDisplay: "Inline",
+								header: "Supplier Name",
+								demandPopin: false,
+								minScreenWidth: "",
+								styleClass: "cellBorderRight"
+							},{
+								width: "15%",
+								hAlign: "Center",
+								vAlign: "Middle",
+								minScreenWidth: "Tablet",
+								demandPopin: "true",
+								popinDisplay: "Inline",
+								header: "Supplier Name",
+								demandPopin: false,
+								minScreenWidth: "",
+								styleClass: "cellBorderRight"
+							}, {
+								width: "15%",
+								hAlign: "Left",
+								vAlign: "Middle",
+								minScreenWidth: "Tablet",
+								demandPopin: "true",
+								popinDisplay: "Inline",
+								header: "Description",
+								demandPopin: true,
+								minScreenWidth: "Tablet",
+								styleClass: "cellBorderRight"
+							}
+						]
+						return aProcesoTable;
+			  default:
+				break;
+			}
 		},
 		//OFFLINE CAMBIO
 		onSincrorniceOffline:function(sRegistro){

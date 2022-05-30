@@ -613,7 +613,8 @@ sap.ui.define([
 
                 var sobject = {};
                 sobject.terminal = null;
-                sobject.usuarioRegistro = "USUARIOTEST";
+                //sobject.usuarioRegistro = "USUARIOTEST";
+                sobject.usuarioRegistro = oInfoUsuario.data.usuario;
                 sobject.fechaRegistro = new Date();
                 sobject.activo = true;
                 sobject.aEstructura = [];
@@ -643,7 +644,8 @@ sap.ui.define([
                     sobjectR.terminal = null;
                     sobjectR.fechaActualiza = null;
                     sobjectR.usuarioActualiza = null;
-                    sobjectR.usuarioRegistro = "USUARIOTEST";
+                    //sobjectR.usuarioRegistro = "USUARIOTEST";
+                    sobjectR.usuarioRegistro = oInfoUsuario.data.usuario;
                     sobjectR.fechaRegistro = new Date();
                     sobjectR.activo = true;
 
@@ -673,7 +675,8 @@ sap.ui.define([
                     sobjectEs.terminal = null;
                     sobjectEs.fechaActualiza = null;
                     sobjectEs.usuarioActualiza = null;
-                    sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    //sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    sobjectEs.usuarioRegistro = oInfoUsuario.data.usuario;
                     sobjectEs.fechaRegistro = new Date();
                     sobjectEs.activo = true;
 
@@ -701,7 +704,8 @@ sap.ui.define([
                         sobjectI.terminal = null;
                         sobjectI.fechaActualiza = null;
                         sobjectI.usuarioActualiza = null;
-                        sobjectI.usuarioRegistro = "USUARIOTEST";
+                        //sobjectI.usuarioRegistro = "USUARIOTEST";
+                        sobjectI.usuarioRegistro = oInfoUsuario.data.usuario;
                         sobjectI.fechaRegistro = new Date();
                         sobjectI.activo = true;
 
@@ -736,7 +740,8 @@ sap.ui.define([
 
                 var sobject = {};
                 sobject.terminal = null;
-                sobject.usuarioRegistro = "USUARIOTEST";
+                //sobject.usuarioRegistro = "USUARIOTEST";
+                sobject.usuarioRegistro = oInfoUsuario.data.usuario;
                 sobject.fechaRegistro = new Date();
                 sobject.activo = true;
                 sobject.aEstructura = [];
@@ -763,7 +768,8 @@ sap.ui.define([
                     sobjectEs.terminal = null;
                     sobjectEs.fechaActualiza = null;
                     sobjectEs.usuarioActualiza = null;
-                    sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    //sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    sobjectEs.usuarioRegistro = oInfoUsuario.data.usuario;
                     sobjectEs.fechaRegistro = new Date();
                     sobjectEs.activo = true;
 
@@ -800,7 +806,8 @@ sap.ui.define([
                         sobjectEp.terminal = null;
                         sobjectEp.fechaActualiza = null;
                         sobjectEp.usuarioActualiza = null;
-                        sobjectEp.usuarioRegistro = "USUARIOTEST";
+                        //sobjectEp.usuarioRegistro = "USUARIOTEST";
+                        sobjectEp.usuarioRegistro = oInfoUsuario.data.usuario;
                         sobjectEp.fechaRegistro = new Date();
                         sobjectEp.activo = true;
 
@@ -831,53 +838,103 @@ sap.ui.define([
                 let sExpand = "aPaso/pasoId,aEquipo,aUtensilio,aEtiqueta,aPasoInsumoPaso,aEspecificacion,aInsumo,estructuraId";
                 let aEstructuraMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD_ESTRUCTURA", aFilter, sExpand);
                 let oEstructuraProceso = aEstructuraMD.results.find(itm=>itm.estructuraId.tipoEstructuraId_iMaestraId === sIdTipoEstructuraProceso);
-                let aPasosNotificacion = oEstructuraProceso.aPaso.results.filter(itm=>itm.tipoDatoId_iMaestraId === stipoDatoNotificacion);
+                //let aPasosNotificacion = oEstructuraProceso.aPaso.results.filter(itm=>itm.tipoDatoId_iMaestraId === stipoDatoNotificacion);
                 let bFlagErrorNotif = true;
-                if (aPasosNotificacion.length > 0) {
-                    let helper = {};
-                    let aPuestoTrabajoPasos = aPasosNotificacion.reduce(function(r, o) {
-                        let key = o.puestoTrabajo;
-                        if (!helper[key]) {
-                            helper[key] = {"puestoTrabajo" : o.puestoTrabajo, aPasos: [o]};
-                            r.push(helper[key]);
-                        } else {
-                            helper[key].aPasos.push(o);
-                        }
-                        return r;
-                    }, []);
-                    if (aPuestoTrabajoPasos.length === 0) {
-                        bFlagErrorNotif = false;
-                    } else {
-                        aPuestoTrabajoPasos.forEach(function(oPuestoTrabajo) {
-                            let helper = {};
-                            let aClvModeloPasos = oPuestoTrabajo.aPasos.reduce(function(r, o) {
-                                let key = o.clvModelo;
-                                if (!helper[key]) {
-                                    helper[key] = {"puestoTrabajo" : o.puestoTrabajo, "clvModelo" : o.clvModelo, aPasos: [o]};
-                                    r.push(helper[key]);
-                                } else {
-                                    helper[key].aPasos.push(o);
-                                }
-                                return r;
-                            }, []);
-                            let oFidClvPre = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPRE');
-                            let oFidClvProceso = aClvModeloPasos.find(itm=>itm.clvModelo === 'PROCESO');
-                            let oFidClvPost = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPOST');
-                            if (oFidClvPre && oFidClvProceso && oFidClvPost) {
-                                bFlagErrorNotif = true;
-                            } else {
-                                bFlagErrorNotif = false;
-                            }
-                            aClvModeloPasos.forEach(function(oCvlModelo){
-                                let oFindPasoInicio = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdInicioCondicion);
-                                let oFindPasoFin = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdFinCondicion);
-                                if (!oFindPasoInicio || !oFindPasoFin) {
-                                    bFlagErrorNotif = false;
-                                }
-                            });
-                        });
-                    }
+                
+                if (oEstructuraProceso) {	
+                    let aPasosNotificacion = oEstructuraProceso.aPaso.results.filter(itm=>itm.tipoDatoId_iMaestraId === stipoDatoNotificacion);	
+                    if (aPasosNotificacion.length > 0) {	
+                        let helper = {};	
+                        let aPuestoTrabajoPasos = aPasosNotificacion.reduce(function(r, o) {	
+                            let key = o.puestoTrabajo;	
+                            if (!helper[key]) {	
+                                helper[key] = {"puestoTrabajo" : o.puestoTrabajo, aPasos: [o]};	
+                                r.push(helper[key]);	
+                            } else {	
+                                helper[key].aPasos.push(o);	
+                            }	
+                            return r;	
+                        }, []);	
+                        if (aPuestoTrabajoPasos.length === 0) {	
+                            bFlagErrorNotif = false;	
+                        } else {	
+                            aPuestoTrabajoPasos.forEach(function(oPuestoTrabajo) {	
+                                let helper = {};	
+                                let aClvModeloPasos = oPuestoTrabajo.aPasos.reduce(function(r, o) {	
+                                    let key = o.clvModelo;	
+                                    if (!helper[key]) {	
+                                        helper[key] = {"puestoTrabajo" : o.puestoTrabajo, "clvModelo" : o.clvModelo, aPasos: [o]};	
+                                        r.push(helper[key]);	
+                                    } else {	
+                                        helper[key].aPasos.push(o);	
+                                    }	
+                                    return r;	
+                                }, []);	
+                                let oFidClvPre = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPRE');	
+                                let oFidClvProceso = aClvModeloPasos.find(itm=>itm.clvModelo === 'PROCESO');	
+                                let oFidClvPost = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPOST');	
+                                if (oFidClvPre && oFidClvProceso && oFidClvPost) {	
+                                    bFlagErrorNotif = true;	
+                                } else {	
+                                    bFlagErrorNotif = false;	
+                                }	
+                                aClvModeloPasos.forEach(function(oCvlModelo){	
+                                    let oFindPasoInicio = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdInicioCondicion);	
+                                    let oFindPasoFin = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdFinCondicion);	
+                                    if (!oFindPasoInicio || !oFindPasoFin) {	
+                                        bFlagErrorNotif = false;	
+                                    }	
+                                });	
+                            });	
+                        }	
+                    }	
                 }
+
+                // if (aPasosNotificacion.length > 0) {
+                //     let helper = {};
+                //     let aPuestoTrabajoPasos = aPasosNotificacion.reduce(function(r, o) {
+                //         let key = o.puestoTrabajo;
+                //         if (!helper[key]) {
+                //             helper[key] = {"puestoTrabajo" : o.puestoTrabajo, aPasos: [o]};
+                //             r.push(helper[key]);
+                //         } else {
+                //             helper[key].aPasos.push(o);
+                //         }
+                //         return r;
+                //     }, []);
+                //     if (aPuestoTrabajoPasos.length === 0) {
+                //         bFlagErrorNotif = false;
+                //     } else {
+                //         aPuestoTrabajoPasos.forEach(function(oPuestoTrabajo) {
+                //             let helper = {};
+                //             let aClvModeloPasos = oPuestoTrabajo.aPasos.reduce(function(r, o) {
+                //                 let key = o.clvModelo;
+                //                 if (!helper[key]) {
+                //                     helper[key] = {"puestoTrabajo" : o.puestoTrabajo, "clvModelo" : o.clvModelo, aPasos: [o]};
+                //                     r.push(helper[key]);
+                //                 } else {
+                //                     helper[key].aPasos.push(o);
+                //                 }
+                //                 return r;
+                //             }, []);
+                //             let oFidClvPre = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPRE');
+                //             let oFidClvProceso = aClvModeloPasos.find(itm=>itm.clvModelo === 'PROCESO');
+                //             let oFidClvPost = aClvModeloPasos.find(itm=>itm.clvModelo === 'SETPOST');
+                //             if (oFidClvPre && oFidClvProceso && oFidClvPost) {
+                //                 bFlagErrorNotif = true;
+                //             } else {
+                //                 bFlagErrorNotif = false;
+                //             }
+                //             aClvModeloPasos.forEach(function(oCvlModelo){
+                //                 let oFindPasoInicio = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdInicioCondicion);
+                //                 let oFindPasoFin = oCvlModelo.aPasos.find(itm=>itm.pasoId.tipoCondicionId_iMaestraId === sIdFinCondicion);
+                //                 if (!oFindPasoInicio || !oFindPasoFin) {
+                //                     bFlagErrorNotif = false;
+                //                 }
+                //             });
+                //         });
+                //     }
+                // }
                 if (bFlagErrorNotif){
                     let sobject = {
                         fechaActualiza : new Date(),
@@ -1224,7 +1281,11 @@ sap.ui.define([
                                         edit : oProcesoMenor.edit,
                                         tab : oProcesoMenor.tab,
                                         aplica: true,
-                                        fraccion: 1
+                                        fraccion: 1,
+                                        Component: oProcesoMenor.Component,
+                                        Matnr: oProcesoMenor.Matnr,
+                                        Maktx: oProcesoMenor.Maktx,
+                                        CompUnit: oProcesoMenor.CompUnit
                                     }
                                     oParam.aPasoInsumoPaso.push(oProcesoMenorObj);
                                 }
@@ -1240,7 +1301,8 @@ sap.ui.define([
                                         rmdEstructuraEspecificacionId : util.onGetUUIDV4(),
                                         rmdEstructuraId_rmdEstructuraId : oParam.rmdEstructuraId,
                                         rmdId_rmdId: LineaActual.rmdId,
-                                        ensayoPadreId_ensayoPadreId : oEspecificacion.ensayoPadreId_ensayoPadreId,
+                                        //ensayoPadreId_ensayoPadreId : oEspecificacion.ensayoPadreId_ensayoPadreId,
+                                        ensayoPadrId_iMaestraId : oEspecificacion.ensayoPadreId_iMaestraId,
                                         ensayoPadreSAP : oEspecificacion.ensayoPadreSAP,
                                         ensayoHijo : oEspecificacion.ensayoHijo,
                                         especificacion: oEspecificacion.especificacion,
@@ -1334,7 +1396,8 @@ sap.ui.define([
                     sobjectCase.tipodato = eq.tipoDatoId_iMaestraId;
                     sobjectCase.fechaActualiza = eq.fechaActualiza;
                     if (eq.ensayoPadreId) {
-                        sobjectCase.descripcion = eq.ensayoPadreId.descripcion;
+                        //sobjectCase.descripcion = eq.ensayoPadreId.descripcion;
+                        sobjectCase.descripcion = eq.ensayoPadreId.contenido;
                         sobjectCase.activo = eq.ensayoPadreId.activo;
                         sobjectCase.codigo = eq.ensayoPadreId.codigo;
                     }
@@ -1845,7 +1908,8 @@ sap.ui.define([
                 BusyIndicator.show(0);
                 if (LineaActualMD.rmdId === "") {
                     aObject.terminal = null;
-                    aObject.usuarioRegistro = "USUARIOTEST";
+                    //aObject.usuarioRegistro = "USUARIOTEST";
+                    aObject.usuarioRegistro = oInfoUsuario.data.usuario;
                     aObject.fechaRegistro = new Date();
                     aObject.activo = true;
                     aObject.rmdId = util.onGetUUIDV4();
@@ -1884,7 +1948,8 @@ sap.ui.define([
                         let infoUser = rowItems[i].getBindingContext("modelGeneral").getObject();
                         var v_user = {};
                         v_user.terminal = null;
-                        v_user.usuarioRegistro = "USUARIOTEST";
+                        //v_user.usuarioRegistro = "USUARIOTEST";
+                        v_user.usuarioRegistro = oInfoUsuario.data.usuario;
                         v_user.fechaRegistro = new Date();
                         v_user.activo = true;
                         v_user.rmdUsuarioId = util.onGetUUIDV4();
@@ -1912,7 +1977,8 @@ sap.ui.define([
                         let infoUser = rowItems[i].getBindingContext("modelGeneral").getObject();
                         var v_user = {};
                         v_user.terminal = null;
-                        v_user.usuarioRegistro = "USUARIOTEST";
+                        //v_user.usuarioRegistro = "USUARIOTEST";
+                        v_user.usuarioRegistro = oInfoUsuario.data.usuario;
                         v_user.fechaRegistro = new Date();
                         v_user.activo = true;
                         v_user.rmdUsuarioId = util.onGetUUIDV4();
@@ -1952,7 +2018,8 @@ sap.ui.define([
 
                     sobject.activo = false;
                     sobject.fechaActualiza = new Date();
-                    sobject.usuarioActualiza = "USUARIOTEST";
+                    //sobject.usuarioActualiza = "USUARIOTEST";
+                    sobject.usuarioActualiza = oInfoUsuario.data.usuario;
                     sobject.rmdUsuarioId = linea.rmdUsuarioId;
 
                     await registroService.updateUserMrd(oThat.mainModelv2, "/RMD_USUARIO", sobject);
@@ -2304,7 +2371,8 @@ sap.ui.define([
 
                 var sobject = {};
                 sobject.terminal = null;
-                sobject.usuarioRegistro = "USUARIOTEST";
+                //sobject.usuarioRegistro = "USUARIOTEST";
+                sobject.usuarioRegistro = oInfoUsuario.data.usuario;
                 sobject.fechaRegistro = new Date();
                 sobject.activo = true;
                 sobject.aEstructura = [];
@@ -2339,7 +2407,8 @@ sap.ui.define([
                     sobjectEs.terminal = null;
                     sobjectEs.fechaActualiza = null;
                     sobjectEs.usuarioActualiza = null;
-                    sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    //sobjectEs.usuarioRegistro = "USUARIOTEST";
+                    sobjectEs.usuarioRegistro = oInfoUsuario.data.usuario;
                     sobjectEs.fechaRegistro = new Date();
                     sobjectEs.activo = true;
 
@@ -2489,16 +2558,41 @@ sap.ui.define([
 
                 Promise.all([this.onGetRmd(oThat.oSelectedObject.rmdId)]).then( async function(value) {
                     var oDataSeleccionada = value[0].results[0].aEstructura;
+                    let sMaterial = value[0].results[0].productoId;	
+                    let sVersion = value[0].results[0].verid;   	
+                    let aRecetaSelected = value[0].results[0].aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
                     if(oDataSeleccionada.results.length > 0){
                         var especificacionEstructura = oDataSeleccionada.results.find(e => e.estructuraId.tipoEstructuraId_iMaestraId === sTipoEstructuraEspecificaciones);
                         if(especificacionEstructura){
                             if(especificacionEstructura.aEspecificacion.results.length > 0){
-                                especificacionEstructura.aEspecificacion.results.sort((a, b) => {
-                                    return (
-                                        a.Merknr - b.Merknr &&
-                                        a.fechaRegistro - b.fechaRegistro
-                                    );
-                                });
+                                let existeSap = especificacionEstructura.aEspecificacion.results.filter(itm=>itm.ensayoPadreSAP !== null).length > 0 ? true : false;	
+                                let noExisteSap = especificacionEstructura.aEspecificacion.results.filter(itm=>itm.ensayoPadreSAP === null).length > 0 ? true : false;	
+                                if (noExisteSap && !existeSap) {	
+                                    await especificacionEstructura.aEspecificacion.results.sort((a, b) => {	
+                                        return (	
+                                            a.fechaRegistro - b.fechaRegistro	
+                                        );	
+                                    });	
+                                } else if (existeSap && !noExisteSap) {	
+                                    await especificacionEstructura.aEspecificacion.results.sort((a, b) => {	
+                                        return (	
+                                            a.Merknr - b.Merknr	
+                                        );	
+                                    });	
+                                } else if (existeSap && noExisteSap) {	
+                                    await especificacionEstructura.aEspecificacion.results.sort((a, b) => {	
+                                        return (	
+                                            a.Merknr - b.Merknr &&	
+                                            a.fechaRegistro - b.fechaRegistro	
+                                        );	
+                                    });	
+                                }
+                                // especificacionEstructura.aEspecificacion.results.sort((a, b) => {
+                                //     return (
+                                //         a.Merknr - b.Merknr &&
+                                //         a.fechaRegistro - b.fechaRegistro
+                                //     );
+                                // });
                             }
                         }
                     }
@@ -2617,9 +2711,10 @@ sap.ui.define([
                         }
                         //INSUMO
                         if (oData.aInsumo.results.length > 0) {
-                            //  oData.aInsumo.results = oData.aInsumo.results.filter(obj => obj.rmdId_rmdId == oThat.oSelectedObject.rmdId);
+                            oData.aInsumo.results = oData.aInsumo.results.filter(obj => obj.rmdId_rmdId == oThat.oSelectedObject.rmdId);
+                            
                             oData.aInsumo.results.sort(function (a, b) {
-                                return a.orden - b.orden;
+                                return a.ItemNo - b.ItemNo;
                             });
                         }
                     }
@@ -2629,9 +2724,11 @@ sap.ui.define([
                     });
 
                     if(descargarPDF){
-                        tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
+                        //tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
+                        tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
                     }else {
-                        tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
+                        //tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
+                        tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
                     }
 
                     sap.ui.core.BusyIndicator.hide();
@@ -2651,6 +2748,7 @@ sap.ui.define([
             // GRPR - Actualización de obtención de datos del RMD.
             getEstructurasRmdRefactory: async function (sFraccion) {
                 // BusyIndicator.show(0);
+                await oThat.onGetRmdReceta(sFraccion);
                 await Promise.all([oThat.onGetRmdEstructura(sFraccion), oThat.onGetRmdEsPaso(sFraccion), oThat.onGetRmdEsEquipo(sFraccion), oThat.onGetRmdEsUtensilio(sFraccion), 
                     oThat.onGetRmdEsEtiqueta(sFraccion), oThat.onGetRmdEsReInsumo(sFraccion), oThat.onGetRmdEsEspecificacion(sFraccion), oThat.onGetRmdEsPasoInsumoPaso(sFraccion)])
                     .then(async function(values) {
@@ -2805,9 +2903,16 @@ sap.ui.define([
                 return new Promise(async function (resolve, reject) {
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
+
+                    let sMaterial = oDataSeleccionada.getData().productoId;	
+                    let sVersion = oDataSeleccionada.getData().verid;   	
+                    let aRecetaSelected = oDataSeleccionada.getData().aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
+
                     var aFilters = [];
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                    aFilters.push(new Filter("rmdRecetaId_rmdRecetaId", "EQ", aRecetaSelected.rmdRecetaId));
+
                     let sExpand = "rmdEstructuraId,rmdRecetaId";
                     await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_RE_INSUMO", aFilters, sExpand).then(function (oListRmdEsReInsumo) {
                         resolve(oListRmdEsReInsumo);
@@ -2847,6 +2952,24 @@ sap.ui.define([
                         reject(oError);
                     })
                 });
+            },
+
+            onGetRmdReceta: function (sFraccion) {	
+                return new Promise(function (resolve, reject) {	
+                    // sap.ui.core.BusyIndicator.show(0);	
+                    let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");	
+                    let aFilters = [];	
+                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));	
+                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));	
+                    let sExpand = "recetaId";	
+                    registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_RECETA", aFilters, sExpand).then(function (oListRmdReceta) {	
+                        oDataSeleccionada.getData().aReceta = oListRmdReceta;	
+                        oDataSeleccionada.refresh(true);	
+                        resolve(oListRmdReceta);	
+                    }).catch(function (oError) {	
+                        reject(oError);	
+                    })	
+                });	
             },
 
             onCompletarAsociarDatos: async function () {
@@ -3135,11 +3258,16 @@ sap.ui.define([
                                         fraccion: sFraccion
                                     }
                                     //OFFLINE SE Agrega Directamente el PASO
+                                    let objPaso = {	
+                                        mdEstructuraPasoId : oPaso.rmdEstructuraPasoId,	
+                                        rmdEstructuraPasoId : oPasoObj.rmdEstructuraPasoId	
+                                    }
+                                    aListIdPaso.push(objPaso);
                                     oParam.aPaso.push(oPasoObj);
                                     await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ES_PASO", oPasoObj);
                                     
-                                    if (oPaso.pasoId.tipoCondicionId_iMaestraId === 481) {
-                                        let pasoLapsoFin = oEstructura.aPaso.results.find(itm=>itm.clvModelo === oPaso.clvModelo && itm.puestoTrabajo === oPaso.puestoTrabajo && itm.pasoId.tipoCondicionId_iMaestraId === 482); 
+                                    if (oPaso.pasoId.tipoCondicionId_iMaestraId === sIdInicioCondicion) {
+                                        let pasoLapsoFin = oEstructura.aPaso.results.find(itm=>itm.clvModelo === oPaso.clvModelo && itm.puestoTrabajo === oPaso.puestoTrabajo && itm.pasoId.tipoCondicionId_iMaestraId === sIdFinCondicion); 
                                         if(pasoLapsoFin){
                                             let sobjectTrama = {
                                                 usuarioRegistro: oInfoUsuario.data.usuario,
@@ -3151,6 +3279,10 @@ sap.ui.define([
                                                 descripcion: oPaso.pasoId.descripcion + " - " + pasoLapsoFin.pasoId.descripcion,
                                                 tipoDatoId: (oPaso.tipoDatoId_iMaestraId).toString(),
                                                 automatico: pasoLapsoFin.automatico === null ? false : pasoLapsoFin.automatico,
+
+                                                asoId_mdEstructuraPasoId: oPaso.mdEstructuraPasoIdDepende,	
+                                                pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoIdDepende,
+
                                                 pasoId_mdEstructuraPasoId: oPaso.mdEstructuraPasoId,
                                                 pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoId,
                                                 fraccion: sFraccion
@@ -3172,7 +3304,11 @@ sap.ui.define([
                                         valorFinal: oPaso.valorFinal,
                                         margen: oPaso.margen,
                                         decimales: oPaso.decimales,
+                                        mdEstructuraPasoIdDepende: oPaso.mdEstructuraPasoIdDepende,
+
                                         depende: oPaso.depende,
+                                        mdEstructuraPasoIdDepende: oPaso.mdEstructuraPasoIdDepende,
+
                                         estadoCC: oPaso.estadoCC,
                                         estadoMov: oPaso.estadoMov,
                                         pmop: oPaso.pmop,
@@ -3191,8 +3327,8 @@ sap.ui.define([
                                         fraccion: sFraccion
                                     }
                                     let objPaso = {
-                                        mdEstructuraPasoId : oPaso.mdEstructuraPasoId,
-                                        rmdEstructuraPasoId : oPasoObj.rmdEstructuraPasoId
+                                        mdEstructuraPasoId : oPaso.rmdEstructuraPasoId,
+                                        rmdEstructuraPasoId : oPasoObj.rmdEstructuraPaso
                                     }
                                     aListIdPaso.push(objPaso);
                                     //OFFLINE SE Agrega Directamente el PASO
@@ -3296,7 +3432,8 @@ sap.ui.define([
                         //AGREGAMOS  LOS PROCESOS MENORES A LOS PASOS DE LA ETIQUETA DE LA ESTRUCTURA
                         if (oEstructura.aPasoInsumoPaso.results.length > 0) {
                             for await (const oProcesoMenor of oEstructura.aPasoInsumoPaso.results) {
-                                let existePasoPadre = aListIdPaso.find(itm=>itm.mdEstructuraPasoId === oProcesoMenor.pasoId_mdEstructuraPasoId)
+                                //let existePasoPadre = aListIdPaso.find(itm=>itm.mdEstructuraPasoId === oProcesoMenor.pasoId_mdEstructuraPasoId)
+                                let existePasoPadre = aListIdPaso.find(itm=>itm.mdEstructuraPasoId === oProcesoMenor.pasoId_rmdEstructuraPasoId)
                                 let existeInsumo = aListIdsInsumos.find(itm=>itm.estructuraRecetaInsumoId === oProcesoMenor.rmdEstructuraRecetaInsumoId_rmdEstructuraRecetaInsumoId);
                                 let estructuraRecta = null;
                                 if (existeInsumo) {
@@ -3326,7 +3463,11 @@ sap.ui.define([
                                     edit : oProcesoMenor.edit,
                                     tab : oProcesoMenor.tab,
                                     aplica: true,
-                                    fraccion: sFraccion
+                                    fraccion: sFraccion,
+                                    Component: oProcesoMenor.Component,	
+                                    Matnr: oProcesoMenor.Matnr,	
+                                    Maktx: oProcesoMenor.Maktx,	
+                                    CompUnit: oProcesoMenor.CompUnit
                                 }
                                 //OFFLINE SE Agrega Directamente pasos menores
                                 oParam.aPasoInsumoPaso.push(oProcesoMenorObj);
@@ -3345,7 +3486,8 @@ sap.ui.define([
                                     rmdEstructuraEspecificacionId : util.onGetUUIDV4(),
                                     rmdEstructuraId_rmdEstructuraId : oParam.rmdEstructuraId,
                                     rmdId_rmdId: rmdNew.rmdId,
-                                    ensayoPadreId_ensayoPadreId : oEspecificacion.ensayoPadreId_ensayoPadreId,
+                                    ensayoPadreId_iMaestraId : oEspecificacion.ensayoPadreId_iMaestraId,
+                                    //ensayoPadreId_ensayoPadreId : oEspecificacion.ensayoPadreId_ensayoPadreId,
                                     ensayoPadreSAP : oEspecificacion.ensayoPadreSAP,
                                     ensayoHijo : oEspecificacion.ensayoHijo,
                                     especificacion: oEspecificacion.especificacion,

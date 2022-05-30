@@ -165,7 +165,8 @@ sap.hybrid = {
 				//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
 				"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true",
 				"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true",
-				"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true"
+				"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true",
+				"IMPRESORA":"/IMPRESORA"
 				//"ABAP_USUARIO": "/ABAP_USUARIO",
 				//"ABAP_ORDEN":"/ABAP_ORDEN",
 				//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
@@ -231,7 +232,11 @@ sap.hybrid = {
 
 		//----------------------------------------------------------------------------------------------------------------------------------------
 		//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet y NecidadesRMD_SRV ----------------------------------
-		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478";  //JSON format is less verbose than atom/xml
+		var fechaActual = new Date();
+		var fechaLimite = sap.hybrid.sumarDias(fechaActual,-7);
+			fechaLimite = sap.hybrid.convertFecha(fechaLimite);
+
+		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaInicioRegistro ge "+fechaLimite+"Z";  //JSON format is less verbose than atom/xml
 		var oHeaders = {};
 		var request = {
 				headers: oHeaders,
@@ -348,6 +353,7 @@ sap.hybrid = {
 		//-----------------------------------------------------------------------------------------------------
 
 		var openStoreErrorCallback = function (error) {
+			sap.hybrid.startApp();
 			console.log("In openStoreErrorCallback");
 			console.log(error);
 			alert("An error occurred" + JSON.stringify(error));
@@ -472,5 +478,20 @@ sap.hybrid = {
 		}
 		console.log(lead + "Sent: " + progressStatus.bytesSent + "  Received: " + progressStatus.bytesRecv + "   File Size: " +
 			progressStatus.fileSize);
+	},
+
+	sumarDias: function (fecha, dias){
+		fecha.setDate(fecha.getDate() + dias);
+		return fecha;
+	},
+	convertFecha:function(dDate){
+		return (`${
+			dDate.getFullYear().toString().padStart(4, '0')}-${
+			(dDate.getMonth()+1).toString().padStart(2, '0')}-${
+			dDate.getDate().toString().padStart(2, '0')}T${
+			dDate.getHours().toString().padStart(2, '0')}:${
+			dDate.getMinutes().toString().padStart(2, '0')}:${
+			dDate.getSeconds().toString().padStart(2, '0')}.${
+			dDate.getMilliseconds().toString().padStart(2, '0')}`);
 	},
 };
