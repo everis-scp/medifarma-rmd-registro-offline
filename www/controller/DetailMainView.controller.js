@@ -13951,7 +13951,7 @@ sap.ui.define([
 						text: "Cancel",
 						press: function () {
                             sap.ui.getCore().byId("submitDialogTextarea").setValue("");
-							oThat.oSubmitDialog.close();
+							oDialogDeleteNotif.close();
 						}
 					}),
                     afterClose: function () {

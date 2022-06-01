@@ -3522,45 +3522,47 @@ sap.ui.define([
             //OFFLINE
             valideUserEmail:async function(){
                 var that =this;
-                if (!this.oSubmitDialog) {
-                    this.oSubmitDialog = new Dialog({
-                        type: mobilelibrary.DialogType.Message,
-                        title: "Verificacion de Correo",
-                        content: [
-                            new Label({
-                                    text: "Sin internet,por favor verifique su correo",
-                                    labelFor: "submissionNote"
-                             }),
-                             new TextArea("submissionNote", {
-                                    width: "100%",
-                                    placeholder: "Ingresar correo (requerido)",
-                                    liveChange: function (oEvent) {
-                                        var sText = oEvent.getParameter("value");
-                                        that.oSubmitDialog.getBeginButton().setEnabled(sText.length > 0);
-                                    }.bind(that)
-                            })
-                            ],
-                        beginButton: new Button({
-                            type: mobilelibrary.ButtonType.Emphasized,
-                            text: "Verificar",
-                            enabled: false,
-                            press: async function () {
-                                var sCorreo= sap.ui.getCore().byId("submissionNote").getValue();
+                var oDialogValidEmail = new sap.m.Dialog({
+                    title: "Verificacion de Correo",
+                    type: "Message",
+                    content: [
+                        new sap.m.Label({
+                            text: "Sin internet,por favor verifique su correo",
+                            labelFor: "submissionNote"
+                        }),
+                        new TextArea("submissionNoteArea", {
+                            width: "100%",
+                            placeholder: "Ingresar correo (requerido)",
+                            liveChange: function (oEvent) {
+                                var sText = oEvent.getParameter("value");
+                                oDialogValidEmail.getBeginButton().setEnabled(sText.length > 0);
+                            }.bind(that)
+                        })
+                    ],
+                    beginButton: new sap.m.Button({
+                        type: sap.m.ButtonType.Emphasized,
+                        text: "Verificar",
+                        enabled: true,
+                        press: async function () {            
+                                var sCorreo= sap.ui.getCore().byId("submissionNoteArea").getValue();
                                 var UserFiltro =[];
                                 UserFiltro.push(new Filter("correo", 'EQ', sCorreo));
                                 let oUsuarioReg = await registroService.getDataFilter(that.mainModelv2, "/USUARIO", UserFiltro);
+                                        
                                 if(oUsuarioReg.results.length){
-                                        MessageToast.show("Correo verificado");
-                                        that.oSubmitDialog.close();
-                                        that.onGetUserData(sCorreo);
+                                    MessageToast.show("Correo verificado");
+                                    oDialogValidEmail.close();
+                                    that.onGetUserData(sCorreo);
                                 }else{
-                                        MessageToast.show("No se encontro registro con el correo proporcionado, ingrese un correo valido");
+                                    MessageToast.show("No se encontro registro con el correo proporcionado, ingrese un correo valido");
                                 }
-                            }.bind(that)
-                        })
-                    });
-                }
-                this.oSubmitDialog.open();
+                        }
+                    }),
+                    afterClose: function () {
+                        oDialogValidEmail.destroy();
+                    }
+                });
+                oDialogValidEmail.open();
             },
             onRefreshButton: function() {
                 if (typeof sap.hybrid !== 'undefined') {

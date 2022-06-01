@@ -7,9 +7,9 @@
 >
   <App id="app">
     <pages>
-      <Page id="page" title="{i18n>title}" class="sapUiContentPadding sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+      <Page id="page" title="{i18n>title}">
         <headerContent>
-          <Label text="´{oModelOffline>/type}"/>
+          <Label text="{oModelOffline>/type}"/>
         </headerContent>
         <content>
           <core:Fragment fragmentName="mif.rmd.registro.view.fragment.master.Filter" type="XML"/>

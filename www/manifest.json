@@ -253,5 +253,10 @@
     },
     "sap.platform.cf": {
         "ui5VersionNumber": "1.84.20"
+    },
+    "sap.mobile": {
+		"definingRequests": {},
+		"stores": [
+		]
     }
 }
