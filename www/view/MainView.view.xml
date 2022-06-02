@@ -9,6 +9,7 @@
     <pages>
       <Page id="page" title="{i18n>title}">
         <headerContent>
+          <core:Icon src="sap-icon://circle-task-2" color="{oModelOffline>/color}" class="sapUiSmallMarginEnd"></core:Icon>
           <Label text="{oModelOffline>/type}"/>
         </headerContent>
         <content>

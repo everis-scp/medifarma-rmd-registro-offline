@@ -172,7 +172,7 @@ sap.hybrid = {
 			
 			///____________________________HANA____________-
 			var dFechaActual = new Date();
-			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-8);
+			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-9);
 			dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
 
 			var HANAproperties = {
@@ -362,7 +362,7 @@ sap.hybrid = {
 		//----------------------------------------------------------------------------------------------------------------------------------------
 		//Una vez obtenido los datos de RMD HANA, obtengo los filtros para ImpresionSet y NecidadesRMD_SRV ----------------------------------
 		var fechaActual = new Date();
-		var fechaLimite = sap.hybrid.sumarDias(fechaActual,-7);
+		var fechaLimite = sap.hybrid.sumarDias(fechaActual,-9);
 			fechaLimite = sap.hybrid.convertFecha(fechaLimite);
 
 		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaInicioRegistro ge "+fechaLimite+"Z";  //JSON format is less verbose than atom/xml

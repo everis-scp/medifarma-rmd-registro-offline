@@ -143,18 +143,21 @@ sap.ui.define([
                     // response.ok fue true
                     console.log('ok');
                     oTypeLine.type = "ONLINE";
+                    oTypeLine.color = "#008000";
                     bInterneInit= true;
                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
 
                 }).catch(function(error) {
                     console.log('Problema al realizar la solicitud: ' + error.message);
                     oTypeLine.type = "OFFLINE";
+                    oTypeLine.color = "#808080";
                     bInterneInit= false;
                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
                 });
                     //oThat.onFlushButton(); 
                 } else {
                     oTypeLine.type = "OFFLINE";
+                    oTypeLine.color = "#808080";
                     bInterneInit= false;
                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
                 }

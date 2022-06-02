@@ -820,6 +820,14 @@ sap.ui.define([
 				output = QMNUM;
 			}
 			return output;
+		},
+		onFormatcolor:function(sTipo){
+			let output;
+			if(sTipo === "ONLINE"){
+				output= "#008000";
+			}else{
+				output= "#808080";
+			}
 		}
 	};
 });

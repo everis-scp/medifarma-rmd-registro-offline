@@ -76,18 +76,21 @@ sap.ui.define([
                         // response.ok fue true
                         console.log('ok');
                         oTypeLine.type = "ONLINE";
+                        oTypeLine.color = "#008000";
                         bInterneInit = true;
                         oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
 
                     }).catch(function(error) {
                         console.log('Problema al realizar la solicitud: ' + error.message);
                         oTypeLine.type = "OFFLINE";
+                        oTypeLine.color = "#808080";
                         bInterneInit = false;
                         oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
                     });
                         //oThat.onFlushButton(); 
                     } else {
                         oTypeLine.type = "OFFLINE";
+                        oTypeLine.color = "#808080";
                         bInterneInit = false;
                         oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
                     }
@@ -2970,9 +2973,32 @@ sap.ui.define([
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
 
                     let sMaterial = oDataSeleccionada.getData().productoId;	
-                    let sVersion = oDataSeleccionada.getData().verid;   	
-                    let aRecetaSelected = oDataSeleccionada.getData().aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
+                    let sVersion = oDataSeleccionada.getData().verid;
+                    //OFFLINE SE CAMBIA LA LOGICA
+                    let aRecetaSelected;
+                    if(oDataSeleccionada.getData().aReceta.results[0].recetaId === null){
 
+                        MessageBox.information("Debe conectarse para visualizar el RMD");
+                        sap.ui.core.BusyIndicator.hide(0);
+                        return;
+                        let aFilterRecetaRmd = [];
+                        aFilterRecetaRmd.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        let aRecetasRmdId = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_RECETA", aFilterRecetaRmd);
+                        
+                        //Genero filtros para receta
+                        let aFilterReceta =[];
+                        for(var i=0;i<aRecetasRmdId.results.length ;i++){
+                            aFilterReceta.push(new Filter("recetaId", "EQ", aRecetasRmdId.results[i].recetaId_recetaId));
+                        }
+
+                        let allFilterReceta= aFilterReceta;
+
+                        let aRecetas = await registroService.getDataFilter(oThat.mainModelv2, "/RECETA", allFilterReceta);
+
+                        aRecetaSelected = aRecetas.results.find(itm=>itm.Matnr === sMaterial && itm.Verid === sVersion);
+                    }else{   	
+                        aRecetaSelected = oDataSeleccionada.getData().aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
+                    }
                     var aFilters = [];
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
