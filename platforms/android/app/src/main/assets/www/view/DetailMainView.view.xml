@@ -153,7 +153,7 @@
           <OverflowToolbar>
 				    <ToolbarSpacer/>
 				     <Button text="Refresh" width="80px" id="__button2" press="onRefreshButton"/>
-				     <Button text="Flush" width="70px" id="__button3" press="onFlushButton"/>
+				     <!-- <Button text="Flush" width="70px" id="__button3" press="onFlushButton"/> -->
 			     </OverflowToolbar>
           </footer>
         </Page>

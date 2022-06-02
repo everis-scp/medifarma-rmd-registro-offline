@@ -16,5 +16,11 @@ var mobile_appRoutes = [
 	"path": "/sap100erp",
 	"destination": "S4H_100_TEST",
 	"originDestination": "S4H_100_TEST"
-}];
+},
+{
+	"path": "/RMD_ONLINE",
+	"destination": "S4H_TEST",
+	"originDestination": "S4H_TEST"
+}
+];
 

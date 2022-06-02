@@ -40,6 +40,9 @@ sap.ui.define([
         const sEstadoAutorizado = 465;
         const idRolAuxiliar = '2be255d3-f5bf-4b0d-988c-6253de8fd578';
         let oInfoUsuario;
+        let bInterneInit = true;
+        let bflushCargando = false;
+        let bRefreshCargando = false;
         return Controller.extend("mif.rmd.registro.controller.MainView", {
             onInit: function () {
                 oThat = this;
@@ -51,18 +54,77 @@ sap.ui.define([
                         return groups
                     }, {})
                 }
-
-                let oTypeLine = {}; 
-                if (navigator.onLine) {
-                    $.sap.internetInit = true;
-                    oTypeLine.type = "ONLINE";
-                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
-                    //oThat.onFlushButton(); 
-                } else {
-                    $.sap.internetInit = false;
-                    oTypeLine.type = "OFFLINE";
-                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                //OFFLINE
+                let identificadorTiempoEspera
+                function temporizadorIntervalo(){
+                    identificadorTiempoEspera = setInterval(preguntarOffline,2000)
                 }
+                function preguntarOffline(){
+                    let oTypeLine = {}; 
+                    if (navigator.onLine) {
+                        fetch('https://postman-echo.com/get?foo1=bar1&foo2=bar2').then(function(response) {
+
+                            if(!response.ok) {
+                                // Parece que hay acceso a Internet,
+                                // pero la respuesta no ha sido ok
+                                // También se puede comprobar el código de estado con response.status
+                                // Y hacer algo específico según el estado exacto recibido
+                            throw Error(response.statusText);
+                        }
+                        return response;
+                     }).then(function(response) {
+                        // response.ok fue true
+                        console.log('ok');
+                        oTypeLine.type = "ONLINE";
+                        bInterneInit = true;
+                        oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+
+                    }).catch(function(error) {
+                        console.log('Problema al realizar la solicitud: ' + error.message);
+                        oTypeLine.type = "OFFLINE";
+                        bInterneInit = false;
+                        oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                    });
+                        //oThat.onFlushButton(); 
+                    } else {
+                        oTypeLine.type = "OFFLINE";
+                        bInterneInit = false;
+                        oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                    }
+                }
+
+                temporizadorIntervalo();
+
+                //FLUSH TEMPORIZADOR
+                let identificadorTiempoEsperaFlush;
+                function temporizadorIntervaloFlush(){
+                    identificadorTiempoEsperaFlush = setInterval(cargarFlush,2000)
+                }
+                function cargarFlush (){
+                    if(bInterneInit){
+                        oThat.onFlushButton();
+                    }else{
+                        console.log("Flush no se esta cargando (Sin internet )");
+                    }
+                }
+
+                temporizadorIntervaloFlush();
+
+                ///REFRESH TEMPORIZADOR
+                let identificadorTiempoEsperaRefresh;
+                function temporizadorIntervaloRefresh(){
+                    identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,2000)
+                }
+                function cargarRefresh (){
+                    if(bInterneInit){
+                        oThat.onRefreshAutomatico();
+                    }else{
+                        console.log("Refresh no se esta cargando (Sin internet )");
+                    }
+                }
+
+                temporizadorIntervaloRefresh();
+
             },
 
             onAfterRendering: async function () {
@@ -2803,6 +2865,9 @@ sap.ui.define([
             },
 
             onRouteDetailView: function () {
+                //OFFLINE
+                bflushCargando = false;
+                bRefreshCargando = false;
                 if (sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment")) {
                     sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment").destroy();
                 }
@@ -3571,9 +3636,56 @@ sap.ui.define([
             },
             
             onFlushButton: function() {
-                if (typeof sap.hybrid !== 'undefined') {
-                    sap.hybrid.flushStore();
+                if (bflushCargando == false){
+                    bflushCargando = true;
+                    if (typeof sap.hybrid !== 'undefined') {
+                        sap.hybrid.flushStore().then(function(result){
+                            if(result){
+                                console.log("Flush Complete");
+                                storeSAPNecesidadesRMD.clear();
+                                storeHANA.clear();
+                                storeSAPProduccion.clear();
+                                storeSAPImpresion.clear();
+
+                                bflushCargando = false;
+                            }
+                        },function(error){
+                            console.log("error Flush");
+                            bflushCargando = false;
+                        });
+                    }
+                }
+            },
+
+            onRefreshAutomatico:  function(){
+                var oThat = this;
+                if(bRefreshCargando === false){
+                    bRefreshCargando = true;
+                    if (typeof sap.hybrid !== 'undefined') {
+    
+                        sap.hybrid.refreshStoreAutomatico().then(function(result){
+                            if(result){
+                                console.log("Refresh Complete");
+                                storeSAPNecesidadesRMD.clear();
+                                storeHANA.clear();
+                                storeSAPProduccion.clear();
+                                storeSAPImpresion.clear();
+                                
+                                bRefreshCargando = false;
+                            }
+                        }, function (error) {
+                            console.log("odataError SAP");
+                            storeHANA.cancelFlush();
+                            storeSAPNecesidadesRMD.cancelFlush();
+                            storeSAPProduccion.cancelFlush();
+                            storeSAPImpresion.cancelFlush();
+
+                            bRefreshCargando = false;
+                        });
+                    }      
                 }
             }
+            //storeHANA.cancelDownload()
+            //storeHANA.cancelFlush()
         });
     });

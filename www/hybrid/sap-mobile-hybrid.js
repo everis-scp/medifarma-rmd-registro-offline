@@ -634,8 +634,8 @@ sap.hybrid = {
 			//sap.ui.core.BusyIndicator.show();
 			//storeSAPNecesidadesRMD.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
 			//storeHANA.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
-			storeSAPImpresion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
-			storeSAPProduccion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
+			storeSAPImpresion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
+			storeSAPProduccion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
 
 			storeSAPNecesidadesRMD.flush(function () {
 				console.log("Offline events: SAP flushStoreCallback");
@@ -669,7 +669,11 @@ sap.hybrid = {
 		console.log("Offline events: errorCallback");
 		alert("An error occurred: " + JSON.stringify(error));
 	},
-
+	errorCallbackFlush:function(){
+		sap.ui.core.BusyIndicator.hide();
+		console.log("Offline events: errorCallback");
+		//alert("An error occurred: " + JSON.stringify(error));
+	},
 	progressCallback: function (progressStatus) {
 		// console.log("Offline events: progressCallback");
 		var status = progressStatus.progressState;
@@ -702,5 +706,57 @@ sap.hybrid = {
 			dDate.getMinutes().toString().padStart(2, '0')}:${
 			dDate.getSeconds().toString().padStart(2, '0')}.${
 			dDate.getMilliseconds().toString().padStart(2, '0')}`);
+	},
+	refreshStoreAutomatico:function(){
+		return new Promise(function (resolve, reject) {
+			if (!storeSAPNecesidadesRMD) {
+				console.log("The store must be open before it can be refreshed");
+				return
+			}
+			//storeSAPNecesidadesRMD.refresh(sap.hybrid.refreshStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
+			//storeHANA.refresh(sap.hybrid.refreshStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
+			storeSAPImpresion.refresh(sap.hybrid.refreshStoreCallback, sap.hybrid.errorCallbackAutomatico, null, sap.hybrid.progressCallbackAutomatico);
+			storeSAPProduccion.refresh(sap.hybrid.refreshStoreCallback, sap.hybrid.errorCallbackAutomatico, null, sap.hybrid.progressCallbackAutomatico);
+			
+			storeSAPNecesidadesRMD.refresh(function () {
+				//console.log("Offline events: SAP refreshStoreCallback");				
+				storeHANA.refresh(function (res){
+					//console.log("Offline events: HANA refreshStoreCallback");
+					resolve(true);
+				}, function (err){
+					//console.log("Offline refresh events: HANA errorCallback");
+					//console.log("An error occurred: " + JSON.stringify(error));
+					reject(false);
+				}, null, sap.hybrid.progressCallbackAutomatico);
+				
+			}, function (error) {
+				//console.log("Offline refresh events: SAP  errorCallback");
+				//console.log("An error occurred: " + JSON.stringify(error));
+				reject(false);
+
+			}, null, sap.hybrid.progressCallbackAutomatico);	
+		});
+	},
+	progressCallbackAutomatico:function(progressStatus){
+		// console.log("Offline events: progressCallback");
+		var status = progressStatus.progressState;
+		var lead = "unknown";
+		if (status === sap.OfflineStore.ProgressState.STORE_DOWNLOADING) {
+			lead = "Downloading ";
+		} else if (status === sap.OfflineStore.ProgressState.REFRESH) {
+			lead = "Refreshing ";
+		} else if (status === sap.OfflineStore.ProgressState.FLUSH_REQUEST_QUEUE) {
+			lead = "Flushing ";
+		} else if (status === sap.OfflineStore.ProgressState.DONE) {
+			lead = "Complete ";
+		} else {
+			//alert("Unknown status in progressCallback");
+		}
+		//console.log(lead + "Sent: " + progressStatus.bytesSent + "  Received: " + progressStatus.bytesRecv + "   File Size: " +
+		//	progressStatus.fileSize);
+	},
+	errorCallbackAutomatico: function (error) {
+		console.log("Offline events: errorCallback");
+		//alert("An error occurred: " + JSON.stringify(error));
 	},
 };

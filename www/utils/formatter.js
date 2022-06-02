@@ -807,6 +807,19 @@ sap.ui.define([
 				output = orden;
 			}
 			return output;
+		},
+		onSincrorniceOfflineAviso:function(QMNUM,tipo){
+			let output;
+			if(QMNUM === "" || !QMNUM){
+				if(tipo === "Afectado"){
+					output = QMNUM;
+				}else{
+					output = "pendiente (Sincronizar)";
+				}
+			}else{
+				output = QMNUM;
+			}
+			return output;
 		}
 	};
 });

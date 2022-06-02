@@ -64,7 +64,7 @@
 				      <Text text="{modelGeneral>usuarioActualiza}" width="auto" wrapping="true"/>
               <Text text="{modelGeneral>comentario}" width="auto"/>
                <!--OFFLINE CAMBIO FORMATTER-->
-              <Text text="{path:'modelGeneral>Qmnum', formatter:'.formatter.onSincrorniceOffline'}" width="auto"/>
+              <Text text="{parts: [{path:'modelGeneral>Qmnum'},{path:'modelGeneral>tipo'}], formatter:'.formatter.onSincrorniceOfflineAviso'}" width="auto"/>
               <Text text="{modelGeneral>MotivoEdit}" width="auto"/>
               <HBox>
                 <!--OFFLINE-->

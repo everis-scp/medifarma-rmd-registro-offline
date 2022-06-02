@@ -97,6 +97,9 @@ sap.ui.define([
         sTipo,
         iId,
         sValorId;
+        let bInterneInit = true;
+        let bflushCargando = false;
+        let bRefreshCargando = false;
     return Controller.extend("mif.rmd.registro.controller.DetailMainView", {
         formatter: formatter,
         onInit: function () {
@@ -117,6 +120,90 @@ sap.ui.define([
             this.oOwnerComponent = this.getOwnerComponent();
             this.oRouter = this.oOwnerComponent.getRouter();
             this.oRouter.getRoute("RouteDetailMainView").attachPatternMatched(this.onRouteMatched, this);
+
+            //OFFLINE
+            let identificadorTiempoEspera
+            function temporizadorIntervalo(){
+                identificadorTiempoEspera = setInterval(preguntarOffline,3000)
+            }
+            function preguntarOffline(){
+                let oTypeLine = {}; 
+                if (navigator.onLine) {
+                    fetch('https://postman-echo.com/get?foo1=bar1&foo2=bar2').then(function(response) {
+
+                        if(!response.ok) {
+                            // Parece que hay acceso a Internet,
+                            // pero la respuesta no ha sido ok
+                            // También se puede comprobar el código de estado con response.status
+                            // Y hacer algo específico según el estado exacto recibido
+                        throw Error(response.statusText);
+                    }
+                    return response;
+                 }).then(function(response) {
+                    // response.ok fue true
+                    console.log('ok');
+                    oTypeLine.type = "ONLINE";
+                    bInterneInit= true;
+                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+
+                }).catch(function(error) {
+                    console.log('Problema al realizar la solicitud: ' + error.message);
+                    oTypeLine.type = "OFFLINE";
+                    bInterneInit= false;
+                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                });
+                    //oThat.onFlushButton(); 
+                } else {
+                    oTypeLine.type = "OFFLINE";
+                    bInterneInit= false;
+                    oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
+                }
+            }
+
+            temporizadorIntervalo();
+
+            //FLUSH TEMPORIZADOR
+            let identificadorTiempoEsperaFlush;
+            function temporizadorIntervaloFlush(){
+                identificadorTiempoEsperaFlush = setInterval(cargarFlush,10000)
+            }
+            function cargarFlush (){
+                if(bInterneInit){
+                    oThat.onFlushButton();
+                }else{
+                    console.log("Flush no se esta cargando (Sin internet)");
+                }
+            }
+            temporizadorIntervaloFlush();
+
+            ///REFRESH TEMPORIZADOR
+            let identificadorTiempoEsperaRefresh;
+            function temporizadorIntervaloRefresh(){
+                identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,2000)
+            }
+            function cargarRefresh (){
+                if(bInterneInit){
+                    oThat.onRefreshAutomatico();
+                }else{
+                    console.log("Refresh no se esta cargando (Sin internet )");
+                }
+            }
+
+            temporizadorIntervaloRefresh();
+
+            //SINCRONIZAR NOTIFICACION Y AVISO
+            let identificadorTiempoEsperaNotAvi;
+            function temporizadorIntervaloNotAvi(){
+                identificadorTiempoEsperaNotAvi = setInterval(cargarNotifAvis,5000)
+            }
+            function cargarNotifAvis (){
+                if(bInterneInit){
+                    oThat.onSynchronizeNotificationAvisoAutomatico();
+                }else{
+                    console.log("Sincronizacion Notificacion y Aviso no esta cargando, Sin internet )");
+                }
+            }
+            temporizadorIntervaloNotAvi();
         },
 
         onAfterRendering: function (aThat) {
@@ -184,18 +271,6 @@ sap.ui.define([
                 // sInterval = setInterval(function(){
                 // oThat.onGetRefresh();
                 // }, 30000);
-                 let oTypeLine = {}; 
-                 if (navigator.onLine) {
-                     $.sap.internetInit = true;
-                     oTypeLine.type = "ONLINE";
-                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
-                    //oThat.onFlushButton(); 
-                 } else {
-                     $.sap.internetInit = false;
-                     oTypeLine.type = "OFFLINE";
-                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
-                 }
-                
             }
         },
 
@@ -5051,6 +5126,10 @@ sap.ui.define([
             // const lstItems = this.getView().byId("idEstructuraWizard");
             // lstItems.destroy();
             clearInterval(sInterval);
+            //OFFLINE
+            bflushCargando = false;
+            bRefreshCargando = false;
+
             if(oThat.modelGeneral) {
                 oThat.modelGeneral.setProperty("/selectFraccionRmdId","");
                 this.vcount = 0;
@@ -16629,7 +16708,7 @@ sap.ui.define([
         //Obtener lista de Hu y crear en HANA Offline
         onGetListHuAndCreateHanaOffline: function () {
             try {
-                sap.ui.core.BusyIndicator.show();
+                //sap.ui.core.BusyIndicator.show();
                 let oLineaActualRMD = oThat.getView().getModel("modelGeneral").getProperty("/LineaActualRMD");
                 let aFilters = [];
                 aFilters.push(new Filter("Vpobjkey", "EQ", oLineaActualRMD.Aufnr));
@@ -16701,40 +16780,58 @@ sap.ui.define([
 
                         oThat.onCrearEtiquetaGeneralHana(oThat.mainModelv2, "/TABLAS_ARRAY_MD_SKIP", oTablaArrayInsert);
                     }
-
+                    sap.ui.core.BusyIndicator.hide();
                 }).catch(function (oError) {
                     console.log(oError);
                     sap.ui.core.BusyIndicator.hide();
                 });
             } catch (oError) {
                 MessageBox.error(oError.responseText);
+                sap.ui.core.BusyIndicator.hide();
             }
         },
 
         onRefreshButton:function() {
+
+            storeSAPNecesidadesRMD.cancelDownload();
+            storeHANA.cancelDownload();
+            storeSAPProduccion.cancelDownload();
+            storeSAPImpresion.cancelDownload();
+            bRefreshCargando = true;
+
             var oThat = this;
             if (typeof sap.hybrid !== 'undefined') {
                 sap.hybrid.refreshStore().then(function(result){
+                    bRefreshCargando = false;
                     if(result){
                         oThat.onSynchronizeNotificationAviso();
                         oThat.onGetListHuAndCreateHanaOffline();
                     }
                 }, function (error) {
-					console.log("odataError SAP");
-
+					console.log("odataError SAP");  
+                    bRefreshCargando = false;
 				});
             }      
         },
         
         onFlushButton: function() {
-            if (typeof sap.hybrid !== 'undefined') {
-                sap.hybrid.flushStore().then(function(result){
-                    if(result){
-                        console.log("Flush Complete");
-                    }
-                },function(error){
-                    console.log("error Flush");
-                });
+            if (bflushCargando == false){
+                bflushCargando = true;
+                if (typeof sap.hybrid !== 'undefined') {
+                    sap.hybrid.flushStore().then(function(result){
+                        bflushCargando = false;
+                        if(result){
+                            console.log("Flush Complete");
+                            storeSAPNecesidadesRMD.clear();
+                            storeHANA.clear();
+                            storeSAPProduccion.clear();
+                            storeSAPImpresion.clear();
+                        }
+                    },function(error){
+                        console.log("error Flush");
+                        bflushCargando = false;
+                    });
+                }
             }
         },
 
@@ -16747,9 +16844,102 @@ sap.ui.define([
             let aFilterAvisoSap = [];
             aFilterAvisoSap.push(new Filter("Sincronizado", "EQ", "0"));
             let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad,"AvisoOfflSet",aFilterAvisoSap);
-
-            BusyIndicator.show(0);
             
+            for await (const oNotification of aNotificaciones.results) {
+                
+                if(oNotification.Rmzhl !== ""){
+                    let aFilter = [];             
+                    aFilter.push(new Filter("rmdControlRechazo", "EQ", oNotification.Notificacionkey));
+                
+                    let oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+
+                    if(oNotifiHana.results.length > 0){
+                        oNotifiHana.results[0].Rmzhl = oNotification.Rmzhl;
+                        oNotifiHana.results[0].Rueck = oNotification.Rueck;
+                        delete oNotifiHana.results[0].__metadata;
+                        delete oNotifiHana.results[0].rmdId;
+
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+
+                        oNotification.Sincronizado = "1";
+                
+                        delete oNotification.__metadata;
+                        oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
+
+                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                    }
+                }
+                BusyIndicator.hide();
+            }
+
+            for await (const oAviso of aAviso.results) {
+                
+                if(oAviso.Qmnum !== ""){
+                    let aFilter = [];             
+                    aFilter.push(new Filter("rmdLapsoId", "EQ", oAviso.Keyaviso));
+                
+                    let oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilter);
+
+                    if(oLapsoHana.results.length>0){
+                        oLapsoHana.results[0].Qmnum = oAviso.Qmnum;
+
+                        delete oLapsoHana.results[0].__metadata;
+                        delete oLapsoHana.results[0].aListCatalogFalla;
+                        delete oLapsoHana.results[0].equipoId;
+                        delete oLapsoHana.results[0].pasoId;
+                        delete oLapsoHana.results[0].pasoIdFin;
+                        delete oLapsoHana.results[0].rmdId;
+                        delete oLapsoHana.results[0].tipoLapsoId;
+
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+
+                        oAviso.Sincronizado = "1";
+                
+                        delete oAviso.__metadata;
+                        if( oAviso.Valid){
+                            oAviso.Valid = formatter.onFormatDateSAP(oAviso.Valid);
+                        }
+                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
+                    }
+                }
+                BusyIndicator.hide();
+            }
+        },
+
+        onRefreshAutomatico:  function(){
+            var oThat = this;
+            if(bRefreshCargando === false){
+                bRefreshCargando = true;
+                if (typeof sap.hybrid !== 'undefined') {
+
+                    sap.hybrid.refreshStoreAutomatico().then(function(result){
+                        bRefreshCargando = false;
+                        if(result){
+                            console.log("Refresh Complete");
+                            storeSAPNecesidadesRMD.clear();
+                            storeHANA.clear();
+                            storeSAPProduccion.clear();
+                            storeSAPImpresion.clear();
+
+                        }
+                    }, function (error) {
+                        console.log("odataError SAP");
+                        bRefreshCargando = false;
+                    });
+                }      
+            }
+        },
+
+        onSynchronizeNotificationAvisoAutomatico:async function(){
+            let aFilterSAP= [];
+            aFilterSAP.push(new Filter("Zflag", "EQ", "1"));
+            aFilterSAP.push(new Filter("Sincronizado", "EQ", "0"));
+            let aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "NotificacionOfflineSet",aFilterSAP);
+            
+            let aFilterAvisoSap = [];
+            aFilterAvisoSap.push(new Filter("Sincronizado", "EQ", "0"));
+            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad,"AvisoOfflSet",aFilterAvisoSap);
+
             for await (const oNotification of aNotificaciones.results) {
                 
                 if(oNotification.Rmzhl !== ""){
@@ -16807,20 +16997,7 @@ sap.ui.define([
                     }
                 }
             }
-            //Nuevamente un flush
-            if (typeof sap.hybrid !== 'undefined') {
-                if (typeof sap.hybrid !== 'undefined') {
-                    sap.hybrid.flushStore().then(function(result){
-                        if(result){
-                            console.log("Flush Complete");
-                        }
-                    },function(error){
-                        console.log("error Flush");
-                    });
-                }
-            }
-            BusyIndicator.hide();
-        }
+        },
 
     });
   });

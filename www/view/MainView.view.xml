@@ -19,7 +19,7 @@
 			    <OverflowToolbar>
 				    <ToolbarSpacer/>
 				     <Button text="Refresh" width="80px" id="__button1" press="onRefreshButton"/>
-				     <Button text="Flush" width="70px" id="__button0" press="onFlushButton"/>
+				     <!-- <Button text="Flush" width="70px" id="__button0" press="onFlushButton"/> -->
 			     </OverflowToolbar>
 		    </footer>
       </Page>
