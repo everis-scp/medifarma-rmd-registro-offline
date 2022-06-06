@@ -18,9 +18,15 @@ var mobile_appRoutes = [
 	"originDestination": "S4H_100_TEST"
 },
 {
-	"path": "/RMD_ONLINE",
-	"destination": "S4H_TEST",
-	"originDestination": "S4H_TEST"
+	"path": "/RMD_ERP_ONLINE",
+	"destination": "S4H_TEST_ONLINE",
+	"originDestination": "S4H_TEST_ONLINE"
+},
+{
+	"path": "/RMD_SRV_ONLINE",
+	"destination": "RMD_QAS_ONLINE",
+	"originDestination": "RMD_QAS_ONLINE"
 }
+
 ];
 

@@ -139,6 +139,10 @@ sap.ui.define([
                 this.modelImpresion = this.getView().getModel("IMPRESIONORD_SRV");
                 this.modelProduccion = this.getView().getModel("PRODUCCION_SRV");
                 this.i18n = this.getView().getModel("i18n").getResourceBundle();
+                this.modelNecesidadOnline = this.getView().getModel("NECESIDADESRMD_SRV_ONL");
+                this.modelImpresionOnline = this.getView().getModel("IMPRESIONORD_SRV_ONL");
+                this.modelProduccionOnline = this.getView().getModel("PRODUCCION_SRV_ONL");
+                this.mainModelv2Online = this.getView().getModel("mainModelv2_onl");
 
                 var oUser;
                 await sap.Settings.getConfigPropertyMap(
@@ -360,35 +364,52 @@ sap.ui.define([
             },
 
             onOrdenesABAP: async function () {
-                var v_lote = oThat.modelGeneral.getProperty("/loteFilter");
+                if(bInterneInit === true){
 
-                if (v_lote === "") {
-                    MessageBox.warning(oThat.i18n.getText("loteObligatorio"));
-                    return;
-                }
-                v_lote = v_lote.toUpperCase();
+                    var v_lote = oThat.modelGeneral.getProperty("/loteFilter");
 
-                var oFilter = [];
-                BusyIndicator.show();
-                oFilter.push(new Filter("Charg", FilterOperator.EQ, v_lote));
-                //OFFLINE - 
-                //oFilter.push(new Filter("Aufnr", FilterOperator.EQ, ""));
-                
-                //Quitamos el uso de AJAX , se debe trabajar con modelos las peticiones
+                    if (v_lote === "") {
+                        MessageBox.warning(oThat.i18n.getText("loteObligatorio"));
+                        return;
+                    }
+                    v_lote = v_lote.toUpperCase();
 
-                // await registroService.getDataAjax("/OrdenSet", oFilter).then(function (oListOrden) {
-                //     oListOrden.forEach(element => {
-                //         if (element.Vfdat !== null) {
-                //             let fechaExpira = element.Vfdat.split("(")[1].split(")")[0];
-                //             element.VfdatBTP = new Date(Number(fechaExpira));
-                //         }
-                //     });
-                //     oThat.modelGeneral.setProperty("/ordenesAbap", oListOrden);
-                //     sap.ui.core.BusyIndicator.hide();
-                // }).catch(function (oError) {
-                //     console.log(oError);
-                //     sap.ui.core.BusyIndicator.hide();
-                // })
+                    var oFilter = [];
+                    BusyIndicator.show();
+                    oFilter.push(new Filter("Charg", FilterOperator.EQ, v_lote));
+                    oFilter.push(new Filter("Aufnr", FilterOperator.EQ, ""));
+
+                    await registroService.getDataFilter(oThat.modelNecesidadOnline,"/OrdenSet",oFilter).then(function (oListOrden){
+                        oListOrden.results.forEach(element => {
+                            if (element.Vfdat !== null) {
+                                //let fechaExpira = element.Vfdat.split("(")[1].split(")")[0];
+                                //element.VfdatBTP = new Date(Number(fechaExpira));
+
+                                let fechaExpira = element.Vfdat;
+                                element.VfdatBTP = fechaExpira;
+                            }
+                        });
+                        oThat.modelGeneral.setProperty("/ordenesAbap", oListOrden.results);
+                        sap.ui.core.BusyIndicator.hide();
+                    }).catch(function(oError){
+                        console.log(oError);
+                        sap.ui.core.BusyIndicator.hide();
+                    });
+
+                }else{ //OFFLINE
+                    var v_lote = oThat.modelGeneral.getProperty("/loteFilter");
+
+                    if (v_lote === "") {
+                        MessageBox.warning(oThat.i18n.getText("loteObligatorio"));
+                        return;
+                    }
+                    v_lote = v_lote.toUpperCase();
+
+                    var oFilter = [];
+                    BusyIndicator.show();
+                    oFilter.push(new Filter("Charg", FilterOperator.EQ, v_lote));
+                    //OFFLINE - 
+                    //oFilter.push(new Filter("Aufnr", FilterOperator.EQ, ""));
 
                 await registroService.getDataFilter(oThat.modelNecesidad,"/OrdenSet",oFilter).then(function (oListOrden){
                     oListOrden.results.forEach(element => {
@@ -407,6 +428,7 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide();
                 });
 
+                }
             },
 
             onMdList: async function (LineaActual) {
@@ -417,8 +439,17 @@ sap.ui.define([
                 oFilterMd.push(new Filter("estadoIdRmd_iMaestraId", FilterOperator.EQ, sEstadoAutorizado));
                 oFilterRmd.push(new Filter("productoId", FilterOperator.EQ, LineaActual.Matnr));
                 oFilterRmd.push(new Filter("ordenSAP", FilterOperator.EQ, LineaActual.Aufnr));
-                let aListMD = await registroService.getDataExpand(oThat.mainModelv2, "/MD", sExpandNivel, oFilterMd);
-                let aListRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD", sExpand, oFilterRmd);
+                
+                //Pregunta si hay internet, sino usa la bd local
+                let aListMD,aListRMD;
+                if(bInterneInit === true){
+                    aListMD = await registroService.getDataExpand(oThat.mainModelv2Online, "/MD", sExpandNivel, oFilterMd);
+                    aListRMD = await registroService.getDataExpand(oThat.mainModelv2Online, "/RMD", sExpand, oFilterRmd);
+                }else{// OFFLINE MODEL
+                    aListMD = await registroService.getDataExpand(oThat.mainModelv2, "/MD", sExpandNivel, oFilterMd);
+                    aListRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD", sExpand, oFilterRmd);
+                }
+             
                 oThat.modelGeneral.setProperty("/LineaActualRMDdata", aListRMD);
                 let aListMDFinal = [];
                 let aListMDTable = [];
@@ -437,7 +468,12 @@ sap.ui.define([
                     //FIN NUEVO MARIN
                     let aFilter= [];
                     aFilter.push(new Filter("mdId", "EQ", aListRMD.results[0].mdId_mdId));
-                    let aMdResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD", aFilter, sExpandNivel);
+                    let aMdResponse;
+                    if(bInterneInit === true){
+                        aMdResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "MD", aFilter, sExpandNivel);
+                    }else{//OFFLINE MODEL
+                        aMdResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD", aFilter, sExpandNivel);
+                    }
                     aMdResponse.results.forEach(function(oMd){
                         oMd.Matnr = LineaActual.Matnr;
                         oMd.rm = oMd.estadoIdRmd.codigo !== "A" ? "A" : oMd.estadoIdRmd.codigo;
@@ -491,63 +527,70 @@ sap.ui.define([
                 var LineaActual = oEvent.getParameter("listItem").getBindingContext("modelGeneral").getObject();
 
                 this.onMdList(LineaActual);
-
-                return new Promise(function (resolve, reject) {
-                    sap.ui.core.BusyIndicator.show(0);
-                    // registroService.getDataAjaxImpresionFilter(LineaActual.Aufnr).then(function (oListOrden) {
-                    //     LineaActual.Pdf64 = "";
-                    //     oListOrden.forEach(function (values) {
-                    //         if (LineaActual.Aufnr == values.Aufnr) {
-                    //             LineaActual.Pdf64 = values.Pdf64;
-                    //         }
-                    //     });
-
-                    //     sap.ui.core.BusyIndicator.hide();
-                    //     if (!oThat.onMds) {
-                    //         oThat.onMds = sap.ui.xmlfragment(
-                    //             "frgMds",
-                    //             rootPath + ".view.dialog.Mds",
-                    //             oThat
-                    //         );
-                    //         oThat.getView().addDependent(oThat.onMds);
-                    //     }
-                    //     oThat.onMds.open();
-
-                    // }).catch(function (oError) {
-                    //     console.log(oError);
-                    //     sap.ui.core.BusyIndicator.hide();
-                    // });
-
-                    //OFFLINE se deben utilizar modelos para el offline
-                    let aFilter = [];
-                    aFilter.push(new Filter("Aufnr", FilterOperator.EQ, LineaActual.Aufnr));
-                    registroService.getDataFilter(oThat.modelImpresion,"/OrdenSet",aFilter).then(function (oListOrden) {
-                        LineaActual.Pdf64 = "";
-                        oListOrden.results.forEach(function (values) {
-                            if (LineaActual.Aufnr == values.Aufnr) {
-                                LineaActual.Pdf64 = values.Pdf64;
+                if(bInterneInit === true){
+                    return new Promise(function (resolve, reject) {
+                        sap.ui.core.BusyIndicator.show(0);
+                        let aFilter = [];
+                        aFilter.push(new Filter("Aufnr", FilterOperator.EQ, LineaActual.Aufnr));
+                        registroService.getDataFilter(oThat.modelImpresionOnline,"/OrdenSet",aFilter).then(function (oListOrden) {
+                            LineaActual.Pdf64 = "";
+                            oListOrden.results.forEach(function (values) {
+                                if (LineaActual.Aufnr == values.Aufnr) {
+                                    LineaActual.Pdf64 = values.Pdf64;
+                                }
+                            });
+    
+                            sap.ui.core.BusyIndicator.hide();
+                            if (!oThat.onMds) {
+                                oThat.onMds = sap.ui.xmlfragment(
+                                    "frgMds",
+                                    rootPath + ".view.dialog.Mds",
+                                    oThat
+                                );
+                                oThat.getView().addDependent(oThat.onMds);
                             }
-                        });
-
-                        sap.ui.core.BusyIndicator.hide();
-                        if (!oThat.onMds) {
-                            oThat.onMds = sap.ui.xmlfragment(
-                                "frgMds",
-                                rootPath + ".view.dialog.Mds",
-                                oThat
-                            );
-                            oThat.getView().addDependent(oThat.onMds);
-                        }
-                        oThat.onMds.open();
-
-                    }).catch(function (oError) {
-                        console.log(oError);
-                        sap.ui.core.BusyIndicator.hide();
-                    })
-
-
-                });
-
+                            oThat.onMds.open();
+    
+                        }).catch(function (oError) {
+                            console.log(oError);
+                            sap.ui.core.BusyIndicator.hide();
+                        })
+    
+    
+                    });   
+                }else{ //OFFLINE
+                    return new Promise(function (resolve, reject) {
+                        sap.ui.core.BusyIndicator.show(0);
+    
+                        //OFFLINE se deben utilizar modelos para el offline
+                        let aFilter = [];
+                        aFilter.push(new Filter("Aufnr", FilterOperator.EQ, LineaActual.Aufnr));
+                        registroService.getDataFilter(oThat.modelImpresion,"/OrdenSet",aFilter).then(function (oListOrden) {
+                            LineaActual.Pdf64 = "";
+                            oListOrden.results.forEach(function (values) {
+                                if (LineaActual.Aufnr == values.Aufnr) {
+                                    LineaActual.Pdf64 = values.Pdf64;
+                                }
+                            });
+    
+                            sap.ui.core.BusyIndicator.hide();
+                            if (!oThat.onMds) {
+                                oThat.onMds = sap.ui.xmlfragment(
+                                    "frgMds",
+                                    rootPath + ".view.dialog.Mds",
+                                    oThat
+                                );
+                                oThat.getView().addDependent(oThat.onMds);
+                            }
+                            oThat.onMds.open();
+    
+                        }).catch(function (oError) {
+                            console.log(oError);
+                            sap.ui.core.BusyIndicator.hide();
+                        })
+    
+                    });
+                }
 
             },
 
@@ -560,7 +603,12 @@ sap.ui.define([
                 let aFilterUser = [];
                 aFilterUser.push(new Filter("rmdId_rmdId", FilterOperator.EQ, LineaActual.rmdId));
                 aFilterUser.push(new Filter("rol", FilterOperator.EQ, "AUXILIAR"));
-                let aListUserRMD = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_USUARIO", aFilterUser);
+                let aListUserRMD;
+                if (bInterneInit === true){
+                    aListUserRMD = await registroService.getDataFilter(oThat.mainModelv2Online, "/RMD_USUARIO", aFilterUser);
+                }else{//OFFLINE
+                    aListUserRMD = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_USUARIO", aFilterUser);
+                }
 
                 if (oInfoUsuario.funcionUsuario.habilitarRMD){
                     if (aListUserRMD.results.length === 0) {
@@ -586,7 +634,13 @@ sap.ui.define([
                 let aFiltersRMD = [];
                 aFiltersRMD.push(new Filter("rmdId", "EQ", LineaActual.rmdId));
                 let sExpand = "mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId";
-                let aResponseRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD", sExpand, aFiltersRMD);
+                let aResponseRMD;
+                if (bInterneInit === true){
+                    aResponseRMD = await registroService.getDataExpand(oThat.mainModelv2Online, "/RMD", sExpand, aFiltersRMD);
+                }else{//OFFLINE
+                    aResponseRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD", sExpand, aFiltersRMD);
+                }
+
                 let oModel = new JSONModel(aResponseRMD.results[0]);
                 oThat.getOwnerComponent().setModel(oModel, "asociarDatos");
 
@@ -604,11 +658,23 @@ sap.ui.define([
                                     var aEquiposError = [];
                                     var sMensajeError  = null;
                                     aFilter.push(new Filter("mdId_mdId", FilterOperator.EQ, LineaActual.mdId));
-                                    var aListEquipo = await registroService.getDataExpand(oThat.mainModelv2, "/MD_ES_EQUIPO", "equipoId", aFilter);
+                                    
+                                    var aListEquipo;
+                                    if (bInterneInit === true){
+                                        aListEquipo = await registroService.getDataExpand(oThat.mainModelv2Online, "/MD_ES_EQUIPO", "equipoId", aFilter);
+                                    }else{//OFFLINE
+                                        aListEquipo = await registroService.getDataExpand(oThat.mainModelv2, "/MD_ES_EQUIPO", "equipoId", aFilter);
+                                    }
                                     var booleanValidateCalibre = false;
                                     for await (const element of aListEquipo.results) {
                                         let entity = "/CalibracionSet('" + element.equipoId.equnr + "')";
-                                        let oEquipoSap = await registroService.getDataAll(oThat.modelNecesidad, entity);
+                                        let oEquipoSap;
+                                        if (bInterneInit === true){
+                                            oEquipoSap = await registroService.getDataAll(oThat.modelNecesidadOnline, entity);
+                                        }else{//OFFLINE
+                                            oEquipoSap = await registroService.getDataAll(oThat.modelNecesidad, entity);
+                                        }
+                                       
                                         if(oEquipoSap.Nplda) {
                                             if (time > oEquipoSap.Nplda.getTime()) {
                                                 booleanValidateCalibre = true;
@@ -621,7 +687,11 @@ sap.ui.define([
                                                 let oData = {
                                                     gstrp : oEquipoSap.Nplda
                                                 }
-                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "EQUIPO", oData, element.equipoId_equipoId);
+                                                if (bInterneInit === true){
+                                                    await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "EQUIPO", oData, element.equipoId_equipoId);
+                                                }else{//OFFLINE
+                                                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "EQUIPO", oData, element.equipoId_equipoId);
+                                                }
                                             }
                                         }    
                                     }
@@ -897,11 +967,24 @@ sap.ui.define([
                 let aFilterReceta = [];
                 aFilterReceta.push(new Filter("mdId_mdId", "EQ", LineaActual.mdId));
                 let sExpandReceta = "aInsumos";
-                let aRecetaMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD_RECETA", aFilterReceta, sExpandReceta);
+
+                let aRecetaMD;
+                if (bInterneInit === true){
+                    aRecetaMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "MD_RECETA", aFilterReceta, sExpandReceta);
+                }else{//OFFLINE
+                    aRecetaMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD_RECETA", aFilterReceta, sExpandReceta);
+                }
                 let aFilter = [];
                 aFilter.push(new Filter("mdId_mdId", FilterOperator.EQ, LineaActual.mdId));
                 let sExpand = "aPaso/pasoId,aEquipo,aUtensilio,aEtiqueta,aPasoInsumoPaso,aEspecificacion,aInsumo,estructuraId";
-                let aEstructuraMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD_ESTRUCTURA", aFilter, sExpand);
+                
+                let aEstructuraMD;
+                if (bInterneInit === true){
+                    aEstructuraMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "MD_ESTRUCTURA", aFilter, sExpand);
+                }else{//OFFLINE
+                    aEstructuraMD = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "MD_ESTRUCTURA", aFilter, sExpand);
+                }
+
                 let oEstructuraProceso = aEstructuraMD.results.find(itm=>itm.estructuraId.tipoEstructuraId_iMaestraId === sIdTipoEstructuraProceso);
                 //let aPasosNotificacion = oEstructuraProceso.aPaso.results.filter(itm=>itm.tipoDatoId_iMaestraId === stipoDatoNotificacion);
                 let bFlagErrorNotif = true;
@@ -1010,7 +1093,12 @@ sap.ui.define([
                         fechaHabilita: new Date(),
                         usuarioHabilita: oInfoUsuario.data.usuario
                     };
-                    await registroService.updateStatusRmd(oThat.mainModelv2, "/RMD", sobject);
+                    if (bInterneInit === true){
+                        await registroService.updateStatusRmd(oThat.mainModelv2Online, "/RMD", sobject);
+                    }else{//OFFLINE
+                        await registroService.updateStatusRmd(oThat.mainModelv2, "/RMD", sobject);
+                    }
+
                     let oUsuarioParam =  {
                         usuarioRegistro: oInfoUsuario.data.usuario,
                         fechaRegistro: new Date(),
@@ -1022,7 +1110,11 @@ sap.ui.define([
                         usuarioId_usuarioId : oInfoUsuario.data.usuarioId,
                         rol          : "JEFE_PROD"
                     }
-                    await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_USUARIO", oUsuarioParam);
+                    if (bInterneInit === true){
+                        await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_USUARIO", oUsuarioParam);
+                    }else{//OFFLINE
+                        await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_USUARIO", oUsuarioParam);
+                    }
 
                     let aListIdsReceta = [];
                     for await (const oReceta of aRecetaMD.results) {
@@ -1041,7 +1133,12 @@ sap.ui.define([
                             rmdRecetaId : oParamReceta.rmdRecetaId
                         }
                         aListIdsReceta.push(objIdReceta);
-                        await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_RECETA", oParamReceta);
+
+                        if (bInterneInit === true){
+                            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_RECETA", oParamReceta);
+                        }else{//OFFLINE
+                            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_RECETA", oParamReceta);
+                        }
                     }
 
                     let aListEstructurasRMD = [];
@@ -1102,7 +1199,11 @@ sap.ui.define([
                             }
                             //OFFLINE es un depp entity se debe revisar la logica nen HANA para replicarlo sin deep entity
                             BusyIndicator.hide();
-                            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ESTRUCTURA", oParam);
+                            if (bInterneInit === true){
+                                await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_ESTRUCTURA", oParam);
+                            }else{//OFFLINE
+                                await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ESTRUCTURA", oParam);
+                            }
                         }
                     }
                     for await (const oEstructura of aEstructuraMD.results) {
@@ -1182,7 +1283,11 @@ sap.ui.define([
                                                     pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoId,
                                                     fraccion: 1
                                                 };
-                                                await registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobjectTrama);
+                                                if (bInterneInit === true){
+                                                    await registroService.createData(oThat.mainModelv2Online, "/RMD_LAPSO", sobjectTrama);
+                                                }else{//OFFLINE
+                                                    await registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobjectTrama);
+                                                }
                                             }
                                         }
                                     } else {
@@ -1229,25 +1334,49 @@ sap.ui.define([
                                     if (oPaso.tipoDatoId_iMaestraId === stipoDatoFormula) {
                                         let aFilter = [];
                                         aFilter.push(new Filter("pasoPadreId_mdEstructuraPasoId", "EQ", oPaso.mdEstructuraPasoId));
-                                        let aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2, "/MD_ES_FORMULA_PASO", aFilter);
+
+                                        let aListaPasosFormula;
+                                        if (bInterneInit === true){
+                                            aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2Online, "/MD_ES_FORMULA_PASO", aFilter);
+                                        }else{//OFFLINE MODEL
+                                            aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2, "/MD_ES_FORMULA_PASO", aFilter);
+                                        }
+                                       
                                         aListaPasosFormula.results.forEach(async function (e) {
                                             let oParam = {
                                                 fechaActualiza: new Date(),
                                                 rmdPasoUsuarioId_rmdEstructuraPasoId: oPasoObj.rmdEstructuraPasoId
                                             }
-                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            if (bInterneInit === true){
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            }else{//OFFLINE MODEL
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            }
+                                            
                                         });
                                     }
                                     if (oPaso.tipoDatoId_iMaestraId === stipoDatoFormula || oPaso.tipoDatoId_iMaestraId === stipoDatoCantidad || oPaso.tipoDatoId_iMaestraId === stipoDatoDatoFijo || oPaso.tipoDatoId_iMaestraId === stipoDatoNumeros) {
                                         var aFilterF = [];
                                         aFilterF.push(new Filter("pasoFormulaId_mdEstructuraPasoId", "EQ", oPaso.mdEstructuraPasoId));
-                                        var aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2, "/MD_ES_FORMULA_PASO", aFilterF);
+
+                                        var aListaPasosFormula;
+                                        if (bInterneInit === true){
+                                            aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2, "/MD_ES_FORMULA_PASO", aFilterF);
+                                        }else{//OFFLINE MODEL
+                                            aListaPasosFormula = await registroService.getDataFilter(oThat.mainModelv2, "/MD_ES_FORMULA_PASO", aFilterF);
+                                        }
+                                        
                                         aListaPasosFormula.results.forEach(async function (e) {
                                             var oParam = {
                                                 fechaActualiza: new Date(),
                                                 rmdPasoFormulaId_rmdEstructuraPasoId: oPasoObj.rmdEstructuraPasoId
                                             }
-                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            if (bInterneInit === true){
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            }else{//OFFLINE MODEL
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "MD_ES_FORMULA_PASO", oParam, e.mdFormulaPaso);
+                                            }
+                                            
                                         });
                                     }
                                 }
@@ -1384,7 +1513,11 @@ sap.ui.define([
                                     oParam.aEspecificacion.push(oEspecificacionObj);
                                 });
                             }
-                            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ESTRUCTURA", oParam);
+                            if( bInterneInit === true){
+                                await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_ESTRUCTURA", oParam);
+                            }else{//OFFLINE MODEL
+                                await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ESTRUCTURA", oParam);
+                            }
                         }
                     }
                     await oThat.getEstructurasRmdRefactory(1);
@@ -2871,6 +3004,7 @@ sap.ui.define([
                 //OFFLINE
                 bflushCargando = false;
                 bRefreshCargando = false;
+                /////
                 if (sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment")) {
                     sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment").destroy();
                 }
@@ -2886,16 +3020,29 @@ sap.ui.define([
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                     var aFilters = [];
-                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    //let sExpand = "rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)";
-                    //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
-                    let sExpand = "rmdId/estadoIdRmd,estructuraId/tipoEstructuraId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ESTRUCTURA", aFilters, sExpand).then(function (oListRmdEstructura) {
-                        resolve(oListRmdEstructura);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+
+                    if(bInterneInit === true){
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)";
+
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ESTRUCTURA", aFilters, sExpand).then(function (oListRmdEstructura) {
+                            resolve(oListRmdEstructura);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        //let sExpand = "rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)";
+                        //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
+                        let sExpand = "rmdId/estadoIdRmd,estructuraId/tipoEstructuraId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ESTRUCTURA", aFilters, sExpand).then(function (oListRmdEstructura) {
+                            resolve(oListRmdEstructura);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -2904,16 +3051,27 @@ sap.ui.define([
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                     var aFilters = [];
-                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    //let sExpand = "rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)";
-                    //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
-                    let sExpand = "rmdId,rmdEstructuraId,tipoDatoId,pasoId/tipoDatoId,pasoId/estadoId,pasoId/tipoLapsoId,pasoId/tipoCondicionId,pasoId/etiquetaId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilters, sExpand).then(function (oListRmdPaso) {
-                        resolve(oListRmdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if(bInterneInit === true){
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        //let sExpand = "rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)";
+                        //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
+                        let sExpand = "rmdId,rmdEstructuraId,tipoDatoId,pasoId/tipoDatoId,pasoId/estadoId,pasoId/tipoLapsoId,pasoId/tipoCondicionId,pasoId/etiquetaId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -2922,14 +3080,25 @@ sap.ui.define([
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                     var aFilters = [];
-                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    let sExpand = "rmdId,rmdEstructuraId,equipoId/tipoId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_EQUIPO", aFilters, sExpand).then(function (oListRmdPaso) {
-                        resolve(oListRmdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if(bInterneInit === true){
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,equipoId/tipoId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_EQUIPO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,equipoId/tipoId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_EQUIPO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -2938,14 +3107,25 @@ sap.ui.define([
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                     var aFilters = [];
-                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    let sExpand = "rmdId,rmdEstructuraId,utensilioId/estadoId,utensilioId/tipoId,agrupadorId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_UTENSILIO", aFilters, sExpand).then(function (oListRmdPaso) {
-                        resolve(oListRmdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if(bInterneInit === true){
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,utensilioId/estadoId,utensilioId/tipoId,agrupadorId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_UTENSILIO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{ //OFFLINE MODEL
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,utensilioId/estadoId,utensilioId/tipoId,agrupadorId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_UTENSILIO", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -2954,16 +3134,29 @@ sap.ui.define([
                     // sap.ui.core.BusyIndicator.show(0);
                     let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                     var aFilters = [];
-                    aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                    aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    //let sExpand = "rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))";
-                    //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
-                    let sExpand = "rmdId,rmdEstructuraId,etiquetaId/estructuraId/tipoEstructuraId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_ETIQUETA", aFilters, sExpand).then(function (oListRmdPaso) {
-                        resolve(oListRmdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    
+                    if(bInterneInit === true){
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        let sExpand = "rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))";
+
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_ETIQUETA", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        aFilters.push(new Filter("fraccion", "EQ", sFraccion));
+                        //let sExpand = "rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))";
+                        //OFFLINE : por alguna razon no funciona el $expand cuando haces la peticion a traves del modelo :/
+                        let sExpand = "rmdId,rmdEstructuraId,etiquetaId/estructuraId/tipoEstructuraId";
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_ETIQUETA", aFilters, sExpand).then(function (oListRmdPaso) {
+                            resolve(oListRmdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -2981,21 +3174,21 @@ sap.ui.define([
                         MessageBox.information("Debe conectarse para visualizar el RMD");
                         sap.ui.core.BusyIndicator.hide(0);
                         return;
-                        let aFilterRecetaRmd = [];
-                        aFilterRecetaRmd.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                        let aRecetasRmdId = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_RECETA", aFilterRecetaRmd);
+                        // let aFilterRecetaRmd = [];
+                        // aFilterRecetaRmd.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                        // let aRecetasRmdId = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_RECETA", aFilterRecetaRmd);
                         
-                        //Genero filtros para receta
-                        let aFilterReceta =[];
-                        for(var i=0;i<aRecetasRmdId.results.length ;i++){
-                            aFilterReceta.push(new Filter("recetaId", "EQ", aRecetasRmdId.results[i].recetaId_recetaId));
-                        }
+                        // //Genero filtros para receta
+                        // let aFilterReceta =[];
+                        // for(var i=0;i<aRecetasRmdId.results.length ;i++){
+                        //     aFilterReceta.push(new Filter("recetaId", "EQ", aRecetasRmdId.results[i].recetaId_recetaId));
+                        // }
 
-                        let allFilterReceta= aFilterReceta;
+                        // let allFilterReceta= aFilterReceta;
 
-                        let aRecetas = await registroService.getDataFilter(oThat.mainModelv2, "/RECETA", allFilterReceta);
+                        // let aRecetas = await registroService.getDataFilter(oThat.mainModelv2, "/RECETA", allFilterReceta);
 
-                        aRecetaSelected = aRecetas.results.find(itm=>itm.Matnr === sMaterial && itm.Verid === sVersion);
+                        // aRecetaSelected = aRecetas.results.find(itm=>itm.Matnr === sMaterial && itm.Verid === sVersion);
                     }else{   	
                         aRecetaSelected = oDataSeleccionada.getData().aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
                     }
@@ -3003,13 +3196,24 @@ sap.ui.define([
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
                     aFilters.push(new Filter("rmdRecetaId_rmdRecetaId", "EQ", aRecetaSelected.rmdRecetaId));
-
                     let sExpand = "rmdEstructuraId,rmdRecetaId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_RE_INSUMO", aFilters, sExpand).then(function (oListRmdEsReInsumo) {
-                        resolve(oListRmdEsReInsumo);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+
+                    if(bInterneInit === true){
+
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_RE_INSUMO", aFilters, sExpand).then(function (oListRmdEsReInsumo) {
+                            resolve(oListRmdEsReInsumo);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_RE_INSUMO", aFilters, sExpand).then(function (oListRmdEsReInsumo) {
+                            resolve(oListRmdEsReInsumo);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
+                   
                 });
             },
 
@@ -3021,11 +3225,19 @@ sap.ui.define([
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
                     let sExpand = "rmdEstructuraId,rmdId,ensayoPadreId";
-                    await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", aFilters, sExpand).then(function (oListRmdEsEspecificacion) {
-                        resolve(oListRmdEsEspecificacion);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if (bInterneInit === true){
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_ESPECIFICACION", aFilters, sExpand).then(function (oListRmdEsEspecificacion) {
+                            resolve(oListRmdEsEspecificacion);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })    
+                    }else {//OFFLINE MODEL
+                        await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", aFilters, sExpand).then(function (oListRmdEsEspecificacion) {
+                            resolve(oListRmdEsEspecificacion);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 });
             },
 
@@ -3037,11 +3249,20 @@ sap.ui.define([
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
                     let sExpand = "rmdId,rmdEstructuraId,etiquetaId,tipoDatoId,pasoId/tipoDatoId,pasoId/pasoId/estadoId,pasoHijoId/tipoDatoId,pasoHijoId/estadoId,rmdEstructuraRecetaInsumoId";
-                    registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", aFilters, sExpand).then(function (oListRmdEsPasoInsumoPaso) {
-                        resolve(oListRmdEsPasoInsumoPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+
+                    if ( bInterneInit === true){
+                        registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO_INSUMO_PASO", aFilters, sExpand).then(function (oListRmdEsPasoInsumoPaso) {
+                            resolve(oListRmdEsPasoInsumoPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{ // OFFLINE MODEL
+                        registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", aFilters, sExpand).then(function (oListRmdEsPasoInsumoPaso) {
+                            resolve(oListRmdEsPasoInsumoPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }               
                 });
             },
 
@@ -3052,14 +3273,24 @@ sap.ui.define([
                     let aFilters = [];	
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));	
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));	
-                    let sExpand = "recetaId";	
-                    registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_RECETA", aFilters, sExpand).then(function (oListRmdReceta) {	
-                        oDataSeleccionada.getData().aReceta = oListRmdReceta;	
-                        oDataSeleccionada.refresh(true);	
-                        resolve(oListRmdReceta);	
-                    }).catch(function (oError) {	
-                        reject(oError);	
-                    })	
+                    let sExpand = "recetaId";
+                    if( bInterneInit === true){
+                        registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_RECETA", aFilters, sExpand).then(function (oListRmdReceta) {	
+                            oDataSeleccionada.getData().aReceta = oListRmdReceta;	
+                            oDataSeleccionada.refresh(true);	
+                            resolve(oListRmdReceta);	
+                        }).catch(function (oError) {	
+                            reject(oError);	
+                        })	
+                    }else{//OFFLINE MODEL
+                        registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_RECETA", aFilters, sExpand).then(function (oListRmdReceta) {	
+                            oDataSeleccionada.getData().aReceta = oListRmdReceta;	
+                            oDataSeleccionada.refresh(true);	
+                            resolve(oListRmdReceta);	
+                        }).catch(function (oError) {	
+                            reject(oError);	
+                        })	
+                    }	
                 });	
             },
 

@@ -55,6 +55,35 @@
                 "settings": {
                     "localUri": "localService/Z_PP_CENTRALPESADAS_SRV/metadata.xml"
                 }
+            },
+            "NECESIDADESRMD_SRV_ONL":{
+                "uri": "/RMD_ERP_ONLINE/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_NECESIDADESRMD_SRV/metadata.xml"
+                }
+            },
+            "IMPRESIONORD_SRV_ONL": {
+                "uri": "/RMD_ERP_ONLINE/sap/opu/odata/sap/Z_PP_IMPRESIONORD_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_IMPRESIONORD_SRV/metadata.xml"
+                }
+            },
+            "PRODUCCION_SRV_ONL": {
+                "uri": "/RMD_ERP_ONLINE/sap/opu/odata/sap/Z_PP_PRODUCCION_SRV/",
+                "type": "OData",
+                "settings": {
+                    "localUri": "localService/Z_PP_PRODUCCION_SRV/metadata.xml"
+                }
+            },
+            "mainModelv2_onl": {
+                "uri": "/RMD_SRV_ONLINE/v2/browse/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "/v2/browse/metadata.xml"
+                }
             }
         },
         "crossNavigation": {
@@ -185,7 +214,44 @@
 				},
 				"dataSource": "CENTRALPESADAS_SRV",
 				"preload": true
-			}
+			},
+            "NECESIDADESRMD_SRV_ONL": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "NECESIDADESRMD_SRV_ONL",
+				"preload": true
+			},
+            "IMPRESIONORD_SRV_ONL": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "IMPRESIONORD_SRV_ONL",
+				"preload": true
+			},
+            "PRODUCCION_SRV_ONL": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Request",
+					"useBatch": false
+				},
+				"dataSource": "PRODUCCION_SRV_ONL",
+				"preload": true
+			},
+            "mainModelv2_onl": {
+                "dataSource": "mainModelv2_onl",
+                "preload": true
+            }
         },
         "resources": {
             "css": [
