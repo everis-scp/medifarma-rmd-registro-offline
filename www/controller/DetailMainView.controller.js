@@ -217,6 +217,11 @@ sap.ui.define([
             this.modelCentralPesadas = this.getView().getModel("CENTRALPESADAS_SRV");
             this.mainModelv2 = this.getView().getModel("mainModelv2");
             oInfoUsuario = this.modelGeneral.getProperty("/oInfoUsuario");
+            
+            this.modelNecesidadOnline = this.getView().getModel("NECESIDADESRMD_SRV_ONL");
+            this.modelImpresionOnline = this.getView().getModel("IMPRESIONORD_SRV_ONL");
+            this.modelProduccionOnline = this.getView().getModel("PRODUCCION_SRV_ONL");
+            this.mainModelv2Online = this.getView().getModel("mainModelv2_onl");
             this.onGetDataInitial();
         },
 
@@ -301,15 +306,26 @@ sap.ui.define([
 
                 if(mdId){
                     var aFilters = [];
-                    aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
-                    //let sExpand = "mdId,estructuraId,equipoId($expand=tipoId)";
-                    //OFFLINE por al guna razon no funciona el $expand para la peticion
-                    let sExpand = "mdId,estructuraId,equipoId/tipoId";
-                    registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2, "MD_ES_EQUIPO", aFilters, sExpand).then(function (oListMdPaso) {
-                        resolve(oListMdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if( bInterneInit === true){
+                        aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
+                        let sExpand = "mdId,estructuraId,equipoId($expand=tipoId)";
+                 
+                        registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2Online, "MD_ES_EQUIPO", aFilters, sExpand).then(function (oListMdPaso) {
+                            resolve(oListMdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
+                        //let sExpand = "mdId,estructuraId,equipoId($expand=tipoId)";
+                        //OFFLINE por al guna razon no funciona el $expand para la peticion
+                        let sExpand = "mdId,estructuraId,equipoId/tipoId";
+                        registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2, "MD_ES_EQUIPO", aFilters, sExpand).then(function (oListMdPaso) {
+                            resolve(oListMdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 }else{
                     resolve([]);
                 }
@@ -321,15 +337,26 @@ sap.ui.define([
                 var mdId = oThatConf.getView().getModel("modelGeneral").getData().LineaActualMD.mdId;
                 if(mdId){
                     var aFilters = [];
-                    aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
-                    //let sExpand = "mdId,estructuraId,utensilioId($expand=estadoId,tipoId)";
-                    //OFFLINE por alguna razon no funcion el $expand
-                    let sExpand = "mdId,estructuraId,utensilioId/estadoId,utensilioId/tipoId";
-                    registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2, "MD_ES_UTENSILIO", aFilters, sExpand).then(function (oListMdPaso) {
-                        resolve(oListMdPaso);
-                    }).catch(function (oError) {
-                        reject(oError);
-                    })
+                    if( bInterneInit === true){
+                        aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
+                        let sExpand = "mdId,estructuraId,utensilioId($expand=estadoId,tipoId)";
+                    
+                        registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2Online, "MD_ES_UTENSILIO", aFilters, sExpand).then(function (oListMdPaso) {
+                            resolve(oListMdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }else{//OFFLINE MODEL
+                        aFilters.push(new Filter("mdId_mdId", "EQ", mdId));
+                        //let sExpand = "mdId,estructuraId,utensilioId($expand=estadoId,tipoId)";
+                        //OFFLINE por alguna razon no funcion el $expand
+                        let sExpand = "mdId,estructuraId,utensilioId/estadoId,utensilioId/tipoId";
+                        registroService.onGetDataGeneralFiltersExpand(oThatConf.mainModelv2, "MD_ES_UTENSILIO", aFilters, sExpand).then(function (oListMdPaso) {
+                            resolve(oListMdPaso);
+                        }).catch(function (oError) {
+                            reject(oError);
+                        })
+                    }
                 }else{
                     resolve([]);
                 }
@@ -597,7 +624,13 @@ sap.ui.define([
                                 aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                                 aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                                 let sExpand = "tipoDatoId,pasoId";
-                                let itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                let itemResponse;
+                                if( bInterneInit === true ){
+                                    itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO", aFilter, sExpand);
+                                }else{//OFFLINE MODEL
+                                    itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                }
+                               
                                 itemPredecesor = itemResponse.results[0];
                                 if (itemPredecesor) {
                                     item.generalEnabledPredecesor = formatter.onFormatoEnabledPredecesor(itemPredecesor);
@@ -716,7 +749,14 @@ sap.ui.define([
                                     aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                                     aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                                     let sExpand = "tipoDatoId,pasoId";
-                                    let itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                    
+                                    let itemResponse;
+                                    if( bInterneInit === true){
+                                        itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO", aFilter, sExpand);
+                                    }else{//OFFLINE MODEL
+                                        itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                    }
+                                    
                                     oPasoEtiquetaPredecesor = itemResponse.results[0];
                                     if (oPasoEtiquetaPredecesor) {
                                         oPasoEtiqueta.generalEnabledPredecesor = formatter.onFormatoEnabledPredecesor(oPasoEtiquetaPredecesor);
@@ -1091,7 +1131,12 @@ sap.ui.define([
                     aFilters.push(new Filter("fraccion", "EQ", oDataEstructura.fraccion));
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataEstructura.rmdId_rmdId));
                     let sExpand = "usuarioId"
-                    let aUsuariosResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_USUARIO", aFilters, sExpand);
+                    let aUsuariosResponse;
+                    if ( bInterneInit === true){
+                        aUsuariosResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_USUARIO", aFilters, sExpand);
+                    }else{//OFFLINE MODEL
+                        aUsuariosResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_USUARIO", aFilters, sExpand);
+                    }
                     let oModelVerificacionFirmas = new JSONModel(aUsuariosResponse.results);
                     oModelVerificacionFirmas.setSizeLimit(999999999);
                     oThat.getView().setModel(oModelVerificacionFirmas, "aListVerifFirmasAssignResponsive");
@@ -3419,7 +3464,12 @@ sap.ui.define([
                     usuarioId_usuarioId : oInfoUsuario.data.usuarioId
                 }
             }
-            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", oObj);
+            if (bInterneInit === true){
+                await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", oObj);
+            }else{//OFFLINE MODEL
+                await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", oObj);
+            }
+            
         },
 
         onRMD_VERIFICACION_FIRMAS_MULTIPLE: async function(oDataFirmaVerif){
@@ -3434,7 +3484,12 @@ sap.ui.define([
                 rol             : oDataFirmaVerif.rol,
                 usuarioId_usuarioId : oDataFirmaVerif.usuarioVerif
             }
-            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", oObj);
+            if (bInterneInit === true){
+                await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", oObj);
+            }else{//OFFLINE MODEL
+                await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", oObj);
+            }
+            
         },
 
         onUpdateRmdPaso: async function(aListRmdItem, sMotivoModif, bModificable){
@@ -6244,10 +6299,22 @@ sap.ui.define([
             oFilter.push(new Filter("rmdId_rmdId", FilterOperator.EQ, LineaActual.rmdId));
             oFilter.push(new Filter("fraccion", FilterOperator.EQ, fraccionActual));
             oFilter.push(new Filter("activo", FilterOperator.EQ, true));
-            let expand = "tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla"
-            var aListLapsosRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD_LAPSO", expand, oFilter);
+            let expand = "tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla";
+            var aListLapsosRMD;
+            if ( bInterneInit === true){
+                aListLapsosRMD = await registroService.getDataExpand(oThat.mainModelv2Online, "/RMD_LAPSO", expand, oFilter);
+            }else{//OFFLINE MODEL
+                aListLapsosRMD = await registroService.getDataExpand(oThat.mainModelv2, "/RMD_LAPSO", expand, oFilter);
+            }
+            
             //var aListMotivoLapso = await registroService.getDataExpand(oThat.mainModelv2, "/RMD_MOTIVO_EDIT_CIERRE_LAPSO", "", oFilter);
-            var aListMotivoLapso = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_MOTIVO_EDIT_CIERRE_LAPSO", oFilter);
+            var aListMotivoLapso;
+            if ( bInterneInit === true){
+                aListMotivoLapso = await registroService.getDataFilter(oThat.mainModelv2Online, "/RMD_MOTIVO_EDIT_CIERRE_LAPSO", oFilter);
+            }else{//OFFLINE MODEL
+                aListMotivoLapso = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_MOTIVO_EDIT_CIERRE_LAPSO", oFilter);
+            }
+            
             var v_dia, v_mes, v_anio, dateEx, v_hora, v_minutos;
             aListLapsosRMD.results.forEach(element => {
                 if (element.fechaRegistro !== null) {
@@ -9724,7 +9791,14 @@ sap.ui.define([
             aFiltersPaso.push(new Filter("puestoTrabajo", "EQ", lineaSeleccionada.pasoIdFin.puestoTrabajo));
             aFiltersPaso.push(new Filter("fraccion", "EQ", fraccionActual));
             aFiltersPaso.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-            let aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFiltersPaso);
+
+            let aPasosSelected;
+            if( bInterneInit === true){
+                aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_ES_PASO", aFiltersPaso);
+            }else{//OFFLINE MODEL
+                aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFiltersPaso);
+            }
+
             aPasosSelected.results.sort(function (a, b) {
                 return a.orden - b.orden;
             });
@@ -10016,7 +10090,13 @@ sap.ui.define([
                 aFilters.push(new Filter("Phase", "EQ", lineaSeleccionada.Vornr));
                 aFilters.push(new Filter("Yield", "EQ", (sumaTeorica).toFixed(3)));
                 //OFFLINE
-                let aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "ActividadOfflineSet", aFilters);
+                let aListActivities;
+                if(bInterneInit === true){
+                    aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "ActividadOfflineSet", aFilters);
+                }else{//OFFLINE MODEL
+                    aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "ActividadOfflineSet", aFilters);
+                }
+                
                 //let aListActivities = await registroService.getDataAjax("/ActividadSet", aFilters);
                 let arrActivities = [];
                 aListActivities.results.forEach(function(oActivity){
@@ -10061,7 +10141,13 @@ sap.ui.define([
             aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
             aFilters.push(new Filter("fraccion", "EQ", fraccionActual));
             aFilters.push(new Filter("activo", "EQ", true));
-            let aListCantidadesParciales = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilters);
+            let aListCantidadesParciales;
+            if( bInterneInit === true){
+                aListCantidadesParciales = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilters);
+            }else{//OFFLINE MODEL
+                aListCantidadesParciales = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilters);
+            }
+            
             return aListCantidadesParciales;
         },
 
@@ -10076,14 +10162,24 @@ sap.ui.define([
             aFilters.push(new Filter("Ktsch", "EQ", Ktsch)) //SCHEDULE
             //promise
             return new Promise((resolve, reject) => {
-            
-                registroService.getDataFilter(this.modelNecesidad,"/FaseNotSet",aFilters)
-                .then(function(payload){
-                    resolve(payload.results[0]);
-                })
-                .catch(function(err){
-                    reject(err);
-                })
+                
+                if (bInterneInit === true ){
+                    registroService.getDataFilter(this.modelNecesidadOnline,"/FaseNotSet",aFilters)
+                    .then(function(payload){
+                        resolve(payload.results[0]);
+                    })
+                    .catch(function(err){
+                        reject(err);
+                    })
+                }else{//OFFLINE MODEL
+                    registroService.getDataFilter(this.modelNecesidad,"/FaseNotSet",aFilters)
+                    .then(function(payload){
+                        resolve(payload.results[0]);
+                    })
+                    .catch(function(err){
+                        reject(err);
+                    })
+                }
             })
         },
         onPressNotifications: async function (oEvent, bFlag, fechaNotificacion) {
@@ -10100,7 +10196,13 @@ sap.ui.define([
                 aFilter.push(new Filter("fechaInicio", "NE", null));
                 aFilter.push(new Filter("notifFinal", "NE", true));
                 let sExpand = "pasoIdFin,pasoId";
-                let oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+                let oResponseLapsoManual;
+                if (bInterneInit === true ){
+                    oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_LAPSO", aFilter, sExpand);
+                }else{//OFFLINE MODEL
+                    oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+                }   
+                
                 lineaSeleccionada = oResponseLapsoManual.results[0];
             } else {
                 lineaSeleccionada = oEvent;
@@ -10136,7 +10238,13 @@ sap.ui.define([
             let lineaActual = this.modelGeneral.getProperty("/LineaActualMD");
             let aFilter = [];
             aFilter.push(new Filter("Werks", "EQ", lineaActual.sucursalId.codigo));
-            var oResponse = await registroService.getDataFilter(oThat.modelNecesidad, "/MotivosNotSet", aFilter);
+            var oResponse;
+            if( bInterneInit === true){
+                oResponse = await registroService.getDataFilter(oThat.modelNecesidadOnline, "/MotivosNotSet", aFilter);
+            }else{//OFFLINE MODEL
+                oResponse = await registroService.getDataFilter(oThat.modelNecesidad, "/MotivosNotSet", aFilter);
+            }
+            
             if (oInfoUsuario.funcionUsuario.registroMuestreo) {
                 oResponse.results = oResponse.results.filter(itm=>itm.Grund !== "0001");
             } else {
@@ -10187,7 +10295,12 @@ sap.ui.define([
                     Message: "",
                     Key:util.onGetUUIDV4()
                 }
-                await registroService.onSaveDataGeneral(oThat.modelNecesidad, "FechaProdSet", oObj);
+                if( bInterneInit === true){
+                    await registroService.onSaveDataGeneral(oThat.modelNecesidadOnline, "FechaProdSet", oObj);
+                }else{//OFFLINE MODEL
+                    await registroService.onSaveDataGeneral(oThat.modelNecesidad, "FechaProdSet", oObj);
+                }
+              
             }
             if (pasoSeleccionado.automatico) {
                 var cantTeorica = parseFloat(lineaActual.Vfmng) / parseFloat(oDataSeleccionada.getData().fraccion);
@@ -10195,22 +10308,43 @@ sap.ui.define([
             }
             //Key Notificacion
             let sNotificationKey = util.onGetUUIDV4();
-            let obj = {
-                "Rueck": "",    //RMD
-                "Rmzhl": "", //
-                "Orderid": lineaActual.Aufnr,
-                "Phase": lineaActual.Vornr,    //Fase a notificar
-                "PostgDate": fechaNotif, 
-                "DevReason":"", //merma
-                "ConfText": lineaActual.textoNotif ? lineaActual.textoNotif : "", //texto de la confirmacion x
-                "ExCreatedBy": oDataSeleccionada.getData().mdId.codigo,
-                "Scrap": pasoSeleccionado.automatico ? "0" : lineaActual.rechazo ? lineaActual.rechazo : "0",
-                //"Yield": pasoSeleccionado.automatico ? lineaActual.Vfmng : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
-                "Yield": pasoSeleccionado.automatico ? cantTeorica : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
-                "Notificacionkey": sNotificationKey,
+            let obj = {};
+            if (bInterneInit === true){
+                obj = {
+                    "Rueck": "",    //RMD
+                    "Rmzhl": "", //
+                    "Orderid": lineaActual.Aufnr,
+                    "Phase": lineaActual.Vornr,    //Fase a notificar
+                    "PostgDate": fechaNotif, 
+                    "DevReason":"", //merma
+                    "ConfText": lineaActual.textoNotif ? lineaActual.textoNotif : "", //texto de la confirmacion x
+                    "ExCreatedBy": oDataSeleccionada.getData().mdId.codigo,
+                    "Scrap": pasoSeleccionado.automatico ? "0" : lineaActual.rechazo ? lineaActual.rechazo : "0",
+                    //"Yield": pasoSeleccionado.automatico ? lineaActual.Vfmng : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                    "Yield": pasoSeleccionado.automatico ? cantTeorica : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                    "NotificacionMensajeSet":[]
+                }
 
-                //"NotificacionMensajeSet":[]
+            }else{//OFFLINE MODEL
+                obj = {
+                    "Rueck": "",    //RMD
+                    "Rmzhl": "", //
+                    "Orderid": lineaActual.Aufnr,
+                    "Phase": lineaActual.Vornr,    //Fase a notificar
+                    "PostgDate": fechaNotif, 
+                    "DevReason":"", //merma
+                    "ConfText": lineaActual.textoNotif ? lineaActual.textoNotif : "", //texto de la confirmacion x
+                    "ExCreatedBy": oDataSeleccionada.getData().mdId.codigo,
+                    "Scrap": pasoSeleccionado.automatico ? "0" : lineaActual.rechazo ? lineaActual.rechazo : "0",
+                    //"Yield": pasoSeleccionado.automatico ? lineaActual.Vfmng : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                    "Yield": pasoSeleccionado.automatico ? cantTeorica : lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                    "Notificacionkey": sNotificationKey,
+    
+                    //"NotificacionMensajeSet":[]
+                }
+
             }
+
             if (aListActivities.length > 0) {
                 aListActivities.map((item,i)=>{
                     obj[`ConfActiUnit${i+1}`]= item.unidad;
@@ -10232,111 +10366,217 @@ sap.ui.define([
             }
             if (pasoSeleccionado.automatico) {
                 if (pasoSeleccionado.fechaFin) {
-                    obj.Zflag = "4";
-                    obj.Notificacionkey = util.onGetUUIDV4();
-                    let response = await registroService.createData(this.modelNecesidad, "/NotificacionOfflineSet", obj);
-                    //let response = await registroService.createData(this.modelNecesidad, "/NotificacionSet", obj);
-                    obj.Notificacionkey  = sNotificationKey;
-                    obj.Zflag = "1";
-                    //OFFLINE 
-                    //if(response.NotificacionMensajeSet.results.length > 0) {
-                    //    if (response.NotificacionMensajeSet.results[0].Type !== "E") {
-                    let payload = await registroService.createData(this.modelNecesidad, "/NotificacionOfflineSet", obj);
-                    var msg = "La solicitud para crear la notificacion se puso en cola";
-                    await registroService.oDataRemove(this.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey);
-                            //var msg = payload.NotificacionMensajeSet.results[0].Message;
-                    //    }
-                    //} else {
-                    //    let payload = await registroService.createData(this.modelNecesidad, "/NotificacionSet", obj);
-                        //var msg = payload.NotificacionMensajeSet.results[0].Message;   
-                    //}
-                    BusyIndicator.hide();
-                    MessageBox.information(msg);
-                } else {
-                    obj.Zflag = "1";
-                    //registroService.createData(this.modelNecesidad,"/NotificacionSet",obj).then((payload)=>{
-                    registroService.createData(this.modelNecesidad,"/NotificacionOfflineSet",obj).then((payload)=>{
-                        console.log(payload);
-                        //let msg = payload.NotificacionMensajeSet.results[0].Message;
-                        var msg = "La solicitud para crear la notificacion se puso en cola";
-                        
-                        registroService.oDataRemove(this.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey).then((res)=>{
-                            console.log("remove succes");
-                        });
 
+                    if(bInterneInit === true){
+                        obj.Zflag = "4";
+                        obj.Notificacionkey = util.onGetUUIDV4();
+                        let response = await registroService.createData(this.modelNecesidadOnline, "/NotificacionSet", obj);
+
+                        obj.Zflag = "1";
+                        if(response.NotificacionMensajeSet.results.length > 0) {
+                            if (response.NotificacionMensajeSet.results[0].Type !== "E") {
+                                let payload = await registroService.createData(this.modelNecesidadOnline, "/NotificacionSet", obj);
+                                var msg = payload.NotificacionMensajeSet.results[0].Message;
+                            }
+                        } else {
+                                let payload = await registroService.createData(this.modelNecesidadOnline, "/NotificacionSet", obj);
+                                var msg = payload.NotificacionMensajeSet.results[0].Message;   
+                        }
+                        BusyIndicator.hide();
+                        MessageBox.information(msg);
+
+                    }else{//OFFLINE MODEL
+                        obj.Zflag = "4";
+                        obj.Notificacionkey = util.onGetUUIDV4();
+                        let response = await registroService.createData(this.modelNecesidad, "/NotificacionOfflineSet", obj);
+                        //let response = await registroService.createData(this.modelNecesidad, "/NotificacionSet", obj);
+                        obj.Notificacionkey  = sNotificationKey;
+                        obj.Zflag = "1";
+                        //OFFLINE 
+                        //if(response.NotificacionMensajeSet.results.length > 0) {
+                        //    if (response.NotificacionMensajeSet.results[0].Type !== "E") {
+                        let payload = await registroService.createData(this.modelNecesidad, "/NotificacionOfflineSet", obj);
+                        var msg = "La solicitud para crear la notificacion se puso en cola";
+                        await registroService.oDataRemove(this.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey);
+                                //var msg = payload.NotificacionMensajeSet.results[0].Message;
+                        //    }
+                        //} else {
+                        //    let payload = await registroService.createData(this.modelNecesidad, "/NotificacionSet", obj);
+                            //var msg = payload.NotificacionMensajeSet.results[0].Message;   
+                        //}
+                        BusyIndicator.hide();
+                        MessageBox.information(msg);
+                    }
+
+                } else {
+
+                    if( bInterneInit === true){
+
+                        obj.Zflag = "1";
+                        registroService.createData(this.modelNecesidadOnline,"/NotificacionSet",obj).then((payload)=>{
+                            console.log(payload);
+                            let msg = payload.NotificacionMensajeSet.results[0].Message;
+                            BusyIndicator.hide();
+                            MessageBox.information(msg);
+                        }).catch((err)=>{
+                            console.log(err);
+                            BusyIndicator.hide();
+                        })
+
+                    }else{//OFFLINE MODEL
+                        obj.Zflag = "1";
+                        //registroService.createData(this.modelNecesidad,"/NotificacionSet",obj).then((payload)=>{
+                        registroService.createData(this.modelNecesidad,"/NotificacionOfflineSet",obj).then((payload)=>{
+                            console.log(payload);
+                            //let msg = payload.NotificacionMensajeSet.results[0].Message;
+                            var msg = "La solicitud para crear la notificacion se puso en cola";
+                        
+                            registroService.oDataRemove(this.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey).then((res)=>{
+                                console.log("remove succes");
+                            });
+
+                            BusyIndicator.hide();
+                            MessageBox.information(msg);
+                        }).catch((err)=>{
+                            console.log(err);
+                            BusyIndicator.hide();
+                        })
+                    }
+                }
+            } else {
+
+                if( bInterneInit === true){
+                    obj.Zflag = "1";
+                    registroService.createData(this.modelNecesidadOnline,"/NotificacionSet",obj).then(async function(payload){
+                        console.log(payload);
+                        
+                        let msg = payload.NotificacionMensajeSet.results[0].Message;
+                        if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
+                            let sCorrelativo = "";
+                            let anioActual = new Date().getFullYear();
+                            if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
+                                let aFilters = [];
+                                aFilters.push(new Filter("cantRechazo", "NE", "0"));
+                                aFilters.push(new Filter("anio", "EQ", anioActual.toString()));
+                                aFilters.push(new Filter("centro", "EQ", oDataSeleccionada.getData().centro));
+                                aFilters.push(new Filter("motivoDesv", "NE", "Merma Propia del Proceso"));
+
+                                let aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilters);
+                                aListNotificaciones.results = aListNotificaciones.results.filter(itm=>itm.rol === "RMD_CONTROL_PROCESO" || itm.rol === "RMD_CONTROL_CALIDAD");
+                                sCorrelativo = formatter.obtenerCorrelativoMuestra(aListNotificaciones.results.length, 5);
+                            }
+                            let oObjNew = {
+                                usuarioRegistro: oInfoUsuario.data.usuario,
+                                fechaRegistro: new Date(),
+                                activo : true,
+                                rmdControlRechazo: sNotificationKey,
+                                rmdId_rmdId: oDataSeleccionada.getData().rmdId,
+                                fraccion: fraccionActual,
+                                orden: obj.Orderid,
+                                operacion: bFlagNotifFinal ? "FINAL" : "PARCIAL",     
+                                puestoTrabajo: pasoSeleccionado.pasoId.puestoTrabajo,
+                                clvModelo: pasoSeleccionado.pasoId.clvModelo,
+                                cantBuena: lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                                cantRechazo: lineaActual.rechazo ? lineaActual.rechazo : "0",
+                                motivoDesv: causaDesv.Grdtx,
+                                fase: lineaActual.Vornr,
+                                Rmzhl: payload.Rmzhl,
+                                Rueck: payload.Rueck,
+                                ConfText: lineaActual.textoNotif ? lineaActual.textoNotif : "",
+                                rol: oInfoUsuario.rol[0].codigo,
+                                styleUser: formatter.selectedColor(oInfoUsuario.rol[0].codigo),
+                                anio: anioActual.toString(),
+                                correlativoMuestra: sCorrelativo,
+                                centro: oDataSeleccionada.getData().centro
+                            }
+                            await registroService.onSaveDataGeneral(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", oObjNew);
+                            if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
+                                await oThat.onUpdateSumatoriaMuestreo();
+                            }
+                            if (bFlagNotifFinal) {
+                                let objNotifFinal = {
+                                    notifFinal: true
+                                }
+                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
+                            }
+                        }
+                        oThat.onNotification.close();
+                        oThat.onCancelNotificationsList();
                         BusyIndicator.hide();
                         MessageBox.information(msg);
                     }).catch((err)=>{
                         console.log(err);
+                        MessageBox.error(JSON.parse(err.responseText).error.message.value)
+                        BusyIndicator.hide();
+                    })
+
+                }else{//OFFLINE MODEL
+                    obj.Zflag = "1";
+                    //registroService.createData(this.modelNecesidad,"/NotificacionSet",obj).then(async function(payload){
+                    registroService.createData(this.modelNecesidad,"/NotificacionOfflineSet",obj).then(async function(payload){
+                        console.log(payload);
+                        //OFFLINE
+                        var msg = "La solicitud para crear la notificacion se puso en cola";
+                        await registroService.oDataRemove(oThat.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey);
+                        //let msg = payload.NotificacionMensajeSet.results[0].Message;
+                        //if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
+                            let sCorrelativo = "";
+                            let anioActual = new Date().getFullYear();
+                            if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
+                                let aFilters = [];
+                                aFilters.push(new Filter("cantRechazo", "NE", "0"));
+                                aFilters.push(new Filter("anio", "EQ", anioActual.toString()));
+                                aFilters.push(new Filter("centro", "EQ", oDataSeleccionada.getData().centro));
+                                aFilters.push(new Filter("motivoDesv", "NE", "Merma Propia del Proceso"));
+                                let aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilters);
+                                aListNotificaciones.results = aListNotificaciones.results.filter(itm=>itm.rol === "RMD_CONTROL_PROCESO" || itm.rol === "RMD_CONTROL_CALIDAD");
+                                sCorrelativo = formatter.obtenerCorrelativoMuestra(aListNotificaciones.results.length, 5);
+                            }
+                            let oObjNew = {
+                                usuarioRegistro: oInfoUsuario.data.usuario,
+                                fechaRegistro: new Date(),
+                                activo : true,
+                                rmdControlRechazo: sNotificationKey,
+                                rmdId_rmdId: oDataSeleccionada.getData().rmdId,
+                                fraccion: fraccionActual,
+                                orden: obj.Orderid,
+                                operacion: bFlagNotifFinal ? "FINAL" : "PARCIAL",     
+                                puestoTrabajo: pasoSeleccionado.pasoId.puestoTrabajo,
+                                clvModelo: pasoSeleccionado.pasoId.clvModelo,
+                                cantBuena: lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
+                                cantRechazo: lineaActual.rechazo ? lineaActual.rechazo : "0",
+                                motivoDesv: causaDesv.Grdtx,
+                                fase: lineaActual.Vornr,
+                                Rmzhl: payload.Rmzhl,
+                                Rueck: payload.Rueck,
+                                ConfText: lineaActual.textoNotif ? lineaActual.textoNotif : "",
+                                rol: oInfoUsuario.rol[0].codigo,
+                                styleUser: formatter.selectedColor(oInfoUsuario.rol[0].codigo),
+                                anio: anioActual.toString(),
+                                correlativoMuestra: sCorrelativo,
+                                centro: oDataSeleccionada.getData().centro
+                            }
+                            await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oObjNew);
+                            if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
+                                await oThat.onUpdateSumatoriaMuestreo();
+                            }
+                            if (bFlagNotifFinal) {
+                                let objNotifFinal = {
+                                    notifFinal: true
+                                }
+                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
+                            }
+                        //}
+                        oThat.onNotification.close();
+                        oThat.onCancelNotificationsList();
+                        BusyIndicator.hide();
+                        MessageBox.information(msg);
+                    }).catch((err)=>{
+                        console.log(err);
+                        MessageBox.error(JSON.parse(err.responseText).error.message.value)
                         BusyIndicator.hide();
                     })
                 }
-            } else {
-                obj.Zflag = "1";
-                //registroService.createData(this.modelNecesidad,"/NotificacionSet",obj).then(async function(payload){
-                registroService.createData(this.modelNecesidad,"/NotificacionOfflineSet",obj).then(async function(payload){
-                    console.log(payload);
-                    //OFFLINE
-                    var msg = "La solicitud para crear la notificacion se puso en cola";
-                    await registroService.oDataRemove(oThat.modelNecesidad, "/NotificacionOfflineSet", sNotificationKey);
-                    //let msg = payload.NotificacionMensajeSet.results[0].Message;
-                    //if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
-                        let sCorrelativo = "";
-                        let anioActual = new Date().getFullYear();
-                        if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
-                            let aFilters = [];
-                            aFilters.push(new Filter("cantRechazo", "NE", "0"));
-                            aFilters.push(new Filter("anio", "EQ", anioActual.toString()));
-                            aFilters.push(new Filter("centro", "EQ", oDataSeleccionada.getData().centro));
-                            aFilters.push(new Filter("motivoDesv", "NE", "Merma Propia del Proceso"));
-                            let aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilters);
-                            aListNotificaciones.results = aListNotificaciones.results.filter(itm=>itm.rol === "RMD_CONTROL_PROCESO" || itm.rol === "RMD_CONTROL_CALIDAD");
-                            sCorrelativo = formatter.obtenerCorrelativoMuestra(aListNotificaciones.results.length, 5);
-                        }
-                        let oObjNew = {
-                            usuarioRegistro: oInfoUsuario.data.usuario,
-                            fechaRegistro: new Date(),
-                            activo : true,
-                            rmdControlRechazo: sNotificationKey,
-                            rmdId_rmdId: oDataSeleccionada.getData().rmdId,
-                            fraccion: fraccionActual,
-                            orden: obj.Orderid,
-                            operacion: bFlagNotifFinal ? "FINAL" : "PARCIAL",     
-                            puestoTrabajo: pasoSeleccionado.pasoId.puestoTrabajo,
-                            clvModelo: pasoSeleccionado.pasoId.clvModelo,
-                            cantBuena: lineaActual.cantBuenda ? lineaActual.cantBuenda : "0",
-                            cantRechazo: lineaActual.rechazo ? lineaActual.rechazo : "0",
-                            motivoDesv: causaDesv.Grdtx,
-                            fase: lineaActual.Vornr,
-                            Rmzhl: payload.Rmzhl,
-                            Rueck: payload.Rueck,
-                            ConfText: lineaActual.textoNotif ? lineaActual.textoNotif : "",
-                            rol: oInfoUsuario.rol[0].codigo,
-                            styleUser: formatter.selectedColor(oInfoUsuario.rol[0].codigo),
-                            anio: anioActual.toString(),
-                            correlativoMuestra: sCorrelativo,
-                            centro: oDataSeleccionada.getData().centro
-                        }
-                        await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oObjNew);
-                        if (lineaActual.rechazo && (oInfoUsuario.rol[0].codigo === "RMD_CONTROL_PROCESO" || oInfoUsuario.rol[0].codigo === "RMD_CONTROL_CALIDAD")) {
-                            await oThat.onUpdateSumatoriaMuestreo();
-                        }
-                        if (bFlagNotifFinal) {
-                            let objNotifFinal = {
-                                notifFinal: true
-                            }
-                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
-                        }
-                    //}
-                    oThat.onNotification.close();
-                    oThat.onCancelNotificationsList();
-                    BusyIndicator.hide();
-                    MessageBox.information(msg);
-                }).catch((err)=>{
-                    console.log(err);
-                    MessageBox.error(JSON.parse(err.responseText).error.message.value)
-                    BusyIndicator.hide();
-                })
             }
         },
         onConfirmNotification: function () {
@@ -12159,7 +12399,13 @@ sap.ui.define([
                                 aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                                 aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                                 let sExpand = "tipoDatoId,pasoId";
-                                let itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                let itemResponse;
+                                if( bInterneInit === true){
+                                    itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO", aFilter, sExpand);
+                                }else{//OFFLINE MODEL
+                                    itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                                }
+                                
                                 oPasoEtiquetaPredecesor = itemResponse.results[0];
                                 if (oPasoEtiquetaPredecesor) {
                                     oPasoEtiqueta.generalEnabledPredecesor = formatter.onFormatoEnabledPredecesor(oPasoEtiquetaPredecesor);
@@ -12279,7 +12525,13 @@ sap.ui.define([
                             aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                             let sExpand = "tipoDatoId,pasoId";
-                            let itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                            let itemResponse;
+                            if( bInterneInit === true){ 
+                                itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO", aFilter, sExpand);
+                            }else{//OFFLINE MODEL
+                                itemResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_ES_PASO", aFilter, sExpand);
+                            }
+                            
                             itemPredecesor = itemResponse.results[0];
                             if (itemPredecesor) {
                                 item.generalEnabledPredecesor = formatter.onFormatoEnabledPredecesor(itemPredecesor);
@@ -13823,8 +14075,15 @@ sap.ui.define([
                 aFilters.push(new Filter("Yield", "EQ", parseFloat(lineaActual.Vfmng)));
             }
             //OFFLINE
-            let aActividades = await registroService.onGetDataGeneral(oThat.modelNecesidad, "ActividadOfflineSet");
-            let aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "ActividadOfflineSet", aFilters);
+            //let aActividades = await registroService.onGetDataGeneral(oThat.modelNecesidad, "ActividadOfflineSet");
+            let aListActivities;
+            if(bInterneInit === true){
+                //aListActivities = await registroService.getDataAjax("/ActividadSet", aFilters);
+                aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "ActividadSet", aFilters);
+            }else{//OFFLINE MODEL
+                aListActivities = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "ActividadOfflineSet", aFilters);
+            }
+           
             //let aListActivities = await registroService.getDataAjax("/ActividadSet", aFilters);
             let arrActivities = [];
             aListActivities.results.forEach(function(oActivity){
@@ -13869,7 +14128,13 @@ sap.ui.define([
             aFilters.push(new Filter("fechaInicio", "NE", null));
             aFilters.push(new Filter("notifFinal", "NE", true));
 			let sExpands = "pasoIdFin,pasoId";
-			let oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilters, sExpands);
+            let oResponseLapsoManual;
+            if(bInterneInit === true){
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_LAPSO", aFilters, sExpands);
+            }else{//OFFLINE MODEL
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilters, sExpands);
+            }
+			
 			let lineaSeleccionada = oResponseLapsoManual.results;
             oThat.modelGeneral.setProperty("/lapsoManual", lineaSeleccionada);
             let bTipo = formatter.onVerifNotif(lineaSeleccionada[0]);
@@ -13887,7 +14152,14 @@ sap.ui.define([
             aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
             let sExpand = "rmdId";
-            let aListNotificaciones = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter, sExpand);
+
+            let aListNotificaciones;
+            if(bInterneInit === true){
+                aListNotificaciones = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter, sExpand);
+            }else{//OFFLINE MODEL
+                aListNotificaciones = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter, sExpand);
+            }
+            
             aListNotificaciones.results.forEach(function(oNotif){
                 oNotif.cantBuena = (parseFloat(oNotif.cantBuena)).toFixed(3);
                 oNotif.cantRechazo = (parseFloat(oNotif.cantRechazo)).toFixed(3);
@@ -13946,7 +14218,13 @@ sap.ui.define([
             aFilter.push(new Filter("fechaInicio", "NE", null));
             aFilter.push(new Filter("notifFinal", "EQ", true));
             let sExpand = "pasoIdFin,pasoId";
-            let oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+            let oResponseLapsoManual;
+            if( bInterneInit === true){
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_LAPSO", aFilter, sExpand);
+            }else{ 
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+            }
+           
             let pasoSelected = oResponseLapsoManual.results.find(itm=>itm.pasoIdFin.puestoTrabajo === oContext.puestoTrabajo);
             let pasoSeleccionado = pasoSelected;
 
@@ -13975,57 +14253,111 @@ sap.ui.define([
 						press: function () {
 							var sMotivoEliminacion = sap.ui.getCore().byId("submitDialogTextarea").getValue();
 							BusyIndicator.show(0);
-                            
-                            let obj = {
-                                Rueck: oContext.Rueck,
-                                Rmzhl: oContext.Rmzhl,
-                                Orderid: (oContext.orden).toString(),
-                                Phase: oContext.fase,
-                                PostgDate: new Date().toISOString().slice(0,-1),
-                                ConfText: sMotivoEliminacion,
-                                Zflag: "5",
-                                NotificacionOfflineSet: util.onGetUUIDV4()
-                                //NotificacionMensajeSet: []
-                            }
-                            //registroService.createData(oThat.modelNecesidad,"/NotificacionSet",obj).then(async function(payload){
-                            registroService.createData(oThat.modelNecesidad,"/NotificacionOfflineSet",obj).then(async function(payload){
-                                console.log(payload);
-                                //let msg = payload.NotificacionMensajeSet.results[0].Message;
-                                //if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
-                                    if (oContext.operacion === "FINAL") {
-                                        if (pasoSelected) {
-                                            let objNotifFinal = {
-                                                notifFinal: false
-                                            }
-                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
-                                        } 
-                                    }
-                                    let objBTP = {
-                                        usuarioActualiza: oInfoUsuario.data.usuario,
-                                        fechaActualiza: new Date(),
-                                        activo: false,
-                                        ConfTextAnulac: sMotivoEliminacion
-                                    }
-                                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", objBTP, oContext.rmdControlRechazo);
-                                    await oThat.onUpdateSumatoriaMuestreo();
-                                    MessageBox.success("Se eliminó correctamente la notificación");
-                                //} else {
-                                //    MessageBox.information(msg);
-                                //}
-                                if (oModel === "tblListNotifications") {
-                                    oThat.onCancelNotificationsList();
-                                } else {
-                                    oThat.onCancelMuestreo();
+
+                            if(bInterneInit === true){
+                                let obj = {
+                                    Rueck: oContext.Rueck,
+                                    Rmzhl: oContext.Rmzhl,
+                                    Orderid: (oContext.orden).toString(),
+                                    Phase: oContext.fase,
+                                    PostgDate: new Date().toISOString().slice(0,-1),
+                                    ConfText: sMotivoEliminacion,
+                                    Zflag: "5",
+                                    NotificacionMensajeSet: []
                                 }
+                                registroService.createData(oThat.modelNecesidadOnline,"/NotificacionSet",obj).then(async function(payload){
+                                    console.log(payload);
+                                    let msg = payload.NotificacionMensajeSet.results[0].Message;
+                                    if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
+                                        if (oContext.operacion === "FINAL") {
+                                            if (pasoSelected) {
+                                                let objNotifFinal = {
+                                                    notifFinal: false
+                                                }
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
+                                            } 
+                                        }
+                                        let objBTP = {
+                                            usuarioActualiza: oInfoUsuario.data.usuario,
+                                            fechaActualiza: new Date(),
+                                            activo: false,
+                                            ConfTextAnulac: sMotivoEliminacion
+                                        }
+                                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", objBTP, oContext.rmdControlRechazo);
+                                        await oThat.onUpdateSumatoriaMuestreo();
+                                        MessageBox.success("Se eliminó correctamente la notificación");
+                                    } else {
+                                        MessageBox.information(msg);
+                                    }
+                                    if (oModel === "tblListNotifications") {
+                                        oThat.onCancelNotificationsList();
+                                    } else {
+                                        oThat.onCancelMuestreo();
+                                    }
+                                
+                                    BusyIndicator.hide();
+                                }).catch((err)=>{
+                                    console.log(err);
+                                    MessageBox.warning("Ocurrió un error al eliminar la notificación");
+                                    BusyIndicator.hide();
+                                })
+                                sap.ui.getCore().byId("submitDialogTextarea").setValue("");
+                                oDialogDeleteNotif.close();  
+
+                            }else{ // OFFLINE MODEL
+
+                                let obj = {
+                                    Rueck: oContext.Rueck,
+                                    Rmzhl: oContext.Rmzhl,
+                                    Orderid: (oContext.orden).toString(),
+                                    Phase: oContext.fase,
+                                    PostgDate: new Date().toISOString().slice(0,-1),
+                                    ConfText: sMotivoEliminacion,
+                                    Zflag: "5",
+                                    NotificacionOfflineSet: util.onGetUUIDV4()
+                                    //NotificacionMensajeSet: []
+                                }
+                                //registroService.createData(oThat.modelNecesidad,"/NotificacionSet",obj).then(async function(payload){
+                                registroService.createData(oThat.modelNecesidad,"/NotificacionOfflineSet",obj).then(async function(payload){
+                                    console.log(payload);
+                                    //let msg = payload.NotificacionMensajeSet.results[0].Message;
+                                    //if (payload.NotificacionMensajeSet.results[0].Type !== "E") {
+                                        if (oContext.operacion === "FINAL") {
+                                            if (pasoSelected) {
+                                                let objNotifFinal = {
+                                                    notifFinal: false
+                                                }
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", objNotifFinal, pasoSeleccionado.rmdLapsoId);
+                                            } 
+                                        }
+                                        let objBTP = {
+                                            usuarioActualiza: oInfoUsuario.data.usuario,
+                                            fechaActualiza: new Date(),
+                                            activo: false,
+                                            ConfTextAnulac: sMotivoEliminacion
+                                        }
+                                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", objBTP, oContext.rmdControlRechazo);
+                                        await oThat.onUpdateSumatoriaMuestreo();
+                                        MessageBox.success("Se eliminó correctamente la notificación");
+                                    //} else {
+                                    //    MessageBox.information(msg);
+                                    //}
+                                    if (oModel === "tblListNotifications") {
+                                        oThat.onCancelNotificationsList();
+                                    } else {
+                                        oThat.onCancelMuestreo();
+                                    }
+                                
+                                    BusyIndicator.hide();
+                                }).catch((err)=>{
+                                    console.log(err);
+                                    MessageBox.warning("Ocurrió un error al eliminar la notificación");
+                                    BusyIndicator.hide();
+                                })
+                                sap.ui.getCore().byId("submitDialogTextarea").setValue("");
+                                oDialogDeleteNotif.close();  
+                            } 
                             
-                                BusyIndicator.hide();
-                            }).catch((err)=>{
-                                console.log(err);
-                                MessageBox.warning("Ocurrió un error al eliminar la notificación");
-                                BusyIndicator.hide();
-                            })
-                            sap.ui.getCore().byId("submitDialogTextarea").setValue("");
-                            oDialogDeleteNotif.close();  
 						}
 
 					}),
@@ -14130,7 +14462,13 @@ sap.ui.define([
             aFilter.push(new Filter("fechaInicio", "NE", null));
             aFilter.push(new Filter("notifFinal", "NE", true));
             let sExpand = "pasoIdFin,pasoId";
-            let oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+            let oResponseLapsoManual;
+            if(bInterneInit === true){
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_LAPSO", aFilter, sExpand);
+            }else{//OFFLINE MODEL
+                oResponseLapsoManual = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_LAPSO", aFilter, sExpand);
+            }
+           
             let lineaSeleccionada = oResponseLapsoManual.results[0];
             if(oContext === "PARCIAL" || oContext === "FINAL" || oContext === "" || oContext === "0"){
                 oThat.modelGeneral.setProperty("/aListActivities", []);
@@ -14188,7 +14526,13 @@ sap.ui.define([
             aFilterLapso.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
             aFilterLapso.push(new Filter("automatico", "EQ", false));
             aFilterLapso.push(new Filter("fraccion", "EQ", fraccionActual));
-            let aLapsoManualResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilterLapso);
+            let aLapsoManualResponse;
+            if(bInterneInit === true ){
+                aLapsoManualResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_LAPSO", aFilterLapso);
+            }else{//OFFLINE MODEL
+                aLapsoManualResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilterLapso);
+            }
+          
             let pasosSelected = [];
             aLapsoManualResponse.results.forEach(function(oLapso){
                 pasosSelected.push(aListPasosProceso.getData().find(itm=>itm.mdEstructuraPasoIdDepende === oLapso.pasoIdFin_mdEstructuraPasoId));
@@ -14202,16 +14546,31 @@ sap.ui.define([
             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
             aFilter.push(new Filter("clvModelo", "EQ", pasosSelected[0].clvModelo));
             aFilter.push(new Filter("puestoTrabajo", "EQ", pasosSelected[0].puestoTrabajo));
-            let aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+            let aListNotificaciones;
+            if(bInterneInit === true ){
+                aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
+            }else{//OFFLINE MODEL
+                aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+            }
+            
             let cantidad = 0;
             aListNotificaciones.results.forEach(function(oNotif){
                 cantidad = cantidad + parseFloat(oNotif.cantRechazo) + parseFloat(oNotif.cantBuena);
             });
             let aFilterSap = [];
-            //OFFLINE
-            //aFilterSap.push(new Filter("Charg", "EQ", ""));
-            aFilterSap.push(new Filter("Aufnr", "EQ", oDataSeleccionada.getData().ordenSAP));
-            let ordenResponse = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "OrdenSet", aFilterSap);
+            let ordenResponse;
+            if(bInterneInit === true){
+                aFilterSap.push(new Filter("Charg", "EQ", ""));
+                aFilterSap.push(new Filter("Aufnr", "EQ", oDataSeleccionada.getData().ordenSAP));
+                ordenResponse = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "OrdenSet", aFilterSap);
+
+            }else{ //OFFLINE MODEL
+                //OFFLINE
+                //aFilterSap.push(new Filter("Charg", "EQ", ""));
+                aFilterSap.push(new Filter("Aufnr", "EQ", oDataSeleccionada.getData().ordenSAP));
+                ordenResponse = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "OrdenSet", aFilterSap);
+            }
+           
             //let teoricoInicial = parseFloat(oDataSeleccionada.getData().vfmng);
             let teoricoInicial = parseFloat(oDataSeleccionada.getData().vfmng) / parseFloat(oDataSeleccionada.getData().fraccion);
             let tolerancia = ordenResponse.results[0].Uebto ? parseFloat(ordenResponse.results[0].Uebto) : 0;
@@ -14489,7 +14848,13 @@ sap.ui.define([
             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
             aFilter.push(new Filter("cantRechazo", "NE", "0"));
             aFilter.push(new Filter("motivoDesv", "NE", "Merma Propia del Proceso"));
-            let aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+            let aListNotificaciones;
+            if ( bInterneInit === true){
+                aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
+            }else{//OFFLINE MODEL
+                aListNotificaciones = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+            }
+            
             aListNotificaciones.results = aListNotificaciones.results.filter(itm=>itm.rol === "RMD_CONTROL_PROCESO" || itm.rol === "RMD_CONTROL_CALIDAD");
             let cantidad = 0;
             aListNotificaciones.results.forEach(function(oNotif){
@@ -14501,19 +14866,35 @@ sap.ui.define([
             aFilterPaso.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
             aFilterPaso.push(new Filter("fraccion", "EQ", fraccionActual));
             aFilterPaso.push(new Filter("tipoDatoId_iMaestraId", "EQ", iIdMuestraCC));
-            let aListPasos = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFilterPaso);
-            let aListPM = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", aFilterPaso);
+            let aListPasos,aListPM; 
+            if (bInterneInit === true){
+                aListPasos = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_ES_PASO", aFilterPaso);
+                aListPM = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_ES_PASO_INSUMO_PASO", aFilterPaso);
+            }else{//OFFLINE MODEL
+                aListPasos = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFilterPaso);
+                aListPM = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", aFilterPaso);
+            }
+          
             for await (const oPaso of aListPasos.results) {
                 let oObj = {
                     cantidad: cantidad
                 }
-                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_PASO", oObj, oPaso.rmdEstructuraPasoId);
+                if (bInterneInit === true){
+                    await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_ES_PASO", oObj, oPaso.rmdEstructuraPasoId);
+                }else{//OFFLINE MODEL
+                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_PASO", oObj, oPaso.rmdEstructuraPasoId);
+                }
+                
             }
             for await (const oPasoMenor of aListPM.results) {
                 let oObj = {
                     cantidad: cantidad
                 }
-                await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", oObj, oPasoMenor.rmdEstructuraPasoInsumoPasoId);
+                if (bInterneInit === true){
+                    await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_ES_PASO_INSUMO_PASO", oObj, oPasoMenor.rmdEstructuraPasoInsumoPasoId);
+                }else{//OFFLINE MODEL
+                    await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_PASO_INSUMO_PASO", oObj, oPasoMenor.rmdEstructuraPasoInsumoPasoId);
+                }
             }
         },
 
@@ -14675,7 +15056,13 @@ sap.ui.define([
             aFiltersPaso.push(new Filter("puestoTrabajo", "EQ", lineaSeleccionada.pasoIdFin.puestoTrabajo));
             aFiltersPaso.push(new Filter("fraccion", "EQ", fraccionActual));
             aFiltersPaso.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-            let aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFiltersPaso);
+            let aPasosSelected;
+            if(bInterneInit === true){
+                aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_ES_PASO", aFiltersPaso);
+            }else{//OFFLINE MODEL
+                aPasosSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_PASO", aFiltersPaso);
+            }
+           
             aPasosSelected.results.sort(function (a, b) {
                 return a.orden - b.orden;
             });
@@ -14820,7 +15207,13 @@ sap.ui.define([
             aFilterBTP.push(new Filter("activo", "EQ", true));
             aFilterBTP.push(new Filter("fraccion", "EQ", fraccionActual));
             aFilterBTP.push(new Filter("ensayoPadreSAP", "NE", null));
-            let aResponseEnsayoSAPBTP = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", aFilterBTP);
+
+            let aResponseEnsayoSAPBTP;
+            if (bInterneInit === true){
+                aResponseEnsayoSAPBTP = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_ES_ESPECIFICACION", aFilterBTP);
+            }else{//OFFLINE MODEL
+                aResponseEnsayoSAPBTP = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", aFilterBTP);
+            }
 
             for await (const oEnsayoSAPBTP of aResponseEnsayoSAPBTP.results) {
                 let oEnsayoSAPMatch = aResponseEnsayoSAP.find(oEsy=>oEsy.Inspchar === oEnsayoSAPBTP.Merknr);
@@ -14839,12 +15232,21 @@ sap.ui.define([
                             oObj.firstFechaActualiza = new Date(year + "/" + month + "/" +  date);
                         }
                         // console.log(oEnsayoSAPBTP.ensayoHijo, oObj);
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", oObj, oEnsayoSAPBTP.rmdEstructuraEspecificacionId);
+                        if (bInterneInit === true){
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_ES_ESPECIFICACION", oObj, oEnsayoSAPBTP.rmdEstructuraEspecificacionId);
+                        }else{//OFFLINE MODEL
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_ES_ESPECIFICACION", oObj, oEnsayoSAPBTP.rmdEstructuraEspecificacionId);
+                        }
 
                         let aFiterAdmin = [];
                         aFiterAdmin.push(new Filter("loginSap", "EQ", oEnsayoSAPMatch.Inspector));
                         aFiterAdmin.push(new Filter("activo", "EQ", true));
-                        let aUserAdminResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "USUARIO", aFiterAdmin);
+                        let aUserAdminResponse;
+                        if (bInterneInit === true){
+                            aUserAdminResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "USUARIO", aFiterAdmin);
+                        }else{//OFFLINE MODEL
+                            aUserAdminResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "USUARIO", aFiterAdmin);
+                        }
                         let aLapsoSelected = [];
                         let oUser = {};
                         if (aUserAdminResponse.results.length > 0) {
@@ -14852,12 +15254,23 @@ sap.ui.define([
                             oFilter.push(new Filter("oUsuario_usuarioId", 'EQ', aUserAdminResponse.results[0].usuarioId));
                             let sExpand = "oRol($select=rolId,codigo,nombre,descripcion)";
                             oUser.results = [];
-                            oUser.results = await registroService.getDataExpand(oThat.mainModelv2, "/UsuarioRol", sExpand, oFilter);
+                            if (bInterneInit === true){
+                                oUser.results = await registroService.getDataExpand(oThat.mainModelv2Online, "/UsuarioRol", sExpand, oFilter);
+                            }else{//OFFLINE MODEL
+                                oUser.results = await registroService.getDataExpand(oThat.mainModelv2, "/UsuarioRol", sExpand, oFilter);
+                            }
+                            
                             let aFilter = [];
                             aFilter.push(new Filter("usuarioId_usuarioId", "EQ", aUserAdminResponse.results[0].usuarioId));
                             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                             aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+
+                            if(bInterneInit === true){
+                                aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                            }else{//OFFLINE MODEL
+                                aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                            }
+                            
                         } else {
                             oUser = {
                                 results: []
@@ -14866,7 +15279,12 @@ sap.ui.define([
                             aFilter.push(new Filter("usuarioSap", "EQ", oEnsayoSAPMatch.Inspector));
                             aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
                             aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                            
+                            if(bInterneInit === true){
+                                aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                            }else{//OFFLINE MODEL
+                                aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                            }
                         }
                         if (aLapsoSelected.results.length === 0) {
                             var oDataFirmaVerif = {}
@@ -14886,11 +15304,19 @@ sap.ui.define([
                 let aFilterSAP = [];
                 aFilterSAP.push(new Filter("Aufnr", "EQ", oDataSeleccionada.getData().ordenSAP));
                 return new Promise ((resolve, reject) => {
-                    registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "EnsayoSet", aFilterSAP).then(function(payload){
-                        resolve(payload);
-                    }).catch(function(err){
-                        resolve("");
-                    })
+                    if(bInterneInit === true){
+                        registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "EnsayoSet", aFilterSAP).then(function(payload){
+                            resolve(payload);
+                        }).catch(function(err){
+                            resolve("");
+                        })
+                    }else{//OFFLINE MODEL
+                        registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "EnsayoSet", aFilterSAP).then(function(payload){
+                            resolve(payload);
+                        }).catch(function(err){
+                            resolve("");
+                        })
+                    }
                 });
             } catch (oError) {
                 MessageBox.error(oError.responseText);
