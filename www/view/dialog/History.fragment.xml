@@ -6,25 +6,25 @@
   <Dialog class="sapUiContentPadding sapUiSizeCompact" contentWidth="80%" title="{i18n>mnHistoryXStep} - {modelGeneral>/sDesPaso}" afterClose="onCancelHistoryStep">
 		<content>
 			<layout:VerticalLayout>
-				<Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/tblHistorial'}" updateFinished="onUpdateFinish" growing="true"
+				<Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/tblHistorial'}"  growing="true"
           growingScrollToLoad="true" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd">
           <columns>
-            <Column width="40%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="true">
+            <Column width="25rem" hAlign="Left" vAlign="Middle"  popinDisplay="Inline" mergeDuplicates="true">
               <Text text="{i18n>clDescription}" width="auto"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="true">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="true">
               <Text text="{i18n>clUser}" width="auto"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="65rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clField}" width="auto"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="65rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clValue}" width="auto"/>
             </Column>
-            <Column width="20%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="70rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clMotivo}" width="auto"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="75rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clDate}" width="auto"/>
             </Column>
           </columns>

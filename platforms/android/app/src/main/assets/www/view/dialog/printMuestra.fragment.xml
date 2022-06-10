@@ -21,8 +21,8 @@
                                 <Label text="Impresora" design="Bold" width="100%"/>
                             </form:label>
                             <form:fields>
-                                <ComboBox items="{path: 'modelGeneral>/ImpresorasMuestra'}" selectedKey="{modelGeneral>/impresoraSelected}" placeholder="Seleccione una Impresora" showSecondaryValues="true" filterSecondaryValues="true">
-                                    <core:ListItem key="{modelGeneral>Padest}" text="{modelGeneral>Padest}" additionalText="{modelGeneral>Area}"/>
+                                <ComboBox items="{path: 'modelGeneral>/ImpresorasMuestra'}" selectedKey="{modelGeneral>/tipoDatoId_iMaestraId}" placeholder="Seleccione una Impresora" showSecondaryValues="true" filterSecondaryValues="true">
+                                    <core:ListItem key="{modelGeneral>impresoraId}" text="{modelGeneral>nombre}" additionalText="{modelGeneral>area}"/>
                                 </ComboBox>
                             </form:fields>
                         </form:FormElement>

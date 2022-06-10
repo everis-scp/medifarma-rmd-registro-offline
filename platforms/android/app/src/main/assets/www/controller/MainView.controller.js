@@ -74,14 +74,14 @@ sap.ui.define([
                         return response;
                      }).then(function(response) {
                         // response.ok fue true
-                        console.log('ok');
+                        //console.log('ok');
                         oTypeLine.type = "ONLINE";
                         oTypeLine.color = "#008000";
                         bInterneInit = true;
                         oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
 
                     }).catch(function(error) {
-                        console.log('Problema al realizar la solicitud: ' + error.message);
+                        //console.log('Problema al realizar la solicitud: ' + error.message);
                         oTypeLine.type = "OFFLINE";
                         oTypeLine.color = "#808080";
                         bInterneInit = false;
@@ -107,7 +107,7 @@ sap.ui.define([
                     if(bInterneInit){
                         oThat.onFlushButton();
                     }else{
-                        console.log("Flush no se esta cargando (Sin internet )");
+                        //console.log("Flush no se esta cargando (Sin internet )");
                     }
                 }
 
@@ -122,7 +122,7 @@ sap.ui.define([
                     if(bInterneInit){
                         oThat.onRefreshAutomatico();
                     }else{
-                        console.log("Refresh no se esta cargando (Sin internet )");
+                        //console.log("Refresh no se esta cargando (Sin internet )");
                     }
                 }
 
@@ -3100,7 +3100,7 @@ sap.ui.define([
 
             // GRPR - Actualización de obtención de datos del RMD.
             getEstructurasRmdRefactory: async function (sFraccion) {
-                // BusyIndicator.show(0);
+                BusyIndicator.show(0);
                 await oThat.onGetRmdReceta(sFraccion);
                 await Promise.all([oThat.onGetRmdEstructura(sFraccion), oThat.onGetRmdEsPaso(sFraccion), oThat.onGetRmdEsEquipo(sFraccion), oThat.onGetRmdEsUtensilio(sFraccion), 
                     oThat.onGetRmdEsEtiqueta(sFraccion), oThat.onGetRmdEsReInsumo(sFraccion), oThat.onGetRmdEsEspecificacion(sFraccion), oThat.onGetRmdEsPasoInsumoPaso(sFraccion)])
@@ -3146,9 +3146,9 @@ sap.ui.define([
                     oThat.getView().getModel("listEsPasoInsumoPasoGeneral").refresh(true);
                     await oThat.onCompletarAsociarDatos();
 
-                    // sap.ui.core.BusyIndicator.hide();
+                    sap.ui.core.BusyIndicator.hide();
                 }).catch(function (oError) {
-                    // sap.ui.core.BusyIndicator.hide();
+                    sap.ui.core.BusyIndicator.hide();
                     oThat.onErrorMessage(oError, "errorSave");
                 });
 
@@ -3793,11 +3793,11 @@ sap.ui.define([
                                                 tipoDatoId: (oPaso.tipoDatoId_iMaestraId).toString(),
                                                 automatico: pasoLapsoFin.automatico === null ? false : pasoLapsoFin.automatico,
 
-                                                asoId_mdEstructuraPasoId: oPaso.mdEstructuraPasoIdDepende,	
+                                                //asoId_mdEstructuraPasoId: oPaso.mdEstructuraPasoIdDepende,	
                                                 pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoIdDepende,
 
                                                 pasoId_mdEstructuraPasoId: oPaso.mdEstructuraPasoId,
-                                                pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoId,
+                                                //pasoIdFin_mdEstructuraPasoId: pasoLapsoFin.mdEstructuraPasoId,
                                                 fraccion: sFraccion
                                             };
                                             if(bInterneInit === true ){

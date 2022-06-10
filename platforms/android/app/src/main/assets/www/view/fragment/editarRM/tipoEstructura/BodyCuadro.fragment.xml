@@ -1,4 +1,9 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<ScrollContainer
+	height="100%"
+	width="100%"
+	horizontal="false"
+	vertical="true">
 	<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListPasoAssignResponsive>/}" updateFinished="onUpdateFinish">
 		<columns>
 			<Column width="55%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
@@ -25,7 +30,7 @@
 				<Text text="{aListPasoAssignResponsive>pasoId/descripcion}" renderWhitespace="true" width="auto"/>
 				<HBox>
 					<Text text="{aListPasoAssignResponsive>generalInput}" visible="{aListPasoAssignResponsive>generalVisibleText}" width="auto"/>
-					<Input value="{aListPasoAssignResponsive>generalInput}" type="{aListPasoAssignResponsive>generalType}" visible="{aListPasoAssignResponsive>generalVisibleInput}" width="auto" change="onGetFormat" enabled="{=${aListPasoAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+					<Input value="{aListPasoAssignResponsive>generalInput}" type="{aListPasoAssignResponsive>generalType}" visible="{aListPasoAssignResponsive>generalVisibleInput}" width="auto" change="onGetFormat" liveChange="onSaveLineaActual" enabled="{=${aListPasoAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
 					<VBox>
 						<ObjectStatus text="{i18n>lblDoFor1}" visible="{aListPasoAssignResponsive>generalVisibleToggleButton}" />
 						<Button icon="sap-icon://accidental-leave" visible="{=${aListPasoAssignResponsive>generalVisibleToggleButton} || ${aListPasoAssignResponsive>onFormatoTipoDatoVisibleToggleButtonMultiCheck}}" press="abrirSeleccionUsuarios" enabled="{=${aListPasoAssignResponsive>aplica} &amp;&amp; ${aListPasoAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${aListPasoAssignResponsive>generalEnabledPredecesor}}"/>
@@ -43,6 +48,7 @@
 					<ObjectStatus text="{aListPasoAssignResponsive>usuarioActualiza}" visible="{aListPasoAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListPasoAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
 					<ObjectStatus text="{parts: [{path: 'aListPasoAssignResponsive>aplica'}, {path: 'aListPasoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListPasoAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListPasoAssignResponsive>aplica'}, {path: 'aListPasoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
 				</VBox>
+				<HBox>
 				<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" buttonMode="Regular">
 					<menu >
 						<Menu itemSelected="onMenuAction">
@@ -52,7 +58,9 @@
 						</Menu>
 					</menu>
 				</MenuButton>
+			</HBox>
 			</ColumnListItem>
 		</items>
 	</Table>
+	</ScrollContainer>
 </core:FragmentDefinition>

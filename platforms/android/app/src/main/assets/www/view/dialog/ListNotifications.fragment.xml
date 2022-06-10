@@ -30,43 +30,43 @@
                         <!-- <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clPosicion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column> -->
-                        <Column width="auto" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clOrden}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clOperacion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clPuestoTrabajo}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clCantidadBuena}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clCantidadRechazo}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clMotivoDesv}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clUsuarioNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clFechaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clUsuarioEliminaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clFechaEliminaNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clEstadoNotif}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clMotivoAnulacion}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                        <Column width="4rem" hAlign="Left" vAlign="Middle" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
                             <Text text="{i18n>clAcc}" width="auto" maxLines="5" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
                         </Column>
                     </columns>

@@ -14,7 +14,7 @@
             <Label text="{oModelOffline>/type}"/>
           </headerContent>
           <content>
-            <f:DynamicPage class="sapUiNoContentPadding">
+            <f:DynamicPage class="sapUiNoContentPadding" preserveHeaderStateOnScroll="true">
               <f:title>
                 <f:DynamicPageTitle>
                   <f:heading>
@@ -37,11 +37,11 @@
                     </OverflowToolbar>
                   </f:content>
                   <f:actions>
-                    <MenuButton icon="sap-icon://dimension" tooltip="{i18n>mnFraction}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/crearFraccion} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}">
+                    <MenuButton icon="sap-icon://dimension" tooltip="{i18n>mnFraction}">
                         <menu>
                             <Menu>
-                                <MenuItem text="{i18n>mnAddFraction}" icon="sap-icon://add" press="onAddFraction" />
-                                <MenuItem text="{i18n>mnListFraction}" icon="sap-icon://list" press="onListFraction" />
+                              <MenuItem text="{i18n>mnAddFraction}" icon="sap-icon://add" press="onAddFraction" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/crearFraccion} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+                                <MenuItem text="{i18n>mnListFraction}" icon="sap-icon://list" press="onListFraction" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/registroP} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
                                 <MenuItem text="{i18n>mnListFractionDelete}" icon="sap-icon://delete" press="onListFractionDelete" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/crearFraccion} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
                             </Menu>
                         </menu>
@@ -65,9 +65,9 @@
                     <MenuButton icon="sap-icon://locked" tooltip="{i18n>mnClose}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/registroLector}===true?false:true}">
                         <menu>
                             <Menu>
-                                <MenuItem text="{i18n>mnEstado}" icon="sap-icon://palette" press="onOpenDialogEstado"/>
-                                <MenuItem text="{i18n>mnClose}" icon="sap-icon://locked" press="onCloseRMD" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/cierreRMD} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
-                                <MenuItem text="{i18n>mnReapertura}" icon="sap-icon://unlocked" press="onReaperturarRMD" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/reaperturaRMD} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+                              <MenuItem text="{i18n>mnEstado}" icon="sap-icon://palette" press="onOpenDialogEstado"/>
+                              <MenuItem text="{i18n>mnClose}" icon="sap-icon://locked" press="onCloseRMD" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/cierreRMD} &amp;&amp; ${generalModelState>/state}}"/>
+                              <MenuItem text="{i18n>mnReapertura}" icon="sap-icon://unlocked" press="onReaperturarRMD" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/reaperturaRMD} &amp;&amp; ${generalModelState>/state} === false ? true : false}"/>
                             </Menu>
                         </menu>
                     </MenuButton>
@@ -135,8 +135,8 @@
                         </layout:VerticalLayout>
 
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                            <ObjectStatus title="Expira" text="{path: 'modelGeneral>/LineaActualRMD/VfdatBTP', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd HH:mm', UTC: false }}"/>
-                            <ObjectStatus title="Cantidad Teórica" text="{modelGeneral>/LineaActualRMD/Vfmng} {modelGeneral>/LineaActualRMD/Amein}"/>
+                            <ObjectStatus title="Expira" text="{path: 'asociarDatos>/vfdat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd', UTC: true }}"/>
+                            <ObjectStatus title="Cantidad Teórica" text="{asociarDatos>/vfmng} {asociarDatos>/Amein}"/>
                             <ObjectStatus title="Inicio y fin de {asociarDatos>/mdId/nivelTxt}" text="{path: 'asociarDatos>/fechaInicioRegistro', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd HH:mm', UTC: false }} - {path: 'asociarDatos>/fechaFinRegistro', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd HH:mm', UTC: false }}"/>
                         </layout:VerticalLayout>
                     </FlexBox>

@@ -1,4 +1,9 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<ScrollContainer
+        height="100%"
+        width="100%"
+        horizontal="false"
+        vertical="true"> 
 	<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListVerifFirmasAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
 		growingScrollToLoad="true">
         <headerToolbar>
@@ -34,4 +39,5 @@
 			</ColumnListItem>
 		</items>
 	</Table>
+</ScrollContainer>
 </core:FragmentDefinition>

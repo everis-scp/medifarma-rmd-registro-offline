@@ -1,5 +1,10 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
 	<!-- <Dialog title="{asociarDatos>/codigo} - {asociarDatos>/descripcion}" afterClose="onCancelCuadroResponsive"> -->
+		<ScrollContainer
+		height="100%"
+		width="100%"
+		horizontal="false"
+		vertical="true"> 
 		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{path: 'aListEspecificacionAssignResponsive>/',
 				sorter: {
 					path: 'Merknr'
@@ -29,7 +34,7 @@
 				<ColumnListItem>
 					<ObjectIdentifier title="{aListEspecificacionAssignResponsive>ensayoPadreId/descripcion}" text="{aListEspecificacionAssignResponsive>ensayoHijo}"/>
                     <Text text="{aListEspecificacionAssignResponsive>especificacion}" width="auto"/>
-                    <TextArea value="{aListEspecificacionAssignResponsive>resultados}" showExceededText="true" maxLength="200" width="100%" valueState="{= ${aListEspecificacionAssignResponsive>resultados}.length > 200 ? 'Warning' : 'None' }" valueLiveUpdate="false" liveChange="handleLiveChange" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
+                    <TextArea value="{aListEspecificacionAssignResponsive>resultados}" showExceededText="true" maxLength="200" width="100%" valueState="{= ${aListEspecificacionAssignResponsive>resultados}.length > 200 ? 'Warning' : 'None' }" valueLiveUpdate="false" change="onLimpiarValoresConstantes" liveChange="handleLiveChange" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
 					<VBox>
 						<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
 						<ObjectStatus text="{aListEspecificacionAssignResponsive>usuarioActualiza}" visible="{aListEspecificacionAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListEspecificacionAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
@@ -38,6 +43,7 @@
 				</ColumnListItem>
 			</items>
 		</Table>
+	</ScrollContainer>
 		<!-- <endButton>
 			<Button text="{i18n>btnClose}" press="onCancelCuadroResponsive" type="Transparent"/>
 		</endButton>

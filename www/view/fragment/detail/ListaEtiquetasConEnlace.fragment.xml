@@ -11,17 +11,24 @@
                         <Input value="{FiltersModel>/Hu}" placeholder="{i18n>clHu}" type="Text" showValueHelp="false" visible="true" width="100%" valueHelpOnly="false"/>
                     </fb:control>
                 </fb:FilterGroupItem>
+                <fb:FilterGroupItem groupName="HU" name="B" label="{i18n>clEstado}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                    <fb:control>
+                        <ComboBox items="{path : 'modelGeneral>/aListaEstadosEtiquetasEnlace'}" placeholder="{i18n>clEstado}" selectedKey="{FiltersModel>/sTipo}" required="true">
+                            <core:ListItem key="{modelGeneral>iMaestraId}" text="{modelGeneral>contenido}"/>
+                        </ComboBox>
+                    </fb:control>
+                </fb:FilterGroupItem>
             </fb:filterGroupItems>
         </fb:FilterBar>
-        <ScrollContainer  width="auto" height="auto" horizontal="true" vertical="true" focusable="true" class="sapUiSmallMargin">
             <Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/ListaEtiqueta'}" updateFinished="onUpdateFinish" growing="true" growingScrollToLoad="true" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd" mode="MultiSelect">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title text="{i18n>tblEtiqueta}"></Title>
+                        <Title text="{i18n>tblEtiqueta} ({=${modelGeneral>/ListaEtiqueta}.length})"></Title>
                         <ToolbarSpacer/>
                         <ToolbarSeparator/>
                         <OverflowToolbarButton tooltip="{i18n>TbEPrint}" icon="sap-icon://print" press="onPrintTicket(0)" type="Transparent"/>
-                        <OverflowToolbarButton tooltip="{i18n>TbEDeleteTicket}" icon="sap-icon://delete" press="onDeleteEtiquetaMasivo" type="Transparent"/>
+                            <OverflowToolbarButton tooltip="{i18n>TbECierreMasivo}" icon="sap-icon://locked" press="onCierreEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
+                        <OverflowToolbarButton tooltip="{i18n>TbEDeleteTicket}" icon="sap-icon://delete" press="onDeleteEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
@@ -34,6 +41,9 @@
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clLote}" width="auto" wrapping="true"/>
                     </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clObjeto}" width="auto" wrapping="true"/>
+                    </Column>
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clCantidadUnidad}" width="auto" wrapping="true"/>
                     </Column>
@@ -43,16 +53,10 @@
                     <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clUM}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
-                        <Text text="" width="auto" wrapping="true"/>
-                    </Column>
-                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
-                        <Text text="" width="auto" wrapping="true"/>
-                    </Column>
-                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="3.5em" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="" width="auto" wrapping="true"/>
                     </Column>
                 </columns>
@@ -63,19 +67,17 @@
                             <Text text="{path:'modelGeneral>Exidv', formatter:'.formatter.onSincrorniceOffline'}" width="auto" wrapping="true"/>
                             <Text text="{modelGeneral>Matnr}" width="auto" wrapping="true"/>
                             <Text text="{modelGeneral>Charg}" width="auto" wrapping="true"/>
+                            <Text text="{modelGeneral>objeto}" width="auto" wrapping="true"/>
                             <Text text="{modelGeneral>Umrez}" width="auto" wrapping="true"/>
-                            <!-- <Input value="{modelGeneral>Umrez}" type="Number" enabled="true" width="auto"/> -->
+
                             <Text  text="{modelGeneral>Resu1}" width="auto" wrapping="true"/>
                             <Text text="{modelGeneral>Altme}" width="auto" wrapping="true"/>
-                            <!-- <Button icon="sap-icon://save" tooltip="{i18n>tltEditar}" type="Transparent" text="" press="onEditEtiquetaControlHu"/> -->
-                            <Button icon="sap-icon://locked" tooltip="{i18n>lblCloseHU}" type="Transparent" text="" press="onPressCerrarEtiqueta"/>
-                            <Button icon="sap-icon://edit" tooltip="{i18n>lblEditHU}" type="Transparent" text="" press="onPressEditEtiqueta"/>
-                            <!-- <Button icon="sap-icon://delete" tooltip="{i18n>lblDeleteHU}" type="Transparent" text="" press="onPressDeleteEtiqueta"/> -->
+                            <Button icon="sap-icon://locked" tooltip="{i18n>lblCloseHU}" type="Transparent" text="" press="onPressCerrarEtiqueta" enabled="{=${modelGeneral>estadoEtiqueta_iMaestraId} === 804 ? true : false}"/>
+                            <Button icon="sap-icon://edit" tooltip="{i18n>lblEditHU}" type="Transparent" text="" press="onPressEditEtiqueta" enabled="{=${modelGeneral>estadoEtiqueta_iMaestraId} === 804 ? true : false}"/>                  
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
-        </ScrollContainer>
         </content>
         <endButton>
             <Button text="{i18n>btnClose}" press="onCancelListEtiquetaConEnlace" type="Reject"/>

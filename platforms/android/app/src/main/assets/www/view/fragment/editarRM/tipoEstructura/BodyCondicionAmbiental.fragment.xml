@@ -1,5 +1,10 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
 	<!-- <Dialog title="{asociarDatos>/codigo} - {asociarDatos>/descripcion}" afterClose="onCancelCuadroResponsive"> -->
+		<ScrollContainer
+	height="100%"
+	width="100%"
+	horizontal="false"
+	vertical="true">
 		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListPasoAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
 			growingScrollToLoad="true">
 			<columns>
@@ -36,6 +41,7 @@
 						<ObjectStatus text="{aListPasoAssignResponsive>usuarioActualiza}" visible="{aListPasoAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListPasoAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
 						<ObjectStatus text="{parts: [{path: 'aListPasoAssignResponsive>aplica'}, {path: 'aListPasoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListPasoAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListPasoAssignResponsive>aplica'}, {path: 'aListPasoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
 					</VBox>
+					<HBox>
 					<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" buttonMode="Regular">
 						<menu >
 							<Menu itemSelected="onMenuAction">
@@ -45,9 +51,11 @@
 							</Menu>
 						</menu>
 					</MenuButton>
+				</HBox>
 				</ColumnListItem>
 			</items>
 		</Table>
+	</ScrollContainer>
 		<!-- <endButton>
 			<Button text="{i18n>btnClose}" press="onCancelCuadroResponsive" type="Transparent"/>
 		</endButton>

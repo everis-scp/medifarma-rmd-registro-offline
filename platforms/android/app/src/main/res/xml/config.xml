@@ -86,7 +86,7 @@
         <param name="android-package" value="com.sap.mp.cordova.plugins.usage.UsagePlugin" />
         <param name="onload" value="true" />
     </feature>
-    <name>registro</name>
+    <name>Registro Manufactura</name>
     <description>QAS</description>
     <author href="http://cordova.io">SAP hybrid mobile solution</author>
     <content src="index.html" />

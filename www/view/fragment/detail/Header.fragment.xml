@@ -36,12 +36,11 @@ xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
                 </snappedTitleOnMobile>
 
                 <actions>
-                    <m:MenuButton icon="sap-icon://dimension" tooltip="{i18n>mnFraction}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/crearFraccion} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}">
+                    <m:MenuButton icon="sap-icon://dimension" tooltip="{i18n>mnFraction}">
                         <m:menu>
-                            <!-- <m:Menu itemSelected="onAddFraction"> -->
                             <m:Menu>
-                                <m:MenuItem text="{i18n>mnAddFraction}" icon="sap-icon://add" press="onAddFraction" />
-                                <m:MenuItem text="{i18n>mnListFraction}" icon="sap-icon://list" press="onListFraction" />
+                                <m:MenuItem text="{i18n>mnAddFraction}" icon="sap-icon://add" press="onAddFraction" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/crearFraccion} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+                                <m:MenuItem text="{i18n>mnListFraction}" icon="sap-icon://list" press="onListFraction" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/registroP} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
                             </m:Menu>
                         </m:menu>
                     </m:MenuButton>

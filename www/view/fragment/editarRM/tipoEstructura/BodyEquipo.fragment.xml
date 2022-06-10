@@ -1,4 +1,9 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
+	<ScrollContainer
+        height="100%"
+        width="100%"
+        horizontal="false"
+        vertical="true">  
 		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListEquipoAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
 			growingScrollToLoad="true">
             <headerToolbar>
@@ -59,6 +64,7 @@
 						<ObjectStatus text="{aListEquipoAssignResponsive>usuarioActualiza}" visible="{aListEquipoAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListEquipoAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
 						<ObjectStatus text="{parts: [{path: 'aListEquipoAssignResponsive>aplica'}, {path: 'aListEquipoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListEquipoAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListEquipoAssignResponsive>aplica'}, {path: 'aListEquipoAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
 					</VBox>
+					<HBox>
 					<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" buttonMode="Regular">
 						<menu >
 							<Menu itemSelected="onMenuAction">
@@ -68,7 +74,9 @@
 							</Menu>
 						</menu>
 					</MenuButton>
+					</HBox>
 				</ColumnListItem>
 			</items>
 		</Table>
+	</ScrollContainer>
 	</core:FragmentDefinition>

@@ -1,5 +1,10 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:dnd="sap.ui.core.dnd">
 	<!-- <Dialog title="{asociarDatos>/codigo} - {asociarDatos>/descripcion}" afterClose="onCancelCuadroResponsive"> -->
+		<ScrollContainer
+		height="100%"
+		width="100%"
+		horizontal="false"
+		vertical="true">  
 		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListInsumosAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
 			growingScrollToLoad="true">
 			<headerToolbar>
@@ -14,7 +19,7 @@
 				<Column width="25%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clDescription}" width="auto"/>
 					<footer>
-						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>
+						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}" visible="{estructuraVerificado>/state}"/>
 					</footer>
 				</Column>
 				<Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -26,7 +31,7 @@
 				<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clCount}" width="auto"/>
                     <footer>
-						<Text text="{i18n>ftTFecha}{aFooter>/fecha}"/>
+						<Text text="{i18n>ftTFecha}{aFooter>/fecha}" visible="{estructuraVerificado>/state}"/>
 					</footer>
 				</Column>
                 <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
@@ -55,6 +60,7 @@
 				</ColumnListItem>
 			</items>
 		</Table>
+	</ScrollContainer>
 		<!-- <endButton>
 			<Button text="{i18n>btnClose}" press="onCancelCuadroResponsive" type="Transparent"/>
 		</endButton>

@@ -26,12 +26,14 @@ sap.ui.define([
     'sap/m/Dialog',
     'sap/m/library',
 	"sap/m/Label",
-    'sap/m/TextArea'
+    'sap/m/TextArea',
+    'sap/base/util/deepExtend',
+    '../controller/table'
 ],
 	/**
 	 * @param {typeof sap.ui.core.mvc.Controller} Controller
 	 */
-  function (Controller, MessageBox, util, registroService, BusyIndicator, Filter, FilterOperator, JSONModel, DateFormat,formatter, Button,ColorPalettePopover,ColorPickerDisplayMode,ResponsivePopover,ColorPicker,unifiedLibrary,ColorPickerPopover,MessageToast, etiquetasPDF, muestreoPdf, FilterType,coreLibrary,IAS,Dialog,mobileLibrary,Label,TextArea) {
+  function (Controller, MessageBox, util, registroService, BusyIndicator, Filter, FilterOperator, JSONModel, DateFormat,formatter, Button,ColorPalettePopover,ColorPickerDisplayMode,ResponsivePopover,ColorPicker,unifiedLibrary,ColorPickerPopover,MessageToast, etiquetasPDF, muestreoPdf, FilterType,coreLibrary,IAS,Dialog,mobileLibrary,Label,TextArea,deepExtend,tablePdf) {
     "use strict";
     var ColorPickerMode = unifiedLibrary.ColorPickerMode;
     const rootPath = "mif.rmd.registro";
@@ -141,14 +143,14 @@ sap.ui.define([
                     return response;
                  }).then(function(response) {
                     // response.ok fue true
-                    console.log('ok');
+                    //console.log('ok');
                     oTypeLine.type = "ONLINE";
                     oTypeLine.color = "#008000";
                     bInterneInit= true;
                     oThat.getView().setModel(new JSONModel(oTypeLine),"oModelOffline");
 
                 }).catch(function(error) {
-                    console.log('Problema al realizar la solicitud: ' + error.message);
+                    //console.log('Problema al realizar la solicitud: ' + error.message);
                     oTypeLine.type = "OFFLINE";
                     oTypeLine.color = "#808080";
                     bInterneInit= false;
@@ -174,7 +176,7 @@ sap.ui.define([
                 if(bInterneInit){
                     oThat.onFlushButton();
                 }else{
-                    console.log("Flush no se esta cargando (Sin internet)");
+                    //console.log("Flush no se esta cargando (Sin internet)");
                 }
             }
             temporizadorIntervaloFlush();
@@ -188,7 +190,7 @@ sap.ui.define([
                 if(bInterneInit){
                     oThat.onRefreshAutomatico();
                 }else{
-                    console.log("Refresh no se esta cargando (Sin internet )");
+                    //console.log("Refresh no se esta cargando (Sin internet )");
                 }
             }
 
@@ -203,7 +205,7 @@ sap.ui.define([
                 if(bInterneInit){
                     oThat.onSynchronizeNotificationAvisoAutomatico();
                 }else{
-                    console.log("Sincronizacion Notificacion y Aviso no esta cargando, Sin internet )");
+                    //console.log("Sincronizacion Notificacion y Aviso no esta cargando, Sin internet )");
                 }
             }
             temporizadorIntervaloNotAvi();
@@ -275,10 +277,14 @@ sap.ui.define([
                     ictfEstructuras.addContent(oContent);
                     lstItems.addItem(ictfEstructuras);
                 }
-                //OFFLINE se quita este intervalo
-                // sInterval = setInterval(function(){
-                // oThat.onGetRefresh();
-                // }, 30000);
+                //OFFLINE CAMBIO
+                sInterval = setInterval(function(){
+                    if(bInterneInit === true){
+                        oThat.onGetRefresh();
+                    }else{
+                        //console.log("Not GetRefresh");
+                    }
+                 }, 30000);
             }
         },
 
@@ -333,7 +339,7 @@ sap.ui.define([
         },
         onGetMdEsUtensilio: function () {
             return new Promise(function (resolve, reject) {
-                sap.ui.core.BusyIndicator.show(0);
+                //sap.ui.core.BusyIndicator.show(0);
                 var mdId = oThatConf.getView().getModel("modelGeneral").getData().LineaActualMD.mdId;
                 if(mdId){
                     var aFilters = [];
@@ -6333,7 +6339,7 @@ sap.ui.define([
                                     CompCode : "",
                                     Texto: sTextoComentario,
                                     AvisoMensajeSet: [],
-                                    Catalogoset: []
+                                    CatalogoSet: []
                                 }
                             }else{//OFFLINE MODEL
                                 oParam = {
@@ -10864,29 +10870,9 @@ sap.ui.define([
                 let arrActivities = [];
                 let flagError = true;
                 let aListaLapsos = 0;
-                arrListLapsos.map(item => {
-                    //validamos que el item no tenga tipoDato sIdNotificacion y que tenga una fechaFin
-                    if(item.tipoDatoId != sIdNotificacion){
-                        const {fechaInicio,fechaFin} = item;
-                        let _fInicio =  new Date(fechaInicio).getTime();
-                        if (fInicio <= _fInicio){
-                            if(!fechaFin){
-                                flagError = false;
-                            } else {
-                                let _fFin = new Date(fechaFin).getTime();
-                                //validamos que la fechas del items este dentro de la fecha de inicio y fin del lapso
-                                if (fFin >= _fFin && fInicio <= _fInicio) {
-                                    let x = new Date(_fInicio);
-                                    let y = new Date(_fFin);
-        
-                                    let diff = y.getTime() - x.getTime();
-                                    aListaLapsos = aListaLapsos + diff;
-                                }
-                            }
-                        }
-                    }
-                });
-                if (!flagError) {
+                aListaLapsos = await oThat.onCalculateTotalHoursLapso(arrListLapsos, fInicio, fFin);
+
+                if (aListaLapsos === false) {
                     MessageBox.warning("Debe finalizar los lapsos para poder notificar.");
                     return false;
                 } else {
@@ -10894,6 +10880,10 @@ sap.ui.define([
                     let timeBetwenTotalProceso = fFin - fInicio;
                     let timeMandarSap = timeBetwenTotalProceso - aListaLapsos;
                     hours = ((timeMandarSap / 60000) / 60).toFixed(3);
+                    if (hours < 0) {
+                        MessageBox.warning("No se pueden notificar Actividades negativas.");
+                        return false;
+                    }
                     let actividadTeorica1 = aListActividadesTeoricas.find(itm=>itm.descripcion === "Activity 1");
                     if (actividadTeorica1) {
                         let restaTeorico = (parseFloat(hours) * iNumberUsers) - parseFloat(actividadTeorica1.hours);
@@ -10986,136 +10976,61 @@ sap.ui.define([
                     }
                 }
             }
-            
-            // await oThat.getLapsosRMD();
-            // let arrListLapsos = this.getView().getModel("modelGeneral").getProperty("/tblListLapso");
-            // let fInicio = new Date(lineaSeleccionada.fechaInicio).getTime();
-            // let fFin = new Date(lineaSeleccionada.fechaFin).getTime();
-            // let arrActivities = [];
-            // let flagError = true;
-            // let aListaLapsos = 0;
-            // arrListLapsos.map(item => {
-            //     //validamos que el item no tenga tipoDato sIdNotificacion y que tenga una fechaFin
-            //     if(item.tipoDatoId != sIdNotificacion){
-            //         const {fechaInicio,fechaFin} = item;
-            //         let _fInicio =  new Date(fechaInicio).getTime();
-            //         if (fInicio <= _fInicio){
-            //             if(!fechaFin){
-            //                 flagError = false;
-            //             } else {
-            //                 let _fFin = new Date(fechaFin).getTime();
-            //                 //validamos que la fechas del items este dentro de la fecha de inicio y fin del lapso
-            //                 if (fFin >= _fFin && fInicio <= _fInicio) {
-            //                     let x = new Date(_fInicio);
-            //                     let y = new Date(_fFin);
-    
-            //                     let diff = y.getTime() - x.getTime();
-            //                     aListaLapsos = aListaLapsos + diff;
-            //                 }
-            //             }
-            //         }
-            //     }
-            // });
-            // if (!flagError) {
-            //     MessageBox.warning("Debe finalizar los lapsos para poder notificar.");
-            //     return false;
-            // } else {
-            //     let hours;
-            //     let timeBetwenTotalProceso = fFin - fInicio;
-            //     let timeMandarSap = timeBetwenTotalProceso - aListaLapsos;
-            //     hours = ((timeMandarSap / 60000) / 60).toFixed(3);
-            //     let actividadTeorica1 = aListActividadesTeoricas.find(itm=>itm.descripcion === "Activity 1");
-            //     if (actividadTeorica1) {
-            //         let restaTeorico = (parseFloat(hours) * iNumberUsers) - parseFloat(actividadTeorica1.hours);
-            //         if (restaTeorico > 0){
-            //             let obj ={
-            //                 hours:(restaTeorico).toFixed(3),
-            //                 descripcion:"Activity 1",
-            //                 unidad:"HRA"
-            //             }
-            //             arrActivities.push(obj);
-            //         } else {
-            //             flagError = false;
-            //         }
-            //     } else {
-            //         let obj ={
-            //             hours:(parseFloat(hours) * iNumberUsers).toFixed(3),
-            //             descripcion:"Activity 1",
-            //             unidad:"HRA"
-            //         }
-            //         arrActivities.push(obj);
-            //     }
-            //     let actividadTeorica2 = aListActividadesTeoricas.find(itm=>itm.descripcion === "Activity 2");
-            //     if (actividadTeorica2) {
-            //         let restaTeorico = parseFloat(hours) - parseFloat(actividadTeorica2.hours);
-            //         if (restaTeorico > 0){
-            //             let obj2 ={
-            //                 hours: (restaTeorico).toFixed(3),
-            //                 descripcion:"Activity 2",
-            //                 unidad:"HRA"
-            //             }
-            //             arrActivities.push(obj2);
-            //         } else {
-            //             flagError = false;
-            //         }
-            //     } else {
-            //         let obj2 ={
-            //             hours: hours,
-            //             descripcion:"Activity 2",
-            //             unidad:"HRA"
-            //         }
-            //         arrActivities.push(obj2);
-            //     }
-            //     let actividadTeorica3 = aListActividadesTeoricas.find(itm=>itm.descripcion === "Activity 3");
-            //     if (actividadTeorica3) {
-            //         let restaTeorico = parseFloat(hours) - parseFloat(actividadTeorica3.hours);
-            //         if (restaTeorico > 0){
-            //             let obj3 ={
-            //                 hours: (restaTeorico).toFixed(3),
-            //                 descripcion:"Activity 3",
-            //                 unidad:"HRA"
-            //             }
-            //             arrActivities.push(obj3);
-            //         } else {
-            //             flagError = false;
-            //         }
-            //     } else {
-            //         let obj3 ={
-            //             hours: hours,
-            //             descripcion:"Activity 3",
-            //             unidad:"HRA"
-            //         }
-            //         arrActivities.push(obj3);
-            //     }
-            //     let actividadTeorica4 = aListActividadesTeoricas.find(itm=>itm.descripcion === "Activity 4");
-            //     if (actividadTeorica4) {
-            //         let restaTeorico = parseFloat(hours) - parseFloat(actividadTeorica4.hours);
-            //         if (restaTeorico > 0){
-            //             let obj4 ={
-            //                 hours: (restaTeorico).toFixed(3),
-            //                 descripcion:"Activity 4",
-            //                 unidad:"HRA"
-            //             }
-            //             arrActivities.push(obj4);
-            //         } else {
-            //             flagError = false;
-            //         }
-            //     } else {
-            //         let obj4 ={
-            //             hours: hours,
-            //             descripcion:"Activity 4",
-            //             unidad:"HRA"
-            //         }
-            //         arrActivities.push(obj4);
-            //     }
+        },
 
-            //     if (!flagError) {
-            //         MessageBox.warning("No se pueden notificar Actividades negativas.");
-            //         return false;
-            //     } else {
-            //         return arrActivities;
-            //     }
-            // }
+        onCalculateTotalHoursLapso: async function (arrListLapsos, fInicio, fFin) {
+            arrListLapsos.sort(function (a, b) {
+                return a.fechaInicio - b.fechaInicio;
+            });
+            let aBloqueLapso = [];
+            let bFlagError = true;
+            arrListLapsos.forEach(function(oLapso) {
+                if (bFlagError && !oLapso.bFlagVerificado) {
+                    oLapso.bFlagVerificado = true;
+                    let fechaInicioBloque = oLapso.fechaInicio;
+                    let fechaFinBloque = oLapso.fechaFin;
+                    if (oLapso.tipoDatoId != sIdNotificacion) {
+                        let _fInicio = new Date(oLapso.fechaInicio).getTime();
+                        if (fInicio <= _fInicio) {
+                            if (!oLapso.fechaFin) {
+                                bFlagError = false;
+                            } else {
+                                let _fFin = new Date(oLapso.fechaFin).getTime();
+                                if (fInicio <= _fInicio && _fFin <= fFin) {
+                                    let aLapsoComplemento = arrListLapsos.filter(itm=>itm.fechaInicio.getTime() <= _fFin && !itm.bFlagVerificado);
+                                    if (aLapsoComplemento.length > 0) {
+                                        aLapsoComplemento.sort(function (a, b){
+                                            return a.fechaFin - b.fechaFin;
+                                        });
+                                        aLapsoComplemento.forEach(function(oLapsoComp){
+                                            oLapsoComp.bFlagVerificado = true;
+                                            if (oLapsoComp.fechaFin > _fFin) {
+                                                fechaFinBloque = oLapsoComp.fechaFin;
+                                            }
+                                        });
+                                    }
+                                    let oObj = {
+                                        fechaInicioBloq: fechaInicioBloque,
+                                        fechaFinBloq: fechaFinBloque
+                                    }
+                                    aBloqueLapso.push(oObj);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            if (bFlagError) {
+                let iContador = 0;
+                aBloqueLapso.forEach(function(oBloque) {
+                    let diff = oBloque.fechaFinBloq.getTime() - oBloque.fechaInicioBloq.getTime();
+                    iContador = iContador + diff;
+                });
+                return iContador;
+            } else {
+                return false;
+            }
+            
         },
 
         obtenerActividadesTeoricas: async function (lineaSeleccionada) {

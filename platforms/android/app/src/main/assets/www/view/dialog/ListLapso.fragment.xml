@@ -17,34 +17,34 @@
             </OverflowToolbar>
           </headerToolbar>
           <columns>
-            <Column width="7%" hAlign="Left" vAlign="Middle" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" popinDisplay="Inline">
               <Text text="{i18n>clLapso}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clEquipo}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clDateInic}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="7%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clDateInicUser}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clDateFin}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="7%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clDateFinUser}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clComment}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="6%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clNroNotif}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clMotivoEdit}" width="auto" maxLines="5"/>
             </Column>
-            <Column width="11%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+            <Column width="5rem" hAlign="Left" vAlign="Middle" minScreenWidth="50rem" demandPopin="true" popinDisplay="Inline">
               <Text text="{i18n>clAcc}" width="auto" maxLines="5"/>
             </Column>
           </columns>

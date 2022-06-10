@@ -4,7 +4,7 @@
      build wizard UI rather than manually modifying their values here. -->
 <!-- Do not change the widget "id" value here. -->
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.sap.webide.x2ad955362913487293a3889cc47f49f2" version="1.6" android-versionCode="10500">
-  <name>registro</name>
+  <name>Registro Manufactura</name>
   <description>QAS</description>
   <author href="http://cordova.io">SAP hybrid mobile solution</author>
   <content src="index.html"/>

@@ -9,28 +9,28 @@
                 <Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/Mds'}" updateFinished="onUpdateFinish" growing="true"
                     growingScrollToLoad="true" noDataText="{i18n>tblNoData}" itemPress="onDetailRmdGo" mode="SingleSelectMaster">
                     <columns>
-                        <Column width="auto" hAlign="Left" vAlign="Middle"  popinDisplay="Inline">
+                        <Column width="14%" hAlign="Left" vAlign="Middle"  popinDisplay="Inline">
                             <Text text="{i18n>clAction}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="14%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clCodigo}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clRM}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clStateRMD}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clOPP}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clRMO}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clRMOPDF}" width="auto" maxLines="5"/>
                         </Column>
-                        <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+                        <Column width="12%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
                             <Text text="{i18n>clAssign}" width="auto" maxLines="5"/>
                         </Column>
                     </columns>
