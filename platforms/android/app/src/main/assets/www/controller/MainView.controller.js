@@ -3100,7 +3100,7 @@ sap.ui.define([
 
             // GRPR - Actualización de obtención de datos del RMD.
             getEstructurasRmdRefactory: async function (sFraccion) {
-                BusyIndicator.show(0);
+                //BusyIndicator.show(0);
                 await oThat.onGetRmdReceta(sFraccion);
                 await Promise.all([oThat.onGetRmdEstructura(sFraccion), oThat.onGetRmdEsPaso(sFraccion), oThat.onGetRmdEsEquipo(sFraccion), oThat.onGetRmdEsUtensilio(sFraccion), 
                     oThat.onGetRmdEsEtiqueta(sFraccion), oThat.onGetRmdEsReInsumo(sFraccion), oThat.onGetRmdEsEspecificacion(sFraccion), oThat.onGetRmdEsPasoInsumoPaso(sFraccion)])
