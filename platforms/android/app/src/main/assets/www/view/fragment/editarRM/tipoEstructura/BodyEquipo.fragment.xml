@@ -4,8 +4,7 @@
         width="100%"
         horizontal="false"
         vertical="true">  
-		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListEquipoAssignResponsive>/}" updateFinished="onUpdateFinish" growing="true"
-			growingScrollToLoad="true">
+		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListEquipoAssignResponsive>/}" updateFinished="onUpdateFinish">
             <headerToolbar>
 				<OverflowToolbar>
 					<!-- <Title text="{i18n>tltEquipos} ({=${aListEquipoAssignResponsive>/}.length})"></Title> -->

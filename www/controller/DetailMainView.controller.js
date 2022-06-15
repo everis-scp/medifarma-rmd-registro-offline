@@ -18482,40 +18482,200 @@ sap.ui.define([
             
         },
 
-        sendDMS: async function (pdfName, pdfBase64, sEstatus) {
+        onTratarInformacionDMS: async function (sEstatus) {
+            let oDataSeleccionadas = oThat.getOwnerComponent().getModel("asociarDatos");
+            oThat.oSelectedObject = oDataSeleccionadas.getData();
+            let arrayFind = [];
+            let value = await oThat.onGetRmd(oThat.oSelectedObject.rmdId);
+            var oDataSeleccionada = value.results[0].aEstructura;
+            let sMaterial = value.results[0].productoId;
+            let sVersion = value.results[0].verid;   
+            let aRecetaSelected = value.results[0].aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
+            if(oDataSeleccionada.results.length > 0){
+                var especificacionEstructura = oDataSeleccionada.results.find(e => e.estructuraId.tipoEstructuraId_iMaestraId === sIdTipoEstructuraEspecificaciones);
+                if(especificacionEstructura){
+                    if(especificacionEstructura.aEspecificacion.results.length > 0){
+                        let existeSap = especificacionEstructura.aEspecificacion.results.filter(itm=>itm.ensayoPadreSAP !== null).length > 0 ? true : false;
+                        let noExisteSap = especificacionEstructura.aEspecificacion.results.filter(itm=>itm.ensayoPadreSAP === null).length > 0 ? true : false;
+                        if (noExisteSap && !existeSap) {
+                            await especificacionEstructura.aEspecificacion.results.sort((a, b) => {
+                                return (
+                                    a.fechaRegistro - b.fechaRegistro
+                                );
+                            });
+                        } else if (existeSap && !noExisteSap) {
+                            await especificacionEstructura.aEspecificacion.results.sort((a, b) => {
+                                return (
+                                    a.Merknr - b.Merknr
+                                );
+                            });
+                        } else if (existeSap && noExisteSap) {
+                            await especificacionEstructura.aEspecificacion.results.sort((a, b) => {
+                                return (
+                                    a.Merknr - b.Merknr &&
+                                    a.fechaRegistro - b.fechaRegistro
+                                );
+                            });
+                        }
+                    }
+                }
+            }
+            var fracciones = [];
+            oDataSeleccionada.results.reduce(function (previousValue, currentValue) {
+                if(previousValue != currentValue.fraccion){
+                    return fracciones.push(currentValue.fraccion);
+                }else {
+                    return currentValue.fraccion;
+                }
+            },[]);
+
+            for await (const fraccionActual of fracciones){
+                let aFilters = [];
+                let sExpand = "usuarioId";
+                aFilters.push(new Filter("rmdId_rmdId", "EQ", oThat.oSelectedObject.rmdId));
+                aFilters.push(new Filter("fraccion", "EQ", fraccionActual));
+                var aLapsoSelected;
+                if (bInterneInit === true){
+                    aLapsoSelected = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilters, sExpand);
+                }else{//MODEL OFFLINE
+                    aLapsoSelected = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilters, sExpand);
+                }
+                
+                if(aLapsoSelected.results){
+                    if(aLapsoSelected.results.length >0){
+                        aLapsoSelected.results.forEach( function(e){
+                            arrayFind.push(e);
+                        })
+                    }
+                }
+            }
+            oDataSeleccionada.results = oDataSeleccionada.results.sort(function (a, b) {
+                return a.orden - b.orden;
+            });
+
+            for await (const oData of oDataSeleccionada.results){
+                //ETIQUETA
+                if (oData.aEtiqueta.results.length > 0) {
+                    oData.aEtiqueta.results.sort(function (a, b) {
+                        return a.orden - b.orden;
+                    });
+                }
+                //PASO
+                if (oData.aPaso.results.length > 0) {
+                    BusyIndicator.show(0);
+                    for await (const oPasoData of oData.aPaso.results){
+                        if(oPasoData.imagen){
+                            let oData = {
+                                origen  : "ImagenMD",
+                                url     :  oPasoData.imagenRuta
+                            }
+                            let oImagenCargada;
+                            if(bInterneInit === true){
+                                oImagenCargada = await sharepointService.sharePointGetGeneral(oThat.mainModelv2Online, oData);
+                            }else{//MODEL OFFLINE
+                                MessageBox.information("SharePoint no implementado Offline");
+                            }
+                            
+                            if(oImagenCargada.length>0){
+                            let oDownloadImage = {
+                                origen  : "ImagenMD",
+                                codigoRM : oPasoData.imagenRuta,
+                                Name : oImagenCargada[0].Name
+                            }
+                            
+                            let oImagenResult;
+                            if(bInterneInit === true){
+                                oImagenResult= await sharepointService.sharePointDownloadGeneral(oThat.mainModelv2Online, oDownloadImage);
+                            }else{
+                                MessageBox.information("SharePoint no implementado Offline");
+                            }
+                            let len = oImagenResult.length;
+                            let bytes = new Uint8Array(len);
+                            for (let i = 0; i <len; i++) {
+                                bytes[i]= oImagenResult.charCodeAt(i);
+                            }
+                            let arrBuffer =bytes.buffer;
+                            let base64 = btoa(new Uint8Array(arrBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+                            let format = '';
+                                if ((oImagenCargada[0].Name).indexOf("jpg") !== -1) {
+                                    format = "data:image/jpg;base64,"
+                                } else {
+                                    format = "data:image/png;base64,"
+                                }
+                            let img = format + base64;
+                            oPasoData.imagenBase64 = img;
+                            }
+                        }
+                    }
+                    BusyIndicator.hide();
+                    oData.aPaso.results.sort(function (a, b) {
+                        return a.orden - b.orden;
+                    });
+                }
+                //PASOINSUMOPASO
+                if (oData.aPasoInsumoPaso.results.length > 0) {
+                    oData.aPasoInsumoPaso.results.sort(function (a, b) {
+                        return a.orden - b.orden;
+                    });
+                }
+                //EQUIPO
+                if (oData.aEquipo.results.length > 0) {
+                    oData.aEquipo.results.sort(function (a, b) {
+                        return a.orden - b.orden;
+                    });
+                }
+                //UTENSILIO
+                if (oData.aUtensilio.results.length > 0) {
+                    oData.aUtensilio.results.sort(function (a, b) {
+                        return a.orden - b.orden;
+                    });
+                }
+                //INSUMO
+                if (oData.aInsumo.results.length > 0) {
+                    oData.aInsumo.results = oData.aInsumo.results.filter(obj => obj.rmdRecetaId_rmdRecetaId == aRecetaSelected.rmdRecetaId);
+                    oData.aInsumo.results.sort(function (a, b) {
+                        return a.ItemNo - b.ItemNo;
+                    });
+                }
+            }
+
+            oDataSeleccionada.results = oDataSeleccionada.results.sort(function (a, b) {
+                return a.fraccion - b.fraccion;
+            });
+            let pdfBase64 = await tablePdf.onGeneratePdf(value.results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results, "BASE64");
+            let pdfName = await oThat.generarNombre();
+            await oThat.sendDMS(pdfName, pdfBase64, sEstatus);
+            sap.ui.core.BusyIndicator.hide();
+        },
+        
+        onGetRmd: function (rmdId) {
+            return new Promise(function (resolve, reject) {
+                sap.ui.core.BusyIndicator.show(0);
+                let oFilterRmd = [];
+                oFilterRmd.push(new Filter("rmdId", FilterOperator.EQ, rmdId));
+                let sExpand = "mdId/estadoIdRmd,aReceta/recetaId,aEstructura/estructuraId,aEstructura/aEquipo/equipoId,aEstructura/aPaso/pasoId,aEstructura/aUtensilio/utensilioId,aEstructura/aEspecificacion,aEstructura/aInsumo,aEstructura/aEtiqueta/etiquetaId,aEstructura/aPasoInsumoPaso/pasoHijoId,aEstructura/aPasoInsumoPaso/rmdEstructuraRecetaInsumoId";
+                if(bInterneInit === true){
+                    registroService.getDataExpand(oThat.mainModelv2Online, "/RMD", sExpand, oFilterRmd).then(async function (oListRMD) {
+                        resolve(oListRMD);
+                    }).catch(function (oError) {
+                        reject(oError);
+                    })
+                }else{//MODEL OFFLINE 
+                    registroService.getDataExpand(oThat.mainModelv2, "/RMD", sExpand, oFilterRmd).then(async function (oListRMD) {
+                        resolve(oListRMD);
+                    }).catch(function (oError) {
+                        reject(oError);
+                    })
+                }   
+                
+            });
+        },
+
+        generarNombre: function () {
             let oDataSeleccionada = oThat.getView().getModel("asociarDatos");
-            let objSendDMS = {
-                Bukrs: "1000",
-                Dokar: "ZPP",
-                DocumentoRef: pdfName,
-                Dokst: "",
-                Operacion: sEstatus,
-                DMSMaterialSet: [
-                    {
-                        Bukrs: "1000",
-                        Dokar: "ZPP",
-                        DocumentoRef: pdfName,
-                        Sign: "I",
-                        Option: "EQ",
-                        Low: oDataSeleccionada.getData().productoId,
-                        High: ""
-                    }
-                ],
-                DMSDocumentoSet: [
-                    {
-                        Bukrs: "1000",
-                        Dokar: "ZPP",
-                        DocumentoRef: pdfName,
-                        Bas64: pdfBase64
-                    }
-                ]
-            }
-            if(bInterneInit === true){
-                await registroService.onSaveDataGeneral(oThat.modelNecesidadOnline, "DMSHeaderSet", objSendDMS);
-            }else{//OFFLINE MODEL
-                await registroService.onSaveDataGeneral(oThat.modelNecesidad, "DMSHeaderSet", objSendDMS);
-            }
-           
+            let sNombre = "";
+            sNombre = oDataSeleccionada.getData().ordenSAP + "-" + oDataSeleccionada.getData().mdId.codigo;
+            return sNombre;
         },
 
         sendDMS: async function (pdfName, pdfBase64, sEstatus) {
@@ -18542,17 +18702,19 @@ sap.ui.define([
                         Bukrs: "1000",
                         Dokar: "ZPP",
                         DocumentoRef: pdfName,
-                        Bas64: pdfBase64
+                        Bas64: pdfBase64,
+                        Nombre: pdfName,
+                        Extension: 'PDF'
                     }
                 ]
             }
-
             if(bInterneInit === true){
                 await registroService.onSaveDataGeneral(oThat.modelNecesidadOnline, "DMSHeaderSet", objSendDMS);
             }else{//OFFLINE MODEL
-                await registroService.onSaveDataGeneral(oThat.modelNecesidad, "DMSHeaderSet", objSendDMS);
+                MessageBox.information("DMSHeaderSet No implmentado");
+                //await registroService.onSaveDataGeneral(oThat.modelNecesidad, "DMSHeaderSet", objSendDMS);
             }
-            
+           
         },
 
         onCierreEtiquetaMasivo: function (oEvent) {

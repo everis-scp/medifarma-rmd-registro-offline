@@ -42,3 +42,20 @@
   .sapMListTblCell.cellBorderLeft {
     border-left: 1px solid lightgray;
   }
+
+  .myRowSize {
+    height: 55px !important;
+  }
+  .myButtonSize>.sapMBtnInner {
+    height: 50px;
+    width: 50px;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .sapMBtn.increaseFont .sapMBtnIcon {
+    font-size: 2.5rem;
+    text-align: center;
+    vertical-align: middle;
+    /* color: red; */
+}

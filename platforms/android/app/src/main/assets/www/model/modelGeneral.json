@@ -34,6 +34,8 @@
   "selectedPrinterKey": "",
   "tipoDatoId_iMaestraId": null,
   "Impresoras": null,
+  "flagNotificacion": false,
+  "viewColumn": true,
   "cuadrosColumn": [
     {
       "text": ""
