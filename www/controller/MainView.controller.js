@@ -57,7 +57,7 @@ sap.ui.define([
                 //OFFLINE
                 let identificadorTiempoEspera
                 function temporizadorIntervalo(){
-                    identificadorTiempoEspera = setInterval(preguntarOffline,2000)
+                    identificadorTiempoEspera = setInterval(preguntarOffline,3000)
                 }
                 function preguntarOffline(){
                     let oTypeLine = {}; 
@@ -101,7 +101,7 @@ sap.ui.define([
                 //FLUSH TEMPORIZADOR
                 let identificadorTiempoEsperaFlush;
                 function temporizadorIntervaloFlush(){
-                    identificadorTiempoEsperaFlush = setInterval(cargarFlush,2000)
+                    identificadorTiempoEsperaFlush = setInterval(cargarFlush,10000)
                 }
                 function cargarFlush (){
                     if(bInterneInit){
@@ -116,7 +116,7 @@ sap.ui.define([
                 ///REFRESH TEMPORIZADOR
                 let identificadorTiempoEsperaRefresh;
                 function temporizadorIntervaloRefresh(){
-                    identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,2000)
+                    identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
                 }
                 function cargarRefresh (){
                     if(bInterneInit){
@@ -2337,15 +2337,30 @@ sap.ui.define([
                     byteArray[i] = decodedPdfContent.charCodeAt(i);
                 }
                 var blob = new Blob([byteArray.buffer], { type: 'application/pdf' });
-                var _pdfurl = URL.createObjectURL(blob);
+                // var _pdfurl = URL.createObjectURL(blob);
 
-                this._PDFViewer = new sap.m.PDFViewer({
-                    title: sTitle,
-                    width: "auto",
-                    source: _pdfurl // my blob url
-                });
-                jQuery.sap.addUrlWhitelist("blob"); // register blob url as whitelist
-                this._PDFViewer.open();
+                // this._PDFViewer = new sap.m.PDFViewer({
+                //     title: sTitle,
+                //     width: "auto",
+                //     source: _pdfurl // my blob url
+                // });
+                // jQuery.sap.addUrlWhitelist("blob"); // register blob url as whitelist
+                // this._PDFViewer.open();
+                const downloadFile = (blob, fileName) => {
+                    const link = document.createElement('a');
+                    // create a blobURI pointing to our Blob
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName;
+                    // some browser needs the anchor to be in the doc
+                    document.body.append(link);
+                    link.click();
+                    link.remove();
+                    // in case the Blob uses a lot of memory
+                    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+                  };
+                  
+                  
+                downloadFile(blob, sTitle);
 
                 // if (!this.onPdfViewerOpp) {
                 //   this.onPdfViewerOpp = sap.ui.xmlfragment(
@@ -3076,19 +3091,88 @@ sap.ui.define([
                         return a.fraccion - b.fraccion;
                     });
 
-                    if(descargarPDF){
-                        //tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
-                        tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
-                    }else {
-                        //tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),aLapsoSelected.results,fracciones);
-                        tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
-                    }
+                    tablePdf.onGeneratePdf2();
+
+
+                    // if(descargarPDF){
+                    //     tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);            
+                    // }else {               
+                    //     tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
+                    // }
+
+                    //OFFLINE CAMBIO para visualizar y descargar el pdf
+                    
+                     //BusyIndicator.show(0);
+                     //tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,"OFFLINE", arrayFind);
+                     //BusyIndicator.hide();
+                    // var sTitle = value[0].results[0].descripcion;
+
+                    // var decodedPdfContent = atob(base64);
+                    // //var  decodedPdfContent = Buffer.from(base64);
+                    // var byteArrays = [];
+                    // var sliceSize = 512;
+                    // for (let offset = 0; offset < decodedPdfContent.length; offset += sliceSize) {
+                    //     const slice = decodedPdfContent.slice(offset, offset + sliceSize);
+
+                    //     const byteNumbers = new Array(slice.length);
+                    //     for (let i = 0; i < slice.length; i++) {
+                    //         byteNumbers[i] = slice.charCodeAt(i);
+                    //     }
+
+                    //     const byteArray = new Uint8Array(byteNumbers);
+                    //     byteArrays.push(byteArray);
+                    // }
+                    // var blob = new Blob(byteArrays, { type: 'application/pdf' });
+
+                    // const downloadFile = (blob, fileName) => {
+                    //     const link = document.createElement('a');
+                    //     // create a blobURI pointing to our Blob
+                    //     link.href = URL.createObjectURL(blob);
+                    //     link.download = fileName;
+                    //     // some browser needs the anchor to be in the doc
+                    //     document.body.append(link);
+                    //     link.click();
+                    //     link.remove();
+                    //     // in case the Blob uses a lot of memory
+                    //     setTimeout(() => URL.revokeObjectURL(link.href), 1000000);
+                    //   };
+                      
+                      
+                    // downloadFile(blob, sTitle);
+                    //var byteArray = new Uint8Array(decodedPdfContent.length)
+                    //for (var i = 0; i < decodedPdfContent.length; i++) {
+                    //    byteArray[i] = decodedPdfContent.charCodeAt(i);
+                    //}
+
+                    // var _pdfurl = URL.createObjectURL(blob);
+
+                    // oThat._PDFViewerRMO = new sap.m.PDFViewer({
+                    //     title: sTitle,
+                    //     width: "auto",
+                    //     displayType:"Auto",
+                    //     source: _pdfurl // my blob url
+                    // });
+                    // jQuery.sap.addUrlWhitelist("blob"); // register blob url as whitelist
+                    // oThat._PDFViewerRMO.open();
+
+                    
+
+                    // set the blog type to final pdf
+
+                // process to auto download it
+                //OTRA FORMA 
+                // const fileURL = URL.createObjectURL(blob);
+                // const link = document.createElement('a');
+                // link.href = fileURL;
+                // link.download = sTitle + ".pdf";
+                // link.click();
 
                     sap.ui.core.BusyIndicator.hide();
-                }).catch(function (oError) {
-                    sap.ui.core.BusyIndicator.hide();
-                    oThat.onErrorMessage(oError, "errorSave");
-                });
+                })
+                //.catch(function (oError) {
+                //    sap.ui.core.BusyIndicator.hide();
+                //    oThat.onErrorMessage(oError, "errorSave");
+                //});
             },
 
             onRestoreFilters: function () {

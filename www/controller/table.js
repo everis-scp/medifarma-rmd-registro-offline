@@ -53,6 +53,26 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
       }
     },
 
+    onFormatterDateUTC: function (dDate) {
+      if(dDate){
+        dDate = new Date(dDate);
+        const sYear = dDate.getUTCFullYear();
+        const sMonth = dDate.getUTCMonth() + 1;
+        // const sDay = dDate.getUTCDate();
+        const sDay = dDate.getUTCDate();
+
+        var sMonth2 = (sMonth <10) ? ("0"+ sMonth.toString()) : sMonth;
+        var sDay2 = (sDay<10) ? ("0"+ sDay.toString()) : sDay;
+        
+        // const sFecha = sDay + "-" + sMonth + "-" + sYear;
+        const sFecha = sYear + "-" + sMonth2 + "-" + sDay2;
+
+        return sFecha;
+      }else{
+        return "";
+      }
+    },
+
     onFormatterDateHour: function (dDataHour) {
       let oDate = new Date(dDataHour)
       return (`${
@@ -78,8 +98,30 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
         return "";
       }
     },
+    formatDecimal : function (nValue) {
+      let datoFinal = '';
+      if (nValue) {
+          let datos = parseFloat(nValue).toFixed(3).toString().split('.'),
+              array = datos[0].toString().split(''),
+              decimales = datos[1],
+              finalDec = '',
+              index = -3;
+          while (array.length + index > 0) {
+              array.splice(index, 0, ' ');
+              // Decrement by 4 since we just added another unit to the array.
+              index -= 4;
+          }
+          if (decimales) {
+              finalDec = '.' + decimales;
+          }
+          datoFinal = array.join('') + finalDec;
+      }
+      
+      return datoFinal;
+    },
     onGeneratePdf: async function (aDataEstructuras, VerPDF, oInfoUsuario, oDataLineaActual,aListUserRMD,fracciones) {
       var oThat = this;
+      var headLinePreviousNodes = null, aHeadLinePrevArray = [],  validCambios=true, totalArrays=[];
       let jDefinition = {
         // footer: function(currentPage, pageCount) {return [{ text: currentPage.toString() + ' de ' + pageCount }]},
         pageMargins: [26, 190, 26, 40],
@@ -97,6 +139,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             margin: [0, 10, 0, 5],
           },
           tableExample: {
+            margin: [0, 5, 0, 15],
+          },
+          tableExampleNoBorder: {
             margin: [0, 5, 0, 15],
           },
           tableOpacityExample: {
@@ -134,7 +179,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           },
           tableData: {
             bold: false,
-            fontSize: 10,
+            fontSize: 9,
             alignment: "left",
             color: "black",
           },
@@ -170,7 +215,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           },
           tableDataCantidad: {
             bold: false,
-            fontSize: 11,
+            fontSize: 9,
             alignment: "right",
             color: "black",
           },
@@ -200,7 +245,114 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           },
         },
       };
-      jDefinition.header = function(currentPage, pageCount, pageSize){ return {
+      // jDefinition.pageBreakBefore= function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+      //   var checkdata = "test";
+        // if(currentNode.headlineLevel === true){
+        //   return currentNode.headlineLevel;
+        // }else if(currentNode.startPosition.top > 690){
+        //   return true;
+        // }
+        // }else if(currentNode.startPosition.top > 690){
+        //   let previousNode = followingNodesOnPage.getPreviousNodesOnPage();
+        //   let tableNodes = previousNode.filter(e=>e.table);
+        //   // if(headLinePreviousNodes != currentNode.headlineLevel){
+        //   //   aHeadLinePrevArray = aHeadLinePrevArray.concat(previousNode);
+        //   // }
+        //   if(tableNodes.length > 0 && currentNode.headlineLevel && headLinePreviousNodes != currentNode.headlineLevel){
+        //     tableNodes.forEach( function(f){
+        //       if(f.table){
+        //         // var level = f.table.body.find(e=>e.headlineLevel === currentNode.headlineLevel);
+        //         var test = 2;
+        //         f.table.body.forEach( function(b){
+        //           var level = b.filter(e=>e.headlineLevel === currentNode.headlineLevel);
+        //           if(level.length > 0){
+        //             level.forEach( function(fila){
+        //               fila.border[1] = true;
+        //             })
+        //             headLinePreviousNodes = currentNode.headlineLevel;
+        //           }
+        //           // b.forEach( function(fila){
+        //           //   if(fila.headlineLevel === currentNode.headlineLevel){
+        //           //     fila.border[1] = true;
+        //           //   }
+        //           // })
+        //         })
+        //       }
+        //     })
+        //   }
+        //   headLinePreviousNodes = currentNode.headlineLevel;
+        //   return true;
+        // }
+      // },
+
+      jDefinition.pageBreakBefore= function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+        if(currentNode.pageNumbers.length === 1){
+          let findPage = totalArrays.find(e=> e === currentNode.pageNumbers[0]);
+          if(!findPage){
+            totalArrays.push(currentNode.pageNumbers[0]);
+            // aHeadLinePrevArray = aHeadLinePrevArray.concat(followingNodesOnPage.getFollowingNodesOnPage());
+          // if(findPage === currentNode.pages && validCambios === true){
+            // validCambios = false;
+            // let tableNodes = followingNodesOnPage.getFollowingNodesOnPage().filter(e=>e.table);
+            let tableNodesGeneral = currentNode.pageNumbers[0] != 1 ? followingNodesOnPage.getNodesOnNextPage().filter(e=>e.table) : followingNodesOnPage.getFollowingNodesOnPage().filter(e=>e.table);
+            let tableNodes = tableNodesGeneral.filter(f=>f.style != "tableExampleNoBorder" && f.style != "tableColocarCheckNoBorder");
+            if(tableNodes.length > 0 ){
+              tableNodes.forEach( function(f){
+                if(f.table){
+                  f.table.body.forEach( function(b){
+                    var lineaTop = false, lineaTopNextPage = false;
+                        b.forEach( function(fNode){
+                          if(fNode.text === "4.4.19.-" ){
+                            var test = 1;
+                          }
+                          if(fNode.nodeInfo){
+                            if(fNode.nodeInfo.startPosition.top > 750 && fNode.nodeInfo.startPosition.top <= 780){
+                              // fNode.pageBreak = "before";
+                              // fNode.nodeInfo.pageBreak = "before";
+                              fNode.border?fNode.border[3] = true:null;
+                              lineaTop = true;
+                              if(fNode.text === "Válvula N° 1:"){
+                                var text = 1;
+                              }
+                            }else if(fNode.nodeInfo.startPosition.top > 780){
+                              fNode.border?fNode.border[1] = true:null;
+                              lineaTopNextPage = true;
+                            }
+                          }else if(lineaTop){
+                            fNode.border?fNode.border[3] = true:null;
+                          }else if(lineaTopNextPage){
+                            fNode.border?fNode.border[1] = true:null;
+                          }
+                        })
+                    })
+                }
+              })
+            }
+            
+          // }
+        }
+        if(findPage === currentNode.pages && validCambios){
+          var getPages = followingNodesOnPage.getFollowingNodesOnPage().sort(function(a, b) {
+            return a.startPosition.top - b.startPosition.top;
+          });
+          if(getPages[getPages.length -1].startPosition.top === currentNode.startPosition.top){
+            validCambios = false;
+            return true;
+          }
+        }
+        }
+        // if(currentNode.startPosition.top > 760){
+        //   return true;
+        // }
+      },
+      jDefinition.header = function(currentPage, pageCount, pageSize){
+          var Fraccion = "";
+          for(var l = 0; l < docDefinition.content.length; l++){
+              if(docDefinition.content[l].pageHeaderText && currentPage >= docDefinition.content[l].positions[0].pageNumber){
+                Fraccion = docDefinition.content[l].pageHeaderText;
+              }
+          }
+        return {
         columns:[{
         margin: [26,14,0,0],
         style: "tableExample",
@@ -229,6 +381,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 style: "tablePrincipalDataRegister",
                 colSpan: 2,
                 alignment: "center",
+                border: [true, true, true, false],
               },
               {},
               {
@@ -245,6 +398,43 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 colSpan: 1,
                 alignment: "center",
                 border: [false, true, true, false],
+              },
+            ],
+            [
+              {
+                // text: "MEDIFARMA S.A.",
+                text: "",
+                width: "50",
+                style: "tablePrincipalDataRegister",
+                colSpan: 4,
+                alignment: "left",
+                border: [true, false, true, false],
+              },
+              {},
+              {},
+              {},
+              {
+                text: "",
+                style: "tablePrincipalDataRegister",
+                colSpan: 2,
+                alignment: "center",
+                border: [true, false, false, false],
+              },
+              {},
+              {
+                text: "Fraccion: ",
+                style: "tablePrincipalDataRegister",
+                colSpan: 1,
+                alignment: "left",
+                border: [true, false, false, false],
+              },
+              {
+                // text: ((aDataEstructuras.mdId&&aDataEstructuras.mdId.fechaSolicitud)? oThat.onFormatterDate(aDataEstructuras.mdId.fechaSolicitud): ' '),
+                text: Fraccion,
+                style: "tablePrincipalDataRegister",
+                colSpan: 1,
+                alignment: "center",
+                border: [false, false, true, false],
               },
             ],
             [
@@ -349,7 +539,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 border: [true, false, false, false],
               },
               {
-                text: ((oDataLineaActual.VfdatBTP)?oThat.onFormatterDate(oDataLineaActual.VfdatBTP): " "),
+                text: ((aDataEstructuras.expira)?oThat.onFormatterDateUTC(aDataEstructuras.expira): " "),
                 style: "tablePrincipalDataRegister",
                 colSpan: 1,
                 alignment: "center",
@@ -502,6 +692,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
       
       let indexEstructuras = 0;
       var indexFraccion = 0;
+      var findexPageBreak = 1, fIndexBorderPB = 0;
       let NumeracionEstructuras = 0;
       for await (const item of aDataEstructuras.aEstructura.results) {
         if(item.fraccion != indexFraccion){
@@ -509,6 +700,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           NumeracionEstructuras = 0;
           indexEstructuras = 0;
         }
+        fIndexBorderPB++;
 
         // if(item.mdId.rptaValidacion && indexEstructuras == 0){
         //   jDefinition.content.push({
@@ -552,12 +744,20 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             // text: NumeracionEstructuras+'.-'+(item.estructuraId&&item.estructuraId.descripcion)?item.estructuraId.descripcion: ' ',
             text: NumeracionEstructuras+'.-'+oThat.onValidarInfo(item, "estructuraId.descripcion"),
             style: "subheader",
+            pageHeaderText: item.fraccion,
+            headlineLevel: findexPageBreak === item.fraccion ? false : true,
+            pageBreak: findexPageBreak === item.fraccion ? null : 'before'
           });
+          findexPageBreak = item.fraccion;
         }else {
           jDefinition.content.push({
             text: oThat.onValidarInfo(item, "estructuraId.descripcion"),
             style: "subheader",
+            pageHeaderText: item.fraccion,
+            headlineLevel: findexPageBreak === item.fraccion ? false : true,
+            pageBreak: findexPageBreak === item.fraccion ? null : 'before'
           });
+          findexPageBreak = item.fraccion;
         }
         // SE MODIFICA NUMERACION ESTRUCTURAS
 
@@ -612,6 +812,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 {
                   text: itemPaso.pasoId.descripcion,
                   style: "tableData",
+                  preserveLeadingSpaces: true,
                   colSpan: (tipoDato==="T")? 3 : (tipoDato==="I")? 1 : (tipoDato==="C")? 2  : 3,
                   border: [false,(counterEstructuraCuadro ===1)? true: false,(tipoDato==="I" || tipoDato==="C")? false : true ,false],
                   color: (itemPaso.formato)? itemPaso.colorHex?itemPaso.colorHex :' ' : ' ',
@@ -630,6 +831,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   {
                     image: itemPaso.imagenBase64,
                     width: "200",
+                    preserveLeadingSpaces: true,
                     style: "tableData",
                     colSpan: (tipoDato==="T")? 3 : (tipoDato==="I")? 1 : (tipoDato==="C")? 2  : 3,
                     border: [false,false,(tipoDato==="I" || tipoDato==="C")? false : true ,false]
@@ -689,12 +891,17 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               },
               {}
             ]);
+          }else {
+            aBodyEstructura[aBodyEstructura.length-1].forEach( function(eBorder){
+              eBorder.border[3] = true;
+            })
           }
 
             jDefinition.content.push({
               style: "tableExample",
               color: "#444",
               table: {
+                dontBreakRows: true, 
                 widths: [8, 365 , 110, 25],
                 headerRows: 0,
                 keepWithHeaderRows: 0,
@@ -750,6 +957,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 {
                   // text: (itemPaso.pasoId.descripcion&&itemPaso.pasoId)?itemPaso.pasoId.descripcion: ' ',
                   text: oThat.onValidarInfo(itemPaso, "pasoId.descripcion"),
+                  preserveLeadingSpaces: true,
                   style: "tableVerify",
                   colSpan: 1,
                   border: [true, true, true, true],
@@ -779,6 +987,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               style: "tableExample",
               color: "#444",
               table: {
+                dontBreakRows: true, 
                 widths: widthArr,
                 headerRows: 0,
                 keepWithHeaderRows: 0,
@@ -809,7 +1018,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             //   NumeracionEstructuras++;
             // }
             jDefinition.content.push({
+              style: "tableColocarCheckNoBorder",
               table: {
+                dontBreakRows: true, 
                 widths: [535],
                 body: [[
                   {
@@ -860,6 +1071,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   // text: (itemEquipo.equipoId.eqktx&&itemEquipo.equipoId) ? itemEquipo.equipoId.eqktx : ' ',
                   text: oThat.onValidarInfo(itemEquipo, "equipoId.eqktx"),
                   style: "tableData",
+                  preserveLeadingSpaces: true,
                   colSpan: 1,
                   border: [true, true, true, true],
                 },
@@ -868,6 +1080,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   text: oThat.onValidarInfo(itemEquipo, "equipoId.equnr"),
                   style: "tableData",
                   alignment: "center",
+                  preserveLeadingSpaces: true,
                   colSpan: 1,
                   border: [true, true, true, true],
                 }
@@ -877,6 +1090,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 aBodyEquipment[iEquipo].push({
                   image: iCheckBody,
                   width: "15",
+                  preserveLeadingSpaces: true,
                   style: "tableHeader",
                   colSpan: 1,
                   border: [true, true, true, true]
@@ -886,6 +1100,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     image: iCheckGuion,
                     width: "15",
                     style: "tableHeader",
+                    preserveLeadingSpaces: true,
                     colSpan: 1,
                     border: [true, true, true, true]
                   })
@@ -922,6 +1137,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     {
                       // text: (itemEquipo.utensilioId.descripcion&&itemEquipo.utensilioId) ? itemEquipo.utensilioId.descripcion : ' ',
                       text: oThat.onValidarInfo(itemEquipo, "utensilioId.descripcion"),
+                      preserveLeadingSpaces: true,
                       style: "tableData",
                       colSpan: 1,
                       border: [true, true, true, true],
@@ -929,6 +1145,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     {
                       // text: (itemEquipo.utensilioId.codigo&&itemEquipo.utensilioId) ? itemEquipo.utensilioId.codigo : ' ',
                       text: oThat.onValidarInfo(itemEquipo, "utensilioId.codigo"),
+                      preserveLeadingSpaces: true,
                       style: "tableData",
                       alignment: "center",
                       colSpan: 1,
@@ -1016,6 +1233,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               style: "tableExample",
               color: "#444",
               table: {
+                dontBreakRows: true, 
                 widths: [358, 100, 60],
                 headerRows: 1,
                 keepWithHeaderRows: 1,
@@ -1043,7 +1261,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             //   NumeracionEstructuras++;
             // }
             jDefinition.content.push({
+              style: "tableColocarCheckNoBorder",
               table: {
+                dontBreakRows: true, 
                 widths: [535],
                 body: [[
                   {
@@ -1109,7 +1329,8 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               iInsumo++;
               aBodyInsumo.push([
                 {
-                  text: itemInsumo.Maktx ? itemInsumo.Maktx : ' ',
+                  text: itemInsumo.Maktx ? (itemInsumo.Maktx + ' ' + (itemInsumo.Txtadic?itemInsumo.Txtadic:' ')) : ' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, true, true, true],
@@ -1122,15 +1343,14 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   border: [true, true, true, true],
                 },
                 {
-                  text: itemInsumo.CompQty ? itemInsumo.CompQty : ' ',
+                  text: itemInsumo.CompQty ? this.formatDecimal(itemInsumo.CompQty) : ' ',
                   style: "tableDataCantidad",
                   colSpan: 1,
                   border: [true, true, true, true],
                 },
                 {
-                  text: itemInsumo.cantidadBarCode ? itemInsumo.cantidadBarCode : ' ',
-                  style: "tableData",
-                  alignment: "right",
+                  text: itemInsumo.cantidadBarCode ? this.formatDecimal(itemInsumo.cantidadBarCode) : ' ',
+                  style: "tableDataCantidad",
                   colSpan: 1,
                   border: [true, true, true, true]
                 },
@@ -1234,6 +1454,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               style: "tableExample",
               color: "#444",
               table: {
+                dontBreakRows: true, 
                 widths: [230, 70, 40, 50, 30, 30, 30],
                 headerRows: 1,
                 keepWithHeaderRows: 1,
@@ -1271,7 +1492,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               // });
               conformeCheck = (itemEtiqueta.conforme)? 1 : 2;
               jDefinition.content.push({
+                style: "tableColocarCheckNoBorder",
                 table: {
+                  dontBreakRows: true, 
                   widths: [260,260],
                   body: [[
                     {
@@ -1279,6 +1502,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                       // text: (NumeracionEstructuras-1) +'.'+NumeracionPaso+'.-'+(itemEtiqueta.etiquetaId && itemEtiqueta.etiquetaId.descripcion)?itemEtiqueta.etiquetaId.descripcion: ' ', 
                       text: (NumeracionEstructuras) +'.'+NumeracionPaso+'.-'+oThat.onValidarInfo(itemEtiqueta, "etiquetaId.descripcion"),
                       border: [false, false, false, false],
+                      preserveLeadingSpaces: true,
                       colSpan: conformeCheck,
                       style: "tableDataProceso",
                     },{
@@ -1300,6 +1524,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 let oFirstFechActualiza= [];
                 for await (const itemPasos of filterPaso) {
                   index++;
+                  fIndexBorderPB++;
                   let valueBorderPaso = (filterPaso.length != index) ? false : true;
                   const filterPaso_Paso = item.aPasoInsumoPaso.results.filter(e => e.pasoId_rmdEstructuraPasoId === itemPasos.rmdEstructuraPasoId);
 
@@ -1307,13 +1532,13 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   
                   let tipoPaso = itemPasos.tipoDatoId_iMaestraId;
                     // aPasos.push(itemPaso.pasoId.descripcion);
-                  if(itemPasos.edit){
-                    tipoDato = "I"; //INPUT
-                  }else if ((itemEtiqueta.procesoMenor || itemPasos.rpor) && !itemPasos.vb){
+                  // if(itemPasos.edit){
+                  //   tipoDato = "I"; //INPUT
+                  if ((itemPasos.rpor) && !itemPasos.vb){ // se estan quitando validaciones de proceso menor }else if ((itemEtiqueta.procesoMenor || itemPasos.rpor) && !itemPasos.vb){
                     tipoDato = "R"; //REALIZADO POR
-                  }else if (!(itemEtiqueta.procesoMenor || itemPasos.rpor) && itemPasos.vb){
-                    tipoDato = "RV"; //VISTO BUENO
-                  }else if ((itemEtiqueta.procesoMenor || itemPasos.rpor) && itemPasos.vb){
+                  }else if (!(itemPasos.rpor) && itemPasos.vb){
+                    tipoDato = "V"; //VISTO BUENO
+                  }else if ((itemPasos.rpor) && itemPasos.vb){
                     tipoDato = "RV"; //REALIZADO POR / VISTO BUENO
                   } else if(tipoPaso === sIdTipoDatoSinTipodeDato){
                     tipoDato = "T"; //TEXTO
@@ -1331,6 +1556,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     {
                       text: (NumeracionEstructuras) +'.'+itemEtiqueta.orden+'.'+itemPasos.orden+'.-',
                       style: "tableData",
+                      headlineLevel: aLineas?null:fIndexBorderPB,
                       border: [aLineas? false : true, 
                         aLineas? false : (itemEtiqueta.conforme && index !== 1)?false:true, false, 
                         aLineas? false : (itemEtiqueta.conforme && index !== 1)?false:valueBorderPaso],
@@ -1338,11 +1564,13 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     },
                     {
                       text: itemPasos.pasoId.descripcion,
+                      headlineLevel: aLineas?null:fIndexBorderPB,
                       style: "tableData",
+                      preserveLeadingSpaces: true,
                       colSpan: (tipoDato === "T")? 5 : 3,
                       border: [aLineas? false : false, 
                         aLineas? false : (itemEtiqueta.conforme && index !== 1)?false:true, 
-                        aLineas? false : (itemEtiqueta.conforme && index !== 1)?false: false, 
+                        tipoDato === "T" && !(itemEtiqueta.conforme && index !== 1)? true : aLineas? false : (itemEtiqueta.conforme && index !== 1)?false: false, 
                         aLineas? false : (itemEtiqueta.conforme && index !== 1)?false:valueBorderPaso],
                       color: (itemPasos.formato)? itemPasos.colorHex : '',
                     },
@@ -1377,7 +1605,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
 
                   if(itemEtiqueta.conforme){
                     tableWidth = [40,243, 35, 50, 35, 50,25];
-                    this.onAddConforme(aBodyPaso[aBodyPaso.length-1],valueBorderPaso,itemPasos,index);
+                    this.onAddConforme(aBodyPaso[aBodyPaso.length-1],valueBorderPaso,itemPasos,index, fIndexBorderPB);
                   }else {
                     tableWidth = [40,278, 35, 50, 35, 50];
                   }
@@ -1405,9 +1633,10 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     let indexPasoPaso = 0;
                     for await (const itemPasoPaso of filterPaso_Paso) {
                       indexPasoPaso++;
+                      fIndexBorderPB++;
                       let tipoPaso = itemPasoPaso.tipoDatoId_iMaestraId;
                       
-                      if(itemPasoPaso.edit){
+                      if(itemPasoPaso.edit && !(tipoPaso === sIdTipoDatoVerificacionCheck||tipoPaso === sIdTipoDatoMultipleCheck)){
                         tipoDato = "I"; //INPUT
                       }else if(tipoPaso === sIdTipoDatoSinTipodeDato){
                         tipoDato = "T"; //SIN DATO
@@ -1419,27 +1648,83 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                         tipoDato = "T"; //SIN DATO
                       }
                       let valueBorderPasoPaso = (filterPaso_Paso.length != indexPasoPaso) ? false : true;
-                      aBodyPaso.push([
-                        {
-                          text: " ",
-                          border: [true, false, false, valueBorderPasoPaso],
-                        },
-                        {
-                          text: oThat.onValidarInfo(itemPasoPaso,"pasoHijoId.descripcion")?oThat.onValidarInfo(itemPasoPaso,"pasoHijoId.descripcion") : oThat.onValidarInfo(itemPasoPaso,"rmdEstructuraRecetaInsumoId.Maktx"),
-                          style: itemPasoPaso.tab ? "tablePasoTab" : "tablePaso",
-                          colSpan: 2,
-                          border: [false, false, false, valueBorderPasoPaso],
-                          color: (itemPasoPaso.formato)? itemPasoPaso.colorHex? itemPasoPaso.colorHex :'BLACK' : 'BLACK',
-                        },
-                        {}
-                      ]);
-                      this.onAddPasoProcesoMenorType(aBodyPaso[aBodyPaso.length-1], tipoDato, itemPasoPaso, indexPasoPaso, valueBorderPasoPaso, tipoPaso, itemEtiqueta.conforme);
+                      if (itemPasoPaso.pasoHijoId) {
+                        aBodyPaso.push([
+                          {
+                            text: " ",
+                            border: [true, false, false, (itemEtiqueta.conforme)?false :  valueBorderPasoPaso],
+                            headlineLevel: fIndexBorderPB
+                          },
+                          {
+                            text: oThat.onValidarInfo(itemPasoPaso,"pasoHijoId.descripcion")?oThat.onValidarInfo(itemPasoPaso,"pasoHijoId.descripcion") : ' ',
+                            preserveLeadingSpaces: true,
+                            headlineLevel: fIndexBorderPB,
+                            style: itemPasoPaso.tab ? "tablePasoTab" : "tablePaso",
+                            colSpan: 2,
+                            border: [false, false, false,  (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                            color: (itemPasoPaso.formato)? itemPasoPaso.colorHex? itemPasoPaso.colorHex :'BLACK' : 'BLACK',
+                          },
+                          {}
+                        ]);
+                        this.onAddPasoProcesoMenorType(aBodyPaso[aBodyPaso.length-1], tipoDato, itemPasoPaso, indexPasoPaso, valueBorderPasoPaso, tipoPaso, itemEtiqueta.conforme, fIndexBorderPB);
+                      } else if (itemPasoPaso.rmdEstructuraRecetaInsumoId) {
+                        aBodyPaso.push([
+                          {
+                            text: " ",
+                            border: [true, false, false, (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                            headlineLevel: fIndexBorderPB,
+                          },
+                          {
+                            text: oThat.onValidarInfo(itemPasoPaso,"rmdEstructuraRecetaInsumoId.Maktx") ? oThat.onValidarInfo(itemPasoPaso,"rmdEstructuraRecetaInsumoId.Maktx") + " (" + oThat.onValidarInfo(itemPasoPaso,"rmdEstructuraRecetaInsumoId.Component") + ")"  : ' ',
+                            preserveLeadingSpaces: true,
+                            headlineLevel: fIndexBorderPB,
+                            style: itemPasoPaso.tab ? "tablePasoTab" : "tablePaso",
+                            colSpan: 1,
+                            border: [false, false, false,  (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                            color: (itemPasoPaso.formato)? itemPasoPaso.colorHex? itemPasoPaso.colorHex :'BLACK' : 'BLACK',
+                          },
+                          {
+                            text: oThat.onValidarInfo(itemPasoPaso,"cantidadInsumo")+ " " +oThat.onValidarInfo(itemPasoPaso,"rmdEstructuraRecetaInsumoId.CompUnit"),
+                            fontSize: 9,
+                            headlineLevel: fIndexBorderPB,
+                            preserveLeadingSpaces: true,
+                            border: [false, false, false,  (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                          }
+                        ]);
+                        this.onAddPasoProcesoMenorType(aBodyPaso[aBodyPaso.length-1], tipoDato, itemPasoPaso, indexPasoPaso, valueBorderPasoPaso, tipoPaso, itemEtiqueta.conforme, fIndexBorderPB);
+                      } else if (itemPasoPaso.rmdEstructuraRecetaInsumoId_rmdEstructuraRecetaInsumoId) {
+                        aBodyPaso.push([
+                          {
+                            text: " ",
+                            border: [true, false, false, (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                            headlineLevel: fIndexBorderPB,
+                          },
+                          {
+                            text: oThat.onValidarInfo(itemPasoPaso,"Maktx") ? oThat.onValidarInfo(itemPasoPaso,"Maktx") + " (" + oThat.onValidarInfo(itemPasoPaso,"Component") + ")" : ' ',
+                            preserveLeadingSpaces: true,
+                            headlineLevel: fIndexBorderPB,
+                            style: itemPasoPaso.tab ? "tablePasoTab" : "tablePaso",
+                            colSpan: 1,
+                            border: [false, false, false, (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                            color: (itemPasoPaso.formato)? itemPasoPaso.colorHex? itemPasoPaso.colorHex :'BLACK' : 'BLACK',
+                          },
+                          {
+                            text: oThat.onValidarInfo(itemPasoPaso,"cantidadInsumo")+ " " +oThat.onValidarInfo(itemPasoPaso,"CompUnit"),
+                            fontSize: 9,
+                            preserveLeadingSpaces: true,
+                            headlineLevel: fIndexBorderPB,
+                            border: [false, false, false, (itemEtiqueta.conforme)?false : valueBorderPasoPaso],
+                          }
+                        ]);
+                        this.onAddPasoProcesoMenorType(aBodyPaso[aBodyPaso.length-1], tipoDato, itemPasoPaso, indexPasoPaso, valueBorderPasoPaso, tipoPaso, itemEtiqueta.conforme, fIndexBorderPB);
+                      }
                       if(itemEtiqueta.conforme){
                         var getType = [
                           {
                             text: " ",
                             style: "TableDataRealiz",
                             colSpan: 1,
+                            headlineLevel: fIndexBorderPB,
                             border: [false, false, true, valueBorderPasoPaso],
                           }];
                           getType.forEach( function(e){
@@ -1520,13 +1805,16 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 }
                 
                 jDefinition.content.push({
-                  style: "tableExample",
+                  style: !itemEtiqueta.conforme && !itemEtiqueta.procesoMenor ? "tableExampleNoBorder" : "tableExample",
                   color: "#444",
+                  headlineLevel: fIndexBorderPB,
                   table: {
+                    dontBreakRows: true, 
                     widths: tableWidth,
                     // headerRows: 1,
                     // keepWithHeaderRows: 1,
                     body: aBodyPaso,
+                    headlineLevel: fIndexBorderPB,
                   },
                   layout: {
                     hLineWidth: function(i, node) {
@@ -1558,7 +1846,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               //agrupa los padres en arreglos
               var resultGroup = [];
               item.aEspecificacion.results.forEach((item) => {
-                var saved = resultGroup.find((innerArr) => {return innerArr.find((innerItem) => innerItem.ensayoPadreId_ensayoPadreId === item.ensayoPadreId_ensayoPadreId) ? true : false;});
+                var saved = resultGroup.find((innerArr) => {return innerArr.find((innerItem) => innerItem.ensayoPadreId_iMaestraId === item.ensayoPadreId_iMaestraId) ? true : false;});
                   (saved)? saved.push(item) : resultGroup.push([item]);
               })
               // fin agrupacion
@@ -1590,6 +1878,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 style: "tableExample",
                 color: "#444",
                 table: {
+                  dontBreakRows: true, 
                   widths: [170,170,170],
                   headerRows: 0,
                   keepWithHeaderRows: 0,
@@ -1620,7 +1909,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
 
 
           jDefinition.content.push({
+            style: "tableColocarCheckNoBorder",
             table: {
+              dontBreakRows: true, 
               widths: [530],
               body: [[
                 {
@@ -1813,6 +2104,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                       style: "tableExample",
                       color: "#444",
                       table: {
+                        dontBreakRows: true, 
                         widths: [25, 25, 130, 50],
                         headerRows: 1,
                         keepWithHeaderRows: 1,
@@ -1823,6 +2115,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                       style: "tableExample",
                       color: "#444",
                       table: {
+                        dontBreakRows: true, 
                         widths: [25, 25, 130, 50],
                         headerRows: 1,
                         keepWithHeaderRows: 1,
@@ -2203,6 +2496,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 // style: "tableExample",
                 color: "#444",
                 table: {
+                  dontBreakRows: true, 
                   widths: [525],
                   headerRows: 1,
                   keepWithHeaderRows: 1,
@@ -2259,7 +2553,18 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
       };
       // pdfMake.createPdf(docDefinition).open();
       if(!VerPDF){
-        pdfMake.createPdf(docDefinition).open();
+        if (fracciones === "BASE64") {
+          let pdfBase64 = await pdfMake.createPdf(docDefinition).getBase64();
+          let base64Complete = encodeURI(pdfBase64);
+          return base64Complete;
+        }else if(fracciones === "OFFLINE"){
+          const doc = pdfMake.createPdf(docDefinition); 
+          const Base64 = await doc.getBase64().then(function(data){
+            window.location.href = 'data:application/pdf;base64,' + data; 
+          });
+        }else {
+          pdfMake.createPdf(docDefinition).open();
+        }
       } else {
           let codigo = aDataEstructuras.codigo?aDataEstructuras.codigo+"-":"";
           let version = aDataEstructuras.version?aDataEstructuras.version+"-":"";
@@ -2267,6 +2572,72 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           let downloadText = codigo+version+descripcion;
           pdfMake.createPdf(docDefinition).download(downloadText);
       }
+    },
+    onGeneratePdf2: async function(){
+      var oThat = this;
+      var headLinePreviousNodes = null, aHeadLinePrevArray = [],  validCambios=true, totalArrays=[];
+      let jDefinition = {
+        // footer: function(currentPage, pageCount) {return [{ text: currentPage.toString() + ' de ' + pageCount }]},
+        pageMargins: [26, 190, 26, 40],
+        header: {},
+        content: [],
+        defaultStyle: {
+          alignment: "justify",
+        },
+        patterns: {
+          stripe45d: {
+            boundingBox: [1, 1, 4, 4],
+            xStep: 3,
+            yStep: 3,
+            pattern: "1 w 0 1 m 4 5 l s 2 0 m 5 3 l s",
+          },
+        },
+      };
+      jDefinition.content = [
+        'First paragraph',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+      ];
+      let docDefinition = jDefinition;
+      //pdfMake.createPdf(docDefinition).open();
+      //Opcion1
+      // const doc = pdfMake.createPdf(docDefinition); 
+      // const Base64 = await doc.getBase64().then(function(data){
+      //   window.location.href = 'data:application/pdf;base64,' + data; 
+      // });
+
+      pdfMake.createPdf(docDefinition).getBuffer().then(function(buffer){
+        var utf8 = new Uint8Array(buffer); // Convert to UTF-8...
+        let binaryArray = utf8.buffer; // Convert to Binary...
+    
+        let dirPath = "";
+        if (oThat.platform.is('android')) {
+        dirPath = oThat.file.externalRootDirectory;
+        } else if (oThat.platform.is('ios')) {
+        dirPath = oThat.file.documentsDirectory;
+        }
+    
+        let dirName = 'DailySheet';
+    
+        oThat.file.createDir(dirPath, dirName, true).then((dirEntry) => {
+        let saveDir = dirPath + '/' + dirName + '/';
+        oThat.file.createFile(saveDir, fileName, true).then((fileEntry) => {
+          fileEntry.createWriter((fileWriter) => {
+          fileWriter.onwriteend = () => {
+            oThat.hideLoading();
+            oThat.showReportAlert('Report downloaded', saveDir + fileName);
+            oThat.fileOpener.open(saveDir + fileName, 'application/pdf')
+              .then(() => console.log('File is opened'))
+              .catch(e => console.log('Error openening file', e));
+          };
+          fileWriter.onerror = (e) => {
+            oThat.hideLoading();
+            oThat.showAlert('Cannot write report', e.toString());
+          };
+          fileWriter.write(binaryArray);
+          });
+        }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create file', error); });
+        }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create folder', error); });
+      }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Error while creating pdf', error); });
     },
 
     onAddPasoCuadroType: function(aBodyEstructura, tipoDato, itemPasoData, index, tipoPaso){
@@ -2289,18 +2660,21 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           var getType = [
           {
             table: {
+              dontBreakRows: true, 
               widths: ['*'],
-              body: [[{fontSize: 8,text: (
+              body: [[{fontSize: 8,preserveLeadingSpaces: true,text: (
                 (tipoPaso === sIdTipoDatoTexto && itemPasoData.texto )?   itemPasoData.texto ? itemPasoData.texto  : " "  : 
-                ((tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega) && itemPasoData.cantidad)? itemPasoData.cantidad  ? itemPasoData.cantidad  : " "  : 
-                (tipoPaso === sIdTipoDatoNumeros && itemPasoData.cantidad)? itemPasoData.cantidad  ? itemPasoData.cantidad  : " "  : 
-                (tipoPaso === sIdTipoDatoRango && itemPasoData.rango)? itemPasoData.rango ? itemPasoData.rango  : " "   : 
-                (tipoPaso === sIdTipoDatoFormula && itemPasoData.formula)? itemPasoData.formula   ? itemPasoData.formula  : " " : 
+                ((tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega) && itemPasoData.cantidad)? itemPasoData.cantidad  ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "  : 
+                (tipoPaso === sIdTipoDatoNumeros && itemPasoData.cantidad)? itemPasoData.cantidad  ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "  : 
+                (tipoPaso === sIdTipoDatoRango && itemPasoData.rango)? itemPasoData.rango ? parseFloat(itemPasoData.rango).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "   : 
+                (tipoPaso === sIdTipoDatoFormula && itemPasoData.formula)? itemPasoData.formula   ? parseFloat(itemPasoData.formula).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " " : 
                 (tipoPaso === sIdTipoDatoRealizadoPor && itemPasoData.realizadoPorUser)? itemPasoData.realizadoPorUser  ? itemPasoData.realizadoPorUser  : " "  : 
                 (tipoPaso === sIdTipoDatoVistoBueno && itemPasoData.vistoBueno)? itemPasoData.vistoBueno   ? itemPasoData.vistoBueno  : " " : 
                 (tipoPaso === sIdTipoDatoRealizadoPoryVistoBueno )? this.onValidarInfo(itemPasoData, "realizadoPorUser") +" "+ this.onValidarInfo(itemPasoData, "vistoBueno") : 
-                (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.datoFijo)? itemPasoData.datoFijo  ? itemPasoData.datoFijo  : " "  : 
-                (tipoPaso === sIdTipoDatoMuestraCC && itemPasoData.cantidad)? itemPasoData.cantidad  ? itemPasoData.cantidad  : " "  : 
+                // (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.datoFijo)? itemPasoData.datoFijo  ? itemPasoData.datoFijo  : " "  : 
+                (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.fecha)? itemPasoData.fecha  ? this.onFormatterDateUTC(itemPasoData.fecha)  : " "  : 
+                (tipoPaso === sIdTipoDatoLote)? itemPasoData.texto     ?   itemPasoData.texto : " "   :  // tipo de dato lote
+                (tipoPaso === sIdTipoDatoMuestraCC && itemPasoData.cantidad)? itemPasoData.cantidad  ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "  : 
                 (tipoPaso === sIdTipoDatoNotificacion && itemPasoData.fechaHora)? this.onFormatterDateHour(itemPasoData.fechaHora)   : 
                 (tipoPaso === sIdTipoDatoFecha && itemPasoData.fecha )?   this.onFormatterDate(itemPasoData.fecha)       : 
                 (tipoPaso === sIdTipoDatoFechayHora && itemPasoData.fechaHora)? this.onFormatterDateHour(itemPasoData.fechaHora)   : 
@@ -2327,6 +2701,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         fontSize  : 8,
@@ -2349,6 +2724,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         fontSize  : 8,
@@ -2371,6 +2747,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         text      : " ", 
@@ -2408,15 +2785,18 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           var getType = [
           {
             table: {
+              dontBreakRows: true, 
               widths: ['*'],
-              body: [[{fontSize: 8,text: (
+              body: [[{fontSize: 8,preserveLeadingSpaces: true,text: (
                 (tipoPaso === sIdTipoDatoTexto && itemPasoData.texto )?   itemPasoData.texto   ? itemPasoData.texto  : " "    : 
-                ((tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega) && itemPasoData.cantidad)? itemPasoData.cantidad  ? itemPasoData.cantidad  : " "     : 
-                (tipoPaso === sIdTipoDatoNumeros && itemPasoData.cantidad)? itemPasoData.cantidad  ? itemPasoData.cantidad  : " "     : 
-                (tipoPaso === sIdTipoDatoRango && itemPasoData.rango)? itemPasoData.rango  ? itemPasoData.rango  : " "     : 
-                (tipoPaso === sIdTipoDatoFormula && itemPasoData.formula)? itemPasoData.formula   ? itemPasoData.formula  : " "    : 
-                (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.datoFijo)? itemPasoData.datoFijo   ? itemPasoData.datoFijo  : " "    : 
-                (tipoPaso === sIdTipoDatoMuestraCC && itemPasoData.cantidad)? itemPasoData.cantidad   ? itemPasoData.cantidad  : " "    : 
+                ((tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega) && itemPasoData.cantidad)? itemPasoData.cantidad  ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "     : 
+                (tipoPaso === sIdTipoDatoNumeros && itemPasoData.cantidad)? itemPasoData.cantidad  ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "     : 
+                (tipoPaso === sIdTipoDatoRango && itemPasoData.rango)? itemPasoData.rango  ? parseFloat(itemPasoData.rango).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "     : 
+                (tipoPaso === sIdTipoDatoFormula && itemPasoData.formula)? itemPasoData.formula   ? parseFloat(itemPasoData.formula).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "    : 
+                // (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.datoFijo)? itemPasoData.datoFijo   ? itemPasoData.datoFijo  : " "    : 
+                (tipoPaso === sIdTipoDatoFechaVencimiento && itemPasoData.fecha)? itemPasoData.fecha   ? this.onFormatterDateUTC(itemPasoData.fecha)  : " "    : 
+                (tipoPaso === sIdTipoDatoMuestraCC && itemPasoData.cantidad)? itemPasoData.cantidad   ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "    : 
+                (tipoPaso === sIdTipoDatoLote)? itemPasoData.texto     ?   itemPasoData.texto : " "   :  // tipo de dato lote
                 (tipoPaso === sIdTipoDatoNotificacion && itemPasoData.fechaHora)? this.onFormatterDateHour(itemPasoData.fechaHora)   : 
                 (tipoPaso === sIdTipoDatoFecha && itemPasoData.fecha )?   this.onFormatterDate(itemPasoData.fecha)       : 
                 (tipoPaso === sIdTipoDatoFechayHora && itemPasoData.fechaHora)? this.onFormatterDateHour(itemPasoData.fechaHora)   : 
@@ -2424,7 +2804,8 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             },
             colSpan: 2,
             border: [false,
-              (validEdit)? false :(index ===1 || filterPaso_Paso === 0)? true: valueBorderPaso, 
+              // (validEdit)? false :(index ===1 || filterPaso_Paso === 0)? true: valueBorderPaso, 
+              (validEdit)? false : index === 1 ? true : conforme ? false : (index !== 1)?true : valueBorderPaso, 
               (validEdit)? false : (conforme)?false :true,
               (validEdit)? false :valueBorderPaso],
           },
@@ -2444,10 +2825,11 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   {
                     text: ' ',
                     style: "TableDataRealiz",
-                    border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, false, valueBorderPaso],
+                    border: [false, true, false, valueBorderPaso],
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         fontSize  : 8,
@@ -2466,10 +2848,11 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 {
                   text: ' ',
                   style: "TableDataRealiz",
-                  border: [false,(index ===1)? true: false,false,false],
+                  border: [false,true,false,valueBorderPaso],
                 },
                 {
                   table: {
+                    dontBreakRows: true, 
                     widths: [13],
                     body: [[{
                       fontSize  : 8,
@@ -2481,17 +2864,18 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     }]],
                   },
                   alignment: "right",
-                  border: [false,(index ===1)? true: false,true,false],
+                  border: [false,true,true,valueBorderPaso],
             }] 
           }else{
                 getTypeC = [
                   {
                     text: ' ',
                     style: "TableDataRealiz",
-                    border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, false, valueBorderPaso],
+                    border: [false, true, false, valueBorderPaso],
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         text      : " ", 
@@ -2523,10 +2907,11 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             {
               text: ' ',
               style: "TableDataRealiz",
-              border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, false, valueBorderPaso],
+              border: [false, true, false, valueBorderPaso],
             },
             {
               table: {
+                dontBreakRows: true, 
                 widths: [39],
                 body: [
                       ['Realizado Por'],
@@ -2536,7 +2921,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   ]
                 },
               style: "TableDataRealiz",
-              border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, (conforme)?false :true, valueBorderPaso],
+              border: [false, true, (conforme)?false :true, valueBorderPaso],
             }];
             getType.forEach( function(e){
               aBodyEstructura.push(e);
@@ -2548,10 +2933,11 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           {
             text: ' ',
             style: "TableDataRealiz",
-            border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, false, valueBorderPaso],
+            border: [false, true, false, valueBorderPaso],
           },
           {
             table: {
+              dontBreakRows: true, 
               widths: [39],
               body: [
                     ['VB'],
@@ -2560,7 +2946,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 ]
               },
             style: "TableDataRealiz",
-            border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, (conforme)?false :true, valueBorderPaso],
+            border: [false,true, (conforme)?false :true, valueBorderPaso],
           }];
           getType.forEach( function(e){
             aBodyEstructura.push(e);
@@ -2580,6 +2966,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           var getType = [
             {
               table: {
+                dontBreakRows: true, 
                 widths: [40,35],
                 body: [
                       ['Realizado Por', 'VB'],
@@ -2591,7 +2978,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 },
               style: "TableDataRealiz",
               colSpan: 2,
-              border: [false, (index === 1 || filterPaso_Paso === 0)? true : valueBorderPaso, (conforme)?false :true, valueBorderPaso],
+              border: [false, true, (conforme)?false :true, valueBorderPaso],
             },
             {
             }];
@@ -2606,16 +2993,19 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
 
     },
 
-    onAddPasoProcesoMenorType: function(aBodyPaso, tipoDato, itemPasoData, index, valueBorderPasoPaso, tipoPaso, conforme){
+    onAddPasoProcesoMenorType: function(aBodyPaso, tipoDato, itemPasoData, index, valueBorderPasoPaso, tipoPaso, conforme, fIndexBorderPB){
       switch(tipoDato){
         case "T": //SIN DATO
           var getType = [
             {
-              text: '',border: [false, false, false, valueBorderPasoPaso]
+              text: '',border: [false, false, false,  (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
             },
-            {text: '',border: [false, false, false, valueBorderPasoPaso]
+            {text: '',border: [false, false, false,  (conforme)?false : valueBorderPasoPaso],
+            headlineLevel: fIndexBorderPB
             },
-            {text: '',border: [false, false,(conforme)?false : true, valueBorderPasoPaso]
+            {text: '',border: [false, false,(conforme)?false : true,  (conforme)?false : valueBorderPasoPaso],
+            headlineLevel: fIndexBorderPB
             }];
           getType.forEach( function(e){
             aBodyPaso.push(e);
@@ -2624,8 +3014,10 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
         case "I": //INPUT
         if(!itemPasoData.aplica){
             var getType = [
-              { border: [false, false, false, valueBorderPasoPaso],
+              { border: [false, false, false,  (conforme)?false : valueBorderPasoPaso],
+                headlineLevel: fIndexBorderPB,
                 table: {
+                  dontBreakRows: true, 
                 widths: ['*'],
                 body: [[{image: iCheckGuion,
                   width: "15",
@@ -2633,32 +3025,41 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   colSpan: 1,
                   border: [true, true, true, true] }]],
               }},
-              {text: '',border: [false, false, false, valueBorderPasoPaso]
+              {text: '',border: [false, false, false,  (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               },
-              {text: '',border: [false, false,(conforme)?false : true, valueBorderPasoPaso]
+              {text: '',border: [false, false,(conforme)?false : true,  (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               }];
             getType.forEach( function(e){
               aBodyPaso.push(e);
             })
           } else {
             var getType = [
-              { border: [false, false, false, valueBorderPasoPaso],
+              { border: [false, false, false,  (conforme)?false : valueBorderPasoPaso],
+                headlineLevel: fIndexBorderPB,
                 table: {
+                  dontBreakRows: true, 
                 widths: ['*'],
-                body: [[{fontSize: 8,text: (
+                body: [[{fontSize: 8,preserveLeadingSpaces: true,text: (
                   (tipoPaso === sIdTipoDatoTexto)? itemPasoData.texto ?   itemPasoData.texto : " "    : 
-                  (tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega)? itemPasoData.cantidad ?   itemPasoData.cantidad : " "      : 
-                  (tipoPaso === sIdTipoDatoNumeros)? itemPasoData.cantidad  ?   itemPasoData.cantidad : " "     : 
-                  (tipoPaso === sIdTipoDatoFechaVencimiento)? itemPasoData.datoFijo  ?   itemPasoData.datoFijo : " "     : 
-                  (tipoPaso === sIdTipoDatoFormula)? itemPasoData.formula   ?   itemPasoData.formula : " "    : 
-                  (tipoPaso === sIdTipoDatoRango)? itemPasoData.rango     ?   itemPasoData.rango : " "   : 
+                  (tipoPaso === sIdTipoDatoCantidad || tipoPaso === sIdTipoDatoEntrega)? itemPasoData.cantidad ?   parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "      : 
+                  (tipoPaso === sIdTipoDatoNumeros)? itemPasoData.cantidad  ?   parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "     : 
+                  // (tipoPaso === sIdTipoDatoFechaVencimiento)? itemPasoData.datoFijo  ?   itemPasoData.datoFijo : " "     : 
+                  (tipoPaso === sIdTipoDatoFechaVencimiento)? itemPasoData.fecha  ?   this.onFormatterDateUTC(itemPasoData.fecha) : " "     : 
+                  (tipoPaso === sIdTipoDatoFormula)? itemPasoData.formula   ?   parseFloat(itemPasoData.formula).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "    :  
+                  (tipoPaso === sIdTipoDatoMuestraCC && itemPasoData.cantidad)? itemPasoData.cantidad   ? parseFloat(itemPasoData.cantidad).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0)  : " "    : 
+                  (tipoPaso === sIdTipoDatoRango)? itemPasoData.rango     ?   parseFloat(itemPasoData.rango).toFixed(itemPasoData.decimales ? itemPasoData.decimales : 0) : " "   : 
+                  (tipoPaso === sIdTipoDatoLote)? itemPasoData.texto     ?   itemPasoData.texto : " "   :  // tipo de dato lote
                   (tipoPaso === sIdTipoDatoFecha && itemPasoData.fecha)? this.onFormatterDate(itemPasoData.fecha)       : 
                   (tipoPaso === sIdTipoDatoFechayHora && itemPasoData.fechaHora)? this.onFormatterDateHour(itemPasoData.fechaHora)   : 
                   (tipoPaso === sIdTipoDatoHora && itemPasoData.hora)? this.onFormatterHour(itemPasoData.hora)        : " ") }]],
               }},
-              {text: '',border: [false, false, false, valueBorderPasoPaso]
+              {text: '',border: [false, false, false, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               },
-              {text: '',border: [false, false,(conforme)?false : true, valueBorderPasoPaso]
+              {text: '',border: [false, false,(conforme)?false : true, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               }];
             getType.forEach( function(e){
               aBodyPaso.push(e);
@@ -2672,6 +3073,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
              getTypeMC = [
               {
                 table: {
+                  dontBreakRows: true, 
                   widths: [13],
                   body: [[{
                     fontSize  : 8,
@@ -2683,21 +3085,26 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   }]],
                 },
                 alignment: "right",
-                border: [false, false, false, valueBorderPasoPaso]
+                headlineLevel: fIndexBorderPB,
+                border: [false, false, false, (conforme)?false : valueBorderPasoPaso]
               },
-              {text: '',border: [false, false, false, valueBorderPasoPaso]
+              {text: '',border: [false, false, false, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               },
-              {text: '',border: [false, false, (conforme)?false :true, valueBorderPasoPaso]
+              {text: '',border: [false, false, (conforme)?false :true, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               }];
             } else if(tipoPaso === sIdTipoDatoMultipleCheck && !itemPasoData.multiCheckUser) {
               getTypeC = [
                   {
                     text: ' ',
+                    headlineLevel: fIndexBorderPB,
                     style: "TableDataRealiz",
-                    border: [false,(index ===1)? true: false,false,false],
+                    border: [false,(index ===1)? true: false,false, (conforme)?false : valueBorderPasoPaso],
                   },
                   {
                     table: {
+                      dontBreakRows: true, 
                       widths: [13],
                       body: [[{
                         fontSize  : 8,
@@ -2709,12 +3116,14 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                       }]],
                     },
                     alignment: "right",
-                    border: [false,(index ===1)? true: false,true,false],
+                    headlineLevel: fIndexBorderPB,
+                    border: [false,(index ===1)? true: false,(conforme)?false :true, (conforme)?false : valueBorderPasoPaso],
               }] 
             }else{
               getTypeMC = [
                 {
                   table: {
+                    dontBreakRows: true, 
                     widths: [13],
                     body: [[{
                       text      : ' ',
@@ -2724,17 +3133,21 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                     }]],
                   },
                   alignment: "right",
-                  border: [false, false, false, valueBorderPasoPaso]
+                  headlineLevel: fIndexBorderPB,
+                  border: [false, false, false, (conforme)?false : valueBorderPasoPaso]
                 },
-                {text: '',border: [false, false, false, valueBorderPasoPaso]
+                {text: '',border: [false, false, false, (conforme)?false : valueBorderPasoPaso],
+                headlineLevel: fIndexBorderPB,
                 },
-                {text: '',border: [false, false, true, valueBorderPasoPaso]
+                {text: '',border: [false, false, (conforme)?false :true, (conforme)?false : valueBorderPasoPaso],
+                headlineLevel: fIndexBorderPB,
                 }];
             }
           } else {
             getTypeMC = [
               {
                 table: {
+                  dontBreakRows: true, 
                   widths: [13],
                   body: [[{
                     image: iCheckGuion,
@@ -2745,11 +3158,14 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                   }]],
                 },
                 alignment: "right",
-                border: [false, false, false, valueBorderPasoPaso]
+                headlineLevel: fIndexBorderPB,
+                border: [false, false, false, (conforme)?false : valueBorderPasoPaso]
               },
-              {text: '',border: [false, false, false, valueBorderPasoPaso]
+              {text: '',border: [false, false, false, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               },
-              {text: '',border: [false, false, (conforme)?false :true, valueBorderPasoPaso]
+              {text: '',border: [false, false, (conforme)?false :true, (conforme)?false : valueBorderPasoPaso],
+              headlineLevel: fIndexBorderPB,
               }];
           }
             getTypeMC.forEach( function(e){
@@ -2760,14 +3176,22 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           break;
         }
       }, 
-      onAddConforme: function(aBodyPaso,valueBorderPaso,itemPasoData, index){
+      onAddConforme: function(aBodyPaso,valueBorderPaso,itemPasoData, index, fIndexBorderPB){
         if(itemPasoData.aplica){
-          if(  itemPasoData.clvModelo === "SETPRE" || itemPasoData.clvModelo === "PROCESO" || itemPasoData.clvModelo === "SETPOST"){
+          if(  itemPasoData.clvModelo === "SETPRE" 
+            || itemPasoData.clvModelo === "PROCESO" 
+            || itemPasoData.clvModelo === "SETPOST" 
+            || itemPasoData.tipoDatoId_iMaestraId === sIdTipoDatoNotificacion 
+            || itemPasoData.tipoDatoId_iMaestraId === sIdTipoDatoFecha
+            || itemPasoData.tipoDatoId_iMaestraId === sIdTipoDatoFechayHora
+            || itemPasoData.tipoDatoId_iMaestraId === sIdTipoDatoHora
+            || itemPasoData.tipoDatoId_iMaestraId === sIdTipoDatoFechaVencimiento){
             var getType = [
               {
                 text: ' ',
                 alignment: "right",
                 style: "TableDataRealiz",
+                headlineLevel: fIndexBorderPB,
                 colSpan: 1,
                 border: [false, index===1?true:false, true, false],
               }];
@@ -2779,6 +3203,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               var getType = [
                 {
                   table: {
+                    dontBreakRows: true, 
                     widths: [13],
                     body: [[{
                       image: iCheckBody,
@@ -2788,6 +3213,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                       border: [true, true, true, true] }]],
                   },
                   alignment: "right",
+                  headlineLevel: fIndexBorderPB,
                   style: "TableDataRealiz",
                   colSpan: 1,
                   border: [false, index===1?true:false, true, false],
@@ -2799,10 +3225,12 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               var getType = [
                 {
                   table: {
+                    dontBreakRows: true, 
                     widths: [13],
                     body: [[{fontSize: 8,text: ' '}]],
                   },
                   alignment: "right",
+                  headlineLevel: fIndexBorderPB,
                   style: "TableDataRealiz",
                   colSpan: 1,
                   border: [false, index===1?true:false, true, false],
@@ -2816,6 +3244,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           var getType = [
             {
               table: {
+                dontBreakRows: true, 
                 widths: [13],
                 body: [[{
                   image: iCheckGuion,
@@ -2827,6 +3256,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               },
               alignment: "right",
               style: "TableDataRealiz",
+              headlineLevel: fIndexBorderPB,
               colSpan: 1,
               border: [false, index===1?true:false, true, false],
             }];
@@ -2875,6 +3305,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 {
                   // text: oData.ensayoPadreId ? oData.ensayoPadreId.descripcion : ' ',
                   text: oThatAmb.onValidarInfo(oData, "ensayoPadreId.descripcion"),
+                  preserveLeadingSpaces: true,
                   style: "tableHeader",
                   alignment: 'left',
                   colSpan: 1,
@@ -2891,18 +3322,21 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
                 ],[
                 {
                   text: oData.ensayoHijo?oData.ensayoHijo: ' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],
                 },
                 {
                   text: oData.especificacion?oData.especificacion: ' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],
                 },
                 {
                   text: oData.resultados?oData.resultados:' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],
@@ -2912,18 +3346,21 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               aBodyEspecificacion.push([
                 {
                   text: oData.ensayoHijo?oData.ensayoHijo:' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],
                 },
                 {
                   text: oData.especificacion?oData.especificacion:' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],
                 },
                 {
                   text: oData.resultados?oData.resultados:' ',
+                  preserveLeadingSpaces: true,
                   style: "tableData",
                   colSpan: 1,
                   border: [true, false, true, false],

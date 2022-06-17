@@ -35,7 +35,10 @@ sap.ui.define([
 	 */
   function (Controller, MessageBox, util, registroService, BusyIndicator, Filter, FilterOperator, JSONModel, DateFormat,formatter, Button,ColorPalettePopover,ColorPickerDisplayMode,ResponsivePopover,ColorPicker,unifiedLibrary,ColorPickerPopover,MessageToast, etiquetasPDF, muestreoPdf, FilterType,coreLibrary,IAS,Dialog,mobileLibrary,Label,TextArea,deepExtend,tablePdf) {
     "use strict";
-    var ColorPickerMode = unifiedLibrary.ColorPickerMode;
+    var ColorPickerMode = unifiedLibrary.ColorPickerMode, once = true, onceU = true;
+    var sTipo,
+    iId,
+    sValorId;
     const rootPath = "mif.rmd.registro";
     const sIdTipoEquipo = 472,
         sIdTipoUtensilio = 471,
@@ -184,7 +187,7 @@ sap.ui.define([
             ///REFRESH TEMPORIZADOR
             let identificadorTiempoEsperaRefresh;
             function temporizadorIntervaloRefresh(){
-                identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,2000)
+                identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
             }
             function cargarRefresh (){
                 if(bInterneInit){
@@ -199,7 +202,7 @@ sap.ui.define([
             //SINCRONIZAR NOTIFICACION Y AVISO
             let identificadorTiempoEsperaNotAvi;
             function temporizadorIntervaloNotAvi(){
-                identificadorTiempoEsperaNotAvi = setInterval(cargarNotifAvis,5000)
+                identificadorTiempoEsperaNotAvi = setInterval(cargarNotifAvis,10000)
             }
             function cargarNotifAvis (){
                 if(bInterneInit){
@@ -2736,8 +2739,14 @@ sap.ui.define([
                 let checkBox = oEvent.getSource().getSelected();
                 this.modelGeneral.setProperty("/checkBoxState", checkBox);
                 // var aListRmdItem = oEvent.getSource().getBindingContext("aListPasoAssignResponsive").getObject();
-                let oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model,
-                    aListRmdItem = oEvent.getSource().getParent().getBindingContext(oModel).getObject();
+                let oModel;
+                if (oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items) {
+                    oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+                } else {
+                    oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
+                }
+
+                let aListRmdItem = oEvent.getSource().getParent().getBindingContext(oModel).getObject();
                 if (aListRmdItem.tipoDatoId_iMaestraId === sIdVistobueno || aListRmdItem.tipoDatoId_iMaestraId === sIdRealizadoporyVistobueno) {
                     if (oInfoUsuario.rol[0].codigo === "rmd_jefe_prod") {
                         oThat.modelGeneral.setProperty("/usuarioLoginVB", oInfoUsuario.data.usuario);
@@ -2903,19 +2912,27 @@ sap.ui.define([
                 let dataRmd = oDataSeleccionada.getData();
                 let oModel,aDataModelEstructura,aListRmdItem,oDataEstructura,oSource,bCheckBox;
                 if(!bFlag){
-                    oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
-                        aDataModelEstructura = oThat.getView().getModel(oModel);
-                        aListRmdItem = oEvent.getSource().getParent().getBindingContext(oModel).getObject();
-                        oDataEstructura = aDataModelEstructura.getData();
-                        oSource = oEvent.getSource();
-                        bCheckBox = oThat.modelGeneral.getProperty("/checkBoxState");;
+                    if (oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items) { 
+                        oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+                    } else {
+                        oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
+                    }
+                    aDataModelEstructura = oThat.getView().getModel(oModel);
+                    aListRmdItem = oEvent.getSource().getParent().getBindingContext(oModel).getObject();
+                    oDataEstructura = aDataModelEstructura.getData();
+                    oSource = oEvent.getSource();
+                    bCheckBox = oThat.modelGeneral.getProperty("/checkBoxState");
                 }else{
-                    oModel = oEvent.getParent().getParent().getParent().mBindingInfos.items.model;
-                        aDataModelEstructura = oThat.getView().getModel(oModel);
-                        aListRmdItem = oEvent.getParent().getBindingContext(oModel).getObject();
-                        oDataEstructura = aDataModelEstructura.getData();
-                        oSource = oEvent;
-                        bCheckBox = oThat.modelGeneral.getProperty("/checkBoxState");
+                    if (oEvent.getParent().getParent().getParent().mBindingInfos.items) { 
+                        oModel = oEvent.getParent().getParent().getParent().mBindingInfos.items.model;
+                    } else {
+                        oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+                    }
+                    aDataModelEstructura = oThat.getView().getModel(oModel);
+                    aListRmdItem = oEvent.getParent().getBindingContext(oModel).getObject();
+                    oDataEstructura = aDataModelEstructura.getData();
+                    oSource = oEvent;
+                    bCheckBox = oThat.modelGeneral.getProperty("/checkBoxState");
                 }
 
                 let sEntity, aFilter = [];
@@ -3274,13 +3291,32 @@ sap.ui.define([
         
         onConfirmUpdateItem:async function (oEvent) {
             try {
+                onceU = true;
                 let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
                 let fraccionActual = oDataSeleccionada.getData().aEstructura.results[0].fraccion;
                 let dataRmd = oDataSeleccionada.getData();
-                let oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model,
-                    aListaRmdItem = oEvent.getSource().getBindingContext(oModel).getObject(),
-                    aDataModelEstructura = oThat.getView().getModel(oModel),
-                    oDataEstructura = aDataModelEstructura.getData();
+                let oModel;
+                if (oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items) {
+                    oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+                } else {
+                    oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
+                }
+                let aListaRmdItem = oEvent.getSource().getBindingContext(oModel).getObject(),
+                aDataModelEstructura = oThat.getView().getModel(oModel),
+                oDataEstructura = aDataModelEstructura.getData();
+
+                sTipo = aListaRmdItem.sTipo;
+                if (aListaRmdItem.sTipo === "PROCEDIMIENTO") {
+                    iId = aListaRmdItem.rmdEstructuraPasoId;
+                } else if (aListaRmdItem.sTipo === "PROCEDIMIENTOPM") {
+                    iId = aListaRmdItem.rmdEstructuraPasoInsumoPasoId;
+                } else if (aListaRmdItem.sTipo === "ESPECIFICACIONES") {
+                    iId = aListaRmdItem.rmdEstructuraEspecificacionId;
+                } else if (aListaRmdItem.sTipo === "CUADRO") {
+                    iId = aListaRmdItem.rmdEstructuraPasoId;
+                }
+
+                sValorId = aListaRmdItem.generalInput;
 
                 if(!aListaRmdItem.generalInput && ( aListaRmdItem.tipoDatoId_iMaestraId === sIdTexto || 
                                                     aListaRmdItem.tipoDatoId_iMaestraId === sIdCantidad ||
@@ -3446,6 +3482,8 @@ sap.ui.define([
                     MessageBox.confirm(formatter.onGetI18nText(oThat, "sMessageSaveAction"), {
                         onClose : async function(sButton) {
                             if (sButton === MessageBox.Action.OK) {
+                                BusyIndicator.show(0);
+                                oThat.onLimpiarValoresConstantes();
                                 // Actualizar estado del RMD a "En Proceso".
                                 let oDataGeneralBack = oThat.getOwnerComponent().getModel("asociarDatos"),
                                     aDataGeneralBack = oDataGeneralBack.getData();
@@ -3517,8 +3555,9 @@ sap.ui.define([
                                 let oModelFooter = new JSONModel(oFooter);
                                 oThat.getView().setModel(oModelFooter, "aFooter");
 
-
+                                BusyIndicator.hide();
                                 let bValidate = await oThat.onUpdateRmdPaso(aListaRmdItem, '', false);
+                                // await oThat.onChangeEstructuraIndividual(aListaRmdItem);
                                 if (bValidate !== false) {
                                     BusyIndicator.show(0);
                                     await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
@@ -3718,6 +3757,12 @@ sap.ui.define([
                     sDatoIngresado = oParam.datoFijo;
                 } else if (aListRmdItem.tipoDatoId_iMaestraId === sIdFormula) {
                     let aFilter = [];
+                    if (aListRmdItem.sTipo === 'PROCEDIMIENTOPM') {
+                        aFilter.push(new Filter("mdEstructuraPasoInsumoPasoId_mdEstructuraPasoInsumoPasoId", "EQ", idFormula));
+                    } else {
+                        aFilter.push(new Filter("pasoPadreId_mdEstructuraPasoId", "EQ", idFormula));
+                    }
+
                     aFilter.push(new Filter("pasoPadreId_mdEstructuraPasoId", "EQ", idFormula));
                     aFilter.push(new Filter("activo", "EQ", true));
 
@@ -3758,6 +3803,11 @@ sap.ui.define([
                         }
     
                         sFormula = eval(formulaResult);
+                        if (sFormula === Infinity) {
+                            BusyIndicator.hide();
+                            MessageBox.error("No se puede registrar la fórmula, debido a que faltan registrar los pasos involucrados.")
+                            return;
+                        }
                         sFormula = parseFloat(sFormula).toFixed(3);
                     } else {
                         BusyIndicator.hide();
@@ -11605,6 +11655,19 @@ sap.ui.define([
                         if (sButton === MessageBox.Action.OK) {
                             var oLineaActualRMD = oThat.getView().getModel("modelGeneral").getProperty("/LineaActualRMD"),
                                 oCantidadHU = oThat.getView().getModel("modelGeneral").getProperty("/CantidadConHUOp");
+                            
+                            //NUEVO MARIN
+                            // let aFilters = [];
+                            // aFilters.push(new Filter("orden", "EQ", oLineaActualRMD.Aufnr));
+                            // aFilters.push(new Filter("operacion", "EQ", 'FINAL'));
+                            // aFilters.push(new Filter("activo", "EQ", true));
+                            // aFilters.push(new Filter("fraccion", "EQ", fraccionActual));
+                            // let existeNotifFinal = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilters);
+                            // if (existeNotifFinal.results.length > 0) {
+                            //     MessageBox.warning("No se pueden crear etiquetas con enlace porque ya se notificó final.");
+                            //     return false;
+                            // }
+                            //FIN NUEVO MARIN
                                 
                             let bFlag = true;
                                 if (oThat.nType === 1) {
@@ -11730,8 +11793,8 @@ sap.ui.define([
                                     let aFilter = [];
                                     aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
                                     aFilter.push(new Filter("rmdId_rmdId", "EQ", dataRmd.rmdId));
-                                    aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-                                    let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                    aFilter.push(new Filter("fraccion", "EQ", fraccionActual));     
+                                    let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);                                  
                                     if(aLapsoSelected.results.length === 0){
                                         var oDataFirmaVerif = {}
                                         oDataFirmaVerif.rmdId           = dataRmd.rmdId;
@@ -13051,12 +13114,17 @@ sap.ui.define([
                                 if (oMessageFinal.Type === "E") {
                                     MessageBox.error(oMessageFinal.Message);
                                 } else {
-                                    let oObj = {
-                                        objeto: result.HUMensajeSet.results[0].MessageV2,
-                                        estadoEtiqueta_iMaestraId : iEstadoEtiquetaCerrado
+                                    let bValidateObjeto = await oThat.onValidateObjeto(result.HUMensajeSet.results[0].MessageV2);
+                                    if (bValidateObjeto) {
+                                        let oObj = {
+                                            objeto: result.HUMensajeSet.results[0].MessageV2,
+                                            estadoEtiqueta_iMaestraId : iEstadoEtiquetaCerrado
+                                        }
+                                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "ETIQUETAS_CONTROL", oObj, oDataFila.etiquetasControlId);
+                                        MessageBox.success(oMessageFinal.Message);
+                                    } else {
+                                        MessageBox.error("Ocurrió un error al cerrar el HU.");
                                     }
-                                    await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "ETIQUETAS_CONTROL", oObj, oDataFila.etiquetasControlId);
-                                    MessageBox.success(oMessageFinal.Message);
                                 }
                                 await oThat.onObtenerListEtiqueta();
                                 oThat.onFragmentEmbalarEtiqueta.close();
@@ -13072,15 +13140,9 @@ sap.ui.define([
                             registroService.onSaveDataGeneral(oModel, "/HuOfflSet", oData).then(async function (result) {
                                 sap.ui.core.BusyIndicator.hide();
                                 console.log(result);
-                                // var aMessage = result.HUMensajeSet.results;
-                                // var item = aMessage.length - 1;
-                                // var oMessageFinal = aMessage[item];
-
-                                // if (oMessageFinal.Type === "E") {
-                                //     MessageBox.error(oMessageFinal.Message);
-                                // } else {
+                         
                                 MessageBox.success("La peticion se puson en cola");
-                                // }
+                                
                                 await oThat.onObtenerListEtiqueta();
                                 oThat.onFragmentEmbalarEtiqueta.close();
 
@@ -13749,6 +13811,7 @@ sap.ui.define([
                     oEtiqueta.designLabel= 'Bold';
                     oEtiqueta.generalVisibleMenuButton= false;
                     oEtiqueta.generalVisibleSaveButton= false;
+                    oEtiqueta.generalVisibleSaveButtonPM= false;
                     oEtiqueta.generalVisibleDeleteAuto = false;
                     oEtiqueta.generalEnabledSaveButton= false;
                     oEtiqueta.generalVisibleText= false;
@@ -13757,6 +13820,8 @@ sap.ui.define([
                     oEtiqueta.generalVisibleCheckBox= false;
                     oEtiqueta.generalVisibleTextUsuario= false;
                     oEtiqueta.generalVisibleTextAdic= false;
+                    oEtiqueta.generalVisibleTextUsuarioPM= false;
+                    oEtiqueta.generalVisibleTextAdicPM= false;
                     oEtiqueta.onFormatoTipoDatoVisibleToggleButtonMultiCheck=false;
                     oEtiqueta.generalVisibleRefresh= false;
                     contador = contador + 1; 
@@ -13776,6 +13841,11 @@ sap.ui.define([
                         oPasoEtiqueta.generalVisibleText = formatter.onFormatoTipoDatoVisibleText(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleCheckBox = formatter.onFormatoTipoDatoVisibleCheckBox(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleSaveButton = formatter.onFormatoTipoDatoVisibleSaveButton(oPasoEtiqueta.tipoDatoId_iMaestraId);
+                        oPasoEtiqueta.generalVisibleTextUsuario= true;
+                        oPasoEtiqueta.generalVisibleTextUsuarioPM= false;
+                        oPasoEtiqueta.generalVisibleTextAdic=true;
+                        oPasoEtiqueta.generalVisibleTextAdicPM=false;
+                        oPasoEtiqueta.generalVisibleSaveButtonPM = false;
                         oPasoEtiqueta.generalEnabledSaveButton= formatter.onFormatoEnabledSaveButton(oPasoEtiqueta, oInfoUsuario.funcionUsuario, oEstructuraSeleccionada.aPaso.results);
                         oPasoEtiqueta.generalVisibleToggleButton = formatter.onFormatoTipoDatoVisibleToggleButton(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.onFormatoTipoDatoVisibleToggleButtonMultiCheck = formatter.onFormatoTipoDatoVisibleToggleButtonMultiCheck(oPasoEtiqueta.tipoDatoId_iMaestraId);
@@ -13850,7 +13920,11 @@ sap.ui.define([
                             oPasoInsumoPaso.generalVisibleInput= formatter.onFormatoTipoDatoVisibleInput(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.generalVisibleText= formatter.onFormatoTipoDatoVisibleText(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.generalVisibleCheckBox= formatter.onFormatoTipoDatoVisibleCheckBox(oPasoInsumoPaso.tipoDatoId_iMaestraId);
-                            oPasoInsumoPaso.generalVisibleSaveButton= formatter.onFormatoTipoDatoVisibleSaveButton(oPasoInsumoPaso.tipoDatoId_iMaestraId);
+                            oPasoInsumoPaso.generalVisibleTextUsuario= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? true : false;
+                            oPasoInsumoPaso.generalVisibleTextUsuarioPM= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? false : true;
+                            oPasoInsumoPaso.generalVisibleTextAdic= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? true : false;
+                            oPasoInsumoPaso.generalVisibleTextAdicPM=oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? false : true;
+                            oPasoInsumoPaso.generalVisibleSaveButton= false;
                             oPasoInsumoPaso.generalEnabledSaveButton= formatter.onFormatoEnabledSaveButton(oPasoInsumoPaso, oInfoUsuario.funcionUsuario, oEstructuraSeleccionada.aPaso.results);
                             oPasoInsumoPaso.generalVisibleToggleButton= formatter.onFormatoTipoDatoVisibleToggleButton(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.onFormatoTipoDatoVisibleToggleButtonMultiCheck = formatter.onFormatoTipoDatoVisibleToggleButtonMultiCheck(oPasoInsumoPaso.tipoDatoId_iMaestraId);
@@ -16724,7 +16798,12 @@ sap.ui.define([
 
         onRefrescarCC: async function (oEvent) {
             BusyIndicator.show(0);
-            let oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+            let oModel;
+            if (oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items) {
+                oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+            } else {
+                oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
+            }
             let aListPasosProceso = oThat.getView().getModel("aListProcessAssignResponsive");
             let aListaRmdItem = oEvent.getSource().getBindingContext(oModel).getObject();
             let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
@@ -16739,7 +16818,7 @@ sap.ui.define([
             let aLapsoManualResponse; 
             if(bInterneInit === true){  
                 aLapsoManualResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_LAPSO", aFilterLapso);
-            }else{
+            }else{//MODEL OFFLINE
                 aLapsoManualResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilterLapso);
             }
             
@@ -18390,11 +18469,21 @@ sap.ui.define([
             var oInput = sValueInput;
             val = sValueInput;
             oEvent.getSource().addEventDelegate({
-                onfocusout: function() {
-                //   console.log("focus lost !!");
-                    oThat.onLimpiarValoresConstantes();
+                onsapfocusleave: function(oEvent) {
+                    if (oEvent.relatedControlId) {
+                        if (oEvent.relatedControlId.includes("__input") && oEvent.relatedControlId.includes("__table")) {
+                            oThat.onLimpiarValoresConstantes();
+                        }
+                    } else {
+                        if(once === true){
+                            oThat.onLimpiarValoresConstantes();
+                        }
+                        once = false;
+                    }
                 }
               });
+              once = true;
+
             if(lineaSeleccionada.tipoDatoId_iMaestraId === 434 || lineaSeleccionada.tipoDatoId_iMaestraId === 438 || lineaSeleccionada.tipoDatoId_iMaestraId === 443){
                 if(Number(oInput) === 0){
                     if (oInput.split(".")[1]){
@@ -18796,19 +18885,29 @@ sap.ui.define([
                                     var aMessage = result.HUMensajeSet.results;
                                     var item = aMessage.length - 1;
                                     var oMessageFinal = aMessage[item];
-    
+                                    let bFlagError = true;
+
                                     if (oMessageFinal.Type === "E") {
                                         MessageBox.error(oMessageFinal.Message);
                                     } else {
                                         for await (const oEtiqueta of aListEtiquetas) {
-                                            let oObj = {
-                                                objeto: result.HUMensajeSet.results[0].MessageV2,
-                                                estadoEtiqueta_iMaestraId : iEstadoEtiquetaCerrado
+                                            let bValidateObjeto = await oThat.onValidateObjeto(result.HUMensajeSet.results[0].MessageV2);
+                                            if (bValidateObjeto)  {
+                                                let oObj = {
+                                                    objeto: result.HUMensajeSet.results[0].MessageV2,
+                                                    estadoEtiqueta_iMaestraId : iEstadoEtiquetaCerrado
+                                                }
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "ETIQUETAS_CONTROL", oObj, oEtiqueta.etiquetasControlId);
+                                            }else{
+                                                bFlagError = false;
                                             }
-                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "ETIQUETAS_CONTROL", oObj, oEtiqueta.etiquetasControlId);
                                         }
                                         MessageBox.success(oMessageFinal.Message);
                                     }
+                                    if (!bFlagError) {
+                                        MessageBox.error("Ocurrió un error al cerrar los HU.")
+                                    }
+
                                     oThat.onFragmentEmbalarEtiquetaMasivo.close();
                                     await oThat.onObtenerListEtiqueta();
                                     sap.ui.core.BusyIndicator.hide();
@@ -18821,13 +18920,7 @@ sap.ui.define([
                             }else{//OFFLINE MODEL
                                 registroService.onSaveDataGeneral(oThat.modelNecesidad, "/HuOfflSet", oData).then(async function (result) {
                                     console.log(result);
-                                    //var aMessage = result.HUMensajeSet.results;
-                                    //var item = aMessage.length - 1;
-                                    //var oMessageFinal = aMessage[item];
-    
-                                    //if (oMessageFinal.Type === "E") {
-                                    //    MessageBox.error(oMessageFinal.Message);
-                                    //} else {
+
                                     for await (const oEtiqueta of aListEtiquetas) {
                                         let oObj = {
                                             objeto: result.HUMensajeSet.results[0].MessageV2,
@@ -18835,9 +18928,9 @@ sap.ui.define([
                                         }
                                         await registroService.onUpdateDataGeneral(oThat.mainModelv2, "ETIQUETAS_CONTROL", oObj, oEtiqueta.etiquetasControlId);
                                     }
-                                    //MessageBox.success(oMessageFinal.Message);
+                                
                                     MessageBox.success("La peticion se puso en cola");
-                                    //}
+                                    
                                     oThat.onFragmentEmbalarEtiquetaMasivo.close();
                                     await oThat.onObtenerListEtiqueta();
                                     sap.ui.core.BusyIndicator.hide();
@@ -18853,6 +18946,15 @@ sap.ui.define([
             } else {
                 MessageBox.warning("Solo se pueden cerrar etiquetas con estado Pendiente.")
             }
+        },
+        onValidateObjeto: function (sObjeto) {
+            let bFlag = true;
+            if (sObjeto.length != 9) {
+                bFlag = false;
+            } else if (sObjeto.slice(0,2) !== '18') {
+                bFlag = false;
+            }
+            return bFlag;
         },
 
         onCancelEmbalarEtiquetaMasivo: function () {
