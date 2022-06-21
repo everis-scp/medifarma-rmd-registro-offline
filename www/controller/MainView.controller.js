@@ -3487,8 +3487,7 @@ sap.ui.define([
                     let aFilters = [];
                     aFilters.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
                     aFilters.push(new Filter("fraccion", "EQ", sFraccion));
-                    let sExpand = "rmdId,rmdEstructuraId,etiquetaId,tipoDatoId,pasoId/tipoDatoId,pasoId/pasoId/estadoId,pasoHijoId/tipoDatoId,pasoHijoId/estadoId,rmdEstructuraRecetaInsumoId";
-
+                    let sExpand = "rmdEstructuraId,etiquetaId,tipoDatoId,pasoId,pasoId/pasoId,pasoHijoId,rmdEstructuraRecetaInsumoId";
                     if ( bInterneInit === true){
                         registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, "RMD_ES_PASO_INSUMO_PASO", aFilters, sExpand).then(function (oListRmdEsPasoInsumoPaso) {
                             resolve(oListRmdEsPasoInsumoPaso);
@@ -4158,6 +4157,82 @@ sap.ui.define([
                             await registroService.onSaveDataGeneral(oThat.mainModelv2, "RMD_ESTRUCTURA", oParam);
                         }
                     }
+                }
+            },
+
+            onChangeEstructuraIndividual: async function (aListaRmdItem) {
+                try {
+                    let sEntity;
+                    let aFilter = [], sExpand;
+                    let aModelPaso = oThat.getView().getModel("listRmdEsPaso").getData();
+                    let aModelEquipo = oThat.getView().getModel("listRmdEsEquipo").getData();
+                    let aModelUtensilio = oThat.getView().getModel("listRmdEsUtensilio").getData();
+                    let aModelPasoInsumoPaso = oThat.getView().getModel("listEsPasoInsumoPasoGeneral").getData();
+                    let aModelEspecificacion = oThat.getView().getModel("listRmdEsEspecificacion").getData(); 
+
+                    if (aListaRmdItem.sTipo === 'PROCEDIMIENTO' || aListaRmdItem.sTipo === 'CUADRO' || aListaRmdItem.sTipo === 'CONDICIONAMBIENTAL') {
+                        sEntity = 'RMD_ES_PASO';
+                        aFilter.push(new Filter ("rmdEstructuraPasoId", "EQ", aListaRmdItem.rmdEstructuraPasoId));
+                        sExpand = "tipoDatoId,pasoId";
+                    } else if (aListaRmdItem.sTipo === 'PROCEDIMIENTOPM') {
+                        sEntity = 'RMD_ES_PASO_INSUMO_PASO';
+                        aFilter.push(new Filter ("rmdEstructuraPasoInsumoPasoId", "EQ", aListaRmdItem.rmdEstructuraPasoInsumoPasoId));
+                        sExpand = "rmdEstructuraId,etiquetaId,pasoId,pasoId/pasoId,pasoHijoId,rmdEstructuraRecetaInsumoId";
+                    } else if (aListaRmdItem.sTipo === 'EQUIPO') {
+                        sEntity = 'RMD_ES_EQUIPO';
+                        aFilter.push(new Filter ("rmdEstructuraEquipoId", "EQ", aListaRmdItem.rmdEstructuraEquipoId));
+                        sExpand = "equipoId/tipoId";
+                    } else if (aListaRmdItem.sTipo === 'UTENSILIO') {
+                        sEntity = 'RMD_ES_UTENSILIO';
+                        aFilter.push(new Filter ("rmdEstructuraUtensilioId", "EQ", aListaRmdItem.rmdEstructuraUtensilioId));
+                        sExpand = "utensilioId/estadoId,utensilioId/tipoId,agrupadorId";
+                    } else if (aListaRmdItem.sTipo === 'ESPECIFICACIONES') {
+                        sEntity = 'RMD_ES_ESPECIFICACION';
+                        aFilter.push(new Filter ("rmdEstructuraEspecificacionId", "EQ", aListaRmdItem.rmdEstructuraEspecificacionId));
+                        sExpand = "rmdEstructuraId,ensayoPadreId";
+                    }
+                    let oResponse;
+                    if(bInterneInit === true){
+                        oResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2Online, sEntity, aFilter, sExpand);
+                    }else{//MODEL OFFLINE
+                        oResponse = await registroService.onGetDataGeneralFiltersExpand(oThat.mainModelv2, sEntity, aFilter, sExpand);
+                    }
+                    
+                    let aResponse;
+                    if (aListaRmdItem.sTipo === 'PROCEDIMIENTO' || aListaRmdItem.sTipo === 'CUADRO' || aListaRmdItem.sTipo === 'CONDICIONAMBIENTAL') {
+                        aResponse = aModelPaso.map(obj => oResponse.results.find(o => o.rmdEstructuraPasoId === obj.rmdEstructuraPasoId) || obj);
+                        let oModelPaso = new JSONModel(aResponse);
+                        oModelPaso.setSizeLimit(999999999);
+                        oThat.getView().setModel(oModelPaso, "listRmdEsPaso");
+                        oThat.getView().getModel("listRmdEsPaso").refresh(true);
+                    } else if (aListaRmdItem.sTipo === 'PROCEDIMIENTOPM') {
+                        aResponse = aModelPasoInsumoPaso.map(obj => oResponse.results.find(o => o.rmdEstructuraPasoInsumoPasoId === obj.rmdEstructuraPasoInsumoPasoId) || obj);
+                        let oModelPaso = new JSONModel(aResponse);
+                        oModelPaso.setSizeLimit(999999999);
+                        oThat.getView().setModel(oModelPaso, "listEsPasoInsumoPasoGeneral");
+                        oThat.getView().getModel("listEsPasoInsumoPasoGeneral").refresh(true);
+                    } else if (aListaRmdItem.sTipo === 'EQUIPO') {
+                        aResponse = aModelEquipo.map(obj => oResponse.results.find(o => o.rmdEstructuraEquipoId === obj.rmdEstructuraEquipoId) || obj);
+                        let oModelPaso = new JSONModel(aResponse);
+                        oModelPaso.setSizeLimit(999999999);
+                        oThat.getView().setModel(oModelPaso, "listRmdEsEquipo");
+                        oThat.getView().getModel("listRmdEsEquipo").refresh(true);
+                    } else if (aListaRmdItem.sTipo === 'UTENSILIO') {
+                        aResponse = aModelUtensilio.map(obj => oResponse.results.find(o => o.rmdEstructuraUtensilioId === obj.rmdEstructuraUtensilioId) || obj);
+                        let oModelPaso = new JSONModel(aResponse);
+                        oModelPaso.setSizeLimit(999999999);
+                        oThat.getView().setModel(oModelPaso, "listRmdEsUtensilio");
+                        oThat.getView().getModel("listRmdEsUtensilio").refresh(true);
+                    } else if (aListaRmdItem.sTipo === 'ESPECIFICACIONES') {
+                        aResponse = aModelEspecificacion.map(obj => oResponse.results.find(o => o.rmdEstructuraEspecificacionId === obj.rmdEstructuraEspecificacionId) || obj);
+                        let oModelPaso = new JSONModel(aResponse);
+                        oModelPaso.setSizeLimit(999999999);
+                        oThat.getView().setModel(oModelPaso, "listRmdEsEspecificacion");
+                        oThat.getView().getModel("listRmdEsEspecificacion").refresh(true);
+                    }
+                    await oThat.onCompletarAsociarDatos();
+                } catch (oError) {
+                    MessageBox.error(oError);
                 }
             },
             //OFFLINE

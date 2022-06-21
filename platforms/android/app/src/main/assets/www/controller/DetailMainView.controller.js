@@ -3048,7 +3048,7 @@ sap.ui.define([
                                 // await oThat.onSaveLineaActualPasoDepende(oParam, oRows);
                                 sap.ui.getCore().byId("submitDialogTextarea").setValue("");
                                 BusyIndicator.show(0);
-                                await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                                await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(aListRmdItem);
                                 await oThat.onChangeEstructura();
                                 
                                 let aFilter = [];
@@ -3148,7 +3148,7 @@ sap.ui.define([
 
                     await oThat.onUpdateRmdPaso(aListRmdItem, '', true);
                     BusyIndicator.show(0);
-                    await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                    await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(aListRmdItem);
                     await oThat.onChangeEstructura();
 
                     let aFilter = [];
@@ -3257,7 +3257,7 @@ sap.ui.define([
 
                     await oThat.onUpdateRmdPaso(aListRmdItem, '', false);
                     BusyIndicator.show(0);
-                    await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                    await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(aListRmdItem);
                     await oThat.onChangeEstructura();
 
                     let aFilter = [];
@@ -3431,7 +3431,7 @@ sap.ui.define([
                                             if (bValidate !== false) {
                                                 sap.ui.getCore().byId("submitDialogTextarea").setValue("");
                                                 BusyIndicator.show(0);
-                                                await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                                                await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(aListaRmdItem);
                                                 await oThat.onChangeEstructura();
                                                 BusyIndicator.hide();
                                                 oDialog.close();
@@ -3557,12 +3557,15 @@ sap.ui.define([
 
                                 BusyIndicator.hide();
                                 let bValidate = await oThat.onUpdateRmdPaso(aListaRmdItem, '', false);
-                                // await oThat.onChangeEstructuraIndividual(aListaRmdItem);
+                                BusyIndicator.show(0);
                                 if (bValidate !== false) {
-                                    BusyIndicator.show(0);
-                                    await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                                    await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(aListaRmdItem);
                                     await oThat.onChangeEstructura();
                                     BusyIndicator.hide();
+                                    // BusyIndicator.show(0);
+                                    // await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
+                                    // await oThat.onChangeEstructura();
+                                    // BusyIndicator.hide();
 
                                     let aFilter = [];
                                     aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
@@ -4571,6 +4574,11 @@ sap.ui.define([
 
             if(!oDataPaso.contModif){
                 if(selectedItems.length > 0){
+                    BusyIndicator.show(0);
+                    selectedItems.forEach(async function(oUser){
+                        aListUserPrevio.push(oUser.getTitle());
+                    });
+
                     let oObjClear = {};
                     if(oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck){
                         oObjClear = {
@@ -4588,33 +4596,6 @@ sap.ui.define([
                     }else{//OFFLINE MODEL
                         await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObjClear, id);
                     }
-                    
-                    selectedItems.forEach(async function(oUser){
-                        aListUserPrevio.push(oUser.getTitle());
-                        var oUserData = oUser.getBindingContext("modelGeneral").getObject();
-                        let aFilter = [];
-                        aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
-                        aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
-                        aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-
-                        let aLapsoSelected;
-                        if(bInterneInit === true){
-                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
-                        }else{//OFFLINE MODEL
-                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-                        }
-                        
-                            if(aLapsoSelected.results.length === 0){
-                                var oDataFirmaVerif = {}
-                                oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
-                                oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
-                                oDataFirmaVerif.fraccionActual  = fraccionActual;
-                                oDataFirmaVerif.rol             = oUserData.rol;
-    
-                                oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
-                            }
-    
-                    });
                     let oObj = {};
                     if(oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck){
                         oObj = {
@@ -4634,18 +4615,51 @@ sap.ui.define([
                     if (!oDataPaso.firstFechaActualiza) {
                         oObj.firstFechaActualiza = new Date();
                     }
-                    BusyIndicator.show(0);
+                    if(bInterneInit === true){
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObj, id);
+                    }else{//MODEL OFFLINE
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
+                    }
+                    await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(oDataPaso);
+                    await oThat.onChangeEstructura();
+                    BusyIndicator.hide();
+                    await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, "");
+
+                    selectedItems.forEach(async function(oUser){
+                        var oUserData = oUser.getBindingContext("modelGeneral").getObject();
+                        let aFilter = [];
+                        aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
+                        aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
+                        aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+
+                        let aLapsoSelected;
+                        if(bInterneInit === true){
+                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                        }else{//MODEL OFFLINE
+                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                        }
+                            if(aLapsoSelected.results.length === 0){
+                                var oDataFirmaVerif = {}
+                                oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
+                                oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
+                                oDataFirmaVerif.fraccionActual  = fraccionActual;
+                                oDataFirmaVerif.rol             = oUserData.rol;
+    
+                                oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
+                            }
+    
+                    });
                     let aDataGeneralBack = oDataSeleccionada.getData();
                     let aFilters= [];
-                        aFilters.push(new Filter("rmdId", "EQ", aDataGeneralBack.rmdId));
-
-                        let aRmdResponse;
-                        if(bInterneInit === true){
-                            aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD", aFilters);
-                        }else{//OFFLINE MODEL
-                            aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD", aFilters);
-                        }
-                        
+                    aFilters.push(new Filter("rmdId", "EQ", aDataGeneralBack.rmdId));
+                    
+                    let aRmdResponse;
+                    if(bInterneInit === true){
+                        aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD", aFilters);
+                    }else{//MODEL OFFLINE
+                        aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD", aFilters);
+                    }
+                    
                     if (!aRmdResponse.results[0].bFlagInitial) {
                         let oChange = {
                             estadoIdRmd_iMaestraId: iStateProcess,
@@ -4654,22 +4668,11 @@ sap.ui.define([
                         }
                         if(bInterneInit === true){
                             await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", oChange, aDataGeneralBack.rmdId);
-                        }else{//OFFLINE MODEL
+                        }else{//MODEL OFFLINE
                             await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD", oChange, aDataGeneralBack.rmdId);
                         }
                         
                     }
-
-                    if(bInterneInit === true){
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObj, id);
-                    }else{//OFFLINE MODEL
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
-                    }
-                    
-                    await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, "");
-                    await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
-                    await oThat.onChangeEstructura();
-                    BusyIndicator.hide();
                 } else {
                     MessageBox.warning("Debe seleccionar almenos un usuario.");
                     return;
@@ -4703,6 +4706,7 @@ sap.ui.define([
                                 onClose : async function(sButton) {
                                     if (sButton === MessageBox.Action.OK) {
                                         if(selectedItems.length > 0){
+                                            BusyIndicator.show(0);
                                             let oObjClear = {};
                                             if(oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck){
                                                 oObjClear = {
@@ -4715,38 +4719,14 @@ sap.ui.define([
                                                     realizadoPorUser: ''
                                                 }
                                             }
-
                                             if(bInterneInit === true){
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObjClear, id);
-                                            }else{//OFFLINE MODEL
+                                            }else{//MODEL OFFLINE
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObjClear, id);
                                             }
                                             
                                             selectedItems.forEach(async function(oUser){
-                                                aListUserPrevio.push(oUser.getTitle());
-                                                var oUserData = oUser.getBindingContext("modelGeneral").getObject();
-                                                let aFilter = [];
-                                                aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
-                                                aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
-                                                aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-
-                                                let aLapsoSelected;
-                                                if(bInterneInit === true){
-                                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                                }else{//OFFLINE MODEL   
-                                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                                }
-                                                
-                                                    if(aLapsoSelected.results.length === 0){
-                                                        var oDataFirmaVerif = {}
-                                                        oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
-                                                        oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
-                                                        oDataFirmaVerif.fraccionActual  = fraccionActual;
-                                                        oDataFirmaVerif.rol             = oUserData.rol;
-                            
-                                                        oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
-                                                    }
-                            
+                                                aListUserPrevio.push(oUser.getTitle());                            
                                             });
                                             let oObj = {};
                                             if(oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck){
@@ -4767,18 +4747,46 @@ sap.ui.define([
                                             if (!oDataPaso.firstFechaActualiza) {
                                                 oObj.firstFechaActualiza = new Date();
                                             }
-                                            BusyIndicator.show(0);
-                                            let aDataGeneralBack = oDataSeleccionada.getData();
-                                            let aFilters= [];
-                                                aFilters.push(new Filter("rmdId", "EQ", aDataGeneralBack.rmdId));
-                                                
-                                                let aRmdResponse;
-                                                if(bInterneInit === true){
-                                                    aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD", aFilters);
-                                                }else{//OFFLINE MODEL
-                                                    aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD", aFilters);
+                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
+                                            await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(oDataPaso);
+                                            await oThat.onChangeEstructura();
+                                            BusyIndicator.hide();
+                                            oDialog.close();
+                                            await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, sText);
+                                            selectedItems.forEach(async function(oUser){
+                                                var oUserData = oUser.getBindingContext("modelGeneral").getObject();
+                                                let aFilter = [];
+                                                aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
+                                                aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
+                                                aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+
+                                                let aLapsoSelected;
+                                                if (bInterneInit === true){
+                                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                                }else{
+                                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
                                                 }
                                                 
+                                                if (aLapsoSelected.results.length === 0) {
+                                                    var oDataFirmaVerif = {}
+                                                    oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
+                                                    oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
+                                                    oDataFirmaVerif.fraccionActual  = fraccionActual;
+                                                    oDataFirmaVerif.rol             = oUserData.rol;
+                        
+                                                    oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
+                                                }
+                                            });
+                                            let aDataGeneralBack = oDataSeleccionada.getData();
+                                            let aFilters= [];
+                                            aFilters.push(new Filter("rmdId", "EQ", aDataGeneralBack.rmdId));
+                                            let aRmdResponse;
+                                            if(bInterneInit === true){
+                                                aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD", aFilters);
+                                            }else{//MODEL OFFLINE
+                                                aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD", aFilters);
+                                            }
+                                            
                                             if (!aRmdResponse.results[0].bFlagInitial) {
                                                 let oChange = {
                                                     estadoIdRmd_iMaestraId: iStateProcess,
@@ -4787,21 +4795,11 @@ sap.ui.define([
                                                 }
                                                 if(bInterneInit === true){
                                                     await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", oChange, aDataGeneralBack.rmdId);
-                                                }else{//OFFLINE MODEL
+                                                }else{//MODEL OFFLINE
                                                     await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD", oChange, aDataGeneralBack.rmdId);
                                                 }
+                                                
                                             }
-                                            if(bInterneInit === true){
-                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObj, id);
-                                            }else{//OFFLINE MODEL
-                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
-                                            }
-                                            
-                                            await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, sText);
-                                            await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
-                                            await oThat.onChangeEstructura();
-                                            
-                                            BusyIndicator.hide();
                                         } else {
                                             BusyIndicator.show(0);
                                             // MessageBox.warning("Debe seleccionar almenos un usuario.");
@@ -4821,21 +4819,18 @@ sap.ui.define([
                                                     contModif: (oDataPaso.contModif + 1)
                                                 }
                                             }
-
                                             if(bInterneInit === true){
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObjClear, id);
-                                            }else{//OFFLIN MODEL
+                                            }else{//MODEL OFFLINE
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObjClear, id);
                                             }
                                             
+                                            BusyIndicator.hide();
+                                            oDialog.close();
                                             await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, sText);
                                             await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
                                             await oThat.onChangeEstructura();
-                                            BusyIndicator.hide();
                                         }
-    
-    
-                                        oDialog.close();
                                     }
                                 }
                             });
@@ -4858,90 +4853,6 @@ sap.ui.define([
                 oDialog.open();
             }
             
-            // if (oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
-            //     if(oDataPaso.multiCheckUser) {
-            //         aListUserPrevio = oDataPaso.multiCheckUser.split(",");
-            //     } 
-            // } else {
-            //     if(oDataPaso.realizadoPorUser) {
-            //         aListUserPrevio = oDataPaso.realizadoPorUser.split(",");
-            //     } 
-            // }
-            // if(oEvent.mParameters.selectedItems.length > 0){
-            //     oEvent.mParameters.selectedItems.forEach(async function(oUser){
-            //         aListUserPrevio.push(oUser.getTitle());
-            //         var oUserData = oUser.getBindingContext("modelGeneral").getObject();
-            //         let aFilter = [];
-            //         aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
-            //         aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
-            //         aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-            //         let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-            //             if(aLapsoSelected.results.length === 0){
-            //                 var oDataFirmaVerif = {}
-            //                 oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
-            //                 oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
-            //                 oDataFirmaVerif.fraccionActual  = fraccionActual;
-            //                 oDataFirmaVerif.rol             = oUserData.rol;
-
-            //                 oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
-            //             }
-
-            //     });
-            //     let oObj = {};
-            //     if(oDataPaso.tipoDatoId_iMaestraId === sIdMultiplecheck){
-            //         oObj = {
-            //             fechaActualiza: new Date(),
-            //             multiCheckUser: aListUserPrevio.join()
-            //         }
-            //     } else {
-            //         oObj = {
-            //             fechaActualiza: new Date(),
-            //             realizadoPorUser: aListUserPrevio.join()
-            //         }
-            //     }
-            //     if (!oDataPaso.firstFechaActualiza) {
-            //         oObj.firstFechaActualiza = new Date();
-            //     }
-            //     BusyIndicator.show(0);
-            //     let aDataGeneralBack = oDataSeleccionada.getData();
-            //     let aFilters= [];
-            //         aFilters.push(new Filter("rmdId", "EQ", aDataGeneralBack.rmdId));
-            //         let aRmdResponse = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD", aFilters);
-            //     if (!aRmdResponse.results[0].bFlagInitial) {
-            //         let oChange = {
-            //             estadoIdRmd_iMaestraId: iStateProcess,
-            //             bFlagInitial: true,
-            //             fechaInicioRegistro: new Date()
-            //         }
-            //         await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD", oChange, aDataGeneralBack.rmdId);
-            //     }
-            //     await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
-            //     await oThat.saveLineaActualHistorial(oDataPaso, String(aListUserPrevio.join()), sControl, '');
-            //     await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
-            //     await oThat.onChangeEstructura();
-
-            //     // oEvent.mParameters.selectedItems.forEach(async function(itemSelected){
-            //     // let aFilter = [];
-            //     // var oUserData = itemSelected.getBindingContext("modelGeneral").getObject();
-            //     // aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oUserData.usuarioId_usuarioId));
-            //     // aFilter.push(new Filter("rmdId_rmdId", "EQ", oUserData.rmdId_rmdId));
-            //     // aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-            //     // let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-            //     //     if(aLapsoSelected.results.length === 0){
-            //     //         var oDataFirmaVerif = {}
-            //     //         oDataFirmaVerif.usuarioVerif    = oUserData.usuarioId_usuarioId;
-            //     //         oDataFirmaVerif.rmdId           = oUserData.rmdId_rmdId;
-            //     //         oDataFirmaVerif.fraccionActual  = fraccionActual;
-            //     //         oDataFirmaVerif.rol             = oUserData.rol;
-
-            //     //         oThat.onRMD_VERIFICACION_FIRMAS_MULTIPLE(oDataFirmaVerif);
-            //     //     }
-            //     // });
-                
-            //     BusyIndicator.hide();
-            // } else {
-            //     MessageBox.warning("Debe seleccionar almenos un usuario.");
-            // }
         },
 
         abrirSeleccionUsuarios: async function(oEvent){
@@ -13853,6 +13764,12 @@ sap.ui.define([
                         oPasoEtiqueta.generalEnabledPredecesor = true;
                         oPasoEtiqueta.generalVisibleDeleteAuto = formatter.onFormatoVisibleDeleteAuto(oPasoEtiqueta);
                         oPasoEtiqueta.generalVisibleRefresh= formatter.onFormatoTipoDatoVisibleRefresh(oPasoEtiqueta.tipoDatoId_iMaestraId);
+                        if (oPasoEtiqueta.multiCheckUser && !(oPasoEtiqueta.multiCheckUser.includes(",\n"))) {
+                            oPasoEtiqueta.multiCheckUser = oPasoEtiqueta.multiCheckUser.replaceAll(",", ",\n");
+                        }
+                        if(oPasoEtiqueta.realizadoPorUser && !(oPasoEtiqueta.realizadoPorUser.includes(",\n"))) {
+                            oPasoEtiqueta.realizadoPorUser = oPasoEtiqueta.realizadoPorUser.replaceAll(",", ",\n");
+                        }
                         if (oPasoEtiqueta.dependeRmdEstructuraPasoId) {
                             let oPasoEtiquetaPredecesor = {};
                             oPasoEtiquetaPredecesor = aPasosEtiqueta.find(itm=>itm.mdEstructuraPasoIdDepende === oPasoEtiqueta.dependeRmdEstructuraPasoId);

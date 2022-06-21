@@ -31,7 +31,7 @@
 			</columns>
 			<items>
 				<ColumnListItem>
-					<!-- <ObjectIdentifier title="{aListEspecificacionAssignResponsive>ensayoPadreId/descripcion}" text="{aListEspecificacionAssignResponsive>ensayoHijo}"/> -->
+					<ObjectIdentifier title="{aListEspecificacionAssignResponsive>ensayoPadreId/descripcion}" text="{aListEspecificacionAssignResponsive>ensayoHijo}"/>
                     <Text text="{aListEspecificacionAssignResponsive>especificacion}" width="auto"/>
                     <TextArea value="{aListEspecificacionAssignResponsive>resultados}" showExceededText="true" maxLength="200" width="100%" valueState="{= ${aListEspecificacionAssignResponsive>resultados}.length > 200 ? 'Warning' : 'None' }" valueLiveUpdate="false" change="onLimpiarValoresConstantes" liveChange="handleLiveChange" enabled="{=${generalModelState>/state} &amp;&amp; ${aListEspecificacionAssignResponsive>generalEnabledSaveButton}}"/>
 					<VBox>

@@ -170,6 +170,12 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
             fontSize: 9,
             color: "black",
           },
+          tableHeaderEspecificaciones: {
+            bold: true,
+            fontSize: 10,
+            alignment: "center",
+            color: "black",
+          },
           tableHeader: {
             bold: true,
             fontSize: 9,
@@ -1854,19 +1860,19 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               aBodyEspecificacion.push([  
                 {
                   text: "ENSAYO",
-                  style: "tableHeader",
+                  style: "tableHeaderEspecificaciones",
                   colSpan: 1,
                   border: [true, true, true, true],
                 },
                 {
                   text: "ESPECIFICACIONES",
-                  style: "tableHeader",
+                  style: "tableHeaderEspecificaciones",
                   colSpan: 1,
                   border: [true, true, true, true],
                 },
                 {
                   text: "RESULTADOS",
-                  style: "tableHeader",
+                  style: "tableHeaderEspecificaciones",
                   colSpan: 1,
                   border: [true, true, true, true],
                 },
@@ -2562,7 +2568,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           const Base64 = await doc.getBase64().then(function(data){
             window.location.href = 'data:application/pdf;base64,' + data; 
           });
-        }else {
+        } else {
           pdfMake.createPdf(docDefinition).open();
         }
       } else {
@@ -3304,9 +3310,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
               aBodyEspecificacion.push([
                 {
                   // text: oData.ensayoPadreId ? oData.ensayoPadreId.descripcion : ' ',
-                  text: oThatAmb.onValidarInfo(oData, "ensayoPadreId.descripcion"),
+                  text: oThatAmb.onValidarInfo(oData, "ensayoPadreId.contenido"),
                   preserveLeadingSpaces: true,
-                  style: "tableHeader",
+                  style: "tableHeaderEspecificaciones",
                   alignment: 'left',
                   colSpan: 1,
                   border: [true, true, true, false],
