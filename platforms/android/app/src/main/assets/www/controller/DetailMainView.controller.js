@@ -98,10 +98,7 @@ sap.ui.define([
         EanValue,
         sPlantillaImpresion = '',
         sPlantillaImpresionMuestra = 'ZPL17',
-        sPlantillaImpresionMuestraCuadro = 'ZPL18',
-        sTipo,
-        iId,
-        sValorId;
+        sPlantillaImpresionMuestraCuadro = 'ZPL18';
         let bInterneInit = true;
         let bflushCargando = false;
         let bRefreshCargando = false;
@@ -171,33 +168,33 @@ sap.ui.define([
             temporizadorIntervalo();
 
             //FLUSH TEMPORIZADOR
-            let identificadorTiempoEsperaFlush;
-            function temporizadorIntervaloFlush(){
-                identificadorTiempoEsperaFlush = setInterval(cargarFlush,10000)
-            }
-            function cargarFlush (){
-                if(bInterneInit){
-                    oThat.onFlushButton();
-                }else{
-                    //console.log("Flush no se esta cargando (Sin internet)");
-                }
-            }
-            temporizadorIntervaloFlush();
+            // let identificadorTiempoEsperaFlush;
+            // function temporizadorIntervaloFlush(){
+            //     identificadorTiempoEsperaFlush = setInterval(cargarFlush,10000)
+            // }
+            // function cargarFlush (){
+            //     if(bInterneInit){
+            //         oThat.onFlushButton();
+            //     }else{
+            //         //console.log("Flush no se esta cargando (Sin internet)");
+            //     }
+            // }
+            // temporizadorIntervaloFlush();
 
             ///REFRESH TEMPORIZADOR
-            let identificadorTiempoEsperaRefresh;
-            function temporizadorIntervaloRefresh(){
-                identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
-            }
-            function cargarRefresh (){
-                if(bInterneInit){
-                    oThat.onRefreshAutomatico();
-                }else{
-                    //console.log("Refresh no se esta cargando (Sin internet )");
-                }
-            }
+            // let identificadorTiempoEsperaRefresh;
+            // function temporizadorIntervaloRefresh(){
+            //     identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
+            // }
+            // function cargarRefresh (){
+            //     if(bInterneInit){
+            //         oThat.onRefreshAutomatico();
+            //     }else{
+            //         //console.log("Refresh no se esta cargando (Sin internet )");
+            //     }
+            // }
 
-            temporizadorIntervaloRefresh();
+            // temporizadorIntervaloRefresh();
 
             //SINCRONIZAR NOTIFICACION Y AVISO
             let identificadorTiempoEsperaNotAvi;
