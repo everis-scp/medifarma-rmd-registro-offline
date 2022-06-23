@@ -11093,7 +11093,13 @@ sap.ui.define([
                 }else{//OFFLINE MODEL
                     registroService.getDataFilter(this.modelNecesidad,"/FaseNotSet",aFilters)
                     .then(function(payload){
-                        resolve(payload.results[0]);
+                        if(payload.results.length > 0){
+                            resolve(payload.results[0]); 
+                        }else{
+                            //MessageBox.warning("No se encontro informacion (Fase Notificacion)");
+                            reject({"responseText":"No se encontro información (Fase Notificacion)"});
+                        }
+                        
                     })
                     .catch(function(err){
                         reject(err);
@@ -14285,9 +14291,8 @@ sap.ui.define([
 
         onMenuAction: async function (oEvent) {
             let press = oEvent.mParameters.item.getProperty("text");
-            let oModel = oEvent.getSource().getParent().getParent().getParent().mBindingInfos.items.model;
+            let oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
             let aDataModelEstructura = oThat.getView().getModel(oModel).getData();
-            //let lineaSeleccionada = oEvent.getSource().getParent().getBindingContext(oModel).getObject();
             let lineaSeleccionada = oEvent.getSource().getParent().getParent().getBindingContext(oModel).getObject();
             if (press === "Observación por paso") {
                 oThat.onGetObservacionesToItem(lineaSeleccionada);
@@ -19497,11 +19502,14 @@ sap.ui.define([
             let aFilterSAP= [];
             aFilterSAP.push(new Filter("Zflag", "EQ", "1"));
             aFilterSAP.push(new Filter("Sincronizado", "EQ", "0"));
-            let aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad, "NotificacionOfflineSet",aFilterSAP);
+            
+            if (oThat.modelNecesidadOnline){
+
+            let aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "NotificacionOfflineSet",aFilterSAP);
             
             let aFilterAvisoSap = [];
             aFilterAvisoSap.push(new Filter("Sincronizado", "EQ", "0"));
-            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidad,"AvisoOfflSet",aFilterAvisoSap);
+            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline,"AvisoOfflSet",aFilterAvisoSap);
 
             for await (const oNotification of aNotificaciones.results) {
                 
@@ -19509,7 +19517,7 @@ sap.ui.define([
                     let aFilter = [];             
                     aFilter.push(new Filter("rmdControlRechazo", "EQ", oNotification.Notificacionkey));
                 
-                    let oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_TABLA_CONTROL", aFilter);
+                    let oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
 
                     if(oNotifiHana.results.length > 0){
                         oNotifiHana.results[0].Rmzhl = oNotification.Rmzhl;
@@ -19517,14 +19525,14 @@ sap.ui.define([
                         delete oNotifiHana.results[0].__metadata;
                         delete oNotifiHana.results[0].rmdId;
 
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
 
                         oNotification.Sincronizado = "1";
                 
                         delete oNotification.__metadata;
                         oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
 
-                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
                     }
                 }
             }
@@ -19535,7 +19543,7 @@ sap.ui.define([
                     let aFilter = [];             
                     aFilter.push(new Filter("rmdLapsoId", "EQ", oAviso.Keyaviso));
                 
-                    let oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_LAPSO", aFilter);
+                    let oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_LAPSO", aFilter);
 
                     if(oLapsoHana.results.length>0){
                         oLapsoHana.results[0].Qmnum = oAviso.Qmnum;
@@ -19548,7 +19556,7 @@ sap.ui.define([
                         delete oLapsoHana.results[0].rmdId;
                         delete oLapsoHana.results[0].tipoLapsoId;
 
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
 
                         oAviso.Sincronizado = "1";
                 
@@ -19556,9 +19564,10 @@ sap.ui.define([
                         if( oAviso.Valid){
                             oAviso.Valid = formatter.onFormatDateSAP(oAviso.Valid);
                         }
-                        await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
+                        await registroService.onUpdateDataGeneral(oThat.modelNecesidadOnline, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
                     }
                 }
+            }
             }
         },
 

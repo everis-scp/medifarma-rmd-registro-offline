@@ -41,7 +41,8 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-dialogs": {},
       "cordova-plugin-whitelist": {},
-      "cordova-plugin-screen-orientation": {}
+      "cordova-plugin-screen-orientation": {},
+      "cordova-plugin-file-opener2-base64": {}
     },
     "platforms": [
       "ios",

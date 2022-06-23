@@ -7,6 +7,9 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-file-opener2": {
+      "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
+    },
     "cordova-plugin-privacyscreen": {
       "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
     },

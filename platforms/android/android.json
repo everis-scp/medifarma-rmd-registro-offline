@@ -83,6 +83,10 @@
             {
               "xml": "<feature name=\"Logging\"><param name=\"android-package\" value=\"com.sap.mp.cordova.plugins.logger.Logger\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"FileOpener2\"><param name=\"android-package\" value=\"io.github.pwlin.cordova.plugins.fileopener2.FileOpener2\" /></feature>",
+              "count": 1
             }
           ],
           "/widget": [
@@ -145,10 +149,6 @@
               "count": 3
             },
             {
-              "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
-              "count": 1
-            },
-            {
               "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
               "count": 1
             },
@@ -178,6 +178,10 @@
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
               "count": 1
             }
           ],
@@ -333,6 +337,9 @@
       "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
     },
     "kapsel-plugin-usage": {
+      "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
+    },
+    "cordova-plugin-file-opener2": {
       "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
     }
   },
@@ -852,6 +859,14 @@
       "clobbers": [
         "sap.Usage"
       ]
+    },
+    {
+      "id": "cordova-plugin-file-opener2.FileOpener2",
+      "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
+      "pluginId": "cordova-plugin-file-opener2",
+      "clobbers": [
+        "cordova.plugins.fileOpener2"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -883,6 +898,7 @@
     "kapsel-plugin-logger": "4.7.5",
     "kapsel-plugin-odata": "4.7.5",
     "kapsel-plugin-settings": "4.7.5",
-    "kapsel-plugin-usage": "4.7.5"
+    "kapsel-plugin-usage": "4.7.5",
+    "cordova-plugin-file-opener2": "2.0.2"
   }
 }

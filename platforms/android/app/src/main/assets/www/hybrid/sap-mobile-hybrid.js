@@ -136,7 +136,7 @@ sap.hybrid = {
 					filterPlantas += " or";
 				}
 			}
-	
+			
 			var SAP_Produccion_properties = {
 					"name": "store_SAP_Produccion",
 					"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
@@ -157,13 +157,16 @@ sap.hybrid = {
 				console.log(error);
 				alert("An error occurred PRODUCCION" + JSON.stringify(error));
 			}
-
+			//TEST TIEMPO
+			var fechaProduccion = new Date();
 			storeSAPProduccion.open(function (res){
+				var TiempoProduccion = new Date().getTime() - fechaProduccion.getTime();
+				console.log("PRODUCCION: "+ TiempoProduccion+ " ms")
 				//sap.ui.core.BusyIndicator.hide();
 				console.log("In openStoreSuccessCallback PRODUCCION SERVICIO CARGA COMPLETA 2");
 				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
 				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-					
+				
 				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
 					sap.hybrid.startApp();
 				}
@@ -244,7 +247,12 @@ sap.hybrid = {
 				console.log(error);
 				alert("An error occurred HANA" + JSON.stringify(error));
 			}
+			//TEST TIEMPO
+			var fechaHana = new Date();
 			storeHANA.open(function (res){
+				var Tiempo = new Date().getTime() - fechaHana.getTime();
+				console.log("HANA: "+ Tiempo+ " ms")
+
 				console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
 				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
 				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
@@ -365,7 +373,7 @@ sap.hybrid = {
 		var fechaLimite = sap.hybrid.sumarDias(fechaActual,-9);
 			fechaLimite = sap.hybrid.convertFecha(fechaLimite);
 
-		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaInicioRegistro ge "+fechaLimite+"Z";  //JSON format is less verbose than atom/xml
+		var uri = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_SRV_TEST/v2/browse/RMD?$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+fechaLimite+"Z";  //JSON format is less verbose than atom/xml
 		var oHeaders = {};
 		var request = {
 				headers: oHeaders,
@@ -428,7 +436,10 @@ sap.hybrid = {
 			}
 			
 			//sap.ui.core.BusyIndicator.show(0);
+			var fechaImpre = new Date();
 			storeSAPImpresion.open( function (res){
+				var Tiempo = new Date().getTime() - fechaImpre.getTime();
+				console.log("IMPRESION: "+ Tiempo+ " ms")
 				//sap.ui.core.BusyIndicator.hide();
 				console.log("In openStoreSuccessCallback Z_PP_IMPRESION_SRV SERVICIO CARGA COMPLETA 3");
 				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
@@ -475,7 +486,10 @@ sap.hybrid = {
 			}
 
 			//sap.ui.core.BusyIndicator.show(0);
+			var fechaNecesidad = new Date();
 			storeSAPNecesidadesRMD.open(function (result){
+				var Tiempo = new Date().getTime() - fechaNecesidad.getTime();
+				console.log("NECESIDAD: "+ Tiempo+ " ms")
 				//sap.ui.core.BusyIndicator.hide();
 				console.log("In openStoreSuccessCallback NECESIDADESRMD SERVICIO CARGA COMPLETA 4");
 				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
@@ -612,7 +626,7 @@ sap.hybrid = {
 	},
 
 	flushStore: function () {
-		console.log("Offline events: flushStore");
+		//console.log("Offline events: flushStore");
 		if (!storeSAPNecesidadesRMD) {
 			console.log("The store of Necesidades RMD must be open before it can be flushed");
 			return;
@@ -638,20 +652,20 @@ sap.hybrid = {
 			storeSAPProduccion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
 
 			storeSAPNecesidadesRMD.flush(function () {
-				console.log("Offline events: SAP flushStoreCallback");
+				//console.log("Offline events: SAP flushStoreCallback");
 				
 				storeHANA.flush(function (res){
-					console.log("Offline events: HANA flushStoreCallback");
+					//console.log("Offline events: HANA flushStoreCallback");
 					resolve(true);
 					//sap.ui.core.BusyIndicator.hide();
 				}, function (err){
-					console.log("Offline events: HANA flushStoreCallback");
+					//console.log("Offline events: HANA flushStoreCallback");
 					reject(false);
 					//sap.ui.core.BusyIndicator.hide();	
 				}, null, sap.hybrid.progressCallback);
 
 			}, function (error) {
-				console.log("Offline events: SAP flushStoreCallback");
+				//console.log("Offline events: SAP flushStoreCallback");
 				reject(false);
 				//sap.ui.core.BusyIndicator.hide();
 
@@ -661,7 +675,7 @@ sap.hybrid = {
 
 	flushStoreCallback: function () {
 		//sap.ui.core.BusyIndicator.hide();
-		console.log("Offline events: flushStoreCallback");
+		//console.log("Offline events: flushStoreCallback");
 	},
 
 	errorCallback: function (error) {

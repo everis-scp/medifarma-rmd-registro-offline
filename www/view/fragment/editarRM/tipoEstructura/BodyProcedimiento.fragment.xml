@@ -1,27 +1,27 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<ScrollContainer
-                                        height="100%"
-                                        width="100%"
-                                        horizontal="false"
-                                        vertical="true">
-		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" items="{aListProcessAssignResponsive>/}" updateFinished="onUpdateFinish">
+					height="100%"
+					width="100%"
+					horizontal="false"
+					vertical="true">
+		<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" items="{aListProcessAssignResponsive>/}"  updateFinished="onUpdateFinish">
 			<columns>
-				<Column width="52%" hAlign="Left" vAlign="Middle" popinDisplay="Inline">
+				<Column width="52%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft cellBorderRight" popinDisplay="Inline">
 					<Text text="" width="auto"/>
 					<footer>
 						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}" visible="{estructuraVerificado>/state}"/>
 					</footer>
 				</Column>
-				<Column width="17%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+				<Column width="17%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
 					<Text text="" width="auto"/>
 					<footer>
 						<Text text="{i18n>ftTFecha}{aFooter>/fecha}" visible="{estructuraVerificado>/state}"/>
 					</footer>
 				</Column>
-				<Column width="11%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+				<Column width="11%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
 					<Text text="" width="auto"/>
 				</Column>
-				<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
+				<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
 					<Text text="" width="auto"/>
 				</Column>
 				<Column width="5%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline">
@@ -34,52 +34,45 @@
 					<HBox>
 						<HBox alignItems="Center">
 							<Text text="{aListProcessAssignResponsive>generalInput}" visible="{aListProcessAssignResponsive>generalVisibleText}" width="auto"/>
-							<Input enabled="{=${aListProcessAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}" value="{aListProcessAssignResponsive>generalInput}" type="{aListProcessAssignResponsive>generalType}" visible="{aListProcessAssignResponsive>generalVisibleInput}" width="auto" change="onGetFormat"/>
-						</HBox>
-						<VBox>
-							<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBoxPM}" select="onConfirmUpdateRmdCheckBoxValid"/>
-							<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButtonPM}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
-							<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuarioPM}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
-							<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdicPM}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
-						</VBox>
-						<HBox justifyContent="Center">
-							<VBox>
-								<ObjectStatus text="{i18n>lblDoFor1}" visible="{aListProcessAssignResponsive>generalVisibleToggleButton}" />
-								<Button enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" icon="sap-icon://accidental-leave" visible="{=${aListProcessAssignResponsive>generalVisibleToggleButton} || ${aListProcessAssignResponsive>onFormatoTipoDatoVisibleToggleButtonMultiCheck}}" press="abrirSeleccionUsuarios" class="myRowSize myButtonSize increaseFont"/>
-								<Text textAlign="Center" text="{aListProcessAssignResponsive>realizadoPorUser}" class="TextStyleAuxiliar" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
-								<Text textAlign="Center" text="{aListProcessAssignResponsive>multiCheckUser}" class="TextStyleAuxiliar" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/>
-								<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado2'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{=${aListProcessAssignResponsive>contModif} > 1 ? true : false}" state="Indication03"/>
-							</VBox>
-							<VBox>
-								<ObjectStatus text="{i18n>lblVcheck}" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 440 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}" />
-								<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBox}" select="onConfirmUpdateRmdCheckBoxValid"/>
-								<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButton}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
-								<Button icon="sap-icon://refresh" tooltip="{i18n>btnRefresh}" press="onRefrescarCC" visible="{aListProcessAssignResponsive>generalVisibleRefresh}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
-								<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
-								<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
-							</VBox>
+							<Input enabled="{=${aListProcessAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}" value="{aListProcessAssignResponsive>generalInput}" type="{aListProcessAssignResponsive>generalType}" visible="{aListProcessAssignResponsive>generalVisibleInput}" width="auto" liveChange="onSaveLineaActual"/>
+							<!-- <Button icon="sap-icon://delete" tooltip="{i18n>btnDelete}" press="onDeleteNotifAuto" visible="{aListProcessAssignResponsive>generalVisibleDeleteAuto}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? false : true &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/> -->
 						</HBox>
 					</HBox>
 					<VBox>
-						<ObjectStatus text="{i18n>lblVcheck}" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 440 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}" />
-						<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBox}" select="onConfirmUpdateRmdCheckBoxValid"/>
-						<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButton}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
-						<Button icon="sap-icon://refresh" tooltip="{i18n>btnRefresh}" press="onRefrescarCC" visible="{aListProcessAssignResponsive>generalVisibleRefresh}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
-						<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
-						<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
+						<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBoxPM}" select="onConfirmUpdateRmdCheckBoxValid"/>
+						<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButtonPM}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
+						<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuarioPM}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
+						<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdicPM}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
 					</VBox>
+					<HBox justifyContent="Center">
+						<VBox>
+							<ObjectStatus text="{i18n>lblDoFor1}" visible="{aListProcessAssignResponsive>generalVisibleToggleButton}" />
+							<Button enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" icon="sap-icon://accidental-leave" visible="{=${aListProcessAssignResponsive>generalVisibleToggleButton} || ${aListProcessAssignResponsive>onFormatoTipoDatoVisibleToggleButtonMultiCheck}}" press="abrirSeleccionUsuarios" class="myRowSize myButtonSize increaseFont"/>
+							<Text textAlign="Center" text="{aListProcessAssignResponsive>realizadoPorUser}" class="TextStyleAuxiliar" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
+							<Text textAlign="Center" text="{aListProcessAssignResponsive>multiCheckUser}" class="TextStyleAuxiliar" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/>
+							<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado2'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{=${aListProcessAssignResponsive>contModif} > 1 ? true : false}" state="Indication03"/>
+						</VBox>
+						<VBox>
+							<ObjectStatus text="{i18n>lblVcheck}" visible="{=${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 440 ? true : false || ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}" />
+							<CheckBox enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${generalModelState>/state}}" selected="{aListProcessAssignResponsive>generalCheckBox}" visible="{aListProcessAssignResponsive>generalVisibleCheckBox}" select="onConfirmUpdateRmdCheckBoxValid"/>
+							<Button icon="sap-icon://save" tooltip="{i18n>btnSave}" press="onConfirmUpdateItem" visible="{aListProcessAssignResponsive>generalVisibleSaveButton}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
+							<Button icon="sap-icon://refresh" tooltip="{i18n>btnRefresh}" press="onRefrescarCC" visible="{aListProcessAssignResponsive>generalVisibleRefresh}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${generalModelState>/state}}" class="myRowSize myButtonSize increaseFont"/>
+							<ObjectStatus text="{aListProcessAssignResponsive>usuarioActualiza}" visible="{aListProcessAssignResponsive>generalVisibleTextUsuario}" state="{path: 'aListProcessAssignResponsive>styleUser',formatter: '.formatter.onGetUserStyles'}"/>
+							<ObjectStatus text="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApply'}" visible="{aListProcessAssignResponsive>generalVisibleTextAdic}" state="{parts: [{path: 'aListProcessAssignResponsive>aplica'}, {path: 'aListProcessAssignResponsive>flagEditado'}], formatter: '.formatter.onGetModifOrNoApplyStyles'}"/>
+						</VBox>
+					</HBox>
 					<HBox>
-					<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" visible="{aListProcessAssignResponsive>generalVisibleMenuButton}">
-						<menu>
-							<Menu itemSelected="onMenuAction">
-								<MenuItem text="{i18n>mnObservationXStep}" icon="sap-icon://show" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
-								<MenuItem text="{i18n>mnHistoryXStep}" icon="sap-icon://activity-items" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionHistorialPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
-								<MenuItem text="{parts: [{path: 'aListProcessAssignResponsive>/'}, {path: 'aListProcessAssignResponsive>descripcion'}], formatter: '.formatter.onGetAplicaPrincipalAndPM'}" icon="{parts: [{path: 'aListProcessAssignResponsive>/'}, {path: 'aListProcessAssignResponsive>descripcion'}], formatter: '.formatter.onGetAplicaPrincipalAndPMSigno'}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/aplicaNoAplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
-								<MenuItem text="Eliminar" icon="sap-icon://delete" press="onDeleteNotifAuto" visible="{aListProcessAssignResponsive>generalVisibleDeleteAuto}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? false : true &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/>
-								<MenuItem text="Editar" icon="sap-icon://edit" press="onOpenEditFecha" visible="{=${aListProcessAssignResponsive>generalVisibleDeleteAuto} &amp;&amp; ${aListProcessAssignResponsive>firstFechaActualiza} === null ? false : true &amp;&amp; ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 447 ? true : false}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? true : false &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/>
-							</Menu>
-						</menu>
-					</MenuButton>
+						<MenuButton width="auto" icon="sap-icon://text-align-justified" tooltip="{i18n>lblOption}" visible="{aListProcessAssignResponsive>generalVisibleMenuButton}">
+							<menu>
+								<Menu itemSelected="onMenuAction">
+									<MenuItem text="{i18n>mnObservationXStep}" icon="sap-icon://show" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+									<MenuItem text="{i18n>mnHistoryXStep}" icon="sap-icon://activity-items" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/observacionHistorialPaso} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+									<MenuItem text="{parts: [{path: 'aListProcessAssignResponsive>/'}, {path: 'aListProcessAssignResponsive>descripcion'}], formatter: '.formatter.onGetAplicaPrincipalAndPM'}" icon="{parts: [{path: 'aListProcessAssignResponsive>/'}, {path: 'aListProcessAssignResponsive>descripcion'}], formatter: '.formatter.onGetAplicaPrincipalAndPMSigno'}" enabled="{=${modelGeneral>/oInfoUsuario/funcionUsuario/aplicaNoAplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}"/>
+									<MenuItem text="Eliminar" icon="sap-icon://delete" press="onDeleteNotifAuto" visible="{aListProcessAssignResponsive>generalVisibleDeleteAuto}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? false : true &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/>
+									<MenuItem text="Editar" icon="sap-icon://edit" press="onOpenEditFecha" visible="{=${aListProcessAssignResponsive>generalVisibleDeleteAuto} &amp;&amp; ${aListProcessAssignResponsive>firstFechaActualiza} === null ? false : true &amp;&amp; ${aListProcessAssignResponsive>tipoDatoId_iMaestraId} === 447 ? true : false}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? true : false &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/>
+								</Menu>
+							</menu>
+						</MenuButton>
 					</HBox>
 				</ColumnListItem>
 			</items>

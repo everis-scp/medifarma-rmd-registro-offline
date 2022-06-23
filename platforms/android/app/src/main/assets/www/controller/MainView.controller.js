@@ -98,35 +98,50 @@ sap.ui.define([
 
                 temporizadorIntervalo();
 
-                //FLUSH TEMPORIZADOR
-                let identificadorTiempoEsperaFlush;
-                function temporizadorIntervaloFlush(){
-                    identificadorTiempoEsperaFlush = setInterval(cargarFlush,10000)
-                }
-                function cargarFlush (){
-                    if(bInterneInit){
-                        oThat.onFlushButton();
-                    }else{
-                        //console.log("Flush no se esta cargando (Sin internet )");
-                    }
-                }
+                // //FLUSH TEMPORIZADOR
+                // let identificadorTiempoEsperaFlush;
+                // function temporizadorIntervaloFlush(){
+                //     identificadorTiempoEsperaFlush = setInterval(cargarFlush,5000)
+                // }
+                // function cargarFlush (){
+                //     if(bInterneInit){
+                //         oThat.onFlushButton();
+                //     }else{
+                //         //console.log("Flush no se esta cargando (Sin internet )");
+                //     }
+                // }
 
-                temporizadorIntervaloFlush();
+                // temporizadorIntervaloFlush();
 
-                ///REFRESH TEMPORIZADOR
-                let identificadorTiempoEsperaRefresh;
-                function temporizadorIntervaloRefresh(){
-                    identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
+                // ///REFRESH TEMPORIZADOR
+                // let identificadorTiempoEsperaRefresh;
+                // function temporizadorIntervaloRefresh(){
+                //     identificadorTiempoEsperaRefresh = setInterval(cargarRefresh,10000)
+                // }
+                // function cargarRefresh (){
+                //     if(bInterneInit){
+                //         oThat.onRefreshAutomatico();
+                //     }else{
+                //         //console.log("Refresh no se esta cargando (Sin internet )");
+                //     }
+                // }
+
+                // temporizadorIntervaloRefresh();
+
+                //FLUSH AND REFRESH
+                let identificadorTiempoEsperaFlushRefresh;
+                function temporizadorIntervaloFlushRefresh(){
+                    identificadorTiempoEsperaFlushRefresh = setInterval(cargarFlushRefresh,10000)
                 }
-                function cargarRefresh (){
+                function cargarFlushRefresh (){
                     if(bInterneInit){
-                        oThat.onRefreshAutomatico();
+                        oThat.onFlushAndRefreshAutomatico();
                     }else{
                         //console.log("Refresh no se esta cargando (Sin internet )");
                     }
                 }
 
-                temporizadorIntervaloRefresh();
+                temporizadorIntervaloFlushRefresh();
 
             },
 
@@ -3091,14 +3106,15 @@ sap.ui.define([
                         return a.fraccion - b.fraccion;
                     });
 
-                    tablePdf.onGeneratePdf2();
+                    //tablePdf.onGeneratePdf2();
 
 
-                    // if(descargarPDF){
-                    //     tablePdf.onGeneratePdf(value[0].results[0],descargarPDF,oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);            
-                    // }else {               
-                    //     tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,fracciones, arrayFind);
-                    // }
+                    if(descargarPDF){
+                        tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,"OFFLINE", arrayFind);          
+                     }else {    
+                        tablePdf.onGeneratePdf(value[0].results[0],false, oThat.modelGeneral.getProperty("/oInfoUsuario"), oThat.modelGeneral.getProperty("/LineaActualRMD"),arrayFind,"OFFLINE", arrayFind);              
+                        //tablePdf.onGeneratePdf2();
+                     }
 
                     //OFFLINE CAMBIO para visualizar y descargar el pdf
                     
@@ -3240,10 +3256,6 @@ sap.ui.define([
             },
 
             onRouteDetailView: function () {
-                //OFFLINE
-                bflushCargando = false;
-                bRefreshCargando = false;
-                /////
                 if (sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment")) {
                     sap.ui.getCore().byId("frgAdicNewMdEquipment--idTblEquipment").destroy();
                 }
@@ -3251,7 +3263,13 @@ sap.ui.define([
                 if (router._oViews._oCache.view["mif.rmd.registro.view.DetailMainView"]) {
                     delete router._oViews._oCache.view["mif.rmd.registro.view.DetailMainView"];
                 }
+                //OFFLINE
+                bflushCargando = false;
+                bRefreshCargando = false;
+                /////
                 oThat.getOwnerComponent().getRouter().navTo("RouteDetailMainView");
+                bflushCargando = false;
+                bRefreshCargando = false;
             },
 
             onGetRmdEstructura: function (sFraccion) {
@@ -3413,21 +3431,6 @@ sap.ui.define([
                         MessageBox.information("Debe conectarse para visualizar el RMD");
                         sap.ui.core.BusyIndicator.hide(0);
                         return;
-                        // let aFilterRecetaRmd = [];
-                        // aFilterRecetaRmd.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                        // let aRecetasRmdId = await registroService.getDataFilter(oThat.mainModelv2, "/RMD_RECETA", aFilterRecetaRmd);
-                        
-                        // //Genero filtros para receta
-                        // let aFilterReceta =[];
-                        // for(var i=0;i<aRecetasRmdId.results.length ;i++){
-                        //     aFilterReceta.push(new Filter("recetaId", "EQ", aRecetasRmdId.results[i].recetaId_recetaId));
-                        // }
-
-                        // let allFilterReceta= aFilterReceta;
-
-                        // let aRecetas = await registroService.getDataFilter(oThat.mainModelv2, "/RECETA", allFilterReceta);
-
-                        // aRecetaSelected = aRecetas.results.find(itm=>itm.Matnr === sMaterial && itm.Verid === sVersion);
                     }else{   	
                         aRecetaSelected = oDataSeleccionada.getData().aReceta.results.find(itm=>itm.recetaId.Matnr === sMaterial && itm.recetaId.Verid === sVersion);
                     }
@@ -4288,17 +4291,16 @@ sap.ui.define([
             
             onFlushButton: function() {
                 if (bflushCargando == false){
-                    bflushCargando = true;
                     if (typeof sap.hybrid !== 'undefined') {
+                        bflushCargando = true;
                         sap.hybrid.flushStore().then(function(result){
+                            bflushCargando = false;
                             if(result){
                                 console.log("Flush Complete");
                                 storeSAPNecesidadesRMD.clear();
                                 storeHANA.clear();
                                 storeSAPProduccion.clear();
                                 storeSAPImpresion.clear();
-
-                                bflushCargando = false;
                             }
                         },function(error){
                             console.log("error Flush");
@@ -4310,30 +4312,64 @@ sap.ui.define([
 
             onRefreshAutomatico:  function(){
                 var oThat = this;
-                if(bRefreshCargando === false){
-                    bRefreshCargando = true;
+                //if(bRefreshCargando === false){
                     if (typeof sap.hybrid !== 'undefined') {
-    
+                        //bRefreshCargando = true;
                         sap.hybrid.refreshStoreAutomatico().then(function(result){
+                            bRefreshCargando = false;
                             if(result){
                                 console.log("Refresh Complete");
                                 storeSAPNecesidadesRMD.clear();
                                 storeHANA.clear();
                                 storeSAPProduccion.clear();
                                 storeSAPImpresion.clear();
-                                
-                                bRefreshCargando = false;
                             }
                         }, function (error) {
-                            console.log("odataError SAP");
+                            bRefreshCargando = false;
+                            console.log("error Refresh");
                             storeHANA.cancelFlush();
                             storeSAPNecesidadesRMD.cancelFlush();
                             storeSAPProduccion.cancelFlush();
                             storeSAPImpresion.cancelFlush();
-
-                            bRefreshCargando = false;
                         });
                     }      
+                //}
+            },
+            onFlushAndRefreshAutomatico: function(){
+                if (bflushCargando == false && bRefreshCargando === false){
+                    if (typeof sap.hybrid !== 'undefined') {
+                        bflushCargando = true;
+                        sap.hybrid.flushStore().then(function(result){
+                            bflushCargando = false;
+
+                            if(bRefreshCargando === false){
+                                if (typeof sap.hybrid !== 'undefined') {
+                                    //bRefreshCargando = true;
+                                    sap.hybrid.refreshStoreAutomatico().then(function(result){
+                                        console.log("Flush Complete");
+                                        bRefreshCargando = false;
+                                        if(result){
+                                            console.log("Refresh Complete");
+                                            storeSAPNecesidadesRMD.clear();
+                                            storeHANA.clear();
+                                            storeSAPProduccion.clear();
+                                            storeSAPImpresion.clear();
+                                        }
+                                    }, function (error) {
+                                        bRefreshCargando = false;
+                                        console.log("error Refresh");
+                                        storeHANA.cancelFlush();
+                                        storeSAPNecesidadesRMD.cancelFlush();
+                                        storeSAPProduccion.cancelFlush();
+                                        storeSAPImpresion.cancelFlush();
+                                    });
+                                }      
+                            }              
+                        },function(error){
+                            console.log("error Flush");
+                            bflushCargando = false;
+                        });
+                    }
                 }
             }
             //storeHANA.cancelDownload()

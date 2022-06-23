@@ -1,0 +1,64 @@
+{
+  "_from": "cordova-plugin-file-opener2-base64@2.0.9",
+  "_id": "cordova-plugin-file-opener2-base64@2.0.9",
+  "_inBundle": false,
+  "_integrity": "sha512-rRYGZdcWOVq0lUcllHxR5/0rHWVsGlAsH9Tkn+/cyA6U/2dF/kGxSpttomsqmE9tDTSmtL76Hm//C+kUwr02kw==",
+  "_location": "/cordova-plugin-file-opener2-base64",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "cordova-plugin-file-opener2-base64@2.0.9",
+    "name": "cordova-plugin-file-opener2-base64",
+    "escapedName": "cordova-plugin-file-opener2-base64",
+    "rawSpec": "2.0.9",
+    "saveSpec": null,
+    "fetchSpec": "2.0.9"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-file-opener2-base64/-/cordova-plugin-file-opener2-base64-2.0.9.tgz",
+  "_shasum": "6a34e76813a9313290863d3ea88305ca0cc2292e",
+  "_spec": "cordova-plugin-file-opener2-base64@2.0.9",
+  "_where": "/Users/jdiapine/Documents/GitHub/medifarma-rmd-registro-offline",
+  "author": {
+    "name": "pwlin05@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/emilhuseynli/cordova-plugin-file-opener2/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-file-opener2-base64",
+    "platforms": [
+      "android",
+      "ios",
+      "wp8",
+      "windows"
+    ]
+  },
+  "deprecated": false,
+  "description": "A File Opener Plugin for Cordova. (The Original Version plus support for handling base64 input files)",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "homepage": "https://github.com/emilhuseynli/cordova-plugin-file-opener2#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp8",
+    "cordova-windows"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-file-opener2-base64",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilhuseynli/cordova-plugin-file-opener2.git"
+  },
+  "version": "2.0.9"
+}

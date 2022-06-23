@@ -2565,8 +2565,21 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           return base64Complete;
         }else if(fracciones === "OFFLINE"){
           const doc = pdfMake.createPdf(docDefinition); 
-          const Base64 = await doc.getBase64().then(function(data){
-            window.location.href = 'data:application/pdf;base64,' + data; 
+          // const Base64 = await doc.getBase64().then(function(data){
+          //   window.location.href = 'data:application/pdf;base64,' + data; 
+          // });
+          doc.getBlob().then(function(blob){
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            var url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = aDataEstructuras.descripcion;
+            a.click();
+            a.dispatchEvent(new MouseEvent('click'));
+            //var file = new File(blob, aDataEstructuras.descripcion,"pdf" );
+            //file.open();
+            //File.save(blob, aDataEstructuras.descripcion, "pdf");
           });
         } else {
           pdfMake.createPdf(docDefinition).open();
@@ -2604,46 +2617,46 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
         'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
       ];
       let docDefinition = jDefinition;
-      //pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).open();
       //Opcion1
-      // const doc = pdfMake.createPdf(docDefinition); 
-      // const Base64 = await doc.getBase64().then(function(data){
-      //   window.location.href = 'data:application/pdf;base64,' + data; 
-      // });
+      const doc = pdfMake.createPdf(docDefinition); 
+      const Base64 = await doc.getBase64().then(function(data){
+        window.location.href = 'data:application/pdf;base64,' + data; 
+      });
 
-      pdfMake.createPdf(docDefinition).getBuffer().then(function(buffer){
-        var utf8 = new Uint8Array(buffer); // Convert to UTF-8...
-        let binaryArray = utf8.buffer; // Convert to Binary...
+      // pdfMake.createPdf(docDefinition).getBuffer().then(function(buffer){
+      //   var utf8 = new Uint8Array(buffer); // Convert to UTF-8...
+      //   let binaryArray = utf8.buffer; // Convert to Binary...
     
-        let dirPath = "";
-        if (oThat.platform.is('android')) {
-        dirPath = oThat.file.externalRootDirectory;
-        } else if (oThat.platform.is('ios')) {
-        dirPath = oThat.file.documentsDirectory;
-        }
+      //   let dirPath = "";
+      //   if (oThat.platform.is('android')) {
+      //   dirPath = oThat.file.externalRootDirectory;
+      //   } else if (oThat.platform.is('ios')) {
+      //   dirPath = oThat.file.documentsDirectory;
+      //   }
     
-        let dirName = 'DailySheet';
+      //   let dirName = 'DailySheet';
     
-        oThat.file.createDir(dirPath, dirName, true).then((dirEntry) => {
-        let saveDir = dirPath + '/' + dirName + '/';
-        oThat.file.createFile(saveDir, fileName, true).then((fileEntry) => {
-          fileEntry.createWriter((fileWriter) => {
-          fileWriter.onwriteend = () => {
-            oThat.hideLoading();
-            oThat.showReportAlert('Report downloaded', saveDir + fileName);
-            oThat.fileOpener.open(saveDir + fileName, 'application/pdf')
-              .then(() => console.log('File is opened'))
-              .catch(e => console.log('Error openening file', e));
-          };
-          fileWriter.onerror = (e) => {
-            oThat.hideLoading();
-            oThat.showAlert('Cannot write report', e.toString());
-          };
-          fileWriter.write(binaryArray);
-          });
-        }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create file', error); });
-        }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create folder', error); });
-      }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Error while creating pdf', error); });
+      //   oThat.file.createDir(dirPath, dirName, true).then((dirEntry) => {
+      //   let saveDir = dirPath + '/' + dirName + '/';
+      //   oThat.file.createFile(saveDir, fileName, true).then((fileEntry) => {
+      //     fileEntry.createWriter((fileWriter) => {
+      //     fileWriter.onwriteend = () => {
+      //       oThat.hideLoading();
+      //       oThat.showReportAlert('Report downloaded', saveDir + fileName);
+      //       oThat.fileOpener.open(saveDir + fileName, 'application/pdf')
+      //         .then(() => console.log('File is opened'))
+      //         .catch(e => console.log('Error openening file', e));
+      //     };
+      //     fileWriter.onerror = (e) => {
+      //       oThat.hideLoading();
+      //       oThat.showAlert('Cannot write report', e.toString());
+      //     };
+      //     fileWriter.write(binaryArray);
+      //     });
+      //   }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create file', error); });
+      //   }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Cannot create folder', error); });
+      // }).catch((error) => { oThat.hideLoading(); oThat.showAlert('Error while creating pdf', error); });
     },
 
     onAddPasoCuadroType: function(aBodyEstructura, tipoDato, itemPasoData, index, tipoPaso){

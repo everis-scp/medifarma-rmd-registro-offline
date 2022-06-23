@@ -1,0 +1,10 @@
+{
+  "cordova-plugin-file-opener2": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-file-opener2-base64@2.0.9"
+    },
+    "is_top_level": true,
+    "variables": {}
+  }
+}
