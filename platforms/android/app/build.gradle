@@ -375,6 +375,7 @@ dependencies {
     implementation "cz.msebera.android:httpclient:4.4.1.1"
     implementation "net.zetetic:android-database-sqlcipher:4.4.3@aar"
     implementation "androidx.sqlite:sqlite:2.0.1"
+    implementation "com.android.support:support-v4:27.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

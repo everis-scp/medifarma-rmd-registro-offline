@@ -176,6 +176,5 @@
   <plugin name="cordova-plugin-dialogs"/>
   <plugin name="cordova-plugin-whitelist"/>
   <plugin name="cordova-plugin-screen-orientation"/>
-  <plugin name="cordova-plugin-file-opener2-base64" spec="2.0.9"></plugin>
   <preference name="AndroidXEnabled" value="true"/>
 </widget>

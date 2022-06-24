@@ -59,8 +59,8 @@
     <feature name="Logging">
         <param name="android-package" value="com.sap.mp.cordova.plugins.logger.Logger" />
     </feature>
-    <feature name="FileOpener2">
-        <param name="android-package" value="io.github.pwlin.cordova.plugins.fileopener2.FileOpener2" />
+    <feature name="FileOpener">
+        <param name="android-package" value="com.wmjalak.cordova.fileopener.FileOpener" />
     </feature>
     <feature name="AppPreferences">
         <param name="android-package" value="com.sap.mp.cordova.plugins.apppreferences.AppPreferences" />

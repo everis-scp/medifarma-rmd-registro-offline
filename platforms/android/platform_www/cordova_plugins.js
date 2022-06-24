@@ -514,6 +514,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "sap.Usage"
       ]
+    },
+    {
+      "id": "com.wmjalak.cordova.fileopener.FileOpener",
+      "file": "plugins/com.wmjalak.cordova.fileopener/www/fileopener.js",
+      "pluginId": "com.wmjalak.cordova.fileopener",
+      "clobbers": [
+        "fileOpener"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -545,6 +553,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "kapsel-plugin-logger": "4.7.5",
     "kapsel-plugin-odata": "4.7.5",
     "kapsel-plugin-settings": "4.7.5",
-    "kapsel-plugin-usage": "4.7.5"
+    "kapsel-plugin-usage": "4.7.5",
+    "com.wmjalak.cordova.fileopener": "1.0.0"
   };
 });

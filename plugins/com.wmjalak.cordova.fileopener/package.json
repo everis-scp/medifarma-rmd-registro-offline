@@ -1,0 +1,48 @@
+{
+  "_from": "cordova-plugin-file-opener",
+  "_id": "cordova-plugin-file-opener@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-gLpF8qb9KEZsmaIezNC7LHZxQkJiVP7GLJdyFpAFpXVNHxVsMFgkVflN1ysFB/qwuFyP18YNbgv5yCjeQPhHbw==",
+  "_location": "/cordova-plugin-file-opener",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-file-opener",
+    "name": "cordova-plugin-file-opener",
+    "escapedName": "cordova-plugin-file-opener",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-file-opener/-/cordova-plugin-file-opener-1.0.0.tgz",
+  "_shasum": "db294f2197d679b309d04a80ce82845e6880b1fb",
+  "_spec": "cordova-plugin-file-opener",
+  "_where": "/Users/jdiapine/Documents/GitHub/medifarma-rmd-registro-offline",
+  "author": {
+    "name": "wmjalak",
+    "email": "wmjalak@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/wmjalak/cordova-plugin-file-opener/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "This plugin allows you to open files in Android. Plugin is especially made to handle application package (.apk) installation process by providing functionality for opening the application after the installation has finished.",
+  "homepage": "https://github.com/wmjalak/cordova-plugin-file-opener#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "cordova-plugin-file-opener",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wmjalak/cordova-plugin-file-opener.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}

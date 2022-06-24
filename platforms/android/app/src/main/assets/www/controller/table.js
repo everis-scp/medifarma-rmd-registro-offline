@@ -2568,15 +2568,16 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
           // const Base64 = await doc.getBase64().then(function(data){
           //   window.location.href = 'data:application/pdf;base64,' + data; 
           // });
-          doc.getBlob().then(function(blob){
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            var url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = aDataEstructuras.descripcion;
-            a.click();
-            a.dispatchEvent(new MouseEvent('click'));
+          doc.getDataUrl().then(function(daturi){
+            window.location.href = daturi; 
+            // var a = document.createElement("a");
+            // document.body.appendChild(a);
+            // a.style = "display: none";
+            // var url = window.URL.createObjectURL(blob);
+            // a.href = url;
+            // a.download = aDataEstructuras.descripcion;
+            // a.click();
+            // a.dispatchEvent(new MouseEvent('click'));
             //var file = new File(blob, aDataEstructuras.descripcion,"pdf" );
             //file.open();
             //File.save(blob, aDataEstructuras.descripcion, "pdf");
@@ -2620,8 +2621,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
       pdfMake.createPdf(docDefinition).open();
       //Opcion1
       const doc = pdfMake.createPdf(docDefinition); 
-      const Base64 = await doc.getBase64().then(function(data){
-        window.location.href = 'data:application/pdf;base64,' + data; 
+      await doc.getDataUrl().then(function(dataURL){
+          //const fileURL = URL.createObjectURL(blob);
+          fileOpener.open(dataURL);
       });
 
       // pdfMake.createPdf(docDefinition).getBuffer().then(function(buffer){

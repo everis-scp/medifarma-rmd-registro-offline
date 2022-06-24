@@ -85,7 +85,7 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"FileOpener2\"><param name=\"android-package\" value=\"io.github.pwlin.cordova.plugins.fileopener2.FileOpener2\" /></feature>",
+              "xml": "<feature name=\"FileOpener\"><param name=\"android-package\" value=\"com.wmjalak.cordova.fileopener.FileOpener\" /></feature>",
               "count": 1
             }
           ],
@@ -182,6 +182,10 @@
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
+              "count": 2
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.REQUEST_INSTALL_PACKAGES\" />",
               "count": 1
             }
           ],
@@ -339,7 +343,7 @@
     "kapsel-plugin-usage": {
       "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
     },
-    "cordova-plugin-file-opener2": {
+    "com.wmjalak.cordova.fileopener": {
       "PACKAGE_NAME": "com.sap.webide.x2ad955362913487293a3889cc47f49f2"
     }
   },
@@ -861,11 +865,11 @@
       ]
     },
     {
-      "id": "cordova-plugin-file-opener2.FileOpener2",
-      "file": "plugins/cordova-plugin-file-opener2/www/plugins.FileOpener2.js",
-      "pluginId": "cordova-plugin-file-opener2",
+      "id": "com.wmjalak.cordova.fileopener.FileOpener",
+      "file": "plugins/com.wmjalak.cordova.fileopener/www/fileopener.js",
+      "pluginId": "com.wmjalak.cordova.fileopener",
       "clobbers": [
-        "cordova.plugins.fileOpener2"
+        "fileOpener"
       ]
     }
   ],
@@ -899,6 +903,6 @@
     "kapsel-plugin-odata": "4.7.5",
     "kapsel-plugin-settings": "4.7.5",
     "kapsel-plugin-usage": "4.7.5",
-    "cordova-plugin-file-opener2": "2.0.2"
+    "com.wmjalak.cordova.fileopener": "1.0.0"
   }
 }

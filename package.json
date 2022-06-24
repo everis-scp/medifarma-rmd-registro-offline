@@ -42,7 +42,7 @@
       "cordova-plugin-dialogs": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-screen-orientation": {},
-      "cordova-plugin-file-opener2-base64": {}
+      "com.wmjalak.cordova.fileopener": {}
     },
     "platforms": [
       "ios",
@@ -51,8 +51,9 @@
   },
   "dependencies": {
     "cordova-android": "^9.0.0",
-    "es6-promise-plugin": "^4.2.2",
-    "cordova-ios": "*"
+    "cordova-ios": "*",
+    "cordova-plugin-file-opener": "^1.0.0",
+    "es6-promise-plugin": "^4.2.2"
   },
   "devDependencies": {}
 }

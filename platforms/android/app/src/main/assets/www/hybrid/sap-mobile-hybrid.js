@@ -158,6 +158,9 @@ sap.hybrid = {
 				alert("An error occurred PRODUCCION" + JSON.stringify(error));
 			}
 			//TEST TIEMPO
+			var optionsProduccion = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			};
 			var fechaProduccion = new Date();
 			storeSAPProduccion.open(function (res){
 				var TiempoProduccion = new Date().getTime() - fechaProduccion.getTime();
@@ -171,7 +174,7 @@ sap.hybrid = {
 					sap.hybrid.startApp();
 				}
 		
-			} , openStoreErrorCallbackProduccion);
+			} , openStoreErrorCallbackProduccion,optionsProduccion);
 			
 			///____________________________HANA____________-
 			var dFechaActual = new Date();
@@ -249,6 +252,9 @@ sap.hybrid = {
 			}
 			//TEST TIEMPO
 			var fechaHana = new Date();
+			var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			}; 
 			storeHANA.open(function (res){
 				var Tiempo = new Date().getTime() - fechaHana.getTime();
 				console.log("HANA: "+ Tiempo+ " ms")
@@ -260,7 +266,7 @@ sap.hybrid = {
 				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
 					sap.hybrid.startApp();
 				}
-			}, openStoreErrorCallbackHana);
+			}, openStoreErrorCallbackHana,optionsHana);
 					
 		}, function (error) {
 				console.log("Error al leer datos de la tabla MAESTRA HANA --- Inicializando produccion Y HANA RDM_SRV");
@@ -436,6 +442,9 @@ sap.hybrid = {
 			}
 			
 			//sap.ui.core.BusyIndicator.show(0);
+			var optionsImpresion = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			}; 
 			var fechaImpre = new Date();
 			storeSAPImpresion.open( function (res){
 				var Tiempo = new Date().getTime() - fechaImpre.getTime();
@@ -448,7 +457,7 @@ sap.hybrid = {
 				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
 					sap.hybrid.startApp();
 				}
-			}, openStoreErrorCallbackImpresion);
+			}, openStoreErrorCallbackImpresion,optionsImpresion);
 
 			//Cargar tienda fuera de linea de SAP NECESIDADES RMD
 
@@ -486,6 +495,9 @@ sap.hybrid = {
 			}
 
 			//sap.ui.core.BusyIndicator.show(0);
+			var optionsNecesidad = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			}; 
 			var fechaNecesidad = new Date();
 			storeSAPNecesidadesRMD.open(function (result){
 				var Tiempo = new Date().getTime() - fechaNecesidad.getTime();
@@ -498,7 +510,7 @@ sap.hybrid = {
 				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
 					sap.hybrid.startApp();
 				}
-			}, openStoreErrorCallbackSAP);
+			}, openStoreErrorCallbackSAP,optionsNecesidad);
 
 			
 		}, function (error) {
