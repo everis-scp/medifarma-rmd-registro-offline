@@ -6,7 +6,7 @@
 	vertical="true">
 	<Table width="auto" sticky="HeaderToolbar,ColumnHeaders" mode="None" items="{aListPasoAssignResponsive>/}" updateFinished="onUpdateFinish">
 		<columns>
-			<Column width="55%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft cellBorderRight" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="55%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="" width="auto"/>
 				<footer>
 					<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>

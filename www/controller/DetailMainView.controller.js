@@ -99,7 +99,7 @@ sap.ui.define([
         sPlantillaImpresion = '',
         sPlantillaImpresionMuestra = 'ZPL17',
         sPlantillaImpresionMuestraCuadro = 'ZPL18';
-        let bInterneInit = true;
+        let bInterneInit = false;
         let bflushCargando = false;
         let bRefreshCargando = false;
     return Controller.extend("mif.rmd.registro.controller.DetailMainView", {
@@ -686,6 +686,11 @@ sap.ui.define([
                     oThat.getView().getModel("aFooter").refresh(true);
 
                     let oModelCuadro = new JSONModel(aData);
+
+                    let onGetColumnValidate = oThat.onGetColumnsValid(aData);
+                    onGetColumnValidate ? oThat.modelGeneral.setProperty("/viewColumn",true) : oThat.modelGeneral.setProperty("/viewColumn",false);
+                    oThat.modelGeneral.refresh(true);
+                    
                     oThat.getView().setModel(oModelCuadro, "aListPasoAssignResponsive");
                     oThat.getView().getModel("aListPasoAssignResponsive").refresh(true);
                 }
@@ -8099,6 +8104,13 @@ sap.ui.define([
                     await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", oParam, LineaActual.rmdId);
                 }else{//OFFLINE MODEL
                     await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD", oParam, LineaActual.rmdId);
+                    
+                    //TEST
+                    var FilterTest = []
+                    FilterTest.push(new Filter("rmdId",FilterOperator.EQ ,LineaActual.rmdId ));
+                    var pruebaTESt = await registroService.getDataFilter(oThat.mainModelv2, "/RMD", FilterTest);
+                    console.log("Quedo asi despues del cambio (onAsignToEstructuraNewFraction) OK");
+                    console.log(pruebaTESt.results);
                 }
                 
                 oThatConf.vcount = 0;
@@ -12362,7 +12374,12 @@ sap.ui.define([
                     }else{//OFFLINE MODEL
                         registroService.getDataFilter(this.modelNecesidad,"/EANSet",aFilters)
                         .then(function(payload){
-                            resolve(payload);
+                            if(payload.length>0){
+                                resolve(payload);
+                            }else{
+                                resolve("");
+                            }
+                            
                         })
                         .catch(function(err){
                             resolve("");
@@ -15585,7 +15602,11 @@ sap.ui.define([
             let oDataSeleccionada = oThat.getOwnerComponent().getModel("asociarDatos");
             if(oDataSeleccionada.getData()){
                 if(oDataSeleccionada.getData().aEstructura.results) {
-                    let fraccionActual = oDataSeleccionada.getData().aEstructura.results[0].fraccion;
+                    //OFFLINE CAMBIO (cuando se encuentra en el controller del Main Falla porque se sigue ejecutando)
+                    let fraccionActual; 
+                    if(oDataSeleccionada.getData().aEstructura.results[0]){
+                        fraccionActual = oDataSeleccionada.getData().aEstructura.results[0].fraccion;
+                    }
                     if (fraccionActual) {
                         await sap.ui.controller("mif.rmd.registro.controller.MainView").getEstructurasRmdRefactory(fraccionActual);
                         await oThat.onChangeEstructura();

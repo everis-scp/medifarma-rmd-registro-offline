@@ -1,0 +1,96 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar" xmlns:mvc="sap.ui.core.mvc" >
+    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlListInsumos}" contentWidth="60%" afterClose="onCerrarListInsumos">
+        <content>
+            <form:Form width="100%" editable="true" visible="{visible>/state}">
+                <form:formContainers>
+                    <form:FormContainer visible="true">
+                        <form:formElements>
+                            <form:FormElement visible="true">
+                                <form:label>
+                                    <Label text="{i18n>lblLote}" design="Bold" width="100%" textAlign="Begin" textDirection="Inherit"/>
+                                </form:label>
+                                <form:fields>
+                                    <Text text="{modelGeneral>/LineaActualRMD/Charg}" width="auto" wrapping="true"/>
+                                </form:fields>
+                            </form:FormElement>
+                            <form:FormElement visible="true">
+                                <form:label>
+                                    <Label text="{i18n>lblCodigo}" design="Bold" width="100%" textAlign="Begin" textDirection="Inherit"/>
+                                </form:label>
+                                <form:fields>
+                                    <Text text="{modelGeneral>/LineaActualRMD/Matnr}" width="auto" wrapping="true"/>
+                                </form:fields>
+                            </form:FormElement>
+                        </form:formElements>
+                    </form:FormContainer>
+                    <form:FormContainer visible="true">
+                        <form:formElements>
+                            <form:FormElement visible="true">
+                                <form:label>
+                                    <Label text="{i18n>lblInsumo}" design="Bold" width="100%" textAlign="Begin" textDirection="Inherit"/>
+                                </form:label>
+                                <form:fields>
+                                    <Text text="{modelGeneral>/LineaActualRMD/Maktx}" width="auto" wrapping="true"/>
+                                </form:fields>
+                            </form:FormElement>
+                        </form:formElements>
+                        <form:title/>
+                    </form:FormContainer>
+                </form:formContainers>
+                <form:layout>
+                    <form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="2" labelSpanM="2" labelSpanS="12"/>
+                </form:layout>
+            </form:Form>
+            <Table width="auto" sticky="ColumnHeaders" items="{path:'aListInsumos>/'}" updateFinished="onUpdateFinish" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd" mode="MultiSelect">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="{i18n>tblInsumos} ({=${aListInsumos>/}.length})"></Title>
+                        <ToolbarSpacer/>
+                        <ToolbarSeparator/>
+                        <OverflowToolbarButton tooltip="{i18n>TbEPrint}" icon="sap-icon://print" press="onPrintTicket(0)" type="Transparent"/>
+                        <OverflowToolbarButton tooltip="{i18n>TbECierreMasivo}" icon="sap-icon://locked" press="onCierreEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
+                        <OverflowToolbarButton tooltip="{i18n>TbEDeleteTicket}" icon="sap-icon://delete" press="onDeleteEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clEstado}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clNumeroBulto}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clCodigoBulto}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clCantDespachada}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column  width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clPTara}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clUnidadMedida}" width="auto" wrapping="true"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem vAlign="Middle" type="Active">
+                        <cells>
+                            <Text text="{aListInsumos>Exidv}" width="auto" wrapping="true"/>
+                            <Text text="{aListInsumos>Matnr}" width="auto" wrapping="true"/>
+                            <Text text="{aListInsumos>Charg}" width="auto" wrapping="true"/>
+                            <Text text="{aListInsumos>objeto}" width="auto" wrapping="true"/>
+                            <Text text="{aListInsumos>Umrez}" width="auto" wrapping="true"/>
+                            <Text text="{aListInsumos>Resu1}" width="auto" wrapping="true"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="onCerrarListInsumos" type="Reject"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

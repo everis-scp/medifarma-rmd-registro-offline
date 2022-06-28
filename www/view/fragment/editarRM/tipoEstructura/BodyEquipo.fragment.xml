@@ -23,31 +23,31 @@
 				</OverflowToolbar>
 			</headerToolbar>
 			<columns>
-				<Column width="25%" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="25%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clDescription}" width="auto"/>
 					<footer>
 						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>
 					</footer>
 				</Column>
-				<Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="10%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clPrincipal}" width="auto"/>
 				</Column>
-				<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clType}" width="auto"/>
 				</Column>
-				<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="15%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clCalification}" width="auto"/>
                     <footer>
 						<Text text="{i18n>ftTFecha}{aFooter>/fecha}"/>
 					</footer>
 				</Column>
-                <Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <Column width="15%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clCode}" width="auto"/>
 				</Column>
-                <Column width="10%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <Column width="10%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clCheck}" width="auto"/>
 				</Column>
-                <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                <Column width="10%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clOption}" width="auto"/>
 				</Column>
 			</columns>

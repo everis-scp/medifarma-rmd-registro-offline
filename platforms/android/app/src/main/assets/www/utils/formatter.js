@@ -712,7 +712,9 @@ sap.ui.define([
 				if (aPrincipal.rmdEstructuraPasoId) {
 					aProcesosMenores = aList.filter(itm=>itm.pasoId_rmdEstructuraPasoId === aPrincipal.rmdEstructuraPasoId);
 					aProcesosMenores.forEach(function(oPM){
-						bFlag = oPM.aplica;
+						if (oPM.tipoDatoId_iMaestraId !== sIdSintipodedato) {
+							bFlag = oPM.aplica;
+						}
 					});
 				}
 				return sResponse = bFlag ? 'No aplica paso' : 'Si aplica paso';
@@ -728,7 +730,9 @@ sap.ui.define([
 				if (aPrincipal.rmdEstructuraPasoId) {
 					aProcesosMenores = aList.filter(itm=>itm.pasoId_rmdEstructuraPasoId === aPrincipal.rmdEstructuraPasoId);
 					aProcesosMenores.forEach(function(oPM){
-						bFlag = oPM.aplica;
+						if (oPM.tipoDatoId_iMaestraId !== sIdSintipodedato) {
+							bFlag = oPM.aplica;
+						}
 					});
 				}
 				return sResponse = bFlag ? 'sap-icon://less' : 'sap-icon://add';

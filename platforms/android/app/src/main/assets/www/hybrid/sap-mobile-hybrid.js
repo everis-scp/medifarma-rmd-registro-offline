@@ -782,7 +782,7 @@ sap.hybrid = {
 		//	progressStatus.fileSize);
 	},
 	errorCallbackAutomatico: function (error) {
-		console.log("Offline events: errorCallback");
+		//console.log("Offline events: errorCallback");
 		//alert("An error occurred: " + JSON.stringify(error));
 	},
 };

@@ -40,7 +40,7 @@ sap.ui.define([
         const sEstadoAutorizado = 465;
         const idRolAuxiliar = '2be255d3-f5bf-4b0d-988c-6253de8fd578';
         let oInfoUsuario;
-        let bInterneInit = true;
+        let bInterneInit = false;
         let bflushCargando = false;
         let bRefreshCargando = false;
         return Controller.extend("mif.rmd.registro.controller.MainView", {

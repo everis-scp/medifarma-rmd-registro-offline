@@ -11,7 +11,7 @@
 				</OverflowToolbar>
 			</headerToolbar>
 			<columns>
-				<Column width="auto" hAlign="Left" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="auto" hAlign="Left" vAlign="Middle" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>txtCode}" width="auto" maxLines="2" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
 				</Column>
 				<Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">

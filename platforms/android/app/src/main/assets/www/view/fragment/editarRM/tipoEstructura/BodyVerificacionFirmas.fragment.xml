@@ -15,16 +15,16 @@
 				</OverflowToolbar>
 			</headerToolbar>
 		<columns>
-			<Column width="15%" hAlign="Center" vAlign="Middle" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="Realizado por (R)" width="auto"/>
 			</Column>
-			<Column width="15%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="Supervisado por (S)" width="auto"/>
 			</Column>
-			<Column width="55%" hAlign="Center" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="55%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="Nombres y Apellidos" width="auto"/>
 			</Column>
-			<Column width="15%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="15%" hAlign="Left" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="Firma" width="auto"/>
 			</Column>
 		</columns>
