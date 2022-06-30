@@ -40,7 +40,7 @@ sap.ui.define([
         const sEstadoAutorizado = 465;
         const idRolAuxiliar = '2be255d3-f5bf-4b0d-988c-6253de8fd578';
         let oInfoUsuario;
-        let bInterneInit = false;
+        let bInterneInit = true;
         let bflushCargando = false;
         let bRefreshCargando = false;
         return Controller.extend("mif.rmd.registro.controller.MainView", {
@@ -2669,6 +2669,16 @@ sap.ui.define([
             },
 
             onConfirmFraction: async function () {
+                //OFFLINE CAMBIO
+                    if(bInterneInit == true){
+                        var RmdId  = oThat.getOwnerComponent().getModel("asociarDatos").getData().rmdId;
+                        var oDataRmdId = [];
+                        
+                        oDataRmdId.push(RmdId);
+                        sap.hybrid.openStoreRegister(oDataRmdId);
+                    }
+                //
+
                 let selectFraccion = oThat.modelGeneral.getProperty("/selectFraccionRmdId");
                 BusyIndicator.show(0);
                 await oThat.getEstructurasRmdRefactory(parseInt(selectFraccion));
