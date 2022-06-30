@@ -16,7 +16,7 @@
 				</OverflowToolbar>
 			</headerToolbar>
 			<columns>
-				<Column width="25%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="25%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft cellBorderRight" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clDescription}" width="auto"/>
 					<footer>
 						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}" visible="{estructuraVerificado>/state}"/>

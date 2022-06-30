@@ -175,98 +175,6 @@ sap.hybrid = {
 				}
 		
 			} , openStoreErrorCallbackProduccion,optionsProduccion);
-			
-			///____________________________HANA____________-
-			var dFechaActual = new Date();
-			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-9);
-			dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
-
-			var HANAproperties = {
-				"name": "store_HANA",
-				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-				"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
-	
-				"definingRequests": {
-					"MD": "/MD?$filter=activo eq true",
-					"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+dFechaLimiteHana+"Z",
-					"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
-					"MD_RECETA": "/MD_RECETA?$filter=activo eq true",
-					"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true",
-					"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true",
-					"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true",
-					"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true",
-					"USUARIO":"/USUARIO?$filter=activo eq true",
-					"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
-					"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
-					"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//471
-					"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true",
-					"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true",
-					"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
-					"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//muchos
-					"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//687
-					"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//449
-					"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
-					"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//MUCHOS
-					"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//muchos
-					"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true  and fechaRegistro ge "+dFechaLimiteHana+"Z",//MUCHOS
-					"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//500
-					"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//muchos
-					"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//muchos
-					"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//MUCHOS
-					"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//Muchos
-					"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true",
-					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
-					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//346
-					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
-					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL",//178
-					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
-					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//620
-					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
-					"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",
-					"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true",
-					"IMPRESORA":"/IMPRESORA?$filter=activo eq true"
-	
-					//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
-					//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
-					//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
-					//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
-					//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
-					//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
-					//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
-					//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
-					//"ABAP_USUARIO": "/ABAP_USUARIO",
-					//"ABAP_ORDEN":"/ABAP_ORDEN",
-					//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
-				}
-			};
-	
-			storeHANA = sap.OData.createOfflineStore(HANAproperties);
-	
-			var openStoreErrorCallbackHana = function (error) {
-				//sap.hybrid.startApp();
-				console.log("In openStoreErrorCallback HANA RMD_SRV");
-				console.log(error);
-				alert("An error occurred HANA" + JSON.stringify(error));
-			}
-			//TEST TIEMPO
-			var fechaHana = new Date();
-			var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
-                "autoFlush": true //enables automatic flush when the application goes into the background 
-			}; 
-			storeHANA.open(function (res){
-				var Tiempo = new Date().getTime() - fechaHana.getTime();
-				console.log("HANA: "+ Tiempo+ " ms")
-
-				console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
-				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
-
-				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
-					sap.hybrid.startApp();
-				}
-			}, openStoreErrorCallbackHana,optionsHana);
 					
 		}, function (error) {
 				console.log("Error al leer datos de la tabla MAESTRA HANA --- Inicializando produccion Y HANA RDM_SRV");
@@ -420,6 +328,139 @@ sap.hybrid = {
 					filterOrdenesActividades += " or";
 				}
 			}
+			//FILTROS HANA
+			var filterOrdenHanaRMDID= "";
+            for (var i = 0; i < aOrdenes.length; i++) {
+                filterOrdenHanaRMDID += " rmdId eq '" + aOrdenes[i].rmdId + "'";
+
+                if (i != aOrdenes.length - 1) {
+                    filterOrdenHanaRMDID += " or";
+                }
+            }
+            var filterOrdenHana= "";
+            for (var i = 0; i < aOrdenes.length; i++) {
+                filterOrdenHana += " rmdId_rmdId eq '" + aOrdenes[i].rmdId + "'";
+
+                if (i != aOrdenes.length - 1) {
+                    filterOrdenHana += " or";
+                }
+            }
+            var filterOrdenHanaMDID= "";
+            for (var i = 0; i < aOrdenes.length; i++) {
+                filterOrdenHanaMDID += " mdId_mdId eq '" + aOrdenes[i].mdId_mdId + "'";
+
+                if (i != aOrdenes.length - 1) {
+                    filterOrdenHanaMDID += " or";
+                }
+            }
+			var filterOrdenHanaMDIDnNew= "";
+            for (var i = 0; i < aOrdenes.length; i++) {
+                filterOrdenHanaMDIDnNew += " mdId eq '" + aOrdenes[i].mdId_mdId + "'";
+
+                if (i != aOrdenes.length - 1) {
+                    filterOrdenHanaMDIDnNew += " or";
+                }
+            }
+			var filterOrdenHanaOrden= "";
+            for (var i = 0; i < aOrdenes.length; i++) {
+                filterOrdenHanaOrden += " orden eq " + aOrdenes[i].ordenSAP + "";
+
+                if (i != aOrdenes.length - 1) {
+                    filterOrdenHanaOrden += " or";
+                }
+            }
+			///____________________________HANA____________-
+			var dFechaActual = new Date();
+			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-9);
+			dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
+
+			var HANAproperties = {
+				"name": "store_HANA",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
+	
+				"definingRequests": {
+					"MD": "/MD?$filter=activo eq true and ("+filterOrdenHanaMDIDnNew+")",
+					"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaRMDID+")",
+					"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
+					"MD_RECETA": "/MD_RECETA?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+					"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true and ("+filterOrdenHana+")",
+					"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true and ("+filterOrdenHana+")",
+					"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true and ("+ filterOrdenHanaMDID+")",
+					"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true and ("+ filterOrdenHana+")",
+					"USUARIO":"/USUARIO?$filter=activo eq true",
+					"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
+					"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+					"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//471
+					"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+					"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+					"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+					//"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and "+filterOrdenHana,//muchos
+					"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//687
+					"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//449
+					"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+					//"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
+					//"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+					//"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true  and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+ filterOrdenHana+")",//MUCHOS
+					"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//500
+					//"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+					//"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+					//"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
+					"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//Muchos
+					"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true and ("+filterOrdenHana+")",
+					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
+					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//346
+					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//178
+					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
+					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaOrden+")",//620
+					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
+					"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",
+					"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true and ("+filterOrdenHana+")",
+					"IMPRESORA":"/IMPRESORA?$filter=activo eq true"
+	
+					//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
+					//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
+					//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
+					//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
+					//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
+					//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
+					//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
+					//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
+					//"ABAP_USUARIO": "/ABAP_USUARIO",
+					//"ABAP_ORDEN":"/ABAP_ORDEN",
+					//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
+				}
+			};
+	
+			storeHANA = sap.OData.createOfflineStore(HANAproperties);
+	
+			var openStoreErrorCallbackHana = function (error) {
+				//sap.hybrid.startApp();
+				console.log("In openStoreErrorCallback HANA RMD_SRV");
+				console.log(error);
+				alert("An error occurred HANA" + JSON.stringify(error));
+			}
+			//TEST TIEMPO
+			var fechaHana = new Date();
+			var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			}; 
+			storeHANA.open(function (res){
+				var Tiempo = new Date().getTime() - fechaHana.getTime();
+				console.log("HANA: "+ Tiempo+ " ms")
+
+				console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+
+				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
+					sap.hybrid.startApp();
+				}
+			}, openStoreErrorCallbackHana,optionsHana);
+
 
 			var SAP_ImpresionOrd_properties = {
 				"name": "store_SAP_Impresion",

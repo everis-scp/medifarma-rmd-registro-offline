@@ -10,7 +10,7 @@
 					path: 'Merknr'
 				}}" updateFinished="onUpdateFinish">
 			<columns>
-				<Column width="30%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+				<Column width="30%" hAlign="Left" vAlign="Middle" styleClass="cellBorderLeft cellBorderRight" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 					<Text text="{i18n>clEnsayo}" width="auto"/>
 					<footer>
 						<Text text="{i18n>ftTVerificado}{aFooter>/usuario}"/>

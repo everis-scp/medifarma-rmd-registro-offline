@@ -15,7 +15,7 @@
 				</OverflowToolbar>
 			</headerToolbar>
 		<columns>
-			<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderLeft" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+			<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderLeft cellBorderRight" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
 				<Text text="Realizado por (R)" width="auto"/>
 			</Column>
 			<Column width="15%" hAlign="Center" vAlign="Middle" styleClass="cellBorderRight" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">

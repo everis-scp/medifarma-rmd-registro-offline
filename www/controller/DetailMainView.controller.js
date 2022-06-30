@@ -690,7 +690,7 @@ sap.ui.define([
                     let onGetColumnValidate = oThat.onGetColumnsValid(aData);
                     onGetColumnValidate ? oThat.modelGeneral.setProperty("/viewColumn",true) : oThat.modelGeneral.setProperty("/viewColumn",false);
                     oThat.modelGeneral.refresh(true);
-                    
+
                     oThat.getView().setModel(oModelCuadro, "aListPasoAssignResponsive");
                     oThat.getView().getModel("aListPasoAssignResponsive").refresh(true);
                 }
@@ -14305,7 +14305,18 @@ sap.ui.define([
             }
             // BusyIndicator.hide();
         },        
-
+        onGetColumnsValid: function(aData){
+            let checkInput, checkButton, checkMulti;
+            checkInput = aData.find(e=> !!e.onFormatoTipoDatoVisibleToggleButtonMultiCheck);
+            checkButton = aData.find(e=> !!e.generalVisibleText);
+            checkMulti = aData.find(e=> !!e.generalVisibleToggleButton);
+            checkMulti = aData.find(e=> !!e.generalVisibleText);
+            if(checkInput || checkButton || checkMulti){
+                return true
+            }else {
+                return false
+            }
+        },
         onMenuAction: async function (oEvent) {
             let press = oEvent.mParameters.item.getProperty("text");
             let oModel = oEvent.getSource().getParent().getParent().getParent().getParent().mBindingInfos.items.model;
