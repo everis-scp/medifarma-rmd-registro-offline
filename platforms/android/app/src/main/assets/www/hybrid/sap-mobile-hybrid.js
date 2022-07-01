@@ -952,6 +952,7 @@ sap.hybrid = {
 					"USUARIO":"/USUARIO?$filter=activo eq true",
 					"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
 					"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+					"RMD_USUARIO":"/RMD_USUARIO",
 				}
 			};
 	
@@ -1331,7 +1332,7 @@ sap.hybrid = {
 					"NotificacionOfflineSet": "/NotificacionOfflineSet",
 					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
-					//"CatalogoSet":"/CatalogoSet",
+					"CatalogoSet":"/CatalogoSet",
 					"AvisoOfflSet":"/AvisoOfflSet"
 				}
 			};

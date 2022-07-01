@@ -1332,7 +1332,7 @@ sap.hybrid = {
 					"NotificacionOfflineSet": "/NotificacionOfflineSet",
 					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
-					//"CatalogoSet":"/CatalogoSet",
+					"CatalogoSet":"/CatalogoSet",
 					"AvisoOfflSet":"/AvisoOfflSet"
 				}
 			};
