@@ -6206,45 +6206,90 @@ sap.ui.define([
                                 tipo: "Pendiente"
                             };
                             if(oDataRMD.rmdId){
-                                registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobject).then( async function () {
-                                    let objParada = {
-                                        usuarioActualiza: oInfoUsuario.data.usuario,
-                                        fechaActualiza: new Date(),
-                                        estadoIdRmd_iMaestraId: 476
-                                    }
-                                    if(bInterneInit === true){
-                                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
-                                    }else{//OFFLINE MODEL
-                                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
-                                    }
-                                    await oThat.onSendMail(oDataSeleccionada.getData(), lineaSeleccionada);
-                                    await oThat.onSaveCatalogoBTP(sobject.rmdLapsoId);
-                           
-                                    let aFilter = [];
-                                    aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
-                                    aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
-                                    aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-                                    let aLapsoSelected;
-                                    if(bInterneInit === true){
-                                        aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                    }else{//OFFLINE MODEL
-                                        aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                    }
-                                    
-                                    if(aLapsoSelected.results.length === 0){
-                                        var oDataFirmaVerif = {}
-                                        oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
-                                        oDataFirmaVerif.fraccionActual  = fraccionActual;
-                
-                                        oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
-                                    }
-                                    oThat.onCancelLapso();
-                                    BusyIndicator.hide();
-                                    MessageBox.success("Se creó satisfactoriamente el lapso por falla de máquina");
-                                }.bind(oThat), function (error) {
-                                    MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
-                                    BusyIndicator.hide();
-                                });
+                                if(bInterneInit === true){
+                                    registroService.createData(oThat.mainModelv2Online, "/RMD_LAPSO", sobject).then( async function () {
+                                        let objParada = {
+                                            usuarioActualiza: oInfoUsuario.data.usuario,
+                                            fechaActualiza: new Date(),
+                                            estadoIdRmd_iMaestraId: 476
+                                        }
+                                        if(bInterneInit === true){
+                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
+                                        }else{//OFFLINE MODEL
+                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
+                                        }
+                                        await oThat.onSendMail(oDataSeleccionada.getData(), lineaSeleccionada);
+                                        await oThat.onSaveCatalogoBTP(sobject.rmdLapsoId);
+                               
+                                        let aFilter = [];
+                                        aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
+                                        aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                                        aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+                                        let aLapsoSelected;
+                                        if(bInterneInit === true){
+                                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                        }else{//OFFLINE MODEL
+                                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                        }
+                                        
+                                        if(aLapsoSelected.results.length === 0){
+                                            var oDataFirmaVerif = {}
+                                            oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
+                                            oDataFirmaVerif.fraccionActual  = fraccionActual;
+                    
+                                            oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
+                                        }
+                                        oThat.onCancelLapso();
+                                        BusyIndicator.hide();
+                                        MessageBox.success("Se creó satisfactoriamente el lapso por falla de máquina");
+                                    }.bind(oThat), function (error) {
+                                        MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
+                                        BusyIndicator.hide();
+                                    });
+                                }else{//OFFLINE MODEL
+                                    sobject.descripcion = selectMotivo.descripcion;
+
+                                    registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobject).then( async function () {
+                                        let objParada = {
+                                            usuarioActualiza: oInfoUsuario.data.usuario,
+                                            fechaActualiza: new Date(),
+                                            estadoIdRmd_iMaestraId: 476
+                                        }
+                                        if(bInterneInit === true){
+                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
+                                        }else{//OFFLINE MODEL
+                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
+                                        }
+                                        await oThat.onSendMail(oDataSeleccionada.getData(), lineaSeleccionada);
+                                        await oThat.onSaveCatalogoBTP(sobject.rmdLapsoId);
+                               
+                                        let aFilter = [];
+                                        aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
+                                        aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataSeleccionada.getData().rmdId));
+                                        aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+                                        let aLapsoSelected;
+                                        if(bInterneInit === true){
+                                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                        }else{//OFFLINE MODEL
+                                            aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                        }
+                                        
+                                        if(aLapsoSelected.results.length === 0){
+                                            var oDataFirmaVerif = {}
+                                            oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
+                                            oDataFirmaVerif.fraccionActual  = fraccionActual;
+                    
+                                            oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
+                                        }
+                                        oThat.onCancelLapso();
+                                        BusyIndicator.hide();
+                                        MessageBox.success("Se creó satisfactoriamente el lapso por falla de máquina");
+                                    }.bind(oThat), function (error) {
+                                        MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
+                                        BusyIndicator.hide();
+                                    });
+                                }
+                                
                             } else{
                                 MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
                                 BusyIndicator.hide();
@@ -6329,55 +6374,106 @@ sap.ui.define([
                                     Keyaviso: sKeyAviso
                                 }
                             }
-
-                            if (oObjObjetoEquipo.Equnr) {
-                                oParam.Catalogoset.push({
-                                    Qmnum: oObjObjetoEquipo.Qmnum,
-                                    Qmart: oObjObjetoEquipo.Qmart,
-                                    Equnr: oObjObjetoEquipo.Equnr,
-                                    CatTyp: oObjObjetoEquipo.CatType,
-                                    CodeGroup: oObjObjetoEquipo.CodeGroup,
-                                    Code: oObjObjetoEquipo.Code,
-                                    Version: oObjObjetoEquipo.Version,
-                                    Valid: oObjObjetoEquipo.Valid,
-                                    Langu: oObjObjetoEquipo.Langu,
-                                    Shorttxtgr: oObjObjetoEquipo.Shorttxtgr,
-                                    Shorttxtcd: oObjObjetoEquipo.Shorttxtcd,
-                                    Texto: oObjObjetoEquipo.Texto
-                                });
+                            if(bInterneInit === true){
+                                if (oObjObjetoEquipo.Equnr) {
+                                    oParam.CatalogoSet.push({
+                                        Qmnum: oObjObjetoEquipo.Qmnum,
+                                        Qmart: oObjObjetoEquipo.Qmart,
+                                        Equnr: oObjObjetoEquipo.Equnr,
+                                        CatTyp: oObjObjetoEquipo.CatType,
+                                        CodeGroup: oObjObjetoEquipo.CodeGroup,
+                                        Code: oObjObjetoEquipo.Code,
+                                        Version: oObjObjetoEquipo.Version,
+                                        Valid: oObjObjetoEquipo.Valid,
+                                        Langu: oObjObjetoEquipo.Langu,
+                                        Shorttxtgr: oObjObjetoEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjObjetoEquipo.Shorttxtcd,
+                                        Texto: oObjObjetoEquipo.Texto
+                                    });
+                                }
+                                if (oObjSintomaEquipo.Equnr) {
+                                    oParam.CatalogoSet.push({
+                                        Qmnum: oObjSintomaEquipo.Qmnum,
+                                        Qmart: oObjSintomaEquipo.Qmart,
+                                        Equnr: oObjSintomaEquipo.Equnr,
+                                        CatTyp: oObjSintomaEquipo.CatTyp ? oObjSintomaEquipo.CatTyp : oObjSintomaEquipo.CatType,
+                                        CodeGroup: oObjSintomaEquipo.CodeGroup,
+                                        Code: oObjSintomaEquipo.Code,
+                                        Version: oObjSintomaEquipo.Version,
+                                        Valid: oObjSintomaEquipo.Valid,
+                                        Langu: oObjSintomaEquipo.Langu,
+                                        Shorttxtgr: oObjSintomaEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjSintomaEquipo.Shorttxtcd,
+                                        Texto: oObjSintomaEquipo.Texto
+                                    });
+                                }
+                                if (oObjCausaEquipo.Equnr) {
+                                    oParam.CatalogoSet.push({
+                                        Qmnum: oObjCausaEquipo.Qmnum,
+                                        Qmart: oObjCausaEquipo.Qmart,
+                                        Equnr: oObjCausaEquipo.Equnr,
+                                        CatTyp: oObjCausaEquipo.CatType,
+                                        CodeGroup: oObjCausaEquipo.CodeGroup,
+                                        Code: oObjCausaEquipo.Code,
+                                        Version: oObjCausaEquipo.Version,
+                                        Valid: oObjCausaEquipo.Valid,
+                                        Langu: oObjCausaEquipo.Langu,
+                                        Shorttxtgr: oObjCausaEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjCausaEquipo.Shorttxtcd,
+                                        Texto: oObjCausaEquipo.Texto
+                                    });
+                                }
+                            }else{
+                                if (oObjObjetoEquipo.Equnr) {
+                                    oParam.Catalogoset.push({
+                                        Qmnum: oObjObjetoEquipo.Qmnum,
+                                        Qmart: oObjObjetoEquipo.Qmart,
+                                        Equnr: oObjObjetoEquipo.Equnr,
+                                        CatTyp: oObjObjetoEquipo.CatType,
+                                        CodeGroup: oObjObjetoEquipo.CodeGroup,
+                                        Code: oObjObjetoEquipo.Code,
+                                        Version: oObjObjetoEquipo.Version,
+                                        Valid: oObjObjetoEquipo.Valid,
+                                        Langu: oObjObjetoEquipo.Langu,
+                                        Shorttxtgr: oObjObjetoEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjObjetoEquipo.Shorttxtcd,
+                                        Texto: oObjObjetoEquipo.Texto
+                                    });
+                                }
+                                if (oObjSintomaEquipo.Equnr) {
+                                    oParam.Catalogoset.push({
+                                        Qmnum: oObjSintomaEquipo.Qmnum,
+                                        Qmart: oObjSintomaEquipo.Qmart,
+                                        Equnr: oObjSintomaEquipo.Equnr,
+                                        CatTyp: oObjSintomaEquipo.CatTyp ? oObjSintomaEquipo.CatTyp : oObjSintomaEquipo.CatType,
+                                        CodeGroup: oObjSintomaEquipo.CodeGroup,
+                                        Code: oObjSintomaEquipo.Code,
+                                        Version: oObjSintomaEquipo.Version,
+                                        Valid: oObjSintomaEquipo.Valid,
+                                        Langu: oObjSintomaEquipo.Langu,
+                                        Shorttxtgr: oObjSintomaEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjSintomaEquipo.Shorttxtcd,
+                                        Texto: oObjSintomaEquipo.Texto
+                                    });
+                                }
+                                if (oObjCausaEquipo.Equnr) {
+                                    oParam.Catalogoset.push({
+                                        Qmnum: oObjCausaEquipo.Qmnum,
+                                        Qmart: oObjCausaEquipo.Qmart,
+                                        Equnr: oObjCausaEquipo.Equnr,
+                                        CatTyp: oObjCausaEquipo.CatType,
+                                        CodeGroup: oObjCausaEquipo.CodeGroup,
+                                        Code: oObjCausaEquipo.Code,
+                                        Version: oObjCausaEquipo.Version,
+                                        Valid: oObjCausaEquipo.Valid,
+                                        Langu: oObjCausaEquipo.Langu,
+                                        Shorttxtgr: oObjCausaEquipo.Shorttxtgr,
+                                        Shorttxtcd: oObjCausaEquipo.Shorttxtcd,
+                                        Texto: oObjCausaEquipo.Texto
+                                    });
+                                }
                             }
-                            if (oObjSintomaEquipo.Equnr) {
-                                oParam.Catalogoset.push({
-                                    Qmnum: oObjSintomaEquipo.Qmnum,
-                                    Qmart: oObjSintomaEquipo.Qmart,
-                                    Equnr: oObjSintomaEquipo.Equnr,
-                                    CatTyp: oObjSintomaEquipo.CatTyp ? oObjSintomaEquipo.CatTyp : oObjSintomaEquipo.CatType,
-                                    CodeGroup: oObjSintomaEquipo.CodeGroup,
-                                    Code: oObjSintomaEquipo.Code,
-                                    Version: oObjSintomaEquipo.Version,
-                                    Valid: oObjSintomaEquipo.Valid,
-                                    Langu: oObjSintomaEquipo.Langu,
-                                    Shorttxtgr: oObjSintomaEquipo.Shorttxtgr,
-                                    Shorttxtcd: oObjSintomaEquipo.Shorttxtcd,
-                                    Texto: oObjSintomaEquipo.Texto
-                                });
-                            }
-                            if (oObjCausaEquipo.Equnr) {
-                                oParam.Catalogoset.push({
-                                    Qmnum: oObjCausaEquipo.Qmnum,
-                                    Qmart: oObjCausaEquipo.Qmart,
-                                    Equnr: oObjCausaEquipo.Equnr,
-                                    CatTyp: oObjCausaEquipo.CatType,
-                                    CodeGroup: oObjCausaEquipo.CodeGroup,
-                                    Code: oObjCausaEquipo.Code,
-                                    Version: oObjCausaEquipo.Version,
-                                    Valid: oObjCausaEquipo.Valid,
-                                    Langu: oObjCausaEquipo.Langu,
-                                    Shorttxtgr: oObjCausaEquipo.Shorttxtgr,
-                                    Shorttxtcd: oObjCausaEquipo.Shorttxtcd,
-                                    Texto: oObjCausaEquipo.Texto
-                                });
-                            }
+                            
                            /*  oParam.AvisoMensajeSet.push({
                                 Qmnum: "",
                                 Type: "",
@@ -6426,7 +6522,7 @@ sap.ui.define([
                                 fechaInicio: new Date(),
                                 fraccion: fraccionActual,
                                 tipo: "Completado",
-                                Qmnum: oAvisoResponse.Qmnum
+                                Qmnum: oAvisoResponse.Qmnum,
                             };
                             if(oDataRMD.rmdId){
 
@@ -6460,6 +6556,9 @@ sap.ui.define([
                                     });
 
                                 }else{//OFFLINE MODEL
+                                   
+                                    sobject.descripcion = selectMotivo.descripcion;
+
                                     registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobject).then( async function () {
                                         let objParada = {
                                             usuarioActualiza: oInfoUsuario.data.usuario,
@@ -6529,46 +6628,77 @@ sap.ui.define([
                             tipo: "Sin Equipo"
                         }
                         if(oDataRMD.rmdId){
-                            registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobject).then(async function () {
-                                let objParada = {
-                                    usuarioActualiza: oInfoUsuario.data.usuario,
-                                    fechaActualiza: new Date(),
-                                    estadoIdRmd_iMaestraId: 476
-                                }
-                                if(bInterneInit === true){
+                            if(bInterneInit === true){
+                                registroService.createData(oThat.mainModelv2Online, "/RMD_LAPSO", sobject).then(async function () {
+                                    let objParada = {
+                                        usuarioActualiza: oInfoUsuario.data.usuario,
+                                        fechaActualiza: new Date(),
+                                        estadoIdRmd_iMaestraId: 476
+                                    }
+                                    
                                     await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD", objParada, oDataRMD.rmdId);
-                                }else{//OFFLINE MODEL
+                                   
+    
+                                    let aFilter = [];
+                                    aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
+                                    aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataRMD.rmdId));
+                                    aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+                                    
+                                    let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                    
+                                    if(aLapsoSelected.results.length === 0){
+                                        let oDataFirmaVerif = {}
+                                        oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
+                                        oDataFirmaVerif.fraccionActual  = fraccionActual;
+    
+                                        oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
+                                    }
+    
+                                    oThat.onCancelLapso();
+                                    MessageBox.success(oThat.getView().getModel("i18n").getResourceBundle().getText("successCreateLapso"));
+                                    oThat.getLapsosRMD();
+                                    BusyIndicator.hide();
+                                }.bind(oThat), function (error) {
+                                    MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
+                                    BusyIndicator.hide();
+                                });
+                            }else{//Offline Model
+                                sobject.descripcion = selectMotivo.descripcion;
+                                registroService.createData(oThat.mainModelv2, "/RMD_LAPSO", sobject).then(async function () {
+                                    let objParada = {
+                                        usuarioActualiza: oInfoUsuario.data.usuario,
+                                        fechaActualiza: new Date(),
+                                        estadoIdRmd_iMaestraId: 476
+                                    }
+                                    
                                     await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD", objParada, oDataRMD.rmdId);
-                                }
-
-                                let aFilter = [];
-                                aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
-                                aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataRMD.rmdId));
-                                aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
-
-                                let aLapsoSelected;
-                                if(bInterneInit === true){
-                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                }else{//OFFLINE MODEL
-                                    aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
-                                }
-                                
-                                if(aLapsoSelected.results.length === 0){
-                                    let oDataFirmaVerif = {}
-                                    oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
-                                    oDataFirmaVerif.fraccionActual  = fraccionActual;
-
-                                    oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
-                                }
-
-                                oThat.onCancelLapso();
-                                MessageBox.success(oThat.getView().getModel("i18n").getResourceBundle().getText("successCreateLapso"));
-                                oThat.getLapsosRMD();
-                                BusyIndicator.hide();
-                            }.bind(oThat), function (error) {
-                                MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
-                                BusyIndicator.hide();
-                            });
+                                    
+        
+                                    let aFilter = [];
+                                    aFilter.push(new Filter("usuarioId_usuarioId", "EQ", oInfoUsuario.data.usuarioId));
+                                    aFilter.push(new Filter("rmdId_rmdId", "EQ", oDataRMD.rmdId));
+                                    aFilter.push(new Filter("fraccion", "EQ", fraccionActual));
+        
+                                    let aLapsoSelected = await registroService.onGetDataGeneralFilters(oThat.mainModelv2, "RMD_VERIFICACION_FIRMAS", aFilter);
+                                    
+                                    if(aLapsoSelected.results.length === 0){
+                                        let oDataFirmaVerif = {}
+                                        oDataFirmaVerif.rmdId           = oDataRMD.rmdId;
+                                        oDataFirmaVerif.fraccionActual  = fraccionActual;
+        
+                                        oThat.onRMD_VERIFICACION_FIRMAS(oDataFirmaVerif);
+                                    }
+        
+                                    oThat.onCancelLapso();
+                                    MessageBox.success(oThat.getView().getModel("i18n").getResourceBundle().getText("successCreateLapso"));
+                                    oThat.getLapsosRMD();
+                                    BusyIndicator.hide();
+                                }.bind(oThat), function (error) {
+                                    MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
+                                    BusyIndicator.hide();
+                                });
+                            }
+                            
                         }else{
                             MessageBox.error(oThat.getView().getModel("i18n").getResourceBundle().getText("errorCreateLapso"));
                             BusyIndicator.hide();
@@ -19536,20 +19666,34 @@ sap.ui.define([
             aFilterSAP.push(new Filter("Sincronizado", "EQ", "0"));
             
             if (oThat.modelNecesidadOnline){
-
-            let aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "NotificacionOfflineSet",aFilterSAP);
             
+            let aNotificaciones = [];
+            aNotificaciones.results = [];    
+            if(bInterneInit){
+                aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "NotificacionOfflineSet",aFilterSAP);
+            }
+
             let aFilterAvisoSap = [];
             aFilterAvisoSap.push(new Filter("Sincronizado", "EQ", "0"));
-            let aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline,"AvisoOfflSet",aFilterAvisoSap);
+
+            let aAviso = {};
+            aAviso.results = [];
+            if(bInterneInit === true){
+                aAviso = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline,"AvisoOfflSet",aFilterAvisoSap);
+            }
+            
 
             for await (const oNotification of aNotificaciones.results) {
                 
                 if(oNotification.Rmzhl !== ""){
                     let aFilter = [];             
                     aFilter.push(new Filter("rmdControlRechazo", "EQ", oNotification.Notificacionkey));
-                
-                    let oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
+                    
+                    let oNotifiHana;
+                    oNotifiHana.results =[]; 
+                    if(bInterneInit === true){
+                        oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
+                    }
 
                     if(oNotifiHana.results.length > 0){
                         oNotifiHana.results[0].Rmzhl = oNotification.Rmzhl;
@@ -19557,14 +19701,23 @@ sap.ui.define([
                         delete oNotifiHana.results[0].__metadata;
                         delete oNotifiHana.results[0].rmdId;
 
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+                        if(bInterneInit === true){
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+                        }else{
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_TABLA_CONTROL", oNotifiHana.results[0], oNotification.Notificacionkey);
+                        }
 
                         oNotification.Sincronizado = "1";
                 
                         delete oNotification.__metadata;
                         oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
 
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                        if(bInterneInit === true){
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                        }else{
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                        }
+
                     }
                 }
             }
@@ -19574,8 +19727,13 @@ sap.ui.define([
                 if(oAviso.Qmnum !== ""){
                     let aFilter = [];             
                     aFilter.push(new Filter("rmdLapsoId", "EQ", oAviso.Keyaviso));
-                
-                    let oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_LAPSO", aFilter);
+                    
+                    let oLapsoHana = {};
+                    oLapsoHana.results =[]; 
+                    if(bInterneInit === true){
+                        oLapsoHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_LAPSO", aFilter);
+                    }
+                    
 
                     if(oLapsoHana.results.length>0){
                         oLapsoHana.results[0].Qmnum = oAviso.Qmnum;
@@ -19588,7 +19746,11 @@ sap.ui.define([
                         delete oLapsoHana.results[0].rmdId;
                         delete oLapsoHana.results[0].tipoLapsoId;
 
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+                        if(bInterneInit === true){
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+                        }else{
+                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "RMD_LAPSO", oLapsoHana.results[0], oAviso.Keyaviso);
+                        }
 
                         oAviso.Sincronizado = "1";
                 
@@ -19596,7 +19758,12 @@ sap.ui.define([
                         if( oAviso.Valid){
                             oAviso.Valid = formatter.onFormatDateSAP(oAviso.Valid);
                         }
-                        await registroService.onUpdateDataGeneral(oThat.modelNecesidadOnline, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
+
+                        if(bInterneInit === true){
+                            await registroService.onUpdateDataGeneral(oThat.modelNecesidadOnline, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
+                        }else{
+                            await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "AvisoOfflSet", oAviso, oAviso.Keyaviso);
+                        }
                     }
                 }
             }

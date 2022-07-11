@@ -14,12 +14,13 @@ sap.ui.define([
     "sap/m/MessageToast",
 	"sap/m/TextArea",
     "sap/m/library",
-    "sap/m/Label"
+    "sap/m/Label",
+    "mif/rmd/registro/utils/formatter"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageBox, registroService, BusyIndicator, Filter, FilterOperator, util, tablePdf, JSONModel,sharepointService,Dialog,Button,MessageToast,TextArea,mobilelibrary,Label) {
+    function (Controller, MessageBox, registroService, BusyIndicator, Filter, FilterOperator, util, tablePdf, JSONModel,sharepointService,Dialog,Button,MessageToast,TextArea,mobilelibrary,Label,formatter) {
         "use strict";
         JsBarcode:true;
         const rootPath = "mif.rmd.registro";
@@ -44,6 +45,7 @@ sap.ui.define([
         let bflushCargando = false;
         let bRefreshCargando = false;
         return Controller.extend("mif.rmd.registro.controller.MainView", {
+            formatter:formatter,
             onInit: function () {
                 oThat = this;
                 Array.prototype.groupBy = function (prop) {
@@ -392,7 +394,18 @@ sap.ui.define([
                             }
                         });
                     }
+                }
+                //OFFLINE CAMBIO
+                var oOrdenesOfline;
+                var oFilterOrdnOffline = [];
+                oFilterOrdnOffline.push(new Filter("correoUsuario", 'EQ', emailUser));
+
+                if(bInterneInit ===true){
+                    oOrdenesOfline = await registroService.getDataFilter(this.mainModelv2Online, "/ORDEN_OFFLINE", oFilterOrdnOffline);
+                }else{//OFFLINE MODEL
+                    oOrdenesOfline = await registroService.getDataFilter(this.mainModelv2, "/ORDEN_OFFLINE", oFilterOrdnOffline);
                 } 
+                this.getView().setModel(new JSONModel(oOrdenesOfline.results),"modelOrdenOffline");
             },
 
             onSearchLote: function () {
@@ -2670,13 +2683,13 @@ sap.ui.define([
 
             onConfirmFraction: async function () {
                 //OFFLINE CAMBIO
-                    if(bInterneInit == true){
-                        var RmdId  = oThat.getOwnerComponent().getModel("asociarDatos").getData().rmdId;
-                        var oDataRmdId = [];
+                    // if(bInterneInit == true){
+                    //     var RmdId  = oThat.getOwnerComponent().getModel("asociarDatos").getData().rmdId;
+                    //     var oDataRmdId = [];
                         
-                        oDataRmdId.push(RmdId);
-                        sap.hybrid.openStoreRegister(oDataRmdId);
-                    }
+                    //     oDataRmdId.push(RmdId);
+                    //     sap.hybrid.openStoreRegister(oDataRmdId);
+                    // }
                 //
 
                 let selectFraccion = oThat.modelGeneral.getProperty("/selectFraccionRmdId");
@@ -4381,6 +4394,94 @@ sap.ui.define([
                         });
                     }
                 }
+            },
+            onChangeCheckOffline:async function(oEvent){
+                //var aOrdenes = oThat.getOwnerComponent().getModel("modelOffline").getData().ordenes;
+                var aOrdenes = this.getView().getModel("modelOrdenOffline").getData();
+                var oCheck = oEvent.getSource();
+                var bSelected = oEvent.getSource().getSelected();
+                var sCorreoUser = oThat.modelGeneral.getProperty("/oInfoUsuario").data.correo;
+                var sUsuario = oThat.modelGeneral.getProperty("/oInfoUsuario").data.usuario
+
+                var sOrdenSeleccionada = oEvent.getSource().getParent().getParent().getBindingContext("modelGeneral").getObject().Aufnr;
+
+                if(bSelected === true){
+                    let oDataOffline ={};
+                    oDataOffline.registroId = util.onGetUUIDV4();
+                    oDataOffline.orden = sOrdenSeleccionada;
+                    oDataOffline.correoUsuario = sCorreoUser;
+                    oDataOffline.activo = true
+                    oDataOffline.usuarioRegistro = sUsuario;
+
+                    if(bInterneInit == true){
+                        
+                        await registroService.createData(oThat.mainModelv2Online, "/ORDEN_OFFLINE", oDataOffline);
+
+                        let oFilterOrdnOffline = [];
+                        oFilterOrdnOffline.push(new Filter("correoUsuario", 'EQ', sCorreoUser));
+                        oFilterOrdnOffline.push(new Filter("activo", 'EQ', true));
+
+                        let oOrdenesOfline = await registroService.getDataFilter(this.mainModelv2Online, "/ORDEN_OFFLINE", oFilterOrdnOffline);
+                        this.getView().setModel(new JSONModel(oOrdenesOfline.results),"modelOrdenOffline");
+                        
+                     }else{
+                        oCheck.setSelected(!bSelected);
+                     }
+
+                    //funcion de crear nuevos filtros
+                }else{
+                    //buscando el path ()
+                    let oFilter = [];
+                        oFilter.push(new Filter("correoUsuario", 'EQ', sCorreoUser));
+                        oFilter.push(new Filter("activo", 'EQ', true));
+                        oFilter.push(new Filter("orden", 'EQ', parseInt(sOrdenSeleccionada)));
+                    
+                    let oObject =  await registroService.getDataFilter(oThat.mainModelv2Online, "/ORDEN_OFFLINE", oFilter);
+                    
+                    let oParam;
+                    if(oObject.results){
+                        oParam = oObject.results[0];
+                        delete oParam.__metadata;
+                        oParam.activo = false;
+                    }
+
+                    if(bInterneInit == true){
+                        
+                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "ORDEN_OFFLINE", oParam, oParam.registroId);
+
+                        let oFilterOrdnOffline = [];
+                        oFilterOrdnOffline.push(new Filter("correoUsuario", 'EQ', sCorreoUser));
+                        oFilterOrdnOffline.push(new Filter("activo", 'EQ', true));
+
+                        let oOrdenesOfline = await registroService.getDataFilter(oThat.mainModelv2Online, "/ORDEN_OFFLINE", oFilterOrdnOffline);
+                        this.getView().setModel(new JSONModel(oOrdenesOfline.results),"modelOrdenOffline");
+
+                       
+                        //aOrdenes.splice(path,1);
+                        //sap.hybrid.openStoreRegister(aOrdenes);
+                    }else{
+                        oCheck.setSelected(!bSelected);
+                    }
+
+                }
+                
+            },
+
+            onSincronizeOffline:async function(){
+                //var aOrdenes = oThat.getOwnerComponent().getModel("modelOffline").getData().ordenes;
+                //var aOrdenes = this.getView().getModel("modelOrdenOffline").getData();
+                sap.ui.core.BusyIndicator.show();
+                var oOrdenesOfline;
+                var sCorreoUser = oThat.modelGeneral.getProperty("/oInfoUsuario").data.correo;
+                var oFilterOrdnOffline = [];
+                oFilterOrdnOffline.push(new Filter("correoUsuario", 'EQ', sCorreoUser));
+                oFilterOrdnOffline.push(new Filter("activo", 'EQ', true));
+
+                if(bInterneInit === true){
+                    oOrdenesOfline = await registroService.getDataFilter(this.mainModelv2Online, "/ORDEN_OFFLINE", oFilterOrdnOffline);
+                    sap.hybrid.openStoreRegister(oOrdenesOfline.results);
+                }
+                
             }
             //storeHANA.cancelDownload()
             //storeHANA.cancelFlush()

@@ -832,6 +832,20 @@ sap.ui.define([
 			}else{
 				output= "#808080";
 			}
-		}
+		},
+		onVerifyOrder:function(orden){
+			
+			//var aOrdenes = this.getOwnerComponent().getModel("modelOffline").getData().ordenes;
+			var aOrdenes = this.getView().getModel("modelOrdenOffline").getData();
+			var bRetun = false;
+
+			for (var count= 0; count < aOrdenes.length ; count++){
+				if(orden == aOrdenes[count].orden){
+					bRetun = true;
+				}
+			}
+			
+			return bRetun;
+		} 
 	};
 });

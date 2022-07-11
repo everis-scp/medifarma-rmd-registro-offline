@@ -251,6 +251,11 @@
             "mainModelv2_onl": {
                 "dataSource": "mainModelv2_onl",
                 "preload": true
+            },
+            "modelOffline": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {},
+                "uri": "model/modelOffline.json"
             }
         },
         "resources": {
