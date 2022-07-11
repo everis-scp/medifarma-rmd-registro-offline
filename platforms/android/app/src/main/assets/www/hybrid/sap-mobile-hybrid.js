@@ -1272,7 +1272,8 @@ sap.hybrid = {
 				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
 	
 				"definingRequests": {
-					"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					//"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					"OrdenSet": "/OrdenSet",
 					"CalibracionSet": "/CalibracionSet",
 					//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
 					"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
@@ -1281,12 +1282,12 @@ sap.hybrid = {
 					"NotificacionSet": "/NotificacionSet",
 					"NotificacionMensajeSet": "/NotificacionMensajeSet",
 					"FechaProdSet":"/FechaProdSet",
-					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
 					"NotificacionOfflineSet": "/NotificacionOfflineSet",
-					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
+					"AvisoOfflSet":"/AvisoOfflSet",
+					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
+					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					//"CatalogoSet":"/CatalogoSet",
-					"AvisoOfflSet":"/AvisoOfflSet"
 				}
 			};
 			

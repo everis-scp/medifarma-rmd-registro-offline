@@ -1,13 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.uxap",
     "type": "library",
-    "embeds": [
-      "component"
-    ],
+    "embeds": [],
     "applicationVersion": {
-      "version": "1.71.23"
+      "version": "1.96.9"
     },
     "title": "SAP UxAP",
     "description": "SAP UxAP",
@@ -24,25 +22,78 @@
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.96",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.96.9"
         },
         "sap.m": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.96.9"
         },
         "sap.ui.layout": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.96.9"
         },
         "sap.f": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.96.9",
           "lazy": true
         }
       }
     },
     "library": {
-      "i18n": "messagebundle.properties",
+      "i18n": {
+        "bundleUrl": "messagebundle.properties",
+        "supportedLocales": [
+          "",
+          "ar",
+          "bg",
+          "ca",
+          "cs",
+          "cy",
+          "da",
+          "de",
+          "el",
+          "en",
+          "en-GB",
+          "en-US-sappsd",
+          "en-US-saprigi",
+          "en-US-saptrc",
+          "es",
+          "es-MX",
+          "et",
+          "fi",
+          "fr",
+          "fr-CA",
+          "hi",
+          "hr",
+          "hu",
+          "id",
+          "it",
+          "iw",
+          "ja",
+          "kk",
+          "ko",
+          "lt",
+          "lv",
+          "ms",
+          "nl",
+          "no",
+          "pl",
+          "pt",
+          "pt-PT",
+          "ro",
+          "ru",
+          "sh",
+          "sk",
+          "sl",
+          "sv",
+          "th",
+          "tr",
+          "uk",
+          "vi",
+          "zh-CN",
+          "zh-TW"
+        ]
+      },
       "content": {
         "controls": [
           "sap.uxap.AnchorBar",

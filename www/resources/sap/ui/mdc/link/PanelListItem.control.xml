@@ -11,10 +11,10 @@
 			<m:ImageContent src="{$this>icon}" visible="{= ${$this>icon} ? true:false}"/>
 
 			<m:VBox>
-				<m:Link text="{$this>text}" href="{$this>href}" target="{$this>target}" visible="{= ${$this>href} ? true:false}" press="onPress"/>
-				<m:Label text="{$this>text}" visible="{= ${$this>href} ? false:true}"/>
+				<m:Link text="{$this>text}" href="{$this>href}" target="{$this>target}" visible="{= ${$this>href} ? true:false}" press="onPress" wrapping="true"/>
+				<m:Label text="{$this>text}" visible="{= ${$this>href} ? false:true}" wrapping="true"/>
 
-				<m:Text text="{$this>description}" visible="{= ${$this>description} ? true:false}"/>
+				<m:Text text="{$this>description}" visible="{= ${$this>description} ? true:false}" wrapping="true"/>
 			</m:VBox>
 		</m:HBox>
 

@@ -1,7 +1,6 @@
 /*
- * ! SAPUI5
-
-		(c) Copyright 2009-2019 SAP SE. All rights reserved
-	
+ * ! OpenUI5
+ * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.define(['sap/ui/mdc/changehandler/SetFilterValue','sap/ui/mdc/flexibility/SortFlex','sap/ui/mdc/flexibility/ChartItem'],function(S,a,C){"use strict";return{addItem:C.addItem,removeItem:C.removeItem,"setChartType":{layers:{USER:true},changeHandler:{createChange:function(p){if(!p.control){throw new Error("Invalid control. The existing control object is mandatory");}return{selectorElement:p.control,changeSpecificData:{changeType:"setChartType",content:{chartType:p.chartType}}};},completeChangeContent:function(c,s){},applyChange:function(c,o,p){c.setRevertData(p.modifier.getProperty(o,"chartType"));p.modifier.setProperty(o,"chartType",c.getContent().chartType);},revertChange:function(c,o,p){p.modifier.setProperty(o,"chartType",c.getRevertData());c.resetRevertData();}}},"setFilterValue":{layers:{USER:true},changeHandler:S},removeSort:a.removeSort,addSort:a.addSort};},true);
+sap.ui.define(['./SortFlex','./ChartItemFlex'],function(S,C){"use strict";return{addItem:C.addItem,removeItem:C.removeItem,moveItem:C.moveItem,"setChartType":{layers:{USER:true},changeHandler:{createChange:function(p){if(!p.control){throw new Error("Invalid control. The existing control object is mandatory");}return{selectorElement:p.control,changeSpecificData:{changeType:"setChartType",content:{chartType:p.chartType}}};},completeChangeContent:function(c,s){},applyChange:function(c,o,p){var m=p.modifier;return Promise.resolve().then(m.getProperty.bind(m,o,"chartType")).then(function(O){c.setRevertData(O);m.setProperty(o,"chartType",c.getContent().chartType);});},revertChange:function(c,o,p){p.modifier.setProperty(o,"chartType",c.getRevertData());c.resetRevertData();}}},removeSort:S.removeSort,addSort:S.addSort,moveSort:S.moveSort};},true);

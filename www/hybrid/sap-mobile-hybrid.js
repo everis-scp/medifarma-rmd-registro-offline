@@ -1239,7 +1239,7 @@ sap.hybrid = {
 					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
 					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and ("+filterOrdenHana+")",//346
 					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and ("+filterOrdenHanaMDID+")",//1000
-					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//178
+					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=("+filterOrdenHanaOrden+")",//178
 					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
 					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//620
 					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=fechaRegistro ge datetimeoffset'"+dFechaLimiteHana+"-05:00'",//1000
@@ -1272,7 +1272,8 @@ sap.hybrid = {
 				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
 	
 				"definingRequests": {
-					"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					//"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					"OrdenSet": "/OrdenSet",
 					"CalibracionSet": "/CalibracionSet",
 					//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
 					"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
@@ -1281,12 +1282,12 @@ sap.hybrid = {
 					"NotificacionSet": "/NotificacionSet",
 					"NotificacionMensajeSet": "/NotificacionMensajeSet",
 					"FechaProdSet":"/FechaProdSet",
-					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
 					"NotificacionOfflineSet": "/NotificacionOfflineSet",
-					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
+					"AvisoOfflSet":"/AvisoOfflSet",
+					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
+					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
 					//"CatalogoSet":"/CatalogoSet",
-					"AvisoOfflSet":"/AvisoOfflSet"
 				}
 			};
 			

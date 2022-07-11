@@ -37,8 +37,8 @@
 						<!-- <ObjectStatus text="{aListPasoAssignResponsive>realizadoPorUser}" state="Indication06" visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
 						<ObjectStatus text="{aListPasoAssignResponsive>multiCheckUser}" state="Indication06" visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/> -->
 						<!--OFFLINE state  la libreria de kapsel solo cuanta con 5 indicadores-->
-						<ObjectStatus text="{aListPasoAssignResponsive>realizadoPorUser}" state="Indication04" visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
-						<ObjectStatus text="{aListPasoAssignResponsive>multiCheckUser}" state="Indication04"  visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/>
+						<ObjectStatus text="{aListPasoAssignResponsive>realizadoPorUser}" state="Indication06" visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 439 ? true : false || ${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 441 ? true : false}"/>
+						<ObjectStatus text="{aListPasoAssignResponsive>multiCheckUser}" state="Indication06"  visible="{=${aListPasoAssignResponsive>tipoDatoId_iMaestraId} === 442 ? true : false}"/>
 					</VBox>
 				</HBox>
 				<VBox>

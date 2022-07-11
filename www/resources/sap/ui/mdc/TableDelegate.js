@@ -1,7 +1,6 @@
 /*
- * ! SAPUI5
-
-		(c) Copyright 2009-2019 SAP SE. All rights reserved
-	
+ * ! OpenUI5
+ * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.define(["./Column","sap/m/Text"],function(C,T){"use strict";var a={fetchProperties:function(t){return Promise.resolve([]);},updateBindingInfo:function(m,b){if(m&&b){b.path=b.path||m.collectionPath||"/"+m.collectionName;b.model=b.model||m.model;}},_getVisibleProperties:function(t){var p=[],l;if(t){t.getColumns().forEach(function(m){l=m&&m.getDataProperties()[0];if(l){p.push({name:l,id:m.getId(),label:m.getHeader()});}});}return p;},_getSortedProperties:function(t){var s=[],p,v;p=t.data("$p13nSort");if(typeof p==="string"){p=p.replace(/\\{/g,"{");v=JSON.parse(p);}if(v){s=v;}return s;},getCurrentState:function(t){return{visibleFields:this._getVisibleProperties(t),sorters:this._getSortedProperties(t)};},createColumn:function(p,t){return this.createColumnTemplateInfo(p).then(function(){var c=this.getColumnInfo(p);c.template=this.createColumnTemplateInfo(p);return new C(c);}.bind(this));},getColumnInfo:function(p){return{header:p.label||p.name,dataProperties:[p.name],hAlign:p.align,width:p.width};},getColumnTemplateInfo:function(p){return{text:{path:p.name},textAlign:p.align};},createColumnTemplate:function(p){return Promise.resolve(new T(this.getColumnTemplateInfo(p)));}};return a;},false);
+sap.ui.define(["sap/ui/mdc/AggregationBaseDelegate","sap/ui/core/library","sap/ui/core/Core"],function(A,c,C){"use strict";var T=Object.assign({},A);T.updateBindingInfo=function(m,d,b){b.parameters={};if(m._oMessageFilter){b.filters=[m._oMessageFilter];}else{b.filters=[];}b.sorter=m._getSorters();};T.updateBinding=function(m,b,B){this.rebindTable(m,b);};T.validateState=function(o,s,k){if(k=="Filter"&&o._oMessageFilter){var r=C.getLibraryResourceBundle("sap.ui.mdc");return{validation:c.MessageType.Information,message:r.getText("table.PERSONALIZATION_DIALOG_FILTER_MESSAGESTRIP")};}return A.validateState.apply(this,arguments);};T.rebindTable=function(m,b){if(m._oTable){m._oTable.bindRows(b);}};T.getFilterDelegate=function(){return{addItem:function(p,t){return Promise.resolve(null);}};};return T;});

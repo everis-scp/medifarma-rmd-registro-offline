@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.ui.support",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.23"
+      "version": "1.96.9"
     },
     "title": "UI5 library: sap.ui.support",
     "description": "UI5 library: sap.ui.support",
@@ -18,10 +18,10 @@
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.96",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.96.9"
         }
       }
     },

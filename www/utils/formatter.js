@@ -373,10 +373,10 @@ sap.ui.define([
 				"TextStyleNone":"None",
 				"TextStyleJefe":"Indication05",
 				//OFFLINE se cambia de  indicador, la libreria Kapsel-ui5 solo tiene 5 disponibles
-				"TextStyleAuxiliar":"Indication04",
-				"TextStyleSupervisor":"Indication02",
-				// "TextStyleAuxiliar":"Indication06",
-				// "TextStyleSupervisor":"Indication08",
+				//"TextStyleAuxiliar":"Indication04",
+				//"TextStyleSupervisor":"Indication02",
+				"TextStyleAuxiliar":"Indication06",
+				"TextStyleSupervisor":"Indication08",
 				"TextStyleControlCalidad":"Indication01",
 				"TextStyleControlProcesos":"None",
 				"TextStyleUsuarioSAP":"Indication01"

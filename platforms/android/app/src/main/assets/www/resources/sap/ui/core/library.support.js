@@ -1,6 +1,6 @@
 /*!
  * OpenUI5
- * (c) Copyright 2009-2019 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 /**
@@ -11,9 +11,11 @@ sap.ui.define([
 	"./rules/Config.support",
 	"./rules/Model.support",
 	"./rules/View.support",
-	"./rules/App.support"
+	"./rules/App.support",
+	"./rules/Rendering.support",
+	"./rules/Theming.support"
 ],
-	function(MiscSupport, ConfigSupport, ModelSupport, ViewSupport, AppSupport) {
+	function(MiscSupport, ConfigSupport, ModelSupport, ViewSupport, AppSupport, RenderingSupport, ThemingSupport) {
 	"use strict";
 
 	return {
@@ -24,7 +26,9 @@ sap.ui.define([
 			ConfigSupport,
 			ModelSupport,
 			ViewSupport,
-			AppSupport
+			AppSupport,
+			RenderingSupport,
+			ThemingSupport
 		]
 	};
 }, true);
