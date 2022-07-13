@@ -13885,6 +13885,7 @@ sap.ui.define([
                     oEtiqueta.generalVisibleTextAdicPM= false;
                     oEtiqueta.onFormatoTipoDatoVisibleToggleButtonMultiCheck=false;
                     oEtiqueta.generalVisibleRefresh= false;
+                    oEtiqueta.generalVisibleCheckBoxPM= false;
                     contador = contador + 1; 
                     oEtiqueta.contador = contador;
                     aProcesoData.push(oEtiqueta);
@@ -13901,6 +13902,7 @@ sap.ui.define([
                         oPasoEtiqueta.generalVisibleInput = formatter.onFormatoTipoDatoVisibleInput(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleText = formatter.onFormatoTipoDatoVisibleText(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleCheckBox = formatter.onFormatoTipoDatoVisibleCheckBox(oPasoEtiqueta.tipoDatoId_iMaestraId);
+                        oPasoEtiqueta.generalVisibleCheckBoxPM= false;
                         oPasoEtiqueta.generalVisibleSaveButton = formatter.onFormatoTipoDatoVisibleSaveButton(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleTextUsuario= true;
                         oPasoEtiqueta.generalVisibleTextUsuarioPM= false;
@@ -13912,6 +13914,8 @@ sap.ui.define([
                         oPasoEtiqueta.onFormatoTipoDatoVisibleToggleButtonMultiCheck = formatter.onFormatoTipoDatoVisibleToggleButtonMultiCheck(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         oPasoEtiqueta.generalVisibleMenuButton= true;
                         oPasoEtiqueta.generalEnabledPredecesor = true;
+                        oPasoEtiqueta.generalVisibleRPOR = ((oPasoEtiqueta.tipoDatoId_iMaestraId === sIdRealizadopor || oPasoEtiqueta.tipoDatoId_iMaestraId === sIdRealizadoporyVistobueno) && oPasoEtiqueta.aplica === false ) ? true : false;
+                        oPasoEtiqueta.generalVisibleVB = (oPasoEtiqueta.tipoDatoId_iMaestraId != sIdRealizadopor)  ? true : false;
                         oPasoEtiqueta.generalVisibleDeleteAuto = formatter.onFormatoVisibleDeleteAuto(oPasoEtiqueta);
                         oPasoEtiqueta.generalVisibleRefresh= formatter.onFormatoTipoDatoVisibleRefresh(oPasoEtiqueta.tipoDatoId_iMaestraId);
                         if (oPasoEtiqueta.multiCheckUser && !(oPasoEtiqueta.multiCheckUser.includes(",\n"))) {
@@ -13986,12 +13990,14 @@ sap.ui.define([
                             oPasoInsumoPaso.generalType= formatter.onFormatoTipoDatoType(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.generalVisibleInput= formatter.onFormatoTipoDatoVisibleInput(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.generalVisibleText= formatter.onFormatoTipoDatoVisibleText(oPasoInsumoPaso.tipoDatoId_iMaestraId);
-                            oPasoInsumoPaso.generalVisibleCheckBox= formatter.onFormatoTipoDatoVisibleCheckBox(oPasoInsumoPaso.tipoDatoId_iMaestraId);
-                            oPasoInsumoPaso.generalVisibleTextUsuario= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? true : false;
-                            oPasoInsumoPaso.generalVisibleTextUsuarioPM= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? false : true;
-                            oPasoInsumoPaso.generalVisibleTextAdic= oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? true : false;
-                            oPasoInsumoPaso.generalVisibleTextAdicPM=oPasoInsumoPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck ? false : true;
+                            oPasoInsumoPaso.generalVisibleCheckBox= false;
+                            oPasoInsumoPaso.generalVisibleCheckBoxPM= formatter.onFormatoTipoDatoVisibleCheckBox(oPasoInsumoPaso.tipoDatoId_iMaestraId);
+                            oPasoInsumoPaso.generalVisibleTextUsuario= false;
+                            oPasoInsumoPaso.generalVisibleTextUsuarioPM= true;
+                            oPasoInsumoPaso.generalVisibleTextAdic= false;
+                            oPasoInsumoPaso.generalVisibleTextAdicPM= true;
                             oPasoInsumoPaso.generalVisibleSaveButton= false;
+                            oPasoInsumoPaso.generalVisibleSaveButtonPM= formatter.onFormatoTipoDatoVisibleSaveButton(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.generalEnabledSaveButton= formatter.onFormatoEnabledSaveButton(oPasoInsumoPaso, oInfoUsuario.funcionUsuario, oEstructuraSeleccionada.aPaso.results);
                             oPasoInsumoPaso.generalVisibleToggleButton= formatter.onFormatoTipoDatoVisibleToggleButton(oPasoInsumoPaso.tipoDatoId_iMaestraId);
                             oPasoInsumoPaso.onFormatoTipoDatoVisibleToggleButtonMultiCheck = formatter.onFormatoTipoDatoVisibleToggleButtonMultiCheck(oPasoInsumoPaso.tipoDatoId_iMaestraId);
@@ -14097,6 +14103,9 @@ sap.ui.define([
                 let oModelCuadro = new JSONModel(aData);
                 oModelCuadro.setSizeLimit(999999999);
                 oThat.getView().setModel(oModelCuadro, "aListPasoAssignResponsive");
+                let onGetColumnValidate = oThat.onGetColumnsValid(aData);
+                onGetColumnValidate ? oThat.modelGeneral.setProperty("/viewColumn",true) : oThat.modelGeneral.setProperty("/viewColumn",false);
+                oThat.modelGeneral.refresh(true);
                 oThat.getView().getModel("aListPasoAssignResponsive").refresh(true);  
             }
 
@@ -19667,7 +19676,7 @@ sap.ui.define([
             
             if (oThat.modelNecesidadOnline){
             
-            let aNotificaciones = [];
+            let aNotificaciones = {};
             aNotificaciones.results = [];    
             if(bInterneInit){
                 aNotificaciones = await registroService.onGetDataGeneralFilters(oThat.modelNecesidadOnline, "NotificacionOfflineSet",aFilterSAP);
@@ -19689,7 +19698,7 @@ sap.ui.define([
                     let aFilter = [];             
                     aFilter.push(new Filter("rmdControlRechazo", "EQ", oNotification.Notificacionkey));
                     
-                    let oNotifiHana;
+                    let oNotifiHana = {};
                     oNotifiHana.results =[]; 
                     if(bInterneInit === true){
                         oNotifiHana = await registroService.onGetDataGeneralFilters(oThat.mainModelv2Online, "RMD_TABLA_CONTROL", aFilter);
@@ -19713,9 +19722,9 @@ sap.ui.define([
                         oNotification.PostgDate = formatter.onFormatDateSAP(oNotification.PostgDate);
 
                         if(bInterneInit === true){
-                            await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                            await registroService.onUpdateDataGeneral(oThat.modelNecesidadOnline, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
                         }else{
-                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
+                            await registroService.onUpdateDataGeneral(oThat.modelNecesidad, "NotificacionOfflineSet", oNotification, oNotification.Notificacionkey);
                         }
 
                     }

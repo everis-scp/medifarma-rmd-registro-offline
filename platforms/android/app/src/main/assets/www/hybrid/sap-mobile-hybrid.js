@@ -1239,7 +1239,7 @@ sap.hybrid = {
 					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
 					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and ("+filterOrdenHana+")",//346
 					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and ("+filterOrdenHanaMDID+")",//1000
-					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//178
+					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=("+filterOrdenHanaOrden+")",//178
 					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
 					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//620
 					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=fechaRegistro ge datetimeoffset'"+dFechaLimiteHana+"-05:00'",//1000
