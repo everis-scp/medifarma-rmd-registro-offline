@@ -73,7 +73,7 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 99961,
+			"size": 100815,
 			"theme": "sap_belize"
 		},
 		{
@@ -83,7 +83,7 @@
 		},
 		{
 			"name": "library.css",
-			"size": 99951,
+			"size": 100805,
 			"theme": "sap_belize"
 		},
 		{
@@ -100,12 +100,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 102413,
+			"size": 103267,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 102403,
+			"size": 103257,
 			"theme": "sap_belize"
 		}
 	]

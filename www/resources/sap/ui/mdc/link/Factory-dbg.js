@@ -11,7 +11,7 @@ sap.ui.define([], function() {
 	 * @namespace Factory to access services outside of sap.ui.mdc library like for example <code>ushell</code> services.
 	 * @name sap.ui.mdc.link.Factory
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @private
 	 * @since 1.54.0
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel

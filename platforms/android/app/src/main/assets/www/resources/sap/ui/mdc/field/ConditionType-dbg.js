@@ -46,7 +46,7 @@ sap.ui.define([
 	 * @extends sap.ui.model.SimpleType
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @since 1.62.0
 	 * @private
@@ -721,7 +721,7 @@ sap.ui.define([
 		var sID = this.oFormatOptions.fieldHelpID;
 		if (sID) {
 			var oFieldHelp = sap.ui.getCore().byId(sID);
-			if (oFieldHelp && oFieldHelp.isValidationSupported()) {
+			if (oFieldHelp && oFieldHelp.isUsableForValidation()) {
 				return oFieldHelp;
 			}
 		}
@@ -861,26 +861,11 @@ sap.ui.define([
 		var oFieldHelp = _getFieldHelp.call(this);
 		var oDelegate = this.oFormatOptions.delegate;
 		var oPayload = this.oFormatOptions.payload;
-		var oConfig = {
-				value: vValue,
-				parsedValue: vParsedValue,
-				inParameters: undefined, // TODO: needed?
-				outParameters: undefined, // TODO: needed?
-				bindingContext: oBindingContext,
-				checkKeyFirst: bCheckKeyFirst, // TODO: not longer needed?
-				checkKey: bCheckKey,
-				checkDescription: bCheckDescription,
-				conditionModel: oConditionModel,
-				conditionModelName: sConditionModelName,
-				exception: ParseException
-		};
 
 		if (oDelegate) {
-//			return oDelegate.getItemForValue(oPayload, oFieldHelp, vValue, vParsedValue, oBindingContext, bCheckKeyFirst, bCheckKey, bCheckDescription, oConditionModel, sConditionModelName);
-			return oDelegate.getItemForValue(oPayload, oFieldHelp, oConfig);
+			return oDelegate.getItemForValue(oPayload, oFieldHelp, vValue, vParsedValue, oBindingContext, bCheckKeyFirst, bCheckKey, bCheckDescription, oConditionModel, sConditionModelName);
 		} else if (oFieldHelp) {
-//			return oFieldHelp.getItemForValue(vValue, vParsedValue, undefined, undefined, oBindingContext, bCheckKeyFirst, bCheckKey, bCheckDescription, oConditionModel, sConditionModelName);
-			return oFieldHelp.getItemForValue(oConfig);
+			return oFieldHelp.getItemForValue(vValue, vParsedValue, undefined, undefined, oBindingContext, bCheckKeyFirst, bCheckKey, bCheckDescription, oConditionModel, sConditionModelName);
 		}
 
 	}

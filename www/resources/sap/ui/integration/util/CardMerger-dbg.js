@@ -20,7 +20,7 @@ sap.ui.define([
 		layers: { "admin": 0, "content": 5, "translation": 10, "all": 20 },
 		mergeManifestPathChanges: function (oModel, oChange) {
 			/* hide multi language function since there has a translation issue in Portal
-			var sLanguage =  Core.getConfiguration().getLanguage().replaceAll('_', '-');
+			var sLanguage =  Core.getConfiguration().getLanguage().replaceAll('-', '_');
 			*/
 			Object.keys(oChange).forEach(function (s) {
 				if (s.charAt(0) === "/") {
@@ -44,11 +44,9 @@ sap.ui.define([
 				}
 			});
 		},
-		mergeCardDelta: function (oManifest, aChanges, sSection) {
-			var oInitialManifest = merge({}, oManifest);
-			if (typeof sSection === "undefined") {
+		mergeCardDelta: function (oManifest, aChanges) {
+			var oInitialManifest = merge({}, oManifest),
 				sSection = "sap.card";
-			}
 			if (Array.isArray(aChanges) && aChanges.length > 0) {
 				var oModel;
 				aChanges.forEach(function (oChange) {

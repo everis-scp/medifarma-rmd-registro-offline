@@ -25,7 +25,7 @@ sap.ui.define(['./Element', './library'],
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.16.0

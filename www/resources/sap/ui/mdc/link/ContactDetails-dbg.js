@@ -15,7 +15,7 @@ sap.ui.define(['sap/ui/core/XMLComposite', 'sap/m/Text', 'sap/m/Link', 'sap/m/La
 	 * @class The ContactDetails control is used to show additional information like for example 'contact details'.
 	 * @extends sap.ui.core.XMLComposite
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @since 1.56.0

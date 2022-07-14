@@ -3,7 +3,6 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
 /**
  * ResourceBundle-based DataBinding
  *
@@ -205,10 +204,7 @@ sap.ui.define([
 	 *
 	 * @alias sap.ui.model.resource.ResourceModel
 	 * @author SAP SE
-	 * @class
-	 * Model implementation for resource bundles.
-	 *
-	 * This model is not prepared to be inherited from.
+	 * @class Model implementation for resource bundles.
 	 *
 	 * This model allows to bind control properties against translatable texts. Its data is taken
 	 * from a {@link module:sap/base/i18n/ResourceBundle} and it only supports property bindings.
@@ -228,7 +224,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.model.Model
 	 * @public
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 	var ResourceModel = Model.extend("sap.ui.model.resource.ResourceModel", /** @lends sap.ui.model.resource.ResourceModel.prototype */ {
 

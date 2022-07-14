@@ -5,8 +5,8 @@
  */
 
 /*global Promise*/
-sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContainer', 'sap/ui/base/Object', 'sap/ui/core/routing/History', 'sap/ui/Device', "sap/base/Log"],
-	function(InstanceManager, NavContainer, SplitContainer, BaseObject, History, Device, Log) {
+sap.ui.define(['sap/ui/base/SyncPromise', 'sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContainer', 'sap/ui/base/Object', 'sap/ui/core/routing/History', 'sap/ui/Device', "sap/base/Log"],
+	function(SyncPromise, InstanceManager, NavContainer, SplitContainer, BaseObject, History, Device, Log) {
 		"use strict";
 
 		var oOnAfterShowDelegate = {
@@ -28,13 +28,11 @@ sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContai
 		 *
 		 * <b>Note:</b> You should not create an own instance of this class. It is created
 		 * when using <code>{@link sap.m.routing.Router}</code> or <code>{@link sap.m.routing.Targets}</code>.
+		 * You may use the <code>{@link #setCloseDialogs}</code> function to specify if dialogs should be
+		 * closed on displaying other views.
 		 *
-		 * <b>Note:</b> You may use the <code>{@link #setCloseDialogs}</code> function to specify if dialogs should be
-		 * closed on displaying other views. The dialogs are closed when a different target is displayed than the
-		 * previously displayed one, otherwise the dialogs are kept open.
-		 *
-		 * @param {boolean} closeDialogs Closes all open dialogs before navigating to a different target, if set to
-		 *  <code>true</code> (default). If set to <code>false</code>, it will just navigate without closing dialogs.
+		 * @param {boolean} closeDialogs Closes all open dialogs before navigating, if set to <code>true</code> (default).
+		 * If set to <code>false</code>, it will just navigate without closing dialogs.
 		 * @public
 		 * @since 1.28.1
 		 * @alias sap.m.routing.TargetHandler
@@ -61,9 +59,6 @@ sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContai
 
 		/**
 		 * Sets if a navigation should close dialogs.
-		 *
-		 * <b>Note:</b> The dialogs are closed when a different target is displayed than the previous one,
-		 * otherwise the dialogs are kept open even when <code>bCloseDialogs</code> is <code>true</code>.
 		 *
 		 * @param {boolean} bCloseDialogs Close dialogs if <code>true</code>
 		 * @public
@@ -267,7 +262,7 @@ sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContai
 				//Parameters for the nav Container
 				oArguments = oParams.eventData,
 				//Nav container does not work well if you pass undefined as transition
-				sTransition = oParams.placeholderShown ? "show" : (oParams.transition || ""),
+				sTransition = oParams.transition || "",
 				oTransitionParameters = oParams.transitionParameters,
 				sViewId = oParams.view && oParams.view.getId(),
 				//this is only necessary if the target control is a Split container since the nav container only has a pages aggregation
@@ -361,7 +356,6 @@ sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContai
 		 * @param {object} mSettings Object containing the container control and the view object to display
 		 * @param {sap.ui.core.Control} mSettings.container The navigation target container
 		 * @param {sap.ui.core.Control|Promise} mSettings.object The component/view object
-		 * @return {Promise} Promise that resolves after the placeholder is loaded
 		 *
 		 * @private
 	 	 * @ui5-restricted sap.ui.core.routing
@@ -369,20 +363,24 @@ sap.ui.define(['sap/m/InstanceManager', 'sap/m/NavContainer', 'sap/m/SplitContai
 		TargetHandler.prototype.showPlaceholder = function(mSettings) {
 			var oContainer = mSettings.container,
 				bNeedsPlaceholder = true,
-				oObject;
+				pObject;
 
-			if (mSettings.object && !(mSettings.object instanceof Promise)) {
-				oObject = mSettings.object;
-			}
+			if (mSettings.object) {
+				if (mSettings.object instanceof Promise) {
+					pObject = mSettings.object;
+				} else {
+					pObject = SyncPromise.resolve(mSettings.object);
+				}
 
-			if (mSettings.container && typeof mSettings.container.needPlaceholder === "function") {
-				bNeedsPlaceholder = mSettings.container.needPlaceholder(mSettings.aggregation, oObject);
-			}
+				pObject.then(function(oObject) {
+					if (mSettings.container && typeof mSettings.container.needPlaceholder === "function") {
+						bNeedsPlaceholder = mSettings.container.needPlaceholder(mSettings.aggregation, oObject);
+					}
 
-			if (bNeedsPlaceholder) {
-				return oContainer.showPlaceholder(mSettings);
-			} else {
-				return Promise.resolve();
+					if (bNeedsPlaceholder) {
+						oContainer.showPlaceholder(mSettings);
+					}
+				});
 			}
 		};
 

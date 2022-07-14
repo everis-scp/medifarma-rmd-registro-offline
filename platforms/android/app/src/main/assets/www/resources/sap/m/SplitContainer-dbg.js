@@ -86,7 +86,7 @@ function(
 	 *
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -2138,20 +2138,16 @@ function(
 	 * @param {object} mSettings Object containing the aggregation name
 	 * @param {string} mSettings.aggregation The aggregation name to decide on which column/container the placeholder should be shown
 	 *
-	 * @private
-	 * @ui5-restricted SAPUI5 Distribution libraries only
+	 * @public
 	 * @since 1.91
 	 */
 	SplitContainer.prototype.showPlaceholder = function(mSettings) {
-		if (!sap.ui.getCore().getConfiguration().getPlaceholder()) {
-			return;
-		}
-
-		switch (mSettings && mSettings.aggregation) {
+		switch (mSettings.aggregation) {
 			case "masterPages":
-				return this.getAggregation("_navMaster").showPlaceholder(mSettings);
+				this.getAggregation("_navMaster").showPlaceholder(mSettings);
+				break;
 			default:
-				return this.getAggregation("_navDetail").showPlaceholder(mSettings);
+				this.getAggregation("_navDetail").showPlaceholder(mSettings);
 		}
 	};
 
@@ -2161,8 +2157,7 @@ function(
 	 * @param {object} mSettings Object containing the aggregation name
 	 * @param {string} mSettings.aggregation The aggregation name to decide on which column/container the placeholder should be hidden
 	 *
-	 * @private
-	 * @ui5-restricted SAP internal apps
+	 * @public
 	 * @since 1.91
 	 */
 	SplitContainer.prototype.hidePlaceholder = function(mSettings) {
@@ -2198,7 +2193,7 @@ function(
 				oContainer = this.getAggregation("_navDetail");
 		}
 
-		return !oObject || (oContainer.getCurrentPage() !== oObject);
+		return oContainer.getCurrentPage() !== oObject;
 	};
 	/**************************************************************
 	* END - Private methods

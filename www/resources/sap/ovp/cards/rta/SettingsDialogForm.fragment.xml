@@ -47,7 +47,7 @@
                                                 type="Default"  change="updateCard" />
                                     </f:fields>
                                 </f:FormElement>
-                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}">
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist' &amp;&amp; ${ovpCardProperties>/template} !== 'sap.ovp.cards.v4.linklist'}">
                                     <!-- Dynamic Sub Title -->
                                     <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SUBTITLE}" visible="{visibility>/dynamicSubTitle}">
                                         <f:fields>
@@ -117,7 +117,7 @@
 		                                </f:FormElement>
 	                                </template:else>
 	                            </template:if>
-                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}" >
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist' &amp;&amp; ${ovpCardProperties>/template} !== 'sap.ovp.cards.v4.linklist'}" >
                                     <!-- KPIHeader Switch -->
                                     <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_KPI_HEADER}" visible="{visibility>/kpiHeader}">
                                         <f:fields>
@@ -193,7 +193,7 @@
                                             </SegmentedButton>
                                         </f:fields>
                                     </f:FormElement>
-                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist'}" >
+                                <template:if test="{= ${ovpCardProperties>/template} !== 'sap.ovp.cards.linklist' &amp;&amp; ${ovpCardProperties>/template} !== 'sap.ovp.cards.v4.linklist'}" >
                                     <!-- Selection Presentation Variant - Filter and Presented By -->
                                     <f:FormElement label="{ovpResourceModel>OVP_KEYUSER_SELECTION_PRESENTATION_VAR}" visible="{visibility>/selectionPresentationVariant}">
                                         <f:fields>
@@ -320,7 +320,9 @@
                                         </f:fields>
                                     </f:FormElement>
                                 </template:if>
-                                <template:if test="{= ${ovpCardProperties>/template} === 'sap.ovp.cards.linklist' &amp;&amp; ${ovpCardProperties>/staticContent}}" >
+                                <template:if test="{= (${ovpCardProperties>/template} === 'sap.ovp.cards.linklist' ||
+                                                       ${ovpCardProperties>/template} === 'sap.ovp.cards.v4.linklist') &amp;&amp; 
+                                                       ${ovpCardProperties>/staticContent}}" >
                                     <f:FormElement>
                                         <f:fields>
                                             <Toolbar>
@@ -389,7 +391,8 @@
                                                 ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.bubble' ||
                                                 ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.donut' ||
                                                 ${ovpCardProperties>/template} === 'sap.ovp.cards.charts.line' ||
-                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.linklist'}" >
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.linklist' ||
+                                                ${ovpCardProperties>/template} === 'sap.ovp.cards.v4.linklist'}" >
                                                 <template:then>
                                                     <ComboBox id="sapOvpSettingsNumberOfRows" width="100%"
                                                             items="{

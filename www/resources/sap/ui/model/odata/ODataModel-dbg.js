@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 /**
  * OData-based DataBinding
  *
@@ -34,14 +34,13 @@ sap.ui.define([
 	"sap/ui/model/Context",
 	"sap/ui/model/FilterProcessor",
 	"sap/ui/model/Model",
-	"sap/ui/model/odata/ODataAnnotations",
 	"sap/ui/model/odata/ODataMetaModel",
 	"sap/ui/thirdparty/datajs",
 	"sap/ui/thirdparty/URI"
 ], function(CountMode, ODataContextBinding, ODataListBinding, ODataMetadata, ODataPropertyBinding,
 		ODataTreeBinding, ODataUtils, assert, Log, encodeURL, each, extend, isEmptyObject,
-		isPlainObject, merge, uid, BindingMode, Context, FilterProcessor, Model, ODataAnnotations,
-		ODataMetaModel, OData, URI) {
+		isPlainObject, merge, uid, BindingMode, Context, FilterProcessor, Model, ODataMetaModel,
+		OData, URI) {
 	"use strict";
 
 	/**
@@ -76,7 +75,7 @@ sap.ui.define([
 	 *
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @deprecated As of version 1.48, please use {@link sap.ui.model.odata.v2.ODataModel} instead.
@@ -3442,13 +3441,13 @@ sap.ui.define([
 	};
 
 	/**
-	 * Get or create the annotation parser instance.
-	 * @param {object} mAnnotationData The annotation data
+	 * Singleton Lazy loading of the annotation parser on demand
 	 *
-	 * @return {sap.ui.model.odata.ODataAnnotations} The annotation parser instance
+	 * @return {sap.ui.model.odata.Annotations} The annotation parser instance
 	 */
 	ODataModel.prototype._getAnnotationParser = function(mAnnotationData) {
 		if (!this.oAnnotations) {
+			var ODataAnnotations = sap.ui.requireSync("sap/ui/model/odata/ODataAnnotations");
 			this.oAnnotations = new ODataAnnotations({
 				annotationData: mAnnotationData,
 				url: null,

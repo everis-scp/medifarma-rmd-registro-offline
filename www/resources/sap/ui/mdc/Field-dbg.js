@@ -46,12 +46,12 @@ sap.ui.define([
 	 * @implements sap.ui.core.IFormContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @alias sap.ui.mdc.Field
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.54.0
 	 * @experimental As of version 1.54
 	 *

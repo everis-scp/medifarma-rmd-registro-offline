@@ -1,16 +1,64 @@
 {
-	"_version": "1.1.0",
+	"_version": "1.21.0",
 
 	"sap.app": {
 		"_version": "1.1.0",
-		"i18n": "i18n/i18n.properties",
+		"i18n": {
+			"bundleUrl": "i18n/i18n.properties",
+			"supportedLocales": [
+				"",
+				"ar",
+				"bg",
+				"ca",
+				"cs",
+				"da",
+				"de",
+				"el",
+				"en",
+				"en_US_sappsd",
+				"en_US_saptrc",
+				"es",
+				"et",
+				"fi",
+				"fr",
+				"hi",
+				"hr",
+				"hu",
+				"it",
+				"iw",
+				"ja",
+				"kk",
+				"ko",
+				"lt",
+				"lv",
+				"ms",
+				"nl",
+				"no",
+				"pl",
+				"pt",
+				"ro",
+				"ru",
+				"sh",
+				"sk",
+				"sl",
+				"sv",
+				"th",
+				"tr",
+				"uk",
+				"vi",
+				"zh_CN",
+				"zh_TW"
+			],
+			"fallbackLocale": "en"
+		},
 		"id": "sap.ushell.plugins.rta-personalize",
 		"title": "{{APP_TITLE}}",
 		"type": "component",
 		"applicationVersion": {
 			"version": "1.0.0"
 		},
-		"ach": "CA-UI5-FL-RTA"
+		"ach": "CA-UI5-FL-RTA",
+		"resources": "resources.json"
 	},
 
 	"sap.ui": {
@@ -55,7 +103,54 @@
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
-				"uri": "i18n/i18n.properties"
+				"uri": "i18n/i18n.properties",
+				"settings": {
+					"supportedLocales": [
+						"",
+						"ar",
+						"bg",
+						"ca",
+						"cs",
+						"da",
+						"de",
+						"el",
+						"en",
+						"en_US_sappsd",
+						"en_US_saptrc",
+						"es",
+						"et",
+						"fi",
+						"fr",
+						"hi",
+						"hr",
+						"hu",
+						"it",
+						"iw",
+						"ja",
+						"kk",
+						"ko",
+						"lt",
+						"lv",
+						"ms",
+						"nl",
+						"no",
+						"pl",
+						"pt",
+						"ro",
+						"ru",
+						"sh",
+						"sk",
+						"sl",
+						"sv",
+						"th",
+						"tr",
+						"uk",
+						"vi",
+						"zh_CN",
+						"zh_TW"
+					],
+					"fallbackLocale": "en"
+				}
 			}
 		}
 	},

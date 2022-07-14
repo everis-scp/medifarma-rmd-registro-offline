@@ -8,7 +8,7 @@
 		},
 		{
 			"name": "InfoLabel.less",
-			"size": 3773,
+			"size": 3563,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "ToolHeader.less",
-			"size": 2220,
+			"size": 2201,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -38,7 +38,7 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 3394,
+			"size": 3470,
 			"theme": "base"
 		},
 		{
@@ -49,7 +49,7 @@
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 95411,
+			"size": 95471,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -105,17 +105,17 @@
 		},
 		{
 			"name": "illustrations/tnt-Dialog-NoApplications.svg",
-			"size": 9455,
+			"size": 10623,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Dialog-NoFlows.svg",
-			"size": 4175,
+			"size": 5218,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Dialog-NoUsers.svg",
-			"size": 7546,
+			"size": 8714,
 			"theme": "base"
 		},
 		{
@@ -195,17 +195,17 @@
 		},
 		{
 			"name": "illustrations/tnt-Scene-NoApplications.svg",
-			"size": 11440,
+			"size": 12514,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Scene-NoFlows.svg",
-			"size": 15471,
+			"size": 16330,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Scene-NoUsers.svg",
-			"size": 11596,
+			"size": 12797,
 			"theme": "base"
 		},
 		{
@@ -285,17 +285,17 @@
 		},
 		{
 			"name": "illustrations/tnt-Spot-NoApplications.svg",
-			"size": 5149,
+			"size": 6316,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Spot-NoFlows.svg",
-			"size": 3068,
+			"size": 4104,
 			"theme": "base"
 		},
 		{
 			"name": "illustrations/tnt-Spot-NoUsers.svg",
-			"size": 5973,
+			"size": 7074,
 			"theme": "base"
 		},
 		{
@@ -340,22 +340,22 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 15182,
+			"size": 15295,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 1404,
+			"size": 1438,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
-			"size": 15177,
+			"size": 15290,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
-			"size": 22163,
+			"size": 21934,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -367,12 +367,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 15960,
+			"size": 15999,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 15955,
+			"size": 15994,
 			"theme": "base"
 		}
 	]

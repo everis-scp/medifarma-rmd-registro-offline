@@ -8,10 +8,14 @@
 			</VBox>
 		</content>
 		<beginButton>
-			<Button text="{i18n>DELETE}" press="onDelete" type="Emphasized"/>
+			<Button text="{i18n>DELETE}"
+					visible="{= ${delete>/tableMode} === 'Delete' ? ${delete>/undeletableCount} === 0 : true}"
+					press="onDelete"
+					type="Emphasized"/>
 		</beginButton>
 		<endButton>
-			<Button text="{i18n>CANCEL}" press="onCancel"/>
+			<Button text="{= (${delete>/tableMode} === 'Delete' ? ${delete>/undeletableCount} === 0 : true) ? ${i18n>CANCEL} : ${i18n>CLOSE} }"
+					press="onCancel"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

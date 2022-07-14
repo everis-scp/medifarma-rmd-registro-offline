@@ -34,7 +34,7 @@
 
 
 			<!-- Active object toggle button -->
-			<template:if test="{=${parameter>/manifest/sap.ui.generic.app/settings/showDraftToggle}}">
+			<template:if test="{appSettings>/showDraftToggle}">
 				<template:if test="{parameter>/isDraftEnabled}">
 					<template:with path="entitySet>Org.OData.Capabilities.V1.NavigationRestrictions/RestrictedProperties/[${path:'NavigationProperty/NavigationPropertyPath'} === 'DraftAdministrativeData']/" var="draftAdminData">
 						<template:if test="{= (${draftAdminData>FilterRestrictions/Filterable/Bool} !== 'false') &amp;&amp; (${entitySet>com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>com.sap.vocabularies.Common.v1.DraftNode}) }">
@@ -45,7 +45,7 @@
 			</template:if>
 
 		<template:with path="entityType>" var="listEntityType">
-			<template:if test="{= ${tableType>value} !== 'TreeTable'}">
+			<template:if test="{= ${tableSettings>type} !== 'TreeTable'}">
 				<template:with path="entitySet>" var="listEntitySet">
 					<core:Fragment fragmentName="sap.suite.ui.generic.template.ListReport.view.fragments.CRUDActionButtons" type="XML"/>
 				</template:with>
@@ -54,10 +54,10 @@
 
 		<!--add sort, filter, group buttons to table toolbar if worklist light is set-->
 		<template:if test="{=${parameter>/settings/isWorklist} }">
-				<OverflowToolbarButton icon="sap-icon://sort" text="{i18n>SORT}" tooltip="{i18n>SORT}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
-				<OverflowToolbarButton icon="sap-icon://filter" text="{i18n>FILTER}" tooltip="{i18n>FILTER}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
-				<OverflowToolbarButton icon="sap-icon://group-2" text="{i18n>GROUP}" tooltip="{i18n>GROUP}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
-				<OverflowToolbarButton icon="sap-icon://action-settings" text="{i18n>COLUMNS}" tooltip="{i18n>COLUMNS}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
+				<OverflowToolbarButton icon="sap-icon://sort" id="{:= ${parameter>/stableId}.getStableId({type: 'ListReportAction', subType: 'Sort', sQuickVariantKey: ${tabItem>key}})}" text="{i18n>SORT}" tooltip="{i18n>SORT}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
+				<OverflowToolbarButton icon="sap-icon://filter" id="{:= ${parameter>/stableId}.getStableId({type: 'ListReportAction', subType: 'Filter', sQuickVariantKey: ${tabItem>key}})}" text="{i18n>FILTER}" tooltip="{i18n>FILTER}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
+				<OverflowToolbarButton icon="sap-icon://group-2" id="{:= ${parameter>/stableId}.getStableId({type: 'ListReportAction', subType: 'Group', sQuickVariantKey: ${tabItem>key}})}"  text="{i18n>GROUP}" tooltip="{i18n>GROUP}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
+				<OverflowToolbarButton icon="sap-icon://action-settings" id="{:= ${parameter>/stableId}.getStableId({type: 'ListReportAction', subType: 'Personalize', sQuickVariantKey: ${tabItem>key}})}"  text="{i18n>COLUMNS}" tooltip="{i18n>COLUMNS}" press="._templateEventHandlers.onWorkListTableSettings" type="Transparent"/>
 		</template:if>
 	</OverflowToolbar>
 

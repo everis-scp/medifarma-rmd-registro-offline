@@ -9,10 +9,10 @@
                    var="action">
 	    <Button
 	        id="{parts: [{path: 'dataField>'}, {path: 'facet>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartForDatafieldActionButton'}::Determining"
-			type="{= ${parameter>/isFiori3Enabled} ? 'Default' : 'Transparent'}"
+			type="{path:'dataField>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.buildExpressionForButtonCriticality'}"
 			dt:annotation="{parts: [{path: 'parameter>/entityType'}, {value: 'com.sap.vocabularies.UI.v1.Identification'}, {path: 'dataField>Action'}, {path: 'dataField>'}], formatter: 'sap.suite.ui.generic.template.changeHandler.js.AnnotationHelperForDesignTime.createInstanceMetadataWithPath'}"
 	        text="{= ${path: 'dataField>Label', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}}"
-            visible="{parts: [{path: 'parameter>/settings/routeConfig/'}, {path: 'action>sap:applicable-path'}, {path: 'dataField>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.actionControlDetermining'}"
+            visible="{parts: [{path: 'parameter>/treeNode'}, {path: 'action>sap:applicable-path'}, {path: 'dataField>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.actionControlDetermining'}"
 	        press="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' ? '._templateEventHandlers.onDeterminingDataFieldForAction' : '._templateEventHandlers.onDeterminingDataFieldForIntentBasedNavigation'}">
 	        <customData>
 	            <core:CustomData key="Action"

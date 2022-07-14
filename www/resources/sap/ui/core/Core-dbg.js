@@ -210,7 +210,7 @@ sap.ui.define([
 	 * @extends sap.ui.base.Object
 	 * @final
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.core.Core
 	 * @public
 	 * @hideconstructor
@@ -589,7 +589,7 @@ sap.ui.define([
 							oSyncPoint2.finishTask(iLoadACBTask);
 						});
 					} else {
-						var AppCacheBuster = sap.ui.requireSync('sap/ui/core/AppCacheBuster'); // legacy-relevant: Synchronous path
+						var AppCacheBuster = sap.ui.requireSync('sap/ui/core/AppCacheBuster');
 						AppCacheBuster.boot(oSyncPoint2);
 					}
 				}
@@ -618,8 +618,8 @@ sap.ui.define([
 							};
 						});
 						fnCallbackSupportBootstrapInfo(
-							sap.ui.requireSync("sap/ui/core/support/Support"), // legacy-relevant: Synchronous path
-							sap.ui.requireSync("sap/ui/support/Bootstrap") // legacy-relevant: Synchronous path
+							sap.ui.requireSync("sap/ui/core/support/Support"),
+							sap.ui.requireSync("sap/ui/support/Bootstrap")
 						);
 					}
 				}
@@ -647,7 +647,7 @@ sap.ui.define([
 							};
 						});
 						fnCallbackTestRecorder(
-							sap.ui.requireSync("sap/ui/testrecorder/Bootstrap") // legacy-relevant: Synchronous preloading
+							sap.ui.requireSync("sap/ui/testrecorder/Bootstrap")
 						);
 					}
 				}
@@ -893,9 +893,6 @@ sap.ui.define([
 			this.includeLibraryTheme("sap-ui-merged", undefined, "?l=" + aCSSLibs.join(","));
 		}
 
-		// add CalendarClass to list of modules
-		this.oConfiguration.modules.push("sap/ui/core/date/" + this.oConfiguration.getCalendarType());
-
 		// load all modules now
 		if ( bAsync ) {
 			return this._requireModulesAsync().then(function() {
@@ -917,7 +914,7 @@ sap.ui.define([
 				this.loadLibrary(m[1]);
 			} else {
 				// data-sap-ui-modules might contain legacy jquery.sap.* modules
-				sap.ui.requireSync( /^jquery\.sap\./.test(mod) ?  mod : mod.replace(/\./g, "/")); // legacy-relevant: Sync loading of modules and libraries
+				sap.ui.requireSync( /^jquery\.sap\./.test(mod) ?  mod : mod.replace(/\./g, "/"));
 			}
 		}.bind(this));
 
@@ -1323,7 +1320,7 @@ sap.ui.define([
 		if (sRootComponent) {
 
 			Log.info("Loading Root Component: " + sRootComponent,null,METHOD);
-			var oComponent = sap.ui.component({ //legacy-relevant: Deprecated rootComponent API
+			var oComponent = sap.ui.component({
 				name: sRootComponent
 			});
 			this.oRootComponent = oComponent;
@@ -1333,7 +1330,7 @@ sap.ui.define([
 				var oRootNode = document.getElementById(sRootNode);
 				if (oRootNode) {
 					Log.info("Creating ComponentContainer for Root Component: " + sRootComponent,null,METHOD);
-					var ComponentContainer = sap.ui.requireSync('sap/ui/core/ComponentContainer'), // legacy-relevant: Deprecated rootComponent API
+					var ComponentContainer = sap.ui.requireSync('sap/ui/core/ComponentContainer'),
 						oContainer = new ComponentContainer({
 						component: oComponent,
 						propagateModel: true /* TODO: is this a configuration or do this by default? right now it behaves like the application */
@@ -1357,7 +1354,7 @@ sap.ui.define([
 				});
 
 				Log.info("Loading Application: " + sApplication,null,METHOD);
-				sap.ui.requireSync(sApplication.replace(/\./g, "/")); // legacy-relevant: deprecated
+				sap.ui.requireSync(sApplication.replace(/\./g, "/"));
 				var oClass = ObjectPath.get(sApplication);
 				assert(oClass !== undefined, "The specified application \"" + sApplication + "\" could not be found!");
 				var oApplication = new oClass();
@@ -1574,14 +1571,12 @@ sap.ui.define([
 			"lib must be a non-empty string or an object with at least a non-empty 'name' property and an optional (boolean) property 'json'" );
 
 		var fileTypeSupportedByLib = 'both';
-		var lazy = false;
 		if ( typeof lib === 'object' ) {
 			if ( lib.json === true ) {
 				fileTypeSupportedByLib = 'json';
 			} else if ( lib.json === false ) {
 				fileTypeSupportedByLib = 'js';
 			}
-			lazy = !!lib.lazy;
 			lib = lib.name;
 		}
 
@@ -1598,8 +1593,7 @@ sap.ui.define([
 
 		return {
 			name: lib,
-			fileType: fileType,
-			lazy: lazy
+			fileType: fileType
 		};
 
 	}
@@ -1636,15 +1630,6 @@ sap.ui.define([
 			return libInfo.promise;
 		}
 
-		if ( libConfig.lazy ) {
-			// For selected lazy dependencies, we load a library-preload-lazy module.
-			// Errors are ignored and the promise is not added to the library bookkeeping
-			// (but the loader avoids double loading).
-			Log.debug("Lazy dependency to '" + lib + "' encountered, loading library-preload-lazy.js");
-			return sap.ui.loader._.loadJSResourceAsync(
-				libPackage + '/library-preload-lazy.js', /* ignoreErrors = */ true);
-		}
-
 		// otherwise mark as pending
 		libInfo.pending = true;
 		libInfo.async = true;
@@ -1677,18 +1662,7 @@ sap.ui.define([
 				oManifest = getManifest(lib);
 
 			if ( dependencies && dependencies.length ) {
-				var eagerDependencies = dependencies.filter(function(dep) {
-					return typeof dep === "string";
-				});
-				var lazyDependencies = dependencies.filter(function(dep) {
-					return typeof dep !== "string";
-				});
-				eagerDependencies = VersionInfo._getTransitiveDependencyForLibraries(eagerDependencies);
-
-				// combine transitive closure of eager dependencies and direct lazy dependencies,
-				// the latter might be redundant
-				dependencies = eagerDependencies.concat(lazyDependencies);
-
+				dependencies = VersionInfo._getTransitiveDependencyForLibraries(dependencies);
 				aPromises = dependencies.map(preloadLibraryAsync.bind(that));
 			}
 
@@ -1736,18 +1710,6 @@ sap.ui.define([
 		}
 	}
 
-	/**
-	 * Set of libraries that provide a bundle info file (library-preload-lazy.js).
-	 *
-	 * The file will be loaded, when a lazy dependency to the library is encountered.
-	 * @private
-	 */
-	var oLibraryWithBundleInfo = new Set([
-		"sap.suite.ui.generic.template",
-		"sap.ui.comp",
-		"sap.ui.layout",
-		"sap.ui.unified"
-	]);
 
 	function dependenciesFromManifest(lib) {
 
@@ -1759,11 +1721,6 @@ sap.ui.define([
 			return Object.keys(libs).reduce(function(result, dep) {
 				if ( !libs[dep].lazy ) {
 					result.push(dep);
-				} else if (oLibraryWithBundleInfo.has(dep)) {
-					result.push({
-						name: dep,
-						lazy: true
-					});
 				}
 				return result;
 			}, []);
@@ -1866,11 +1823,9 @@ sap.ui.define([
 			return;
 		}
 
+		// currently loading
 		if ( libInfo.pending ) {
-			if ( libConfig.lazy ) {
-				// ignore a lazy request when an eager request is already pending
-				return;
-			} else if ( libInfo.async ) {
+			if ( libInfo.async ) {
 				Log.warning("request to load " + lib + " synchronously while async loading is pending; this causes a duplicate request and should be avoided by caller");
 				// fall through and preload synchronously
 			} else {
@@ -1878,19 +1833,6 @@ sap.ui.define([
 				Log.warning("request to load " + lib + " synchronously while sync loading is pending (cycle, ignored)");
 				return;
 			}
-		}
-
-		if ( libConfig.lazy ) {
-			// For selected lazy dependencies, we load a library-preload-lazy module.
-			// Errors are ignored and the library is not marked as pending in the bookkeeping
-			// (but the loader avoids double loading).
-			Log.debug("Lazy dependency to '" + lib + "' encountered, loading library-preload-lazy.js");
-			try {
-				sap.ui.requireSync(libPackage + '/library-preload-lazy');
-			} catch (e) {
-				Log.error("failed to load '" + libPackage + "/library-preload-lazy.js" + "' synchronously (" + (e && e.message || e) + ")");
-			}
-			return;
 		}
 
 		libInfo.pending = true;
@@ -1905,7 +1847,7 @@ sap.ui.define([
 		if ( fileType !== 'json' /* 'js' or 'both', not forced to JSON */ ) {
 			var sPreloadModule = libPackage + '/library-preload';
 			try {
-				sap.ui.requireSync(sPreloadModule); // legacy-relevant: Synchronous preloading
+				sap.ui.requireSync(sPreloadModule);
 				dependencies = dependenciesFromManifest(lib);
 			} catch (e) {
 				Log.error("failed to load '" + sPreloadModule + "' (" + (e && e.message || e) + ")");
@@ -2035,11 +1977,11 @@ sap.ui.define([
 	 *     });
 	 * </pre>
 	 *
-	 * @param {string} sLibrary Name of the library to load
+	 * @param {string} sLibrary name of the library to load
 	 * @param {string|boolean|object} [vUrl] URL to load the library from or the async flag or a complex configuration object
-	 * @param {boolean} [vUrl.async] Whether to load the library asynchronously
 	 * @param {string} [vUrl.url] URL to load the library from
-	 * @returns {object|Promise<object>} An info object for the library (sync) or a Promise on it (async).
+	 * @param {boolean} [vUrl.async] Whether to load the library asynchronously
+	 * @returns {Object|Promise} An info object for the library (sync) or a Promise (async)
 	 * @public
 	 */
 	Core.prototype.loadLibrary = function(sLibrary, vUrl) {
@@ -2058,9 +2000,7 @@ sap.ui.define([
 				if ( vUrl.url && mLibraryPreloadBundles[sLibrary] == null ) { // only if lib has not been loaded yet
 					registerModulePath(sLibrary, vUrl.url);
 				}
-				return this.loadLibraries([sLibrary]).then(function() {
-					return this.mLibraries[sLibrary];
-				}.bind(this));
+				return this.loadLibraries([sLibrary]);
 			}
 			vUrl = vUrl.url;
 		}
@@ -2080,7 +2020,7 @@ sap.ui.define([
 			}
 
 			// require the library module (which in turn will call initLibrary())
-			sap.ui.requireSync(sModule.replace(/\./g, "/")); // legacy-relevant
+			sap.ui.requireSync(sModule.replace(/\./g, "/"));
 
 			// check for legacy code
 			if ( !mLoadedLibraries[sLibrary] ) {
@@ -2151,7 +2091,7 @@ sap.ui.define([
 		}
 
 		function requireLibsSync() {
-			getLibraryModuleNames().forEach(sap.ui.requireSync); // legacy-relevant: Sync path
+			getLibraryModuleNames().forEach(sap.ui.requireSync);
 		}
 
 		if ( bAsync ) {
@@ -2197,8 +2137,6 @@ sap.ui.define([
 	 * @param {string} [sId] the ID for the component instance
 	 * @param {object} [mSettings] the settings object for the component
 	 * @public
-	 * @returns {sap.ui.core.Component} the created Component instance
-	 * @deprecated Since 1.95. Please use {@link sap.ui.core.Component.create Component.create} instead.
 	 */
 	Core.prototype.createComponent = function(vComponent, sUrl, sId, mSettings) {
 
@@ -2228,7 +2166,7 @@ sap.ui.define([
 		}
 
 		// use deprecated factory for sync use case or when legacy options are used
-		return sap.ui.component(vComponent); // legacy-relevant
+		return sap.ui.component(vComponent);
 
 	};
 
@@ -2237,7 +2175,6 @@ sap.ui.define([
 	 *
 	 * @return {sap.ui.core.Component} instance of the current root component
 	 * @public
-	 * @deprecated Since 1.95. Please use {@link module:sap/ui/core/ComponentSupport} instead. See also {@link topic:82a0fcecc3cb427c91469bc537ebdddf Declarative API for Initial Components}.
 	 */
 	Core.prototype.getRootComponent = function() {
 		return this.oRootComponent;
@@ -2393,7 +2330,7 @@ sap.ui.define([
 			Log.debug("resolve Dependencies to " + sDepLib, null, METHOD);
 			if ( mLoadedLibraries[sDepLib] !== true ) {
 				Log.warning("Dependency from " + sLibName + " to " + sDepLib + " has not been resolved by library itself", null, METHOD);
-				this.loadLibrary(sDepLib); // legacy-relevant: Sync fallback for missing manifest/AMD dependencies
+				this.loadLibrary(sDepLib);
 			}
 		}
 
@@ -3370,7 +3307,6 @@ sap.ui.define([
 	 * @return {sap.ui.core.Component} the component for the given id
 	 * @function
 	 * @public
-	 * @deprecated Since 1.95. Please use {@link sap.ui.core.Component.get Component.get} instead.
 	 */
 	Core.prototype.getComponent = Component.registry.get;
 
@@ -3389,7 +3325,7 @@ sap.ui.define([
 				name: "Core.prototype.getTemplate"
 			};
 		});
-		var Template = sap.ui.requireSync('sap/ui/core/tmpl/Template'); // legacy-relevant
+		var Template = sap.ui.requireSync('sap/ui/core/tmpl/Template');
 		return Template.byId(sId);
 	};
 
@@ -3471,22 +3407,8 @@ sap.ui.define([
 	 * @public
 	 */
 	Core.prototype.attachIntervalTimer = function(fnFunction, oListener) {
-		Log.warning(
-			"Usage of sap.ui.getCore().attachIntervalTimer() is deprecated. " +
-			"Please use 'IntervalTrigger.addListener()' from 'sap/ui/core/IntervalTrigger' module instead.",
-			"Deprecation",
-			null,
-			function() {
-				return {
-					type: "sap.ui.core.Core",
-					name: "Core"
-				};
-			});
-
 		if (!oIntervalTrigger) {
-			// IntervalTrigger should be available via transitive dependency (sap/ui/core/ResizeHandler)
-			oIntervalTrigger = sap.ui.require("sap/ui/core/IntervalTrigger") ||
-				sap.ui.requireSync("sap/ui/core/IntervalTrigger"); // legacy-relevant: Sync fallback;
+			oIntervalTrigger = sap.ui.requireSync("sap/ui/core/IntervalTrigger");
 		}
 		oIntervalTrigger.addListener(fnFunction, oListener);
 	};
@@ -3830,7 +3752,7 @@ sap.ui.define([
 						name: "core-eventbus"
 					};
 				});
-				EventBus = sap.ui.requireSync('sap/ui/core/EventBus'); // legacy-relevant: fallback for missing dependency
+				EventBus = sap.ui.requireSync('sap/ui/core/EventBus');
 			}
 			var oEventBus = this.oEventBus = new EventBus();
 			this._preserveHandler = function(event) {

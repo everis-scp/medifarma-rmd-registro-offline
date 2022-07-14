@@ -4,7 +4,7 @@
   /* Set height, width, borders, and global font properties here */
   font-family: Arial, Helvetica, sans-serif;
   height: 300px;
-  margin: 0.25rem 0 0.25rem 0;
+  margin: 0;
 }
 .rules {
   /* Set height, width, borders, and global font properties here */
@@ -19,6 +19,7 @@
     line-height: normal;
     height: auto !important;
     padding: 0.412rem 0.75rem 0.412rem 0.75rem;
+    width: 100% !important;
 }
 .CodeMirror-rules-DT {
   /* Set height, width, borders, and global font properties here */

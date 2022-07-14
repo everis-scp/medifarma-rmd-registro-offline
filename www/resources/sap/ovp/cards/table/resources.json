@@ -3,26 +3,33 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 1519,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 677
 		},
 		{
 			"name": "Table-dbg.controller.js",
+			"size": 11019,
 			"isDebug": true
 		},
 		{
-			"name": "Table.controller.js"
+			"name": "Table.controller.js",
+			"size": 4118
 		},
 		{
-			"name": "Table.fragment.xml"
+			"name": "Table.fragment.xml",
+			"size": 1140
 		},
 		{
-			"name": "TableDashBoardLayout.fragment.xml"
+			"name": "TableDashBoardLayout.fragment.xml",
+			"size": 42358
 		},
 		{
-			"name": "TableEasyScanLayout.fragment.xml"
+			"name": "TableEasyScanLayout.fragment.xml",
+			"size": 6342
 		}
 	]
 }

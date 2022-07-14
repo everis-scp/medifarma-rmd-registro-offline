@@ -28,7 +28,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.numberEditor.NumberEditor
 	 * @author SAP SE
 	 * @since 1.72
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.72
@@ -55,15 +55,7 @@ sap.ui.define([
 		);
 	};
 
-	NumberEditor.configMetadata = Object.assign(
-		{},
-		BasePropertyEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.NUMBER"
-			}
-		}
-	);
+	NumberEditor.configMetadata = Object.assign({}, BasePropertyEditor.configMetadata);
 
 	NumberEditor.prototype.formatValue = function (sValue) {
 		if (_isNil(sValue) || isValidBindingString(sValue, false)) {

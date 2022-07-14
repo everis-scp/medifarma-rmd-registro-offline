@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 sap.ui.define(['./Filter', 'sap/base/Log'],
 	function(Filter, Log) {
 	"use strict";
@@ -198,40 +198,34 @@ sap.ui.define(['./Filter', 'sap/base/Log'],
 					bResult = false;
 					break;
 				}
-			} else if (bMatch) {
+			} else {
 				// if operator is OR, first matching filter breaks
-				bResult = true;
-				break;
+				if (bMatch) {
+					bResult = true;
+					break;
+				}
 			}
 		}
 		return bResult;
 	};
 
 	/**
-	 * Normalize filter value.
-	 *
-	 * @param {any} vValue
-	 *   The value to normalize
-	 * @param {boolean} [bCaseSensitive=false]
-	 *   Whether the case should be considered when normalizing; only relevant when
-	 *   <code>oValue</code> is a string
-	 *
-	 * @returns {any} The normalized value
+	 * Normalize filter value
 	 *
 	 * @private
 	 * @static
 	 */
-	FilterProcessor.normalizeFilterValue = function(vValue, bCaseSensitive){
+	FilterProcessor.normalizeFilterValue = function(oValue, bCaseSensitive){
 		var sResult;
 
-		if (typeof vValue == "string") {
+		if (typeof oValue == "string") {
 			if (bCaseSensitive === undefined) {
 				bCaseSensitive = false;
 			}
-			if (this._normalizeCache[bCaseSensitive].hasOwnProperty(vValue)) {
-				return this._normalizeCache[bCaseSensitive][vValue];
+			if (this._normalizeCache[bCaseSensitive].hasOwnProperty(oValue)) {
+				return this._normalizeCache[bCaseSensitive][oValue];
 			}
-			sResult = vValue;
+			sResult = oValue;
 			if (!bCaseSensitive) {
 				sResult = sResult.toUpperCase();
 			}
@@ -240,21 +234,17 @@ sap.ui.define(['./Filter', 'sap/base/Log'],
 			// http://www.w3.org/TR/2012/WD-charmod-norm-20120501/#sec-ChoiceNFC
 			sResult = sResult.normalize("NFC");
 
-			this._normalizeCache[bCaseSensitive][vValue] = sResult;
+			this._normalizeCache[bCaseSensitive][oValue] = sResult;
 			return sResult;
 		}
-		if (vValue instanceof Date) {
-			return vValue.getTime();
+		if (oValue instanceof Date) {
+			return oValue.getTime();
 		}
-		return vValue;
+		return oValue;
 	};
 
 	/**
-	 * Provides a JS filter function for the given filter.
-	 *
-	 * @param {sap.ui.model.Filter} oFilter The filter to provide the function for
-	 *
-	 * @returns {function} The filter function
+	 * Provides a JS filter function for the given filter
 	 * @private
 	 * @static
 	 */

@@ -5,23 +5,23 @@
 						 xmlns:sfi="sap.ui.comp.smartfield">
 
 
-	<sfi:SmartLabel id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Label"
-		   labelFor="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Value"
+	<Title id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Label"
+	text="{path: 'dataPoint>Title', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpandSimple'}"
 		   class="sapSmartTemplatesObjectPageDataPointLabel sapUiTinyMarginEnd"/>
 	<template:with path="headerFacet>Target" helper="sap.ui.model.odata.AnnotationHelper.gotoEntitySet"
 				   var="annotation">
 		<sfi:SmartField
 				id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Value"
 				contextEditable="false" uomEditable="false" enabled="true" clientSideMandatoryCheck="false"
+				ariaLabelledBy="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Label"
 				class="sapSmartTemplatesObjectPageDataPointValue {= ${dataPoint>Value/EdmType} === 'Edm.Byte' || ${dataPoint>Value/EdmType} === 'Edm.Decimal' || ${dataPoint>Value/EdmType} === 'Edm.Double' ||  ${dataPoint>Value/EdmType} === 'Edm.Float' ||  ${dataPoint>Value/EdmType} === 'Edm.Int16' ||  ${dataPoint>Value/EdmType} === 'Edm.Int32' || ${dataPoint>Value/EdmType} === 'Edm.Int64' ||  ${dataPoint>Value/EdmType} === 'Edm.SByte' ? 'sapSmartTemplatesObjectPageDataPointNumericValue' : 'sapSmartTemplatesObjectPageDataPointTextualValue'}"
-				value="{parts: [{path: 'dataPoint>Value'}, {path: 'entitySet>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpand'}"
-				textLabel="{path: 'dataPoint>Title', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpandSimple'}"
-				fetchValueListReadOnly="false">
+				value="{parts: [{path: 'dataPoint>Value'}, {path: 'entitySet>'}, {path: 'dataPoint>ValueFormat'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpandSimplePath'}"
+				fetchValueListReadOnly="{parts:[{path: 'parameter>/entityType'},{path: 'dataPoint>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getValueListReadOnly'}">
 			<sfi:semanticObjectController>
 				<smartlink:SemanticObjectController beforePopoverOpens="._templateEventHandlers.onBeforeSemanticObjectLinkPopoverOpens"
-													navigate="._templateEventHandlers.onSemanticObjectLinkPopoverLinkPressed"
 													navigationTargetsObtained="._templateEventHandlers.onSemanticObjectLinkNavigationTargetObtained"
-													forceLinkRendering="{parts: [{path: 'entitySet>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.hasQuickViewFacet'}"/>
+					                                beforeNavigationCallback="._templateEventHandlers.onBeforeSemanticObjectLinkNavigationCallback"
+													forceLinkRendering="{parts: [{path: 'entitySet>'},{path: 'parameter>/templateSpecific/targetEntities'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.hasQuickViewFacet'}"/>
 			</sfi:semanticObjectController>
 			<sfi:configuration>
 				<sfi:Configuration

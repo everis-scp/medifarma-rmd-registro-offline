@@ -70,14 +70,12 @@ sap.ui.define([],
 
 	ShellOverlayRenderer.renderSearch = function(rm, oControl) {
 		var iWidth = oControl._getSearchWidth();
-
-		rm.write("<div id='" + oControl.getId() + "-search' class='sapUiUfdShellOvrlySearch' ");
+		var sStyle = "";
 		if (iWidth > 0 && oControl._opening) {
-			rm.addStyle("width", iWidth + "px'");
-			rm.writeStyles();
+			sStyle = "style='width:" + iWidth + "px'";
 		}
-		rm.write("><div>");
 
+		rm.write("<div id='" + oControl.getId() + "-search' class='sapUiUfdShellOvrlySearch' " + sStyle + "><div>");
 		var oSearch = oControl.getSearch();
 		if (oSearch) {
 			rm.renderControl(oSearch);

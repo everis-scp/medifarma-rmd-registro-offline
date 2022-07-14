@@ -21,7 +21,7 @@ sap.ui.define([
 	 * @see sap.ui.core.DeclarativeSupport
 	 * @public
 	 * @since 1.7.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.core.plugin.DeclarativeSupport
 	 */
 	var DeclarativeSupportPlugin = function() {

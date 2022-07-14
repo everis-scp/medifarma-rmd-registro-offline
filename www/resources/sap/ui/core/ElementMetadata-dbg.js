@@ -23,7 +23,7 @@ sap.ui.define([
 	 *
 	 * @class
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 0.8.6
 	 * @alias sap.ui.core.ElementMetadata
 	 * @extends sap.ui.base.ManagedObjectMetadata
@@ -99,10 +99,8 @@ sap.ui.define([
 				name: sRendererName
 			};
 		});
-
-		// Relevant for all controls that don't maintain the renderer module in their dependencies
 		this._oRenderer =
-			sap.ui.requireSync(sRendererName.replace(/\./g, "/")) // legacy-relevant
+			sap.ui.requireSync(sRendererName.replace(/\./g, "/"))
 			|| ObjectPath.get(sRendererName);
 
 		return this._oRenderer;

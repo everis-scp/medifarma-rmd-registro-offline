@@ -29,7 +29,7 @@ function(View, TemplateViewRenderer, ViewType, Log) {
 	 * @extends sap.ui.core.mvc.View
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @deprecated Since version 1.56.0, use {@link sap.ui.core.mvc.XMLView} in combination with
@@ -71,7 +71,7 @@ function(View, TemplateViewRenderer, ViewType, Log) {
 		 */
 		sap.ui.templateview = function(sId, vView) {
 			Log.warning("sap.ui.core.mvc.TemplateView is deprecated. Use XMLView or JSView instead.");
-			return sap.ui.view(sId, vView, ViewType.Template); // legacy-relevant
+			return sap.ui.view(sId, vView, ViewType.Template);
 		};
 
 		/**

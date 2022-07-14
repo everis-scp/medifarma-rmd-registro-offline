@@ -26,6 +26,14 @@
         },
         "Dependencies": []
     },
+    "TrackingActivitiesSetting": {
+        "loadingMode": "byEvent",
+        "byEvent":{
+            "eventName": "loadTrackingActivitiesSetting",
+            "eventData": ""
+        },
+        "Dependencies": []
+    },
     "UsageAnalytics": {
         "loadingMode": "byEvent",
 
@@ -34,6 +42,26 @@
             "eventData": ""
         },
         "Dependencies": []
+    },
+    "MenuBar": {
+        "loadingMode": "byComponentCreate",
+
+        "byComponentCreate": {
+            "enabled": true,
+            "ui5ComponentOptions": {
+                "name": "sap.ushell.components.shell.MenuBar",
+                "manifest": true
+            },
+            "url": "sap/ushell/components/shell/MenuBar"
+        },
+        "configSwitch": [
+            {
+                "path":"/core/menu/enabled",
+                "assertionValue": true
+            }
+        ],
+        "userCanTrigger": false,
+        "canBeInterrupted": false
     },
     "Notifications": {
         "loadingMode": "byComponentCreate",
@@ -59,6 +87,20 @@
         "userCanTrigger": false,
         "canBeInterrupted": false
     },
+    "PostLoadingHeaderEnhancement": {
+        "loadingMode": "byComponentCreate",
+
+        "byComponentCreate": {
+            "enabled": true,
+            "ui5ComponentOptions": {
+                "name": "sap.ushell.components.shell.PostLoadingHeaderEnhancement",
+                "manifest": false
+            },
+            "url": "sap/ushell/components/shell/PostLoadingHeaderEnhancement"
+        },
+        "userCanTrigger": false,
+        "canBeInterrupted": false
+    },
     "MeArea": {
         "loadingMode": "byComponentCreate",
 
@@ -70,6 +112,26 @@
             },
             "url": "sap/ushell/components/shell/MeArea"
         },
+        "Dependencies": ["TrackingActivitiesSetting"],
+        "userCanTrigger": false,
+        "canBeInterrupted": false
+    },
+    "ProductSwitch": {
+        "loadingMode": "byComponentCreate",
+        "byComponentCreate": {
+            "enabled": true,
+            "ui5ComponentOptions": {
+                "name": "sap.ushell.components.shell.ProductSwitch",
+                "manifest": false
+            },
+            "url": "sap/ushell/components/shell/ProductSwitch"
+        },
+        "configSwitch": [
+            {
+                "path": "/core/productSwitch/enabled",
+                "assertionValue": true
+            }
+        ],
         "userCanTrigger": false,
         "canBeInterrupted": false
     },
@@ -79,10 +141,10 @@
         "byComponentCreate": {
             "enabled": true,
             "ui5ComponentOptions": {
-                "name": "sap.ushell.components.shell.UserSettings",
+                "name": "sap.ushell.components.shell.Settings",
                 "manifest": false
             },
-            "url": "sap/ushell/components/shell/UserSettings"
+            "url": "sap/ushell/components/shell/Settings"
         },
         "userCanTrigger": false,
         "canBeInterrupted": false
@@ -131,6 +193,8 @@
     },
     "WarmupPlugins": {
         "loadingMode": "byEvent",
+
+        "excludedFLPStates": ["app"],
 
         "byEvent": {
             "eventName": "loadWarmupPlugins",

@@ -21,8 +21,7 @@ sap.ui.define([
         "sap/ui/mdc/p13n/subcontroller/ChartItemController",
         "sap/ui/mdc/p13n/subcontroller/SortController",
         "sap/ui/base/ManagedObjectObserver",
-        "sap/ui/mdc/chartNew/DrillBreadcrumbsNew",
-        "sap/ui/mdc/actiontoolbar/ActionToolbarAction"
+        "sap/ui/mdc/chartNew/DrillBreadcrumbsNew"
     ],
     function (
         Core,
@@ -41,8 +40,7 @@ sap.ui.define([
         ChartItemController,
         SortController,
         ManagedObjectObserver,
-        Breadcrumbs,
-        ActionToolbarAction
+        Breadcrumbs
     ) {
         "use strict";
 
@@ -59,7 +57,7 @@ sap.ui.define([
          * @class The Chart control creates a chart based on metadata and the configuration specified.
          * @extends sap.ui.mdc.Control
          * @author SAP SE
-         * @version 1.96.9
+         * @version 1.93.4
          * @constructor
          * @experimental As of version ...
          * @private
@@ -70,7 +68,6 @@ sap.ui.define([
         var Chart = Control.extend("sap.ui.mdc.ChartNew", /** @lends sap.ui.mdc.ChartNew.prototype */ {
             metadata: {
                 library: "sap.ui.mdc",
-                designtime: "sap/ui/mdc/designtime/chart/ChartNew.designtime",
                 interfaces: [
                     "sap.ui.mdc.IxState"
                 ],
@@ -222,7 +219,7 @@ sap.ui.define([
                         type: "sap.ui.core.Control",
                         multiple: true,
                         forwarding: {
-                            getter: "_getToolbar",
+                            idSuffix: "--toolbar",
                             aggregation: "actions"
                         }
                     },
@@ -325,7 +322,7 @@ sap.ui.define([
 
         Chart.prototype.setP13nMode = function(aMode) {
             var aSortedKeys = null;
-            if (aMode && aMode.length >= 1){
+            if (aMode && aMode.length > 1){
                 aSortedKeys = [];
                 var mKeys = aMode.reduce(function(mMap, sKey, iIndex){
                     mMap[sKey] = true;
@@ -368,10 +365,7 @@ sap.ui.define([
             if (aMode && aMode.length > 0) {
                 aMode.forEach(function(sMode){
                     var sKey = sMode;
-                    var oController = mRegistryOptions[sMode];
-                    if (oController) {
-                        oRegisterConfig.controller[sKey] = oController;
-                    }
+                    oRegisterConfig.controller[sKey] = mRegistryOptions[sMode];
                 });
 
                 this.getEngine().registerAdaptation(this, oRegisterConfig);
@@ -389,6 +383,18 @@ sap.ui.define([
          * @ui5-restricted sap.ui.mdc
          */
         Chart.prototype.applySettings = function (mSettings, oScope) {
+			// Note: In the mdc.Chart control metadata, the "action" aggregation
+			// is defined as a forwarded aggregation.
+			// However, the automatic forwarding of aggregations only works when
+			// the target aggregation exists.
+			// So, the actions are removed from the settings argument to prevent
+			// an exception to happen when an aggregation is forwarded to a
+			// target control that has not been created.
+			if (mSettings) {
+				this._aInitialToolbarActions = mSettings.actions;
+				delete mSettings.actions;
+			}
+
             Control.prototype.applySettings.apply(this, arguments);
 
             this.initializedPromise = new Promise(function (resolve, reject) {
@@ -446,7 +452,7 @@ sap.ui.define([
             }.bind(this));
 
             //independent from fetchProperties
-            this._getToolbar().createToolbarContent(this);
+            this._createToolbar();
         };
 
         /**
@@ -480,28 +486,10 @@ sap.ui.define([
 
         };
 
-        Chart.prototype.setHeight = function(iHeight) {
-            try {
-                this.getControlDelegate().adjustChartHeight(this);
-            } catch (oError) {
-                //No need to do anything as correct height will be calculated anyways once inner chart is ready
-            }
-
-            this.setProperty("height", iHeight);
-
-            return this;
-        };
-
         Chart.prototype._createBreadcrumbs = function () {
             this._oBreadcrumbs = new Breadcrumbs(this.getId() + "--breadcrumbs");
             this._oBreadcrumbs.updateDrillBreadcrumbs(this, this.getControlDelegate().getDrillableItems(this));
             this.setAggregation("_breadcrumbs", this._oBreadcrumbs);
-
-            this._oBreadcrumbs.addEventDelegate({
-                onAfterRendering: function() {
-                    this.getControlDelegate().adjustChartHeight(this);
-                }.bind(this)
-            });
         };
 
         /**
@@ -533,41 +521,22 @@ sap.ui.define([
         };
 
         /**
-         * Gets the adaption UI for the p13n dialog
-         * @returns {Prmoise} promise that resolves with UI
-         */
-        Chart.prototype.getAdaptationUI = function () {
-            return this.getControlDelegate().getAdaptionUI(this);
-        };
-
-        /**
          * Propagates a change on the "item" aggregation to the inner chart via the delegate
          * The delegate must then update the inner chart accordingly
          *
          * @param {object} oChange the change object from the ManagedObjectModel observer
          */
         Chart.prototype._propagateItemChangeToInnerChart = function (oChange) {
-
-            if (this._bIsDestroyed){
-                return; //Don't propagate changes when CHart is destroyed
-            }
-
             this.setBusy(true);
             switch (oChange.mutation) {
 
                 case "insert":
-                    var iIndex;
+                    var iIndex = this.getItems().indexOf(oChange.child);
 
-                    if (oChange.child && oChange.child.getType()) {
-                        iIndex = this.getItems().filter(function(oItem){return oItem.getType() === oChange.child.getType();}).indexOf(oChange.child);
-                    } else {
-                        iIndex = this.getItems().indexOf(oChange.child);
-                    }
-
-                    this.getControlDelegate().insertItemToInnerChart(this, oChange.child, iIndex);
+                    this.getControlDelegate().insertItemToInnerChart(oChange.child, iIndex);
                     break;
                 case "remove":
-                    this.getControlDelegate().removeItemFromInnerChart(this, oChange.child);
+                    this.getControlDelegate().removeItemFromInnerChart(oChange.child);
                     break;
                 default:
                     Log.error("Unknown mutation on MDC Chart Item Aggregation. This will not sync to inner chart!");
@@ -601,19 +570,22 @@ sap.ui.define([
 
             this.setBusy(true);
 
-            if (!this.getControlDelegate().getInnerChartBound(this)) {
+            if (!this.getControlDelegate().getInnerChartBound()) {
                 this._createContentfromPropertyInfos();
                 return;
             }
 
-            var oBindingInfo = this.getControlDelegate()._getBindingInfo(this);
+            var oBindingInfo = this.oBindData ? this.oBindData : this.getControlDelegate()._getBindingInfo(this);
 
             if (oBindingInfo) {
                 oBindingInfo.sorter = this._getSorters();
             }
 
             this.getControlDelegate().updateBindingInfo(this, oBindingInfo); //Applies filters
-            this.getControlDelegate().rebindChart(this, oBindingInfo);
+            //TODO: Temporary workaround, find a solution to handle binding info for inner chart
+            this.getControlDelegate().rebindChart(this, oBindingInfo, this._innerChartDataLoadComplete.bind(this));
+
+            this._updateToolbar();
         };
 
         /**
@@ -621,17 +593,24 @@ sap.ui.define([
          *
          * @private
          */
-        Chart.prototype._getToolbar = function () {
-            if (this.getAggregation("_toolbar")) {
-                return this.getAggregation("_toolbar");
-            } else {
-                var oToolbar = new ChartToolbar(this.getId() + "--toolbar", {
-                    design: "Transparent"
-                });
+        Chart.prototype._createToolbar = function () {
+            var toolbar = new ChartToolbar(this.getId() + "--toolbar", {
+                design: "Transparent"
+            });
 
-                this.setAggregation("_toolbar", oToolbar);
-                return oToolbar;
-            }
+            toolbar.createToolbarContent(this);
+
+            this.setAggregation("_toolbar", toolbar);
+        };
+
+        /**
+         * Gets initial actions for toolbar as they cannot not be forwarded on init due to sorting issues
+         * @returns {array} intial actions
+         *
+         * @private
+         */
+        Chart.prototype._getInitialToolbarActions = function() {
+            return this._aInitialToolbarActions ? this._aInitialToolbarActions : [];
         };
 
         /**
@@ -655,7 +634,7 @@ sap.ui.define([
          */
         Chart.prototype._getInnerChart = function () {
             if (this._bInnerChartReady) {
-                return this.getControlDelegate().getInnerChart(this);
+                return this.getControlDelegate().getInnerChart();
             } else {
                 Log.error("Trying to acces inner chart while inner chart is not yet initialized!");
             }
@@ -719,7 +698,7 @@ sap.ui.define([
                 iValue = 10;
             }
 
-            this.getControlDelegate().zoomIn(this, iValue);
+            this.getControlDelegate().zoomIn(iValue);
         };
 
         /**
@@ -735,7 +714,7 @@ sap.ui.define([
                 iValue = 10;
             }
 
-            this.getControlDelegate().zoomOut(this, iValue);
+            this.getControlDelegate().zoomOut(iValue);
         };
 
         /**
@@ -752,19 +731,11 @@ sap.ui.define([
          * @ui5-restricted sap.ui.mdc, sap.fe
          */
         Chart.prototype.getZoomState = function () {
-            return this.getControlDelegate().getZoomState(this);
+            return this.getControlDelegate().getZoomState();
         };
 
         Chart.prototype.getSelectionHandler = function () {
-            return this.getControlDelegate().getInnerChartSelectionHandler(this);
-        };
-
-        Chart.prototype.getChartTypeLayoutConfig = function() {
-            return this.getControlDelegate().getChartTypeLayoutConfig();
-        };
-
-        Chart.prototype.getAllowedRolesForKinds = function() {
-            return this.getControlDelegate().getAllowedRolesForKinds();
+            return this.getControlDelegate().getInnerChartSelectionHandler();
         };
 
         /**
@@ -781,7 +752,7 @@ sap.ui.define([
 
             //Skip if no control delegate; gets propagated by _propagatePropertiesToInnerChart after init
             try {
-                this.getControlDelegate().setLegendVisible(this, bVisible);
+                this.getControlDelegate().setLegendVisible(bVisible);
             } catch (e) {
                 Log.info("Trying to set legend visiblity for Chart before delegate was initialized");
             }
@@ -800,18 +771,12 @@ sap.ui.define([
 
             //Skip if no control delegate; gets propagated by _propagatePropertiesToInnerChart after init
             try {
-                this.getControlDelegate().setChartTooltipVisibility(this, bValue);
+                this.getControlDelegate().setChartTooltipVisibility(bValue);
             } catch (e) {
                 Log.info("Trying to set tooltip visibility before delegate was initialized");
             }
 
             return this;
-        };
-
-        Chart.prototype.destroy = function() {
-            this._bIsDestroyed = true;
-
-            Control.prototype.destroy.apply(this, arguments);
         };
 
         /**
@@ -825,7 +790,10 @@ sap.ui.define([
         Chart.prototype._showDrillDown = function (oDrillBtn) {
             if (DrillStackHandler) {
 
-                DrillStackHandler.createDrillDownPopover(this);
+                if (!this._oDrillDownPopover) {
+                    DrillStackHandler.createDrillDownPopover(this);
+                }
+
                 return DrillStackHandler.showDrillDownPopover(this, oDrillBtn);
             }
 
@@ -870,7 +838,7 @@ sap.ui.define([
             var mInfo;
 
             try {
-                mInfo = this.getControlDelegate().getChartTypeInfo(this);
+                mInfo = this.getControlDelegate().getChartTypeInfo();
             } catch (error) {
                 //Inner chart is not yet ready
                 if (!mInfo) {
@@ -894,7 +862,7 @@ sap.ui.define([
          * @ui5-restricted Fiori Elements
          */
         Chart.prototype.getAvailableChartTypes = function () {
-            return this.getControlDelegate().getAvailableChartTypes(this);
+            return this.getControlDelegate().getAvailableChartTypes();
         };
 
 
@@ -907,7 +875,7 @@ sap.ui.define([
             this.setProperty("chartType", sChartType);
 
             try {
-                this.getControlDelegate().setChartType(this, sChartType);
+                this.getControlDelegate().setChartType(sChartType);
             } catch (e) {
                 Log.info("Trying to set chart type for Chart before delegate was initialized");
             }
@@ -934,14 +902,15 @@ sap.ui.define([
          *
          * @private
          */
-        Chart.prototype._innerChartDataLoadComplete = function (mArguments) {
+        //TODO: Pass this as an callback function to the delegate instead of calling it form the delegate directly
+        Chart.prototype._innerChartDataLoadComplete = function () {
             this.setBusy(false);
             this._renderOverlay(false);
 
-            this.getControlDelegate().requestToolbarUpdate(this);
+            this._updateToolbar();
 
             this.fireEvent("innerChartLoadedData ", {
-                innerChart: this.getControlDelegate().getInnerChart(this)
+                innerChart: this.getControlDelegate().getInnerChart()
             });
         };
 
@@ -1073,7 +1042,7 @@ sap.ui.define([
 		 * @ui5-restricted Fiori Elements, sap.ui.mdc
 		 */
 		Chart.prototype._onFiltersChanged = function(oEvent) {
-			if (this._bInnerChartReady && this.getControlDelegate() && this.getControlDelegate().getInnerChartBound(this) && oEvent.getParameter("conditionsBased")) {
+			if (this._bInnerChartReady && this.getControlDelegate() && this.getControlDelegate().getInnerChartBound() && oEvent.getParameter("conditionsBased")) {
 				this._renderOverlay(true);
 			}
 		};
@@ -1088,9 +1057,9 @@ sap.ui.define([
 		 */
 		Chart.prototype._renderOverlay = function(bShow) {
 
-			if (this.getControlDelegate().getInnerChart(this)) {
+			if (this.getControlDelegate().getInnerChart()) {
 
-				var $this = this.getControlDelegate().getInnerChart(this).$(), $overlay = $this.find(".sapUiMdcChartOverlay");
+				var $this = this.getControlDelegate().getInnerChart().$(), $overlay = $this.find(".sapUiMdcChartOverlay");
 				if (bShow && $overlay.length === 0) {
 					$overlay = jQuery("<div>").addClass("sapUiOverlay sapUiMdcChartOverlay").css("z-index", "1");
 					$this.append($overlay);
@@ -1099,16 +1068,6 @@ sap.ui.define([
 				}
 			}
 		};
-
-        Chart.prototype.addAction = function(oControl) {
-            if (oControl.getMetadata().getName() !== "sap.ui.mdc.actiontoolbar.ActionToolbarAction") {
-                oControl = new ActionToolbarAction(oControl.getId() + "-action", {
-                    action: oControl
-                });
-            }
-
-            return Control.prototype.addAggregation.apply(this, ["actions", oControl]);
-        };
 
         return Chart;
     }, true);

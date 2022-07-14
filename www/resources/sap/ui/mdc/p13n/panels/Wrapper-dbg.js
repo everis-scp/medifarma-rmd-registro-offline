@@ -34,7 +34,7 @@ sap.ui.define([
      * @extends sap.ui.mdc.ui.Container
      *
      * @author SAP SE
-     * @version 1.96.9
+     * @version 1.93.4
      *
      * @private
      * @ui5-restricted sap.ui.mdc

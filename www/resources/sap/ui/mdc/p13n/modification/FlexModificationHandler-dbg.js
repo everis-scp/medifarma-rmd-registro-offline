@@ -54,11 +54,8 @@ sap.ui.define([
 
     FlexModificationHandler.prototype.reset = function(mPropertyBag, oModificationPayload){
         var sPersistenceMode = oModificationPayload.mode;
-
         var bIsGlobal = sPersistenceMode === mode.Global;
-        var bIsAutoGlobal = !oModificationPayload.hasVM && oModificationPayload.hasPP && sPersistenceMode === mode.Auto;
-
-        return (bIsGlobal || bIsAutoGlobal) ? FlexUtil.reset.call(this, mPropertyBag) : FlexUtil.restore.call(this, mPropertyBag);
+        return bIsGlobal ? FlexUtil.reset.call(this, mPropertyBag) : FlexUtil.restore.call(this, mPropertyBag);
     };
 
     FlexModificationHandler.prototype.isModificationSupported = function(mPropertyBag, oModificationPayload){

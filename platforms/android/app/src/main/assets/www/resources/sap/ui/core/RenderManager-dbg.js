@@ -182,7 +182,7 @@ sap.ui.define([
 	 *
 	 * @extends Object
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.core.RenderManager
 	 * @public
 	 */
@@ -202,9 +202,7 @@ sap.ui.define([
 			oStringInterface = {},         // holds old string based rendering API and the string implementation of the new semantic rendering API
 			oDomInterface = {},            // semantic rendering API for the controls whose renderer provides apiVersion=2 marker
 			aRenderingStyles = [],         // during string-based rendering, stores the styles that couldn't be set via style attribute due to CSP restrictions
-			oPatcher = new Patcher(),      // the Patcher instance to handle in-place DOM patching
-			sLastStyleMethod,
-			sLastClassMethod;
+			oPatcher = new Patcher();      // the Patcher instance to handle in-place DOM patching
 
 		/**
 		 * Sets the focus handler to be used by the RenderManager.
@@ -221,7 +219,6 @@ sap.ui.define([
 		 * Reset all rendering related buffers.
 		 */
 		function reset() {
-			assert(!(sLastStyleMethod = sLastClassMethod = ""));
 			aBuffer = that.aBuffer = [];
 			aRenderedControls = that.aRenderedControls = [];
 			aStyleStack = that.aStyleStack = [{}];
@@ -250,21 +247,14 @@ sap.ui.define([
 
 		function assertValidAttr(sAttr) {
 			assertValidName(sAttr, "attr");
-			assert((sAttr != "class" || sLastClassMethod != "class" && (sLastClassMethod = "attr"))
-				&& (sAttr != "style" || sLastStyleMethod != "style" && (sLastStyleMethod = "attr")),
-				"Attributes 'class' and 'style' must not be written when the methods with the same name"
-				+ " have been called for the same element already");
+			assert(sAttr != "class" && sAttr != "style", "Attributes 'class' and 'style' must not be written, instead use dedicated 'class' or 'style' method");
 		}
 
 		function assertValidClass(sClass) {
-			assert(sLastClassMethod != "attr" && (sLastClassMethod = "class"),
-				"Method class() must not be called after the 'class' attribute has been written for the same element");
 			assert(typeof sClass == "string" && !/\s/.test(sClass) && arguments.length === 1, "Method 'class' must be called with exactly one class name");
 		}
 
 		function assertValidStyle(sStyle) {
-			assert(sLastStyleMethod != "attr" && (sLastStyleMethod = "style"),
-				"Method style() must not be called after the 'style' attribute has been written for the same element");
 			assert(sStyle && typeof sStyle == "string" && !/\s/.test(sStyle), "Method 'style' must be called with a non-empty string name");
 		}
 
@@ -489,7 +479,6 @@ sap.ui.define([
 		this.openStart = function(sTagName, vControlOrId) {
 			assertValidName(sTagName, "tag");
 			assertOpenTagHasEnded();
-			assert(!(sLastStyleMethod = sLastClassMethod = ""));
 			sOpenTag = sTagName;
 
 			this.write("<" + sTagName);
@@ -652,11 +641,7 @@ sap.ui.define([
 		this.attr = function(sName, vValue) {
 			assertValidAttr(sName);
 
-			if (sName == "style") {
-				aStyleStack[aStyleStack.length - 1].aStyle = [vValue];
-			} else {
-				this.writeAttributeEscaped(sName, vValue);
-			}
+			this.writeAttributeEscaped(sName, vValue);
 			return this;
 		};
 
@@ -788,9 +773,6 @@ sap.ui.define([
 		 * <li><code>alt: ""</code></li>
 		 * </ul>
 		 *
-		 * <b>Note:</b> This function requires the {@link sap.ui.core.IconPool} module. Ensure that the module is
-		 * loaded before this function is called to avoid syncXHRs.
-		 *
 		 * @param {sap.ui.core.URI} sURI URI of an image or of an icon registered in {@link sap.ui.core.IconPool}
 		 * @param {array|string} [aClasses] Additional classes that are added to the rendered tag
 		 * @param {object} [mAttributes] Additional attributes that will be added to the rendered tag.
@@ -810,7 +792,6 @@ sap.ui.define([
 		oDomInterface.openStart = function(sTagName, vControlOrId) {
 			assertValidName(sTagName, "tag");
 			assertOpenTagHasEnded();
-			assert(!(sLastStyleMethod = sLastClassMethod = ""));
 			sOpenTag = sTagName;
 
 			if (!vControlOrId) {
@@ -1885,19 +1866,8 @@ sap.ui.define([
 	 * @deprecated Since 1.92. Instead use {@link sap.ui.core.RenderManager#icon} of the {@link sap.ui.core.RenderManager Semantic Rendering API}.
 	 */
 	RenderManager.prototype.writeIcon = function(sURI, aClasses, mAttributes){
-		var IconPool = sap.ui.require("sap/ui/core/IconPool");
-		if (!IconPool) {
-			Log.warning("Synchronous loading of IconPool due to sap.ui.core.RenderManager#icon call. " +
-				"Ensure that 'sap/ui/core/IconPool is loaded before this function is called" , "SyncXHR", null, function() {
-				return {
-					type: "SyncXHR",
-					name: "rendermanager-icon"
-				};
-			});
-			IconPool = sap.ui.requireSync("sap/ui/core/IconPool"); // legacy-relevant: Sync fallback
-		}
-
-		var bIconURI = IconPool.isIconURI(sURI),
+		var IconPool = sap.ui.requireSync("sap/ui/core/IconPool"),
+			bIconURI = IconPool.isIconURI(sURI),
 			bAriaLabelledBy = false,
 			sProp, oIconInfo, mDefaultAttributes, sLabel, sInvTextId;
 

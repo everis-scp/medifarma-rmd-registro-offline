@@ -4,8 +4,8 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 sap.ui.define([
-	"sap/ui/mdc/filterbar/p13n/GroupContainer", "sap/ui/mdc/filterbar/p13n/FilterGroupLayout","sap/ui/mdc/filterbar/p13n/TableContainer", "sap/ui/mdc/filterbar/p13n/FilterColumnLayout", "sap/ui/mdc/filterbar/FilterBarBase", "sap/ui/mdc/filterbar/FilterBarBaseRenderer"
-], function( GroupContainer, FilterGroupLayout, TableContainer, FilterColumnLayout, FilterBarBase, FilterBarBaseRenderer) {
+	"sap/ui/mdc/filterbar/p13n/GroupContainer", "sap/ui/mdc/filterbar/p13n/FilterGroupLayout","sap/ui/mdc/filterbar/p13n/TableContainer", "sap/ui/mdc/filterbar/p13n/FilterColumnLayout", "sap/ui/mdc/filterbar/FilterBarBase", "sap/ui/mdc/filterbar/FilterBarBaseRenderer", 'sap/base/Log'
+], function( GroupContainer, FilterGroupLayout, TableContainer, FilterColumnLayout, FilterBarBase, FilterBarBaseRenderer, Log) {
 	"use strict";
 
 	/**
@@ -18,7 +18,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.mdc.filterbar.FilterBarBase
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @since 1.80.0
@@ -127,13 +127,6 @@ sap.ui.define([
 	AdaptationFilterBar.prototype.applyConditionsAfterChangesApplied = function() {
 		FilterBarBase.prototype.applyConditionsAfterChangesApplied.apply(this, arguments);
 		this.triggerSearch();
-	};
-
-
-	AdaptationFilterBar.prototype.initPropertyHelper = function(){
-		return this.getAdaptationControl().awaitPropertyHelper().then(function(oPropertyHelper) {
-			this._oPropertyHelper = oPropertyHelper;
-		}.bind(this));
 	};
 
 	/**
@@ -312,6 +305,54 @@ sap.ui.define([
 		}
 		this._mOriginalsForClone = null;
 		this.oAdaptationModel = null;
+	};
+
+	AdaptationFilterBar.prototype._retrieveMetadata = function() {
+
+		if (this._oMetadataAppliedPromise) {
+			return this._oMetadataAppliedPromise;
+		}
+
+		this._fResolveMetadataApplied = undefined;
+		this._oMetadataAppliedPromise = new Promise(function(resolve) {
+			this._fResolveMetadataApplied = resolve;
+		}.bind(this));
+
+		var oAdaptationControl = this.getAdaptationControl();
+
+		Promise.all([oAdaptationControl && oAdaptationControl.awaitControlDelegate && oAdaptationControl.awaitControlDelegate(), this.initControlDelegate()]).then(function() {
+			if (!this._bIsBeingDestroyed) {
+
+				this._aProperties = [];
+
+				var fnResolveMetadata = function() {
+					this._fResolveMetadataApplied();
+					this._fResolveMetadataApplied = null;
+				}.bind(this);
+
+				var oParentDelegate = oAdaptationControl.getControlDelegate();
+
+				if (oParentDelegate && oParentDelegate.fetchProperties) {
+					try {
+						oParentDelegate.fetchProperties(oAdaptationControl).then(function(aProperties) {
+							this._aProperties = aProperties;
+							fnResolveMetadata();
+						}.bind(this), function(sMsg) {
+							Log.error(sMsg);
+							fnResolveMetadata();
+						});
+					} catch (ex) {
+						Log.error("Exception during fetchProperties occured: " + ex.message);
+						fnResolveMetadata();
+					}
+				} else {
+					Log.error("Provided delegate '" + this.getDelegate().path + "' not valid.");
+					fnResolveMetadata();
+				}
+			}
+		}.bind(this));
+
+		return this._oMetadataAppliedPromise;
 	};
 
 	return AdaptationFilterBar;

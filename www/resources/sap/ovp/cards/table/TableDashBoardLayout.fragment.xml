@@ -20,15 +20,21 @@
                     <template:then>
                         <template:if test="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataField'}">
                             <template:then>
-                                <Column styleClass="sapTableColumnHide" visible="false">
-                                    <Text text="{path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField>', 
+                                formatter: 'sap.ovp.cards.AnnotationHelper.setAlignmentForDataPoint'} === 'Right' ? 'Right' : 'Left'}">
+                                    <Text 
+                                    text="{path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                    wrapping="true"
+                                    wrappingType="Hyphenated"/>
                                 </Column>
                             </template:then>
                             <template:elseif
                                     test="{= ${dataField>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAnnotation'}">
                                 <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center' ? 'Center' : ${dataField>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'Left' : 'Right'}">
                                     <Text class="displayBlock {= ${path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === Center ? 'textAlignCenter' : ${dataField>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'textAlignLeft' : 'textAlignRight'}"
-                                          text="{path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                          text="{path: 'dataField>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                          wrapping="true"
+                                          wrappingType="Hyphenated"/>
                                 </Column>
                             </template:elseif>
                         </template:if>
@@ -44,15 +50,20 @@
                     <template:then>
                         <template:if test="{= ${dataField1>RecordType} === 'com.sap.vocabularies.UI.v1.DataField'}">
                             <template:then>
-                                <Column styleClass="sapTableColumnHide" visible="false">
-                                    <Text text="{path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField1>', 
+                                formatter: 'sap.ovp.cards.AnnotationHelper.setAlignmentForDataPoint'} === 'Right' ? 'Right' : 'Left'}">
+                                    <Text text="{path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                          wrapping="true"
+                                          wrappingType="Hyphenated"/>
                                 </Column>
                             </template:then>
                             <template:elseif
                                     test="{= ${dataField1>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAnnotation'}">
                                 <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center' ? 'Center' : ${dataField1>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'Left' : 'Right'}">
                                     <Text class="displayBlock {= ${path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center' ? 'textAlignCenter' : ${dataField1>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'textAlignLeft' : 'textAlignRight'}"
-                                          text="{path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                          text="{path: 'dataField1>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                          wrapping="true"
+                                          wrappingType="Hyphenated"/>
                                 </Column>
                             </template:elseif>
                         </template:if>
@@ -68,15 +79,20 @@
                     <template:then>
                         <template:if test="{= ${dataField2>RecordType} === 'com.sap.vocabularies.UI.v1.DataField'}">
                             <template:then>
-                                <Column styleClass="sapTableColumnHide" visible="false">
-                                    <Text text="{path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField2>', 
+                                formatter: 'sap.ovp.cards.AnnotationHelper.setAlignmentForDataPoint'} === 'Right' ? 'Right' : 'Left'}">
+                                    <Text text="{path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                        wrapping="true"
+                                        wrappingType="Hyphenated"/>
                                 </Column>
                             </template:then>
                             <template:elseif
                                     test="{= ${dataField2>RecordType} === 'com.sap.vocabularies.UI.v1.DataFieldForAnnotation'}">
                                 <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center' ? 'Center' : ${dataField2>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'Left' : 'Right'}">
                                     <Text class="displayBlock {= ${path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center' ? 'textAlignCenter' : ${dataField2>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'textAlignLeft' : 'textAlignRight'}"
-                                          text="{path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                          text="{path: 'dataField2>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                          wrapping="true"
+                                          wrappingType="Hyphenated"/>
                                 </Column>
                             </template:elseif>
                         </template:if>
@@ -91,8 +107,11 @@
                     <template:then>
                         <template:if test="{= ${dataField3>RecordType} === 'com.sap.vocabularies.UI.v1.DataField'}">
                             <template:then>
-                                <Column styleClass="sapTableColumnHide" visible="false">
-                                    <Text text="{path: 'dataField3>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                <Column styleClass="sapTableColumnHide" visible="false" hAlign="{= ${path: 'dataField3>', 
+                                formatter: 'sap.ovp.cards.AnnotationHelper.setAlignmentForDataPoint'} === 'Right' ? 'Right' : 'Left'}">
+                                    <Text text="{path: 'dataField3>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                        wrapping="true"
+                                        wrappingType="Hyphenated"/>
                                 </Column>
                             </template:then>
                             <template:elseif
@@ -105,7 +124,9 @@
                                     formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Right' ? 'textAlignRight' : ${path: 'dataField3>', 
                                 formatter: 'sap.ovp.cards.AnnotationHelper.checkCriticalityGenericForTableStatus'} === 'Center'? 'textAlignCenter':
                                     ${dataField3>Target/AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') >= 0 ? 'textAlignLeft' : 'textAlignRight'}"
-                                          text="{path: 'dataField3>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"/>
+                                          text="{path: 'dataField3>', formatter: 'sap.ovp.cards.AnnotationHelper.getLabelForDataItem'}"
+                                          wrapping="true"
+                                          wrappingType="Hyphenated"/>
                                 </Column>
                             </template:elseif>
                         </template:if>

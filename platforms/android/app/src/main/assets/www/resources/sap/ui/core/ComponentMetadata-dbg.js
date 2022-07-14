@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @public
 	 * @class
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.9.2
 	 * @alias sap.ui.core.ComponentMetadata
 	 * @extends sap.ui.base.ManagedObjectMetadata
@@ -540,21 +540,10 @@ sap.ui.define([
 	 *
 	 * @return {string[]} Included files.
 	 * @public
-	 * @deprecated Since 1.27.1. For CSS, please use {@link sap.ui.core.Component#getManifestEntry}("/sap.ui5/resources/css").
+	 * @deprecated Since 1.27.1. Please use {@link sap.ui.core.Component#getManifestEntry}("/sap.ui5/resources")
 	 */
 	ComponentMetadata.prototype.getIncludes = function() {
-		Log.warning(
-			"Usage of sap.ui.core.ComponentMetadata.protoype.getIncludes() is deprecated. " +
-			"For CSS files, please use the '/sap.ui5/resources/css' section in your 'manifest.json'. ",
-			"Deprecation",
-			null,
-			function() {
-				return {
-					type: "sap.ui.core.ComponentMetadata",
-					name: this.getName()
-				};
-			}.bind(this));
-
+		// Log.warning("Usage of sap.ui.core.ComponentMetadata.protoype.getIncludes is deprecated!");
 		if (!this._aLegacyIncludes) {
 			var aIncludes = [],
 			    mResources = this.getManifestEntry("/sap.ui5/resources") || {},

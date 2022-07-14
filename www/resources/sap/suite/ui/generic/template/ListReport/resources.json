@@ -3,351 +3,541 @@
 	"resources": [
 		{
 			"name": "AnnotationHelper-dbg.js",
+			"size": 14233,
 			"isDebug": true
 		},
 		{
-			"name": "AnnotationHelper.js"
+			"name": "AnnotationHelper.js",
+			"size": 5541
+		},
+		{
+			"name": "AnnotationHelperSmartList-dbg.js",
+			"size": 11662,
+			"isDebug": true
+		},
+		{
+			"name": "AnnotationHelperSmartList.js",
+			"size": 4537
 		},
 		{
 			"name": "Component-dbg.js",
+			"size": 21948,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 7981
+		},
+		{
+			"name": "behaviour-dbg.js",
+			"size": 520,
+			"isDebug": true
+		},
+		{
+			"name": "behaviour.js",
+			"size": 232
 		},
 		{
 			"name": "controller/ControllerImplementation-dbg.js",
+			"size": 39869,
 			"isDebug": true
 		},
 		{
-			"name": "controller/ControllerImplementation.js"
+			"name": "controller/ControllerImplementation.js",
+			"size": 19082
 		},
 		{
 			"name": "controller/IappStateHandler-dbg.js",
+			"size": 62488,
 			"isDebug": true
 		},
 		{
-			"name": "controller/IappStateHandler.js"
+			"name": "controller/IappStateHandler.js",
+			"size": 18061
+		},
+		{
+			"name": "controller/MultiEditHandler-dbg.js",
+			"size": 12891,
+			"isDebug": true
+		},
+		{
+			"name": "controller/MultiEditHandler.js",
+			"size": 3397
 		},
 		{
 			"name": "controller/MultipleViewsHandler-dbg.js",
+			"size": 11799,
 			"isDebug": true
 		},
 		{
-			"name": "controller/MultipleViewsHandler.js"
+			"name": "controller/MultipleViewsHandler.js",
+			"size": 4418
 		},
 		{
-			"name": "controller/MultipleViewsMultipleTablesModeHelper-dbg.js",
+			"name": "controller/SmartListHandler-dbg.js",
+			"size": 1133,
 			"isDebug": true
 		},
 		{
-			"name": "controller/MultipleViewsMultipleTablesModeHelper.js"
+			"name": "controller/SmartListHandler.js",
+			"size": 577
 		},
 		{
-			"name": "controller/MultipleViewsSingleTableModeHelper-dbg.js",
+			"name": "controller/SmartTableHandler-dbg.js",
+			"size": 1202,
 			"isDebug": true
 		},
 		{
-			"name": "controller/MultipleViewsSingleTableModeHelper.js"
+			"name": "controller/SmartTableHandler.js",
+			"size": 610
+		},
+		{
+			"name": "controller/SmartTableOrListHandler-dbg.js",
+			"size": 1282,
+			"isDebug": true
+		},
+		{
+			"name": "controller/SmartTableOrListHandler.js",
+			"size": 623
 		},
 		{
 			"name": "controller/WorklistHandler-dbg.js",
+			"size": 5785,
 			"isDebug": true
 		},
 		{
-			"name": "controller/WorklistHandler.js"
+			"name": "controller/WorklistHandler.js",
+			"size": 1790
 		},
 		{
 			"name": "controllerFrameworkExtensions-dbg.js",
+			"size": 12377,
 			"isDebug": true
 		},
 		{
-			"name": "controllerFrameworkExtensions.js"
+			"name": "controllerFrameworkExtensions.js",
+			"size": 746
 		},
 		{
 			"name": "extensionAPI/ExtensionAPI-dbg.js",
+			"size": 9931,
 			"isDebug": true
 		},
 		{
-			"name": "extensionAPI/ExtensionAPI.js"
+			"name": "extensionAPI/ExtensionAPI.js",
+			"size": 1713
 		},
 		{
 			"name": "extensionAPI/NonDraftTransactionController-dbg.js",
+			"size": 4691,
 			"isDebug": true
 		},
 		{
-			"name": "extensionAPI/NonDraftTransactionController.js"
+			"name": "extensionAPI/NonDraftTransactionController.js",
+			"size": 1759
 		},
 		{
 			"name": "flexibility/ListReport.flexibility-dbg.js",
+			"size": 1680,
 			"isDebug": true
 		},
 		{
-			"name": "flexibility/ListReport.flexibility.js"
+			"name": "flexibility/ListReport.flexibility.js",
+			"size": 1144
 		},
 		{
 			"name": "i18n/i18n.properties",
+			"size": 6707,
 			"locale": "",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ar.properties",
+			"size": 7729,
 			"locale": "ar",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_bg.properties",
+			"size": 9185,
 			"locale": "bg",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ca.properties",
+			"size": 2937,
 			"locale": "ca",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_cs.properties",
+			"size": 3225,
 			"locale": "cs",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_cy.properties",
+			"size": 2929,
+			"locale": "cy",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_da.properties",
+			"size": 2721,
 			"locale": "da",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_de.properties",
+			"size": 3000,
 			"locale": "de",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_el.properties",
+			"size": 10131,
 			"locale": "el",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_en.properties",
+			"size": 2595,
 			"locale": "en",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_en_GB.properties",
+			"size": 2593,
+			"locale": "en_GB",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_en_US_sappsd.properties",
+			"size": 10247,
 			"locale": "en_US_sappsd",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_en_US_saprigi.properties",
+			"size": 21627,
+			"locale": "en_US_saprigi",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_en_US_saptrc.properties",
+			"size": 4113,
 			"locale": "en_US_saptrc",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_es.properties",
+			"size": 2951,
 			"locale": "es",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_es_MX.properties",
+			"size": 2984,
+			"locale": "es_MX",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_et.properties",
+			"size": 2844,
 			"locale": "et",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_fi.properties",
+			"size": 3017,
 			"locale": "fi",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_fr.properties",
+			"size": 3235,
 			"locale": "fr",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_fr_CA.properties",
+			"size": 3142,
+			"locale": "fr_CA",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_hi.properties",
+			"size": 9329,
 			"locale": "hi",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_hr.properties",
+			"size": 2834,
 			"locale": "hr",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_hu.properties",
+			"size": 3440,
 			"locale": "hu",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_id.properties",
+			"size": 2741,
+			"locale": "id",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_it.properties",
+			"size": 2764,
 			"locale": "it",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_iw.properties",
+			"size": 6919,
 			"locale": "iw",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ja.properties",
+			"size": 5343,
 			"locale": "ja",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_kk.properties",
+			"size": 8633,
 			"locale": "kk",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ko.properties",
+			"size": 4839,
 			"locale": "ko",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_lt.properties",
+			"size": 3208,
 			"locale": "lt",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_lv.properties",
+			"size": 3319,
 			"locale": "lv",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ms.properties",
+			"size": 2737,
 			"locale": "ms",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_nl.properties",
+			"size": 2761,
 			"locale": "nl",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_no.properties",
+			"size": 2724,
 			"locale": "no",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_pl.properties",
+			"size": 3085,
 			"locale": "pl",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_pt.properties",
+			"size": 3004,
 			"locale": "pt",
 			"raw": "i18n/i18n.properties"
 		},
 		{
+			"name": "i18n/i18n_pt_PT.properties",
+			"size": 2990,
+			"locale": "pt_PT",
+			"raw": "i18n/i18n.properties"
+		},
+		{
 			"name": "i18n/i18n_ro.properties",
+			"size": 3064,
 			"locale": "ro",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_ru.properties",
+			"size": 9266,
 			"locale": "ru",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_sh.properties",
+			"size": 2873,
 			"locale": "sh",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_sk.properties",
+			"size": 3247,
 			"locale": "sk",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_sl.properties",
+			"size": 2850,
 			"locale": "sl",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_sv.properties",
+			"size": 2797,
 			"locale": "sv",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_th.properties",
+			"size": 8984,
 			"locale": "th",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_tr.properties",
+			"size": 3178,
 			"locale": "tr",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_uk.properties",
+			"size": 8725,
 			"locale": "uk",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_vi.properties",
+			"size": 5519,
 			"locale": "vi",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_zh_CN.properties",
+			"size": 3726,
 			"locale": "zh_CN",
 			"raw": "i18n/i18n.properties"
 		},
 		{
 			"name": "i18n/i18n_zh_TW.properties",
+			"size": 3671,
 			"locale": "zh_TW",
 			"raw": "i18n/i18n.properties"
 		},
 		{
-			"name": "manifest.json"
+			"name": "manifest.json",
+			"size": 2194
 		},
 		{
-			"name": "view/ListReport.view.xml"
+			"name": "view/ListReport.view.xml",
+			"size": 809
 		},
 		{
-			"name": "view/fragments/BreakoutActions.fragment.xml"
+			"name": "view/fragments/BreakoutActions.fragment.xml",
+			"size": 1120
 		},
 		{
-			"name": "view/fragments/CRUDActionButtons.fragment.xml"
+			"name": "view/fragments/CRUDActionButtons.fragment.xml",
+			"size": 4956
 		},
 		{
-			"name": "view/fragments/DefaultVariant.fragment.xml"
+			"name": "view/fragments/DefaultVariant.fragment.xml",
+			"size": 2626
 		},
 		{
-			"name": "view/fragments/DeleteConfirmation.fragment.xml"
+			"name": "view/fragments/DeleteConfirmation.fragment.xml",
+			"size": 1293
 		},
 		{
-			"name": "view/fragments/DraftInfoBox.fragment.xml"
+			"name": "view/fragments/DraftInfoBox.fragment.xml",
+			"size": 1154
 		},
 		{
-			"name": "view/fragments/FullscreenPage.fragment.xml"
+			"name": "view/fragments/FullscreenPage.fragment.xml",
+			"size": 5850
 		},
 		{
-			"name": "view/fragments/IconTabBarWithSmartTable.fragment.xml"
+			"name": "view/fragments/HeaderCommands.fragment.xml",
+			"size": 377
 		},
 		{
-			"name": "view/fragments/MultipleViewsSingleTableMode.fragment.xml"
+			"name": "view/fragments/IconTabBarWithSmartTable.fragment.xml",
+			"size": 3429
 		},
 		{
-			"name": "view/fragments/MultipleViewsSingleTableModeItemCustomData.fragment.xml"
+			"name": "view/fragments/MultiEditConfirmation.fragment.xml",
+			"size": 497
 		},
 		{
-			"name": "view/fragments/SearchField.fragment.xml"
+			"name": "view/fragments/MultiEditDialog.fragment.xml",
+			"size": 411
 		},
 		{
-			"name": "view/fragments/SmartChart.fragment.xml"
+			"name": "view/fragments/MultipleViewsSingleTableMode.fragment.xml",
+			"size": 3144
 		},
 		{
-			"name": "view/fragments/SmartChartToolbar.fragment.xml"
+			"name": "view/fragments/MultipleViewsSingleTableModeItemCustomData.fragment.xml",
+			"size": 2447
 		},
 		{
-			"name": "view/fragments/SmartFilterBar.fragment.xml"
+			"name": "view/fragments/Placeholder.fragment.xml",
+			"size": 27852
 		},
 		{
-			"name": "view/fragments/SmartTable.fragment.xml"
+			"name": "view/fragments/SearchField.fragment.xml",
+			"size": 679
 		},
 		{
-			"name": "view/fragments/SmartTableToolbar.fragment.xml"
+			"name": "view/fragments/SmartChart.fragment.xml",
+			"size": 4691
 		},
 		{
-			"name": "view/fragments/TitleVariant.fragment.xml"
+			"name": "view/fragments/SmartChartToolbar.fragment.xml",
+			"size": 1543
+		},
+		{
+			"name": "view/fragments/SmartFilterBar.fragment.xml",
+			"size": 4733
+		},
+		{
+			"name": "view/fragments/SmartList.fragment.xml",
+			"size": 4996
+		},
+		{
+			"name": "view/fragments/SmartTable.fragment.xml",
+			"size": 18813
+		},
+		{
+			"name": "view/fragments/SmartTableOrList.fragment.xml",
+			"size": 577
+		},
+		{
+			"name": "view/fragments/SmartTableToolbar.fragment.xml",
+			"size": 4909
+		},
+		{
+			"name": "view/fragments/TableCommands.fragment.xml",
+			"size": 361
+		},
+		{
+			"name": "view/fragments/TitleVariant.fragment.xml",
+			"size": 2043
 		}
 	]
 }

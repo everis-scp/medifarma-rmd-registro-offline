@@ -27,7 +27,6 @@ sap.ui.define([], function () {
 			oDataTimestamp = oHeader.getAggregation("_dataTimestamp"),
 			bHasDataTimestamp = oHeader.getDataTimestamp() || oBindingInfos.dataTimestamp,
 			bLoading = oHeader.isLoading(),
-			oError = oHeader.getAggregation("_error"),
 			oToolbar = oHeader.getToolbar(),
 			sTabIndex = oHeader._isInsideGridContainer() ? "-1" : "0";
 
@@ -43,30 +42,14 @@ sap.ui.define([], function () {
 			oRm.class("sapFCardClickable");
 		}
 
-		if (oError) {
-			oRm.class("sapFCardHeaderError");
-		}
-
 		//Accessibility state
 		oRm.accessibilityState(oHeader, {
-			role: oHeader.getAriaRole(),
-			labelledby: { value: oHeader._getAriaLabelledBy(), append: true },
-			roledescription: { value: oHeader.getAriaRoleDescription(), append: true },
-			level: { value: oHeader.getAriaHeadingLevel() }
+			role: oHeader._sAriaRole,
+			labelledby: { value: oHeader._getHeaderAccessibility(), append: true },
+			roledescription: { value: oHeader._sAriaRoleDescritoion, append: true },
+			level: { value: oHeader._sAriaHeadingLevel }
 		});
 		oRm.openEnd();
-
-		oRm.openStart("div")
-			.class("sapFCardHeaderWrapper")
-			.openEnd();
-
-		if (oError) {
-			oRm.renderControl(oError);
-
-			oRm.close("div");
-			oRm.close("div");
-			return;
-		}
 
 		if (oHeader.getIconSrc() || oHeader.getIconInitials() || oBindingInfos.iconSrc) {
 			oRm.openStart("div")
@@ -137,8 +120,6 @@ sap.ui.define([], function () {
 				oRm.close("div"); //closes sapFCardHeaderTextSecondLine
 			}
 		}
-
-		oRm.close("div");
 
 		oRm.close("div");
 

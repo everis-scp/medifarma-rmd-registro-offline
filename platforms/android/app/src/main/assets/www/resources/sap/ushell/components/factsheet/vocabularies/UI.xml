@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
@@ -10,9 +9,6 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="UI" Namespace="com.sap.vocabularies.UI.v1">
       <Annotation Term="Core.Description">
         <String>Terms for presenting data in user interfaces</String>
-      </Annotation>
-      <Annotation Term="Core.Description" Qualifier="Published">
-        <String>Copyright (c) 2009-2017 SAP SE, All Rights Reserved</String>
       </Annotation>
 
       <!-- Semantic Views / Perspectives -->
@@ -154,19 +150,19 @@
       <ComplexType Name="CriticalityCalculationType">
         <Annotation Term="Core.Description">
           <String>
-              Direction: Target        
+              Direction: Target
                - Positive: ge ToleranceRangeLowValue and le ToleranceRangeHighValue
                - Critical: ge DeviationRangeLowValue  and lt ToleranceRangeLowValue or
                            gt ToleranceRangeHighValue and le DeviationRangeHighValue
                - Negative: lt DeviationRangeLowValue and gt DeviationRangeHighValue
-              Direction: Minimize        
+              Direction: Minimize
                - Positive: le ToleranceRangeHighValue
-               - Critical: gt ToleranceRangeHighValue and le DeviationRangeHighValue  
+               - Critical: gt ToleranceRangeHighValue and le DeviationRangeHighValue
                - Negative: gt DeviationRangeHighValue
-              Direction: Maximize        
-               - Positive: ge ToleranceRangeLowValue  
-               - Critical: lt ToleranceRangeLowValue and ge DeviationRangeLowValue   
-               - Negative: lt DeviationRangeLowValue    
+              Direction: Maximize
+               - Positive: ge ToleranceRangeLowValue
+               - Critical: lt ToleranceRangeLowValue and ge DeviationRangeLowValue
+               - Negative: lt DeviationRangeLowValue
             </String>
         </Annotation>
         <Property Name="ImprovementDirection" Type="UI.ImprovementDirectionType" Nullable="false">
@@ -190,7 +186,7 @@
         <Member Name="Down" />
         <Member Name="StrongDown" />
       </EnumType>
-      
+
       <ComplexType Name="TrendCalculationType">
         <Annotation Term="Core.Description">
           <String>

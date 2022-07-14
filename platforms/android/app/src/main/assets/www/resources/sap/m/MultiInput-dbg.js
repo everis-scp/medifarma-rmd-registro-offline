@@ -118,10 +118,9 @@ function(
 	* <li> You can select single tokens or a range of tokens and you can copy/cut/delete them.</li>
 	* </ul>
 	* @extends sap.m.Input
-	* @implements sap.ui.core.ISemanticFormContent
 	*
 	* @author SAP SE
-	* @version 1.96.9
+	* @version 1.93.4
 	*
 	* @constructor
 	* @public
@@ -131,9 +130,7 @@ function(
 	*/
 	var MultiInput = Input.extend("sap.m.MultiInput", /** @lends sap.m.MultiInput.prototype */ {
 		metadata: {
-			interfaces: [
-				"sap.ui.core.ISemanticFormContent"
-			],
+
 			library: "sap.m",
 			designtime: "sap/m/designtime/MultiInput.designtime",
 			properties: {
@@ -153,13 +150,7 @@ function(
 				 * The max number of tokens that is allowed in MultiInput.
 				 * @since 1.36
 				 */
-				maxTokens: {type: "int", group: "Behavior"},
-
-				/**
-				 * Changed when tokens are changed. The value for sap.ui.core.ISemanticFormContent interface.
-				 * @private
-				 */
-				_semanticFormValue: {type: "string", group: "Behavior", defaultValue: "", visibility: "hidden"}
+				maxTokens: {type: "int", group: "Behavior"}
 			},
 			aggregations: {
 
@@ -256,10 +247,7 @@ function(
 	MultiInput.prototype.init = function () {
 		var that = this;
 		this._bShowListWithTokens = false;
-
 		Input.prototype.init.call(this);
-
-		this._getClearIcon();
 
 		this._bIsValidating = false;
 
@@ -316,7 +304,6 @@ function(
 					break;
 			}
 
-			this.updateFormValueProperty();
 			this.invalidate();
 		}.bind(this));
 
@@ -992,7 +979,7 @@ function(
 			this._validateCurrentText();
 		}
 
-		if (oEvent && oEvent.setMarked && (this._bTokenIsValidated || this.getDOMValue())) {
+		if (oEvent && oEvent.setMarked && this._bTokenIsValidated) {
 			oEvent.setMarked();
 		}
 
@@ -1403,34 +1390,8 @@ function(
 
 		var oInfo = Input.prototype.getAccessibilityInfo.apply(this, arguments);
 		oInfo.type = oRb.getText("ACC_CTR_TYPE_MULTIINPUT");
-		oInfo.description = (this.getValueDescriptionInfo() + " " + sText).trim();
+		oInfo.description = ((oInfo.description || "") + " " + sText).trim();
 		return oInfo;
-	};
-
-	/**
-	 * Gets the value of the accessibility description info field.
-	 *
-	 * @protected
-	 * @override
-	 * @returns {string} The value of the accessibility description info
-	 */
-	MultiInput.prototype.getValueDescriptionInfo = function () {
-		var iTokensLength = this.getTokens().length;
-		var sDescriptionText = this.getDescription() || "";
-		var sValue = this.getValue();
-
-		if (sValue) {
-			return sValue;
-		}
-
-		// Empty string or the description text should be set as acc description in case there are no tokens and no value.
-		// This way the tokens will be announced as the control's value.
-		if (iTokensLength > 0) {
-			return sDescriptionText;
-		} else {
-			// "Empty" or the description text should be set as acc description in case there are no tokens and no value.
-			return sDescriptionText ? sDescriptionText : sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("INPUTBASE_VALUE_EMPTY");
-		}
 	};
 
 	/**
@@ -1501,7 +1462,7 @@ function(
 		if (oDomRef && oPopover) {
 			// Popover's width was calculated once in its onBeforeOpen method and is set in PX
 			iCurrentWidth = parseInt(oPopover.getContentWidth());
-			iCalculatedWidth = isNaN(iCurrentWidth) || oDomRef.offsetWidth > iCurrentWidth ? oDomRef.offsetWidth : iCurrentWidth;
+			iCalculatedWidth = oDomRef.offsetWidth > iCurrentWidth ? oDomRef.offsetWidth : iCurrentWidth;
 
 			iCalculatedWidth = ((oTokenizer.getTokens().length === 1) || !bEditable) ? "auto" :
 				(iCalculatedWidth / parseFloat(library.BaseFontSize)) + "rem";
@@ -1686,7 +1647,7 @@ function(
 		}
 
 		iSummedIconsWidth = this._calculateIconsSpace();
-		iTokenizerWidth = oTokenizer.getDomRef().scrollWidth;
+		iTokenizerWidth = Math.ceil(oTokenizer.getDomRef().getBoundingClientRect().width);
 		oFocusDomRef.style.width = 'calc(100% - ' + Math.floor(iSummedIconsWidth + iTokenizerWidth) + "px";
 	};
 
@@ -2004,42 +1965,6 @@ function(
 				fValidateCallback && fValidateCallback(false);
 			}
 		};
-	};
-
-	/**
-	 * Gets formatted form value.
-	 *
-	 * In the context of the MultiInput, this is the merged value of all the Tokens in the control.
-	 *
-	 * @since 1.94
-	 * @experimental
-	 */
-	MultiInput.prototype.getFormFormattedValue = function () {
-		return this.getTokens()
-			.map(function (oToken) {
-				return oToken.getText();
-			})
-			.join(", ");
-	};
-
-	/**
-	 * The property which triggers form display invalidation when changed
-	 *
-	 * @since 1.94
-	 * @experimental
-	 */
-	MultiInput.prototype.getFormValueProperty = function () {
-		return "_semanticFormValue";
-	};
-
-	/**
-	 * ISemanticFormContent interface works only with properties. The state of MultiInput is kept as Tokens.
-	 * Update _semanticFormValue property so it'd match MultiInput's state, but as a string which could be reused.
-	 *
-	 * @private
-	 */
-	MultiInput.prototype.updateFormValueProperty = function () {
-		this.setProperty("_semanticFormValue", this.getFormFormattedValue(), true);
 	};
 
 	return MultiInput;

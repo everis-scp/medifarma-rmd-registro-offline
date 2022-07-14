@@ -46,7 +46,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -300,10 +300,6 @@ sap.ui.define([
 
 		// inform parent delayed
 		setTimeout(function() {
-			// make sure that the column is visible
-			if (!this.getVisible()) {
-				return;
-			}
 			this.fireEvent("media", this);
 			this.informTable("Resize");
 		}.bind(this), 0);

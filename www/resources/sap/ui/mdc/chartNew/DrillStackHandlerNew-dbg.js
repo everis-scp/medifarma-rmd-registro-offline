@@ -42,7 +42,7 @@ sap.ui.define([
 	var ListMode = MLibrary.ListMode;
 
 	function _getDrillStackDimensions(oMDCChart) {
-		var aDrillStack = oMDCChart.getControlDelegate().getDrillStack(oMDCChart);
+		var aDrillStack = oMDCChart.getControlDelegate().getDrillStack();
 		var aStackDimensions = [];
 
 		aDrillStack.forEach(function(oStackEntry) {
@@ -76,14 +76,6 @@ sap.ui.define([
 	 */
 	DrillStackHandler.createDrillDownPopover = function(oMDCChart) {
 
-		var oSubHeader = new Bar();
-		var oPopover = new ResponsivePopover({
-			id: oMDCChart.getId() + "-drilldownPopover",
-			contentWidth: "25rem",
-			contentHeight: "20rem",
-			placement: PlacementType.Bottom,
-			subHeader: oSubHeader
-		});
 		var oList = new List({
 			mode: ListMode.SingleSelectMaster,
 			selectionChange: function(oControlEvent) {
@@ -106,9 +98,7 @@ sap.ui.define([
 			}
 		});
 
-		oPopover.attachAfterClose(function(){
-			oPopover.destroy();
-		});
+		var oSubHeader = new Bar();
 
 		//TODO add search field
 		//var oSearchField = new SearchField({
@@ -117,6 +107,14 @@ sap.ui.define([
 		//oSearchField.attachLiveChange(function(oEvent) {
 		//this._triggerSearchInDrillDownPopover(oEvent, oList);
 		//}.bind(this));
+
+		var oPopover = new ResponsivePopover({
+			id: oMDCChart.getId() + "-drilldownPopover",
+			contentWidth: "25rem",
+			contentHeight: "20rem",
+			placement: PlacementType.Bottom,
+			subHeader: oSubHeader
+		});
 
 
 		var oRb = Core.getLibraryResourceBundle("sap.ui.mdc");

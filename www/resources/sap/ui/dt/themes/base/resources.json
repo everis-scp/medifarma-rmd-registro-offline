@@ -1,0 +1,82 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": ".theming",
+			"size": 64,
+			"theme": "base"
+		},
+		{
+			"name": "ContextMenu.less",
+			"size": 1829,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "Overlay.less",
+			"size": 2862,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.css",
+			"size": 949,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 240,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 92189,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "library-RTL.css",
+			"size": 3823,
+			"theme": "base"
+		},
+		{
+			"name": "library-parameters.json",
+			"size": 325,
+			"theme": "base"
+		},
+		{
+			"name": "library.css",
+			"size": 3817,
+			"theme": "base"
+		},
+		{
+			"name": "library.less",
+			"size": 5389,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "library.source.less",
+			"size": 348,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 3494,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 3488,
+			"theme": "base"
+		},
+		{
+			"name": "shared.less",
+			"size": 65,
+			"designtime": true,
+			"theme": "base"
+		}
+	]
+}

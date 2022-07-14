@@ -87,11 +87,6 @@ sap.ui.define(['sap/ui/Device', 'sap/ui/core/InvisibleText'],
 
 		oRm.openStart("div", oControl.getId() + "-scrollContainer");
 		oRm.class("sapMTokenizerScrollContainer");
-
-		if (oControl.getHiddenTokensCount() === oControl.getTokens().length) {
-			oRm.class("sapMTokenizerScrollContainerNoVisibleTokens");
-		}
-
 		oRm.openEnd();
 
 		TokenizerRenderer._renderTokens(oRm, oControl);

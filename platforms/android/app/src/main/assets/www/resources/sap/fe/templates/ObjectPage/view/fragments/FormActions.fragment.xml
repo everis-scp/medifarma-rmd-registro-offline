@@ -5,8 +5,8 @@
 	xmlns:uxap="sap.uxap"
 	template:require="{
 		AH: 'sap/fe/templates/ObjectPage/AnnotationHelper'
-	}">
-
+	}"
+>
 	<!--
 		This Fragment renders Action buttons in Sections.
 		UI.DataFieldForActions from
@@ -16,16 +16,9 @@
 		will be capable of rendering action buttons in Sections.
 	 -->
 	<uxap:actions>
-		<template:if test="{facet>Facets}">
-			<template:then>
-				<template:repeat list="{facet>Facets}" var="facet">
-					<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FormActionButtons" type="XML"/>
-				</template:repeat>
-			</template:then>
-			<template:else>
-				<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FormActionButtons" type="XML"/>
-			</template:else>
-		</template:if>
+		<template:repeat list="{subSection>actions}" var="action">
+						<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.FormActionButtons" type="XML" />
+		</template:repeat>
 	</uxap:actions>
 
 </core:FragmentDefinition>

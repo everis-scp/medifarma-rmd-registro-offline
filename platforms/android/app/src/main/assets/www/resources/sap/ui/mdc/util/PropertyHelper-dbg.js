@@ -137,17 +137,11 @@ sap.ui.define([
 			type: "object",
 			allowedForComplexProperty: true
 		},
-		visualSettings: { // This object contains all relevant properties for visual adjustments
-			type: "object"
-		},
 
 		// Chart
 
 		// FilterBar
 		required:  { // Whether there must be a filter condition for this property before firing a "search" event.
-			type: "boolean"
-		},
-		hiddenFilter:  { // Name of the property indicating if the filter is never to be shown on the UI.
 			type: "boolean"
 		}
 
@@ -412,7 +406,7 @@ sap.ui.define([
 	 * @extends sap.ui.base.Object
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental
@@ -985,21 +979,6 @@ sap.ui.define([
 		return oProperty ? oProperty.exportSettings : null;
 	};
 	aPropertyMethods.push("getExportSettings");
-
-	/**
-	 * Gets the visual settings.
-	 *
-	 * @function
-	 * @name getVisualSettings
-	 * @param {string} sName Name of a property
-	 * @returns {object|false|null} The visual settings
-	 * @public
-	 */
-	PropertyHelper.prototype.getVisualSettings = function(sName) {
-		var oProperty = this.getProperty(sName);
-		return oProperty ? oProperty.visualSettings : null;
-	};
-	aPropertyMethods.push("getVisualSettings");
 
 	/**
 	 * Gets the unique name (key) of a property.

@@ -45,7 +45,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.cardEditor.propertyEditor.parametersEditor.ParametersEditor
 	 * @author SAP SE
 	 * @since 1.70
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.70
@@ -98,7 +98,6 @@ sap.ui.define([
 		var oValidations = oConfigValue.value.validations || vItemMetadata.validations;
 		var sHint = oConfigValue.value.hint || vItemMetadata.hint || "";
 		var sFormattor = oConfigValue.value.formatter || vItemMetadata.formatter;
-		var oLayout = oConfigValue.value.layout || vItemMetadata.layout;
 		//var bLine = this.getBoolenValue(oConfigValue.value.line, vItemMetadata.line, false);
 		//var oTemplate = oConfigValue.value.template || vItemMetadata.template || {};
 /*
@@ -290,16 +289,6 @@ sap.ui.define([
 				value: oValues,
 				visible: sType === "string" || sType === "array",
 				placeholder: this.getI18nProperty("CARD_EDITOR.PARAMETERS.VALUES.PLACEHOLDER"),
-				type: "textArea",
-				itemKey: sKey
-			},
-			{
-				label: this.getI18nProperty("CARD_EDITOR.PARAMETERS.LAYOUT"),
-				path: "layout",
-				allowBindings: true,
-				value: oLayout,
-				visible: sType !== "group" && sType !== "separator",
-				placeholder: this.getI18nProperty("CARD_EDITOR.PARAMETERS.LAYOUT.PLACEHOLDER"),
 				type: "textArea",
 				itemKey: sKey
 			}

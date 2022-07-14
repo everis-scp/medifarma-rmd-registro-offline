@@ -45,7 +45,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @since 1.48
 		 *
 		 * @constructor
@@ -150,14 +150,7 @@ sap.ui.define([
 						/**
 						 * This event is fired when there is an error loading the PDF file.
 						 */
-						error: {
-							parameters : {
-								/**
-								 * The iframe element.
-								 */
-								target : {type: "any", defaultValue: null}
-							}
-						},
+						error: {},
 						/**
 						 * This event is fired when the PDF viewer control cannot check the loaded content. For
 						 * example, the default configuration of the Mozilla Firefox browser may not allow checking
@@ -263,11 +256,9 @@ sap.ui.define([
 		/**
 		 * @private
 		 */
-		PDFViewer.prototype._fireErrorEvent = function (oEventTarget) {
+		PDFViewer.prototype._fireErrorEvent = function () {
 			this._renderErrorState();
-			this.fireError({
-				target: oEventTarget || null
-			});
+			this.fireEvent("error", {}, true);
 		};
 
 		/**
@@ -328,14 +319,14 @@ sap.ui.define([
 					// even though the sourceValidationFailed event is fired, the default behaviour is to continue.
 					// when preventDefault is on event object is called, the rendering ends up with error
 					if (!Device.browser.firefox && this.fireEvent("sourceValidationFailed", {}, true)) {
-						this._fireLoadedEvent();
+						this._showMessageBox();
 						return;
 					}
 				}
 				if (bContinue && PDFViewerRenderer._isSupportedMimeType(sCurrentContentType) && PDFViewerRenderer._isPdfPluginEnabled()) {
 					this._fireLoadedEvent();
 				} else {
-					this._fireErrorEvent(oEvent.target);
+					this._fireErrorEvent();
 				}
 			} catch (error) {
 				Log.fatal(false, "Fatal error during the handling of load event happened.");
@@ -483,7 +474,6 @@ sap.ui.define([
 		 * @private
 		 */
 		PDFViewer.prototype._isEmbeddedModeAllowed = function () {
-			//Check if Desktop View is emulated from mobile as well
 			return this._isDisplayTypeAuto() ? Device.system.desktop : this._isDisplayTypeEmbedded();
 		};
 

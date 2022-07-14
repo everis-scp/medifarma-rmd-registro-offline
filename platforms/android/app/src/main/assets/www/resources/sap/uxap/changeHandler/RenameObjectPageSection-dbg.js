@@ -21,7 +21,7 @@ sap.ui.define([
 	 * @constructor
 	 * @alias sap.uxap.changeHandler.RenameObjectPageSection
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @experimental Since 1.50
 	 */
 
@@ -41,13 +41,6 @@ sap.ui.define([
 			})
 			.then(function(aSubSectionsLocal) {
 				aSubSections = aSubSectionsLocal;
-
-				if (aSubSections.length !== 1) {
-					// if there are no or more than one sub sections, the following
-					// code should not execute and oControl should be returned
-					return [];
-				}
-
 				return Promise.all([oModifier.getPropertyBindingOrProperty(aSubSections[0], "title"),
 					oModifier.getProperty(oModifier.getParent(oControl), "subSectionLayout")]);
 			})

@@ -4,19 +4,20 @@
 	xmlns:layout="sap.ui.layout" xmlns:build="sap.build"
 	xmlns:block="sap.suite.ui.generic.template.ObjectPage.view.fragments">
 	<uxap:ObjectPageSection
-			id="{ExtensionsSectionId>id}"
-			title="{parts: [{path: 'manifestKey>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getExtensionPointFacetTitle'}"
-			titleUppercase="false"
-			visible="{= !${parameter>/isDraftEnabled} &amp;&amp; ${path: 'firstLevelFacet>Target/AnnotationPath', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.isSelf'} === false ? '{= !${ui>/createMode} ? true : false }' : true}">
+			id="{section>id}"
+			title="{parts: [{path: 'section>extensionPointName'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getExtensionPointFacetTitle'}"
+			titleUppercase="false">
 		<uxap:subSections>
-			<uxap:ObjectPageSubSection id="{ExtensionsSubSectionId>id}" title=" " class="sapSmartTemplatesObjectPageSubSection">
-				<template:if test="{parts: [{path: 'manifestKey>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.isExtensionPointFacetLazyLoadingEnabled'}">
+			<template:repeat list="{section>subSections}" var="subSection">
+			<uxap:ObjectPageSubSection id="{subSection>id}" title=" " class="sapSmartTemplatesObjectPageSubSection">
+				<template:if test="{parts: [{path: 'section>extensionPointName'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.isExtensionPointFacetLazyLoadingEnabled'}">
 					<uxap:customData>
-						<core:CustomData key="strategyForVisibilityChange" value="lazyLoadingAfterHeader"/>
+						<core:CustomData key="loadingStrategy" value="lazyLoadingAfterHeader"/>
 					</uxap:customData>
 				</template:if>
-				<core:ExtensionPoint name="{manifestKey>}"/>
+				<core:ExtensionPoint name="{section>extensionPointName}"/>
 			</uxap:ObjectPageSubSection>
+			</template:repeat>
 		</uxap:subSections>
 	</uxap:ObjectPageSection>
 </core:FragmentDefinition>

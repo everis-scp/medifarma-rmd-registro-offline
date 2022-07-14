@@ -20,12 +20,12 @@ sap.ui.define(['sap/ui/core/Element'],
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @alias sap.ui.mdc.ui.ContainerItem
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.85.0
 	 *
 	 * @private

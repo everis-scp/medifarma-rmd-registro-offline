@@ -13,22 +13,11 @@
 					   labelFor="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"/>
 				<HBox alignItems="Center">
 					<items>
-						<template:if test="{= ${parameter>/isFiori3Enabled}}">
-							<template:then>
-								<RatingIndicator id="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
-												 enabled="true" editable="false"
-												 maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-												 value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-												 iconSize="1rem" />
-							</template:then>
-							<template:else>
-								<RatingIndicator id="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
-											 enabled="false"
-											 maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-											 value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-											 iconSize="1rem" />
-							</template:else>
-						</template:if>
+						<RatingIndicator id="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
+							enabled="true" editable="false"
+							maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+							value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+							iconSize="1rem" />
 						<Text id="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicatorTotalRatings"
 							  text="{path: 'dataPoint>SampleSize', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.buildRatingIndicatorAggregateCountExpression'}"
 							  visible="{= ${dataPoint>SampleSize} ? true : false }">

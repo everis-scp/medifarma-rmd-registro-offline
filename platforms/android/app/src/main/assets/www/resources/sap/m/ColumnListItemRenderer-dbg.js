@@ -305,16 +305,11 @@ sap.ui.define([
 			}
 
 			var aStyleClass = oColumn.getStyleClass().split(" "),
-				sPopinDisplay = oColumn.getPopinDisplay(),
-				oOriginalHeader = oHeader;
+				sPopinDisplay = oColumn.getPopinDisplay();
 
 			/* row start */
 			rm.openStart("div");
 			rm.class("sapMListTblSubCntRow");
-
-			if (sPopinDisplay == PopinDisplay.Inline) {
-				rm.class("sapMListTblSubCntRowInline");
-			}
 
 			aStyleClass && aStyleClass.forEach(function(sClassName) {
 				rm.class(sClassName);
@@ -324,16 +319,14 @@ sap.ui.define([
 			/* header cell */
 			if (oHeader && sPopinDisplay != PopinDisplay.WithoutHeader) {
 				rm.openStart("div").class("sapMListTblSubCntHdr").openEnd();
-				if (oTable._aPopinHeaders.indexOf(oHeader) === -1) {
-					oTable._aPopinHeaders.push(oOriginalHeader);
-				}
 				oHeader = oHeader.clone();
 				oColumn.addDependent(oHeader);
 				oLI._addClonedHeader(oHeader);
 				rm.renderControl(oHeader);
-				rm.openStart("span").class("sapMListTblSubCntSpr");
-				rm.attr("data-popin-colon", Core.getLibraryResourceBundle("sap.m").getText("TABLE_POPIN_LABEL_COLON"));
-				rm.openEnd().close("span");
+				rm.close("div");
+
+				rm.openStart("div").class("sapMListTblSubCntSpr").openEnd();
+				rm.text(Core.getLibraryResourceBundle("sap.m").getText("TABLE_POPIN_LABEL_COLON"));
 				rm.close("div");
 			}
 
@@ -343,7 +336,7 @@ sap.ui.define([
 				rm.class("sapMListTblSubCntVal");
 				rm.class("sapMListTblSubCntVal" + sPopinDisplay);
 				rm.openEnd();
-				this.applyAriaLabelledBy(oOriginalHeader, oCell);
+				this.applyAriaLabelledBy(oHeader, oCell);
 				rm.renderControl(oCell);
 				rm.close("div");
 			}

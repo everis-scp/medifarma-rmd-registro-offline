@@ -19,7 +19,7 @@ sap.ui.define(["./PluginBase", "sap/ui/core/Core", "sap/ui/base/ManagedObjectObs
 	 *
 	 * @extends sap.ui.core.Element
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.73
@@ -342,10 +342,9 @@ sap.ui.define(["./PluginBase", "sap/ui/core/Core", "sap/ui/base/ManagedObjectObs
 	DataStateIndicator.prototype._applyFilter = function() {
 		var fnFilter = this.getFilter();
 		var oControl = this.getControl();
-		var oParent = this.getParent();
 		var oBinding = oControl.getBinding(this._getBindingName());
 		var fnMessageFilter = fnFilter && function(oMessage) {
-			return fnFilter(oMessage, oParent);
+			return fnFilter(oMessage, oControl);
 		};
 
 		oBinding.requestFilterForMessages(fnMessageFilter).then(function(oFilter) {

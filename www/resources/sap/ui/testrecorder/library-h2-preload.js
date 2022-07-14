@@ -4,9 +4,9 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.predefine('sap/ui/testrecorder/library',["sap/ui/core/library","sap/ui/core/Core","sap/ui/support/library"],function(){"use strict";sap.ui.getCore().initLibrary({name:"sap.ui.testrecorder",dependencies:["sap.ui.core","sap.ui.support"],interfaces:[],controls:[],elements:[],noLibraryCSS:true,version:"1.96.9",extensions:{"sap.ui.support":{internalRules:true}}});return sap.ui.testrecorder;});
+sap.ui.predefine('sap/ui/testrecorder/library',["sap/ui/core/library","sap/ui/core/Core","sap/ui/support/library"],function(){"use strict";sap.ui.getCore().initLibrary({name:"sap.ui.testrecorder",dependencies:["sap.ui.core","sap.ui.support"],interfaces:[],controls:[],elements:[],noLibraryCSS:true,version:"1.93.4",extensions:{"sap.ui.support":{internalRules:true}}});return sap.ui.testrecorder;});
 sap.ui.require.preload({
-	"sap/ui/testrecorder/manifest.json":'{"_version":"1.21.0","sap.app":{"id":"sap.ui.testrecorder","type":"library","embeds":[],"applicationVersion":{"version":"1.96.9"},"title":"UI5 library: sap.ui.testrecorder","description":"UI5 library: sap.ui.testrecorder","resources":"resources.json","offline":true},"sap.ui":{"technology":"UI5","supportedThemes":[]},"sap.ui5":{"dependencies":{"minUI5Version":"1.96","libs":{"sap.ui.core":{"minVersion":"1.96.9"}}},"library":{"i18n":false,"css":false,"content":{"controls":[],"elements":[],"interfaces":[]}}}}'
+	"sap/ui/testrecorder/manifest.json":'{"_version":"1.21.0","sap.app":{"id":"sap.ui.testrecorder","type":"library","embeds":[],"applicationVersion":{"version":"1.93.4"},"title":"UI5 library: sap.ui.testrecorder","description":"UI5 library: sap.ui.testrecorder","resources":"resources.json","offline":true},"sap.ui":{"technology":"UI5","supportedThemes":[]},"sap.ui5":{"dependencies":{"minUI5Version":"1.93","libs":{"sap.ui.core":{"minVersion":"1.93.4"}}},"library":{"i18n":false,"css":false,"content":{"controls":[],"elements":[],"interfaces":[]}}}}'
 },"sap/ui/testrecorder/library-h2-preload"
 );
 sap.ui.loader.config({depCacheUI5:{

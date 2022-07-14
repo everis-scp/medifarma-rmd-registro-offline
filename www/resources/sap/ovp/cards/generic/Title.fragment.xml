@@ -19,7 +19,7 @@
                         <ovp:CustomData key="aria-label" value="{ovpCardProperties>/title}"
                                         writeToDom="true"/>
                         <ovp:CustomData key="role" value="heading" writeToDom="true"/>
-                        <ovp:CustomData key="aria-level" value="3" writeToDom="true"/>
+                        <ovp:CustomData key="aria-level" value="2" writeToDom="true"/>
                     </customData>
                 </Text>
             </FlexBox>

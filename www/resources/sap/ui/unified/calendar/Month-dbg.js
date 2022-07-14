@@ -65,7 +65,7 @@ sap.ui.define([
 	 * If used inside the calendar the properties and aggregation are directly taken from the parent
 	 * (To not duplicate and sync DateRanges and so on...)
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -264,8 +264,6 @@ sap.ui.define([
 
 		// Currently visible days
 		this._aVisibleDays = [];
-
-		this._bAlwaysShowSpecialDates = false;
 	};
 
 	Month.prototype._getAriaRole = function(){
@@ -286,7 +284,6 @@ sap.ui.define([
 		}
 
 		this._aVisibleDays = null;
-		this._bAlwaysShowSpecialDates = null;
 
 	};
 
@@ -443,7 +440,7 @@ sap.ui.define([
 	Month.prototype.setDate = function(oDate){
 		if (oDate) {
 			var oCalDate = CalendarDate.fromLocalJSDate(oDate, this.getPrimaryCalendarType());
-			_changeDate.call(this, oCalDate);
+			_changeDate.call(this, oCalDate, false);
 		}
 
 		return this.setProperty("date", oDate);
@@ -475,7 +472,7 @@ sap.ui.define([
 	 */
 	Month.prototype.displayDate = function(oDate){
 		var oCalDate = CalendarDate.fromLocalJSDate(oDate, this.getPrimaryCalendarType());
-		_changeDate.call(this, oCalDate);
+		_changeDate.call(this, oCalDate, true);
 
 		return this;
 
@@ -769,29 +766,6 @@ sap.ui.define([
 
 		return aNonWorkingDays;
 
-	};
-
-	/*
-	 * Checks if a date have to be rendered as special date.
-	 *
-	 * In Month and OneMonthDatesRow on small screen scenarios only the special dates inside current month are marked as special.
-	 * In DatesRow and OneMonthDatesRow on large screen scenarios all special dates are rendered as such.
-	 *
-	 * @param {sap.ui.unified.calendar.CalendarDate} the date to be checked
-	 * @return {boolean} if the given date should be rendered as special date
-	 * @private
-	 */
-	Month.prototype._isSpecialDateMarkerEnabled = function(oDay) {
-		var oMonthDate;
-		if (this.getStartDate) {
-			oMonthDate = this.getStartDate();
-		} else if (this.getDate()) {
-			oMonthDate = this.getDate();
-		} else {
-			oMonthDate = new Date();
-		}
-
-		return this._bAlwaysShowSpecialDates || CalendarUtils._isSameMonthAndYear(oDay, CalendarDate.fromLocalJSDate(oMonthDate));
 	};
 
 	/*
@@ -2095,22 +2069,28 @@ sap.ui.define([
 	/**
 	 *
 	 * @param {sap.ui.unified.calendar.CalendarDate} oDate the calendar date
+	 * @param {boolean} bNoFocus Will the focusing of the date be skipped (true) or not (false)
 	 * @private
 	 */
-	function _changeDate (oDate){
+	function _changeDate (oDate, bNoFocus){
 
 		CalendarUtils._checkCalendarDate(oDate);
 
 		var iYear = oDate.getYear();
 		CalendarUtils._checkYearInValidRange(iYear);
 
+		var bFocusable = true; // if date not changed it is still focusable
 		if (!this.getDate() || !oDate.isSame(CalendarDate.fromLocalJSDate(this.getDate(), oDate.getCalendarType()))) {
 			var oCalDate = new CalendarDate(oDate);
 			this.setProperty("date", oDate.toLocalJSDate());
+			bFocusable = this.checkDateFocusable(oDate.toLocalJSDate());
 			this._oDate = oCalDate;
-		} else {
-			this.invalidate();
 		}
+
+		if (this.getDomRef()) {
+			this._focusDate(this._oDate, true, bFocusable ? bNoFocus : true);
+		}
+
 	}
 
 	/**

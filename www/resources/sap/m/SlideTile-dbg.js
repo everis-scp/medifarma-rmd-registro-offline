@@ -41,7 +41,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.34
 	 *
 	 * @public
@@ -77,13 +77,7 @@ sap.ui.define([
 				 * Width of the control.
 				 * @since 1.72
 				 */
-				width: {type: "sap.ui.core.CSSSize", group: "Appearance"},
-				/**
-				 * Height of the control.
-				 * @experimental
-				 * @since 1.96
-				 */
-				height: {type: "sap.ui.core.CSSSize", group: "Appearance"}
+				width: {type: "sap.ui.core.CSSSize", group: "Appearance"}
 			},
 			defaultAggregation: "tiles",
 			aggregations: {
@@ -187,28 +181,6 @@ sap.ui.define([
 		if (sScope === GenericTileScope.Actions && this._iCurrentTile >= 0 &&
 			this._hasNewsContent(this._iCurrentTile)) {
 			this.addStyleClass("sapMSTDarkBackground");
-		}
-
-		// Slide Navigation through bullet click
-		var oCurrentBullet;
-		for (var i = 0; i < this.getTiles().length; i++) {
-			var oCurrentTile = this.getTiles()[this._iCurrentTile];
-			if (oCurrentTile && oCurrentTile._isNavigateActionEnabled()) {
-				oCurrentTile._oNavigateAction._bExcludeFromTabChain = false;
-				oCurrentTile._oNavigateAction.invalidate();
-			}
-			oCurrentBullet = document.querySelector('span[id$="tileIndicator-' + i + '"]');
-			if (oCurrentBullet) {
-				oCurrentBullet.addEventListener("click", function(event) {
-					var sId = event.currentTarget.id,
-						iCurrentIndex = parseInt(sId.substring(sId.lastIndexOf("-") + 1)),
-						bIsbackward = this._iCurrentTile > iCurrentIndex;
-
-					if (this._iCurrentTile !== iCurrentIndex) {
-						this._scrollToNextTile(this._bAnimationPause, bIsbackward, iCurrentIndex);
-					}
-				}.bind(this));
-			}
 		}
 	};
 
@@ -507,9 +479,8 @@ sap.ui.define([
 	 * @private
 	 * @param {boolean} pause Triggers if the animation gets paused or not
 	 * @param {boolean} backward Sets the direction backward or forward
-	 * @param {integer} iNextTile Scrolls to custom tile
 	 */
-	SlideTile.prototype._scrollToNextTile = function (pause, backward, iNextTile) {
+	SlideTile.prototype._scrollToNextTile = function (pause, backward) {
 		var iTransitionTime = this._iCurrAnimationTime - this.getDisplayTime(),
 			bFirstAnimation, iNxtTile, oWrapperFrom, oWrapperTo, sWidthFrom, fWidthTo, fWidthFrom, bChangeSizeBefore, sDir, oDir;
 
@@ -526,24 +497,10 @@ sap.ui.define([
 			this._iCurrentTile = iNxtTile;
 		}
 
-		if (iNextTile >= 0) {
-			this._iCurrentTile = iNextTile;
-		}
-
 		oWrapperTo = this.$("wrapper-" + this._iCurrentTile);
 		sDir = sap.ui.getCore().getConfiguration().getRTL() ? "right" : "left";
 
-		var oCurrentTile = this.getTiles()[this._iCurrentTile];
-		if (oCurrentTile && oCurrentTile._isNavigateActionEnabled()) {
-			oCurrentTile._oNavigateAction._bExcludeFromTabChain = false;
-			oCurrentTile._oNavigateAction.invalidate();
-		}
 		if (this._iPreviousTile != undefined) {
-			var oPreviousTile = this.getTiles()[this._iPreviousTile];
-			if (oPreviousTile && oPreviousTile._isNavigateActionEnabled()) {
-				oPreviousTile._oNavigateAction._bExcludeFromTabChain = true;
-				oPreviousTile._oNavigateAction.invalidate();
-			}
 			oWrapperFrom = this.$("wrapper-" + this._iPreviousTile);
 			sWidthFrom = oWrapperFrom.css("width");
 			fWidthTo = parseFloat(oWrapperTo.css("width"));

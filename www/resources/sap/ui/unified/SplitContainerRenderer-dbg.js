@@ -54,11 +54,7 @@ sap.ui.define(["sap/ui/core/library"],
 		var sSidePaneId = sId + "-pane";
 
 		var sWidth = oControl.getShowSecondaryContent() ? oControl.getSecondaryContentSize() : "0";
-		rm.write("<aside id='", sSidePaneId);
-		rm.write("'");
-		rm.addStyle("width", sWidth);
-		rm.writeStyles();
-
+		rm.write("<aside id='", sSidePaneId, "' style='width:", sWidth, "'");
 		rm.addClass("sapUiUfdSpltContPane");
 		if (!oControl.getShowSecondaryContent()) {
 			rm.addClass("sapUiUfdSplitContSecondClosed");

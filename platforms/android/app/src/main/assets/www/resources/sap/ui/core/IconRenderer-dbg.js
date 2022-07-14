@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.define(['./_IconRegistry', './library', "sap/base/security/encodeCSS"], function(_IconRegistry, library, encodeCSS) {
+sap.ui.define(['./IconPool', './library', "sap/base/security/encodeCSS"], function(IconPool, library, encodeCSS) {
 	"use strict";
 
 	// shortcut for enum(s)
@@ -26,7 +26,7 @@ sap.ui.define(['./_IconRegistry', './library', "sap/base/security/encodeCSS"], f
 	 */
 	IconRenderer.render = function(oRm, oControl) {
 		// write the HTML into the render manager
-		var vIconInfo = _IconRegistry.getIconInfo(oControl.getSrc(), undefined, "mixed"),
+		var vIconInfo = IconPool.getIconInfo(oControl.getSrc(), undefined, "mixed"),
 			sWidth = oControl.getWidth(),
 			sHeight = oControl.getHeight(),
 			sColor = oControl.getColor(),
@@ -65,6 +65,10 @@ sap.ui.define(['./_IconRegistry', './library', "sap/base/security/encodeCSS"], f
 			}
 		}
 
+		if (sTitle) {
+			oRm.attr("title", sTitle);
+		}
+
 		if (oControl.hasListeners("press")) {
 			oRm.class("sapUiIconPointer");
 			if (!oControl.getNoTabStop()) {
@@ -86,10 +90,6 @@ sap.ui.define(['./_IconRegistry', './library', "sap/base/security/encodeCSS"], f
 		}
 
 		oRm.openEnd();
-
-		if (sTitle) {
-			oRm.openStart("span").class("sapUiIconTitle").attr("title", sTitle).attr("aria-hidden", true).openEnd().close("span");
-		}
 
 		if (aLabelledBy && aLabelledBy.length && oInvisibleText) {
 			oRm.renderControl(oInvisibleText);

@@ -70,7 +70,7 @@ sap.ui.define(["sap/base/Log", "sap/base/util/ObjectPath", "sap/ui/core/mvc/View
 	 * @private
 	 */
 	ExtensionPoint._factory = function(oContainer, sExtName, fnCreateDefaultContent, oTargetControl, sAggregationName, bAsync) {
-		var oExtensionConfig, oView, vResult, sViewOrFragmentName;
+		var oExtensionConfig, oView, vResult, sViewOrFragmentName, oOwnerComponent;
 
 		// do we have a view to check or do we need to check for configuration for a fragment?
 		if (oContainer) {
@@ -83,11 +83,18 @@ sap.ui.define(["sap/base/Log", "sap/base/util/ObjectPath", "sap/ui/core/mvc/View
 			}
 
 			// if customizing is enabled we read the extension-point from the merged manifests of the owner component
-			oExtensionConfig = Component.getCustomizing(oContainer, {
-				type: "sap.ui.viewExtensions",
-				name: sViewOrFragmentName,
-				extensionName: sExtName
-			});
+			if (!sap.ui.getCore().getConfiguration().getDisableCustomizing()) {
+				oOwnerComponent = Component.getOwnerComponentFor(oContainer);
+				if (oOwnerComponent) {
+					if (oOwnerComponent.getExtensionComponent) {
+						oOwnerComponent = oOwnerComponent.getExtensionComponent();
+						if (!oOwnerComponent) {
+							throw new Error("getExtensionComponent() must return an instance.");
+						}
+					}
+					oExtensionConfig = oOwnerComponent._getManifestEntry("/sap.ui5/extends/extensions/sap.ui.viewExtensions/" + sViewOrFragmentName + "/" + sExtName, true);
+				}
+			}
 		}
 
 		// Extension Point - is something configured?
@@ -130,7 +137,7 @@ sap.ui.define(["sap/base/Log", "sap/base/util/ObjectPath", "sap/ui/core/mvc/View
 							});
 						}
 					} else {
-						Fragment = Fragment || sap.ui.requireSync("sap/ui/core/Fragment"); // legacy-relevant: Sync path
+						Fragment = Fragment || sap.ui.requireSync("sap/ui/core/Fragment");
 						var oFragment = new Fragment(oFactoryConfig);
 						// make sure vResult is at least an empty array, if a Fragment is configured, the default content is not added
 						vResult = (Array.isArray(oFragment) ? oFragment : [oFragment]);

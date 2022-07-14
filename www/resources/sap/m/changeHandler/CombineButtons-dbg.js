@@ -21,18 +21,17 @@ sap.ui.define([
 	 *
 	 * @alias sap.m.changeHandler.CombineButtons
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @experimental Since 1.48
 	 */
 	var CombineButtons = {};
-
-	var sCombineButtonsModelName = "$sap.m.flexibility.CombineButtonsModel";
 
 	function fnHandleMenuItems(aButtons, oModifier, oAppComponent, oMenu, oParent, sParentAggregation, oView, oChangeDefinition, oRevertData) {
 		var sPropertyEnabled = "";
 		var sPropertyVisible = "";
 		var sOR = "";
 		var aMenuButtonModels = [];
+		var sCombineButtonsModelName = "$sap.m.flexibility.CombineButtonsModel";
 		var bIsRtl = sap.ui.getCore().getConfiguration().getRTL();
 		var aMenuButtonName = [];
 
@@ -57,6 +56,17 @@ sap.ui.define([
 				})
 				.then(function(iIndexInParentAggregation) {
 					oRevertData.insertIndexes[iIndex] = iIndexInParentAggregation;
+					return oModifier.attachEvent(
+							oMenuItem,
+							"press",
+							"sap.m.changeHandler.CombineButtons.pressHandler",
+							{
+								selector: oModifier.getSelector(oButton, oAppComponent),
+								appComponentId: oAppComponent.getId()
+							}
+						);
+				})
+				.then(function() {
 					return oModifier.createControl(
 						"sap.ui.fl.util.ManagedObjectModel",
 						oAppComponent,
@@ -107,12 +117,10 @@ sap.ui.define([
 					}
 					// Add suffix to the id, so we can get the original ids of the combined buttons
 					// when we want to split the menu. The suffix is used in SplitMenuButton change handler.
-					var oNewSelector = Object.assign({}, oSelector, {
-						id: oSelector.id + '-originalButtonId'
-					});
+					oSelector.id = oSelector.id + "-originalButtonId"; // FIXME: do not mutate original object!
 
 					// Create CustomData, holding the original ids of the combined buttons
-					return oModifier.createControl("sap.ui.core.CustomData", oAppComponent, oView, oNewSelector);
+					return oModifier.createControl("sap.ui.core.CustomData", oAppComponent, oView, oSelector);
 				})
 				.then(function(oRetrievedId) {
 					oIdToSave = oRetrievedId;
@@ -231,13 +239,6 @@ sap.ui.define([
 			})
 			.then(function(oCreatedMenu){
 				oMenu = oCreatedMenu;
-				return oModifier.attachEvent(
-					oMenu,
-					"itemSelected",
-					"sap.m.changeHandler.CombineButtons.pressHandler"
-				);
-			})
-			.then(function(){
 				return fnHandleMenuItems(
 					aButtons,
 					oModifier,
@@ -403,8 +404,8 @@ sap.ui.define([
 	 * @param {object} mParameters - parameters containing the selector and appComponentId
 	 * while applying the change.
 	 */
-	CombineButtons.pressHandler = function(oEvent) {
-		var oButton = oEvent.getParameter("item").getModel(sCombineButtonsModelName).getObject();
+	CombineButtons.pressHandler = function (oEvent, mParameters) {
+		var oButton = JsControlTreeModifier.bySelector(mParameters.selector, Component.get(mParameters.appComponentId));
 		oButton.firePress();
 	};
 

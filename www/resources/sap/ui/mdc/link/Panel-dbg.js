@@ -36,7 +36,7 @@ sap.ui.define([
 	 * supposed that the properties of the item structure is not changed.
 	 * @extends sap.ui.core.XMLComposite
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @since 1.54.0

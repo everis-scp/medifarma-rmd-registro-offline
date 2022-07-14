@@ -163,7 +163,7 @@ sap.ui.define([
 	 * @see {@link sap.f.dnd.GridDropInfo}
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @extends sap.ui.core.Control
 	 *
@@ -366,12 +366,6 @@ sap.ui.define([
 	 */
 	GridContainer.prototype._onBeforeItemRendering = function () {
 		var oContainer = this.getParent();
-
-		if (oContainer._resizeListeners[this.getId()]) {
-			ResizeHandler.deregister(oContainer._resizeListeners[this.getId()]);
-			delete oContainer._resizeListeners[this.getId()];
-		}
-
 		oContainer._reflectItemVisibilityToWrapper(this);
 	};
 
@@ -380,28 +374,19 @@ sap.ui.define([
 	 * @private
 	 */
 	GridContainer.prototype._onAfterItemRendering = function () {
-		var oContainer = this.getParent();
+		var container = this.getParent();
 
-		oContainer._checkOwnVisualFocus(this);
+		container._checkOwnVisualFocus(this);
 
-		oContainer._resizeListeners[this.getId()] = ResizeHandler.register(this, oContainer._resizeItemHandler);
-
-		oContainer._setItemNavigationItems();
-
-		oContainer._applyItemAutoRows(this);
-
-		if (this.getAriaRoleDescription) {
-			var oListItemDomRef = this.getDomRef().parentElement,
-				sAriaRoleDesc = this.getAriaRoleDescription();
-
-			if (oListItemDomRef.classList.contains("sapFGridContainerItemWrapper")) {
-				if (sAriaRoleDesc) {
-					oListItemDomRef.setAttribute("aria-roledescription", sAriaRoleDesc);
-				} else {
-					oListItemDomRef.removeAttribute("aria-roledescription");
-				}
-			}
+		// register resize listener for that item only once
+		if (!container._resizeListeners[this.getId()]) {
+			container._resizeListeners[this.getId()] = ResizeHandler.register(this, container._resizeItemHandler);
 		}
+
+		container._setItemNavigationItems();
+
+
+		container._applyItemAutoRows(this);
 	};
 
 	/**

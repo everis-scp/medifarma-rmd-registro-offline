@@ -5,7 +5,7 @@
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.96.9"
+      "version": "1.93.4"
     },
     "title": "UI5 library: sap.ui.mdc",
     "description": "UI5 library: sap.ui.mdc",
@@ -28,16 +28,16 @@
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.96",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.96.9"
+          "minVersion": "1.93.4"
         },
         "sap.m": {
-          "minVersion": "1.96.9"
+          "minVersion": "1.93.4"
         },
         "sap.ui.layout": {
-          "minVersion": "1.96.9",
+          "minVersion": "1.93.4",
           "lazy": true
         }
       }
@@ -123,7 +123,6 @@
           "sap.ui.mdc.table.GridTableType",
           "sap.ui.mdc.table.ResponsiveTableType",
           "sap.ui.mdc.table.RowSettings",
-          "sap.ui.mdc.chart.Item",
           "sap.ui.mdc.chart.DimensionItem",
           "sap.ui.mdc.chart.MeasureItem",
           "sap.ui.mdc.chartNew.ItemNew",
@@ -159,10 +158,7 @@
           "sap.ui.mdc.field.InParameter",
           "sap.ui.mdc.field.OutParameter",
           "sap.ui.mdc.ui.ContainerItem",
-          "sap.ui.mdc.field.MultiValueFieldItem",
-          "sap.ui.mdc.ValueHelp",
-          "sap.ui.mdc.valuehelp.Popover",
-          "sap.ui.mdc.valuehelp.Dialog"
+          "sap.ui.mdc.field.MultiValueFieldItem"
         ],
         "types": [
           "sap.ui.mdc.TableType",
@@ -177,11 +173,7 @@
         "interfaces": [
           "sap.ui.mdc.IFilterSource",
           "sap.ui.mdc.IFilter",
-          "sap.ui.mdc.IxState",
-          "sap.ui.mdc.valuehelp.ITypeaheadContent",
-          "sap.ui.mdc.valuehelp.IDialogContent",
-          "sap.ui.mdc.valuehelp.ITypeaheadContainer",
-          "sap.ui.mdc.valuehelp.IDialogContainer"
+          "sap.ui.mdc.IxState"
         ]
       }
     }

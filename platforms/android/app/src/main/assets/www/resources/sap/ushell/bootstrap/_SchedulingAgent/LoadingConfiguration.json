@@ -2,7 +2,9 @@
 
     "OrderOfLoadingBlocks": [
         "AfterCoreExtLight",
-        "FLPPlugins"
+        "FLPComponents",
+        "FLPPlugins",
+        "WarmUpPlugins"
     ],
     "LoadingBlocks": {
         "AfterCoreExtLight": {
@@ -18,22 +20,30 @@
                 {
                     "LoadingStep": "UsageAnalytics",
                     "canBeLoadedAsync": true
+                },
+                {
+                    "LoadingStep": "MenuBar",
+                    "canBeLoadedAsync": true
                 }
             ],
             "maxWaitInMs": 0
         },
-        "FLPPlugins": {
+        "FLPComponents": {
             "LoadingSteps": [
                 {
                     "LoadingStep": "ConditionalWaitForAppLoading",
                     "canBeLoadedAsync": false
                 },
                 {
-                    "LoadingStep": "LoadPlugins",
+                    "LoadingStep": "PostLoadingHeaderEnhancement",
                     "canBeLoadedAsync": true
                 },
                 {
-                    "LoadingStep": "Notifications",
+                    "LoadingStep": "TrackingActivitiesSetting",
+                    "canBeLoadedAsync": true
+                },
+                {
+                    "LoadingStep": "MeArea",
                     "canBeLoadedAsync": false
                 },
                 {
@@ -41,21 +51,39 @@
                     "canBeLoadedAsync": false
                 },
                 {
+                    "LoadingStep": "Notifications",
+                    "canBeLoadedAsync": false
+                },
+                {
                     "LoadingStep": "Search",
                     "canBeLoadedAsync": false
                 },
                 {
-                    "LoadingStep": "MeArea",
+                    "LoadingStep": "ProductSwitch",
                     "canBeLoadedAsync": false
                 },
                 {
                     "LoadingStep": "UserSettings",
                     "canBeLoadedAsync": false
+                }
+            ],
+            "maxWaitInMs": 0
+        },
+        "FLPPlugins": {
+            "LoadingSteps": [
+                {
+                    "LoadingStep": "LoadPlugins",
+                    "canBeLoadedAsync": true
                 },
                 {
                     "LoadingStep": "FirstSegmentCompleteLoaded",
                     "canBeLoadedAsync": false
-                },
+                }
+            ],
+            "maxWaitInMs": 0
+        },
+        "WarmUpPlugins": {
+            "LoadingSteps": [
                 {
                     "LoadingStep": "WarmupPlugins",
                     "canBeLoadedAsync": true
@@ -65,4 +93,3 @@
         }
     }
 }
-

@@ -37,7 +37,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -81,6 +81,7 @@ sap.ui.define([
 
 		this._ariaContentText = new InvisibleText({id: this.getId() + "-ariaContentText"});
 		this._ariaContentText.setText(this._oRb.getText("ARIA_LABEL_CARD_CONTENT"));
+
 
 		this._ariaText = new InvisibleText({id: this.getId() + "-ariaText"});
 		this._ariaText.setText(this._oRb.getText("ARIA_ROLEDESCRIPTION_CARD"));
@@ -242,26 +243,10 @@ sap.ui.define([
 	 */
 	CardBase.prototype._getAriaLabelledIds = function () {
 		var oHeader = this.getCardHeader(),
-			sAriaLabelledBy = "";
+			sTitleId = oHeader && oHeader._getTitle() ? oHeader._getTitle().getId() : "",
+			sAriaLabelledBy = this.getId() + "-ariaText " + sTitleId;
 
-		if (oHeader && oHeader._getTitle()) {
-			sAriaLabelledBy = oHeader._getTitle().getId();
-		}
-
-		return sAriaLabelledBy;
-	};
-
-	/**
-	 * @ui5-restricted
-	 */
-	CardBase.prototype.getAriaRoleDescription = function () {
-		var oHeader = this.getCardHeader();
-
-		if (oHeader) {
-			return oHeader.getAriaRoleDescription();
-		}
-
-		return null;
+		return sAriaLabelledBy.trim();
 	};
 
 	return CardBase;

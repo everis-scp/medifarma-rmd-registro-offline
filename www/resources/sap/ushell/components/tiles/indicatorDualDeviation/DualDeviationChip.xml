@@ -3,14 +3,12 @@
 	<implementation>
 		<sapui5>
 			<basePath>../../</basePath>
-            <viewName>tiles/indicatorDualDeviation.DualDeviation.view.js</viewName>
+			<viewName>tiles/indicatorDualDeviation.DualDeviation.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
-	
 		<title />
 		<description />
-		
 	</appearance>
 	<contracts>
 		<consume id="configuration">
@@ -23,7 +21,7 @@
 				<parameter name="col">2</parameter>
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />
@@ -34,6 +32,5 @@
 		<consume id="preview" />
 		<consume id="search" />
 		<consume id="bag" />
-
 	</contracts>
 </chip>

@@ -652,13 +652,11 @@ sap.ui.define([
 	 *
 	 *   This model is read-only.
 	 *
-	 *   This model is not prepared to be inherited from.
-	 *
 	 * @extends sap.ui.model.MetaModel
 	 * @hideconstructor
 	 * @public
 	 * @since 1.37.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 	var ODataMetaModel = MetaModel.extend("sap.ui.model.odata.v4.ODataMetaModel", {
 		/*
@@ -1291,7 +1289,7 @@ sap.ui.define([
 			 *   Whether to continue after this step
 			 */
 			function step(sSegment, i, aSegments) {
-				var iIndexOfAt, bResultIsObject, bSplitSegment;
+				var iIndexOfAt, bSplitSegment;
 
 				if (sSegment === "$Annotations") {
 					return log(WARNING, "Invalid segment: $Annotations");
@@ -1330,9 +1328,8 @@ sap.ui.define([
 
 					if (typeof vResult === "string"
 						&& !(bSplitSegment && (sSegment === "@sapui.name" || sSegment[1] === "@"))
-						&& !(bODataMode && oSchemaChild && oSchemaChild.$kind === "EnumType")
 						// indirection: treat string content as a meta model path unless followed by
-						// a computed annotation or if it is an (Edm.Int64) enum member value
+						// a computed annotation
 						&& !steps(vResult, aSegments.slice(0, i))) {
 						return false;
 					}
@@ -1344,24 +1341,23 @@ sap.ui.define([
 							// technical property, switch to pure "JSON" drill-down
 							bODataMode = false;
 						} else {
-							bResultIsObject = typeof vResult === "object";
 							if (bSplitSegment) {
 								// no special preparations needed, but handle overloads below!
 							} else if (sSegment[0] !== "@" && sSegment.includes(".", 1)) {
 								// "17.3 QualifiedName": scope lookup
 								return scopeLookup(sSegment);
-							} else if (bResultIsObject && "$Type" in vResult) {
+							} else if (vResult && "$Type" in vResult) {
 								// implicit $Type insertion, e.g. at (navigation) property
 								if (!scopeLookup(vResult.$Type, "$Type")) {
 									return false;
 								}
-							} else if (bResultIsObject && "$Action" in vResult) {
+							} else if (vResult && "$Action" in vResult) {
 								// implicit $Action insertion at action import
 								if (!scopeLookup(vResult.$Action, "$Action")) {
 									return false;
 								}
 								vBindingParameterType = UNBOUND;
-							} else if (bResultIsObject && "$Function" in vResult) {
+							} else if (vResult && "$Function" in vResult) {
 								// implicit $Function insertion at function import
 								if (!scopeLookup(vResult.$Function, "$Function")) {
 									return false;
@@ -1466,18 +1462,19 @@ sap.ui.define([
 								aSegments[i].slice(0, iIndexOfAt)).join("/"));
 						}
 					}
+					if (!vResult || typeof vResult !== "object") {
+						// Note: even an OData path cannot continue here (e.g. by type cast)
+						vResult = undefined;
+						return !bInsideAnnotation && log(DEBUG, "Invalid segment: ", sSegment);
+					}
 					if (bODataMode && sSegment[0] === "@") { // annotation(s) via external targeting
 						// Note: inline annotations are reached via above fast path for pure "JSON"
 						// drill-down
-						vBindingParameterType = vResult && vResult.$Type || vBindingParameterType;
+						vBindingParameterType = vResult.$Type || vBindingParameterType;
 						vResult = mScope.$Annotations[sTarget] || {};
 						bODataMode = false; // switch to pure "JSON" drill-down
 					} else if (sSegment === "$" && i + 1 < aSegments.length) {
 						return log(WARNING, "Unsupported path after $");
-					} else if (!vResult || typeof vResult !== "object") {
-						// Note: even an OData path cannot continue here (e.g. by type cast)
-						vResult = undefined;
-						return !bInsideAnnotation && log(DEBUG, "Invalid segment: ", sSegment);
 					}
 				}
 
@@ -1663,7 +1660,7 @@ sap.ui.define([
 
 		// First fetch the complete metapath to ensure that everything is in mScope
 		// This also ensures that the metadata is valid
-		return this.fetchObject(_Helper.getMetaPath(sResolvedPath)).then(function () {
+		return this.fetchObject(this.getMetaPath(sResolvedPath)).then(function () {
 			// Then fetch mScope
 			return that.fetchEntityContainer();
 		}).then(function (mScope) {
@@ -2081,8 +2078,7 @@ sap.ui.define([
 						&& aSegments0[i + 1] === "$Parameter") {
 					// Filter via the binding parameter
 					aOverloadMetadata = that.getObject(
-						_Helper.getMetaPath(aSegments0.slice(0, i + 1).join("/")
-							+ "/@$ui5.overload")
+						that.getMetaPath(aSegments0.slice(0, i + 1).join("/") + "/@$ui5.overload")
 					);
 					// Note: This must be a bound operation with a binding parameter; otherwise it
 					// would be in the first segment and the loop would not touch it due to
@@ -2101,7 +2097,7 @@ sap.ui.define([
 			return j < iBasePathLength || sSegment[0] === "#" || sSegment[0] === "@"
 					|| rNumber.test(sSegment) || sSegment === "$Parameter"
 				? {} // simply an object w/o $Partner and $isCollection
-				: that.getObject(_Helper.getMetaPath(aSegments.slice(0, j + 1).join("/"))) || {};
+				: that.getObject(that.getMetaPath(aSegments.slice(0, j + 1).join("/"))) || {};
 		});
 		mPaths[sPath] = true;
 		if (!(bNoReduceBeforeCollection
@@ -2230,7 +2226,7 @@ sap.ui.define([
 	 * @since 1.37.0
 	 */
 	ODataMetaModel.prototype.getMetaContext = function (sPath) {
-		return new BaseContext(this, _Helper.getMetaPath(sPath));
+		return new BaseContext(this, this.getMetaPath(sPath));
 	};
 
 	/**
@@ -3086,8 +3082,7 @@ sap.ui.define([
 	 *   instead, see {@link sap.ui.model.odata.v4.ODataModel#bindList}.
 	 *
 	 *   For fixed values, only one mapping is expected and the qualifier is ignored. The mapping
-	 *   is available with key "" and has an additional property "$qualifier" which is the original
-	 *   qualifier (useful in case of "ValueListRelevantQualifiers" annotation).
+	 *   is available with key "".
 	 *
 	 *   The promise is rejected with an error if there is no value list information available
 	 *   for the given property path. Use {@link #getValueListType} to determine if value list
@@ -3115,7 +3110,7 @@ sap.ui.define([
 	 */
 	ODataMetaModel.prototype.requestValueListInfo = function (sPropertyPath, bAutoExpandSelect,
 			oContext) {
-		var sPropertyMetaPath = _Helper.getMetaPath(sPropertyPath),
+		var sPropertyMetaPath = this.getMetaPath(sPropertyPath),
 			sParentMetaPath = sPropertyMetaPath.slice(0, sPropertyMetaPath.lastIndexOf("/"))
 				.replace("/$Parameter", ""),
 			sQualifiedName = sParentMetaPath.slice(sParentMetaPath.lastIndexOf("/") + 1),
@@ -3215,7 +3210,7 @@ sap.ui.define([
 					});
 				});
 			})).then(function () {
-				var aRelevantQualifiers = mAnnotationByTerm[sValueListRelevantQualifiers];
+				var aQualifiers;
 
 				// add all mappings in the data service (or local annotation files)
 				Object.keys(mAnnotationByTerm).filter(function (sTerm) {
@@ -3224,36 +3219,28 @@ sap.ui.define([
 					addMapping(mAnnotationByTerm[sTerm], getValueListQualifier(sTerm), that.sUrl,
 						that.oModel);
 				});
+				aQualifiers = Object.keys(oValueListInfo);
 
 				// Each reference must have contributed at least one qualifier. So if oValueListInfo
 				// is empty, there cannot have been a reference.
-				if (isEmptyObject(oValueListInfo)) {
+				if (!aQualifiers.length) {
 					throw new Error("No annotation '" + sValueListReferences.slice(1) + "' for " +
 						sPropertyPath);
 				}
-
-				return aRelevantQualifiers && oContext && oContext.getBinding
-					? that.filterValueListRelevantQualifiers(oValueListInfo, aRelevantQualifiers,
-						sPropertyMetaPath + sValueListRelevantQualifiers, oContext)
-					: oValueListInfo;
-			}).then(function (mValueListByRelevantQualifier) {
-				var aQualifiers, mValueListMapping;
-
 				if (bFixedValues) {
-					aQualifiers = Object.keys(mValueListByRelevantQualifier);
-					// With fixed values, only one mapping should exist. Return it for qualifier "".
-					if (aQualifiers.length !== 1) {
+					// With fixed values, only one mapping may exist. Return it for qualifier "".
+					if (aQualifiers.length > 1) {
 						throw new Error("Annotation '" + sValueListWithFixedValues.slice(1)
-							+ "' but not exactly one '" + sValueList.slice(1)
+							+ "' but multiple '" + sValueList.slice(1)
 							+ "' for property " + sPropertyPath);
 					}
-					mValueListMapping = mValueListByRelevantQualifier[aQualifiers[0]];
-					mValueListMapping.$qualifier = aQualifiers[0];
-
-					return {"" : mValueListMapping};
+					return {"" : oValueListInfo[aQualifiers[0]]};
 				}
-
-				return mValueListByRelevantQualifier;
+				aQualifiers = mAnnotationByTerm[sValueListRelevantQualifiers];
+				return aQualifiers && oContext && oContext.getBinding
+					? that.filterValueListRelevantQualifiers(oValueListInfo, aQualifiers,
+						sPropertyMetaPath + sValueListRelevantQualifiers, oContext)
+					: oValueListInfo;
 			});
 		});
 	};

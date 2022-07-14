@@ -67,12 +67,12 @@ sap.ui.define([
 	 *   A function called with parameters <code>sGroupId</code> and <code>sPropertyName</code>
 	 *   returning the property value in question. Only 'submit' is supported for <code>
 	 *   sPropertyName</code>. Supported property values are: 'API', 'Auto' and 'Direct'.
-	 * @param {function} oModelInterface.reportStateMessages
-	 *   A function for reporting state messages; see {@link #reportStateMessages} for the signature
+	 * @param {function} oModelInterface.reportBoundMessages
+	 *   A function for reporting bound messages; see {@link #reportBoundMessages} for the signature
 	 *   of this function
-	 * @param {function} oModelInterface.reportTransitionMessages
+	 * @param {function} oModelInterface.reportUnboundMessages
 	 *   A function called with parameters <code>sResourcePath</code> and <code>sMessages</code>
-	 *   reporting OData transition messages to the {@link sap.ui.core.message.MessageManager}.
+	 *   reporting unbound OData messages to the {@link sap.ui.core.message.MessageManager}.
 	 * @param {function (string)} [oModelInterface.onCreateGroup]
 	 *   A callback function that is called with the group name as parameter when the first
 	 *   request is added to a group
@@ -88,11 +88,10 @@ sap.ui.define([
 		this.oModelInterface = oModelInterface;
 		this.sQueryParams = _Helper.buildQuery(mQueryParams); // Used for $batch and CSRF token only
 		this.mRunningChangeRequests = {}; // map from group ID to a SyncPromise[]
+		this.oSecurityTokenPromise = null; // be nice to Chrome v8
 		this.iSessionTimer = 0;
 		this.iSerialNumber = 0;
 		this.sServiceUrl = sServiceUrl;
-		this.vStatistics = mQueryParams && mQueryParams["sap-statistics"];
-		this.processSecurityTokenHandlers(); // sets this.oSecurityTokenPromise
 	}
 
 	/**
@@ -1201,7 +1200,7 @@ sap.ui.define([
 						// methods it must be possible to insert the ETag from the header
 						oResponse = vRequest.method === "GET" ? null : {};
 					}
-					that.reportHeaderMessages(vRequest.url,
+					that.reportUnboundMessagesAsJSON(vRequest.url,
 						getResponseHeader.call(vResponse, "sap-messages"));
 					sETag = getResponseHeader.call(vResponse, "ETag");
 					if (sETag) {
@@ -1286,38 +1285,6 @@ sap.ui.define([
 			this.aLockedGroupLocks.push(oGroupLock);
 		}
 		return oGroupLock;
-	};
-
-	/**
-	 * Calls the security token handlers returned by
-	 * {@link sap.ui.core.Configuration#getSecurityTokenHandlers} one by one with the requestor's
-	 * service URL. The first handler not returning <code>undefined</code> but a
-	 * <code>Promise</code> is used to determine the required security tokens.
-	 *
-	 * @private
-	 */
-	_Requestor.prototype.processSecurityTokenHandlers = function () {
-		var that = this;
-
-		this.oSecurityTokenPromise = null;
-
-		sap.ui.getCore().getConfiguration().getSecurityTokenHandlers().some(function (fnHandler) {
-			var oSecurityTokenPromise = fnHandler(that.sServiceUrl);
-
-			if (oSecurityTokenPromise !== undefined) {
-				that.oSecurityTokenPromise = oSecurityTokenPromise.then(function (mHeaders) {
-					that.checkHeaderNames(mHeaders);
-					// also overwrite this.mPredefinedRequestHeaders["X-CSRF-Token"] : "Fetch"
-					Object.assign(that.mHeaders, {"X-CSRF-Token" : undefined}, mHeaders);
-					that.oSecurityTokenPromise = null;
-				}).catch(function (oError) {
-					Log.error("An error occurred within security token handler: " + fnHandler,
-						oError, sClassName);
-					throw oError;
-				});
-				return true;
-			}
-		});
 	};
 
 	/**
@@ -1483,7 +1450,7 @@ sap.ui.define([
 	};
 
 	/**
-	 * Reports OData messages from the "sap-messages" response header.
+	 * Reports unbound OData messages.
 	 *
 	 * @param {string} sResourcePath
 	 *   The resource path of the request whose response contained the messages
@@ -1492,9 +1459,9 @@ sap.ui.define([
 	 *
 	 * @private
 	 */
-	_Requestor.prototype.reportHeaderMessages = function (sResourcePath, sMessages) {
+	_Requestor.prototype.reportUnboundMessagesAsJSON = function (sResourcePath, sMessages) {
 		if (sMessages) {
-			this.oModelInterface.reportTransitionMessages(JSON.parse(sMessages), sResourcePath);
+			this.oModelInterface.reportUnboundMessages(JSON.parse(sMessages), sResourcePath);
 		}
 	};
 
@@ -1624,9 +1591,6 @@ sap.ui.define([
 			return oPromise;
 		}
 
-		if (this.vStatistics !== undefined) {
-			mQueryOptions = Object.assign({"sap-statistics" : this.vStatistics}, mQueryOptions);
-		}
 		if (mQueryOptions) {
 			sResourcePath = that.addQueryString(sResourcePath, sMetaPath, mQueryOptions);
 		}
@@ -1637,7 +1601,7 @@ sap.ui.define([
 			Object.assign({}, mHeaders, this.mFinalHeaders),
 			JSON.stringify(oPayload), sOriginalResourcePath
 		).then(function (oResponse) {
-			that.reportHeaderMessages(oResponse.resourcePath, oResponse.messages);
+			that.reportUnboundMessagesAsJSON(oResponse.resourcePath, oResponse.messages);
 			return that.doConvertResponse(oResponse.body, sMetaPath);
 		});
 	};
@@ -1733,7 +1697,7 @@ sap.ui.define([
 						// methods it must be possible to insert the ETag from the header
 						vResponse = sMethod === "GET" ? null : {};
 					}
-					if (sETag && typeof vResponse === "object") {
+					if (sETag) {
 						vResponse["@odata.etag"] = sETag;
 					}
 
@@ -1911,10 +1875,11 @@ sap.ui.define([
 	 * @param {function (string)} [oModelInterface.onCreateGroup]
 	 *   A callback function that is called with the group name as parameter when the first
 	 *   request is added to a group
-	 * @param {function} oModelInterface.reportStateMessages
-	 *   A function to report OData state messages
-	 * @param {function (object[])} oModelInterface.reportTransitionMessages
-	 *   A function to report OData transition messages
+	 * @param {function} oModelInterface.reportBoundMessages
+	 *   A function to report bound OData messages
+	 * @param {function (object[])} oModelInterface.reportUnboundMessages
+	 *   A function to report unbound OData messages contained in the <code>sap-messages</code>
+	 *   response header
 	 * @param {object} [mHeaders={}]
 	 *   Map of default headers; may be overridden with request-specific headers; certain
 	 *   OData V4 headers are predefined, but may be overridden by the default or

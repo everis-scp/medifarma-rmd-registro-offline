@@ -1,13 +1,15 @@
 <core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
 						 xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 						 xmlns:smartlink="sap.ui.comp.navpopover"
-						 xmlns:sfi="sap.ui.comp.smartfield" xmlns:uxap="sap.uxap" xmlns:build="sap.build" xmlns:f="sap.f" >
+						 xmlns:sfi="sap.ui.comp.smartfield" xmlns:uxap="sap.uxap" xmlns:build="sap.build"
+						 template:require="{ AH: 'sap/suite/ui/generic/template/js/AnnotationHelper'}">
 			<template:if test="{= !${parameter>/settings/simpleHeaderFacets} }">
 				<template:with path="parameter>/manifest/sap.ui5/extends/extensions/sap.ui.viewExtensions/sap.suite.ui.generic.template.ObjectPage.view.Details"
 								var="manifestViewExtensions">
 					<template:if test="{entityType>com.sap.vocabularies.UI.v1.HeaderInfo/ImageUrl}">
 						<template:then>
-							<f:Avatar id="objectImage"
+							<Avatar id="objectImage"
+								tooltip="{_templPriv>/objectPage/headerInfo/objectTitle}"
 								src="{parts:[{path: 'entityType>com.sap.vocabularies.UI.v1.HeaderInfo/ImageUrl'}, {path: 'parameter>/appComponentName'}, {value: true}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatImageUrl'}"
 								displaySize="L"
 								displayShape="Square"
@@ -22,11 +24,12 @@
 							</template:if>
 						</template:then>
 						<template:elseif test="{entityType>com.sap.vocabularies.UI.v1.HeaderInfo/TypeImageUrl}">
-							<f:Avatar id="objectTypeImage"
+							<Avatar id="objectTypeImage"
+								tooltip="{_templPriv>/objectPage/headerInfo/objectTitle}"
 								src="{parts:[{path: 'entityType>com.sap.vocabularies.UI.v1.HeaderInfo/TypeImageUrl'}, {path: 'parameter>/appComponentName'}, {value: true}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatImageUrl'}"
 								displaySize="L"
 								displayShape="Square"
-								press="._templateEventHandlers.onHeaderImagePress"
+								initials="{path: 'entityType>com.sap.vocabularies.UI.v1.HeaderInfo/Initials', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getAvatarInitials'}"
 								class="sapUxAPObjectPageHeaderObjectImage sapSmartTemplatesObjectPageHeaderAvatar"/>
 							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointAfterImageExists' }">
 								<VBox id="AfterImageExtensionFacet::objectTypeImage">
@@ -35,10 +38,10 @@
 							</template:if>
 						</template:elseif>
 						<template:elseif test="{= ${entityType>com.sap.vocabularies.UI.v1.HeaderInfo/Initials}}"	>
-									<f:Avatar id="{:= ${parameter>/stableId}.getStableId({type: 'ObjectPageHeader', subType: 'InitialsAvatar'})}"
+									<Avatar id="{:= ${parameter>/stableId}.getStableId({type: 'ObjectPageHeader', subType: 'InitialsAvatar'})}"
+										tooltip="{_templPriv>/objectPage/headerInfo/objectTitle}"
 										displaySize="L"
 										displayShape="Square"
-										press="._templateEventHandlers.onHeaderImagePress"
 										class="sapUxAPObjectPageHeaderObjectImage sapSmartTemplatesObjectPageHeaderAvatar"
 										initials="{path: 'entityType>com.sap.vocabularies.UI.v1.HeaderInfo/Initials', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getAvatarInitials'}" />
 							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointAfterImageExists' }">
@@ -65,6 +68,8 @@
 							   var="manifestViewExtensions">
 					<template:with path="entityType>com.sap.vocabularies.UI.v1.HeaderFacets"
 								   var="headerFacets">
+						<template:with path="parameter>/variables" helper="AH.getNewVariable" var="isHeaderFacet">
+						<template:if test="{:= ${isHeaderFacet>}.set(true)}"/>
 						<template:repeat list="{headerFacets>}" var="headerFacet">
 							<template:if test="{parameter>/settings/simpleHeaderFacets}">
 								<template:then>
@@ -89,7 +94,7 @@
 																</HBox>
 															</template:then>
 															<template:else>
-																<HBox class="sapSmartTemplatesObjectPageHeaderForm">
+																<HBox class="sapSmartTemplatesObjectPageHeaderForm sapSmartTemplatesObjectPageHeaderFormBox">
 																	<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.HeaderFormDataField"
 																					type="XML"/>
 																</HBox>
@@ -121,7 +126,7 @@
 															</HBox>
 														</template:then>
 														<template:else>
-															<HBox class="sapSmartTemplatesObjectPageHeaderForm">
+															<HBox class="sapSmartTemplatesObjectPageHeaderForm sapSmartTemplatesObjectPageHeaderFormBox">
 																<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.HeaderFormDataField"
 																				type="XML"/>
 															</HBox>
@@ -233,6 +238,7 @@
 								</template:else>
 							</template:if>
 						</template:repeat>
+						</template:with>
 					</template:with>
 				</template:with>
 				</template:then>
@@ -242,7 +248,7 @@
 						<template:repeat
 								list="{path:'entityType>', filters: {path: '@sapui.name', operator: 'StartsWith', value1: 'com.sap.vocabularies.UI.v1.DataPoint'}}"
 								var="dataPoint">
-							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'dataPoint>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointBeforeHeaderDataPointExists'}">	
+							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'dataPoint>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointBeforeHeaderDataPointExists'}">
 								<l:VerticalLayout
 									id="dataPoint::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::BeforeDataPointExtension">
 									<core:ExtensionPoint name="BeforeHeaderDataPoint|{entitySet>name}|{path: 'dataPoint>' , formatter:'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}" />
@@ -266,14 +272,14 @@
 										<sfi:SmartField
 												id="dataPoint::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::Value"
 												contextEditable="false" uomEditable="false" enabled="true" clientSideMandatoryCheck="false"
-												value="{parts: [{path: 'dataPoint>Value'}, {path: 'entitySet>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpand'}"
+												value="{parts: [{path: 'dataPoint>Value'}, {path: 'entitySet>'}, {path: 'dataPoint>ValueFormat'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatWithExpandSimplePath'}"
 												class="sapSmartTemplatesObjectPageDataPointValue {= ${dataPoint>Value/EdmType} === 'Edm.Byte' || ${dataPoint>Value/EdmType} === 'Edm.Decimal' || ${dataPoint>Value/EdmType} === 'Edm.Double' ||  ${dataPoint>Value/EdmType} === 'Edm.Float' ||  ${dataPoint>Value/EdmType} === 'Edm.Int16' ||  ${dataPoint>Value/EdmType} === 'Edm.Int32' || ${dataPoint>Value/EdmType} === 'Edm.Int64' ||  ${dataPoint>Value/EdmType} === 'Edm.SByte' ? 'sapSmartTemplatesObjectPageDataPointNumericValue' : 'sapSmartTemplatesObjectPageDataPointTextualValue'}"
-												fetchValueListReadOnly="false">
+												fetchValueListReadOnly="{parts:[{path: 'parameter>/entityType'},{path: 'dataPoint>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getValueListReadOnly'}">
 											<sfi:semanticObjectController>
 												<smartlink:SemanticObjectController beforePopoverOpens="._templateEventHandlers.onBeforeSemanticObjectLinkPopoverOpens"
-																					navigate="._templateEventHandlers.onSemanticObjectLinkPopoverLinkPressed"
 																					navigationTargetsObtained="._templateEventHandlers.onSemanticObjectLinkNavigationTargetObtained"
-																					forceLinkRendering="{parts: [{path: 'entitySet>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.hasQuickViewFacet'}"/>
+													                                beforeNavigationCallback="._templateEventHandlers.onBeforeSemanticObjectLinkNavigationCallback"
+																					forceLinkRendering="{parts: [{path: 'entitySet>'},{path: 'parameter>/templateSpecific/targetEntities'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.hasQuickViewFacet'}"/>
 											</sfi:semanticObjectController>
 											<template:if test="{= ${dataPoint>Criticality} }">
 												<sfi:controlProposal>
@@ -290,7 +296,7 @@
 									</l:VerticalLayout>
 								</template:else>
 							</template:if>
-							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'dataPoint>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointAfterHeaderDataPointExists'}">	
+							<template:if test="{parts: [{path: 'entitySet>name'}, {path: 'dataPoint>'}, {path: 'manifestViewExtensions>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.extensionPointAfterHeaderDataPointExists'}">
 								<l:VerticalLayout
 									id="dataPoint::{path: 'dataPoint>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}::AfterDataPointExtension">
 									<core:ExtensionPoint name="AfterHeaderDataPoint|{entitySet>name}|{path: 'dataPoint>' , formatter:'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromDataPoint'}" />

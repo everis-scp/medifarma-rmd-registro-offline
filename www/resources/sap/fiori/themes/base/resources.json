@@ -3,38 +3,61 @@
 	"resources": [
 		{
 			"name": ".theming",
+			"size": 64,
 			"theme": "base"
 		},
 		{
-			"name": "library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "css_variables.css",
+			"size": 126798,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 234,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 138156,
+			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library-RTL.css",
-			"theme": "base"
-		},
-		{
-			"name": "library-dbg.css",
-			"isDebug": true,
+			"size": 1134571,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
+			"size": 94378,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
+			"size": 1133855,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
+			"size": 566,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library.source.less",
+			"size": 498,
 			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 1095235,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 1094520,
 			"theme": "base"
 		}
 	]

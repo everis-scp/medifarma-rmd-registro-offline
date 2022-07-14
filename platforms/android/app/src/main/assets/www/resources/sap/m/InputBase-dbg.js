@@ -11,7 +11,6 @@ sap.ui.define([
 	'sap/ui/core/IconPool',
 	'./delegate/ValueStateMessage',
 	'sap/ui/core/message/MessageMixin',
-	'sap/ui/core/InvisibleMessage',
 	'sap/ui/core/library',
 	'sap/ui/Device',
 	'./InputBaseRenderer',
@@ -32,7 +31,6 @@ function(
 	IconPool,
 	ValueStateMessage,
 	MessageMixin,
-	InvisibleMessage,
 	coreLibrary,
 	Device,
 	InputBaseRenderer,
@@ -64,7 +62,7 @@ function(
 	 * @implements sap.ui.core.IFormContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -302,9 +300,6 @@ function(
 		// handle composition events & validation of composition symbols
 		this._bIsComposingCharacter = false;
 
-		this.setLastValueStateText("");
-		this.setErrorMessageAnnouncementState(false);
-
 		this.fnCloseValueStateOnClick = function() {
 			this.closeValueStateMessage();
 		};
@@ -348,39 +343,23 @@ function(
 	};
 
 	InputBase.prototype.onBeforeRendering = function() {
-		var oFocusDomRef = this.getFocusDomRef();
 		var oFormattedVSText = this.getFormattedValueStateText();
-		var bFormattedValueStateUpdated;
-
-		if (!this._oInvisibleMessage) {
-			this._oInvisibleMessage = InvisibleMessage.getInstance();
-		}
+		var oFormattedVSTextContent = oFormattedVSText && oFormattedVSText.getHtmlText();
+		var oFormattedVSTextAcc = this.getAggregation("_invisibleFormattedValueStateText");
+		var oFormattedVSTextAccContent = oFormattedVSTextAcc && oFormattedVSTextAcc.getHtmlText();
 
 		if (this._bCheckDomValue && !this.bRenderingPhase) {
+
 			// remember dom value in case of invalidation during keystrokes
 			// so the following should only be used onAfterRendering
 			if (this.isActive()) {
-				this._sDomValue = this._getInputValue();
-			} else {
-				this._bCheckDomValue = false;
-			}
+                this._sDomValue = this._getInputValue();
+            } else {
+                this._bCheckDomValue = false;
+            }
 		}
 
-		if (!oFormattedVSText) {
-			bFormattedValueStateUpdated = false;
-		} else {
-			var oFormattedVSTextAcc = this.getAggregation("_invisibleFormattedValueStateText");
-			bFormattedValueStateUpdated = oFormattedVSText.getHtmlText() !== (oFormattedVSTextAcc && oFormattedVSTextAcc.getHtmlText());
-		}
-
-		// The value state error should be announced, when there are dynamic changes
-		// to value state error or value state error message, due to user interaction
-		if (this.getValueState() === ValueState.Error && oFocusDomRef) {
-			var bValueStateUpdated = bFormattedValueStateUpdated || this.getValueStateText() !== this.getLastValueStateText();
-			this.setErrorMessageAnnouncementState(!oFocusDomRef.hasAttribute('aria-invalid') || bValueStateUpdated);
-		}
-
-		if (bFormattedValueStateUpdated) {
+		if (oFormattedVSText && oFormattedVSTextContent !== oFormattedVSTextAccContent) {
 			oFormattedVSTextAcc && oFormattedVSTextAcc.destroy();
 			this.setAggregation("_invisibleFormattedValueStateText", oFormattedVSText.clone());
 		}
@@ -393,7 +372,6 @@ function(
 		var sValueState = this.getValueState();
 		var bIsFocused = this.getFocusDomRef() === document.activeElement;
 		var bClosedValueState = sValueState === ValueState.None;
-		var sValueStateMessageHiddenText = document.getElementById(this.getValueStateMessageId() + '-sr');
 
 		// maybe control is invalidated on keystrokes and
 		// even the value property did not change
@@ -403,12 +381,6 @@ function(
 
 			// so we should keep the dom up-to-date
 			this.$("inner").val(this._sDomValue);
-		}
-
-		// Announce error value state update, only when the visual focus is in the input field
-		if (this.getErrorMessageAnnouncementState() && this.hasStyleClass("sapMFocus")) {
-			sValueStateMessageHiddenText && this._oInvisibleMessage.announce(sValueStateMessageHiddenText.textContent);
-			this.setErrorMessageAnnouncementState(false);
 		}
 
 		this.$("message").text(this.getValueStateText());
@@ -428,8 +400,6 @@ function(
 				oControl.getDomRef() && oControl.getDomRef().setAttribute("tabindex", -1);
 			});
 		}
-
-		this.setLastValueStateText(this.getValueStateText());
 	};
 
 	InputBase.prototype.exit = function() {
@@ -438,12 +408,8 @@ function(
 			this._oValueStateMessage.destroy();
 		}
 
-		if (this.oInvisibleMessage) {
-			this.oInvisibleMessage.destroy();
-			this.oInvisibleMessage = null;
-		}
-
 		this._oValueStateMessage = null;
+		this._oDomRefBeforeRendering = null;
 	};
 
 	/* =========================================================== */
@@ -548,7 +514,7 @@ function(
 		mParameters = mParameters || this.getChangeEventParams();
 
 		// check the control is editable or not
-		if (this.getDomRef() && (!this.getEditable() || !this.getEnabled())) {
+		if (!this.getEditable() || !this.getEnabled()) {
 			return;
 		}
 
@@ -987,42 +953,6 @@ function(
 	};
 
 	/**
-	 * Gets the state of the value state message announcemnt.
-	 *
-	 * @returns {boolean} True, if the error value state should be announced.
-	 */
-	InputBase.prototype.getErrorMessageAnnouncementState = function() {
-		return this._bErrorStateShouldBeAnnounced;
-	};
-
-	/**
-	 * Sets the state of the value state message announcemnt.
-	 *
-	 * @param {boolean} bAnnounce Determines, if the error value state message should be announced.
-	 */
-	InputBase.prototype.setErrorMessageAnnouncementState = function(bAnnounce) {
-		this._bErrorStateShouldBeAnnounced = bAnnounce;
-	};
-
-	/**
-	 * Sets the last value state text.
-	 *
-	 * @param {string} sValueStateText The Last Value State Text to be set
-	 */
-	InputBase.prototype.setLastValueStateText = function(sValueStateText) {
-		this._sLastValueStateText = sValueStateText;
-	};
-
-	/**
-	 * Gets the last stored value state text.
-	 *
-	 * @returns {string} The value state text
-	 */
-	InputBase.prototype.getLastValueStateText = function() {
-		return this._sLastValueStateText;
-	};
-
-	/**
 	 * Gets the labels referencing this control.
 	 *
 	 * @returns {sap.m.Label[]} Array of objects which are the current targets of the <code>ariaLabelledBy</code>
@@ -1152,7 +1082,7 @@ function(
 		return {
 			role: oRenderer.getAriaRole(this),
 			type: sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("ACC_CTR_TYPE_INPUT"),
-			description: [this.getValueDescriptionInfo(), oRenderer.getLabelledByAnnouncement(this), oRenderer.getDescribedByAnnouncement(this), sRequired].join(" ").trim(),
+			description: [this.getValue() || "", oRenderer.getLabelledByAnnouncement(this), oRenderer.getDescribedByAnnouncement(this), sRequired].join(" ").trim(),
 			focusable: this.getEnabled(),
 			enabled: this.getEnabled(),
 			editable: this.getEnabled() && this.getEditable()
@@ -1160,36 +1090,20 @@ function(
 	};
 
 	/**
-	 * Gets the value of the accessibility description info field.
-	 *
-	 * @protected
-	 * @returns {string} The value of the accessibility description info
-	 */
-	InputBase.prototype.getValueDescriptionInfo = function () {
-		return this.getValue() || sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("INPUTBASE_VALUE_EMPTY");
-	};
-
-	/**
 	 * Adds an icon to be rendered
 	 * @param {string} sIconPosition a position for the icon to be rendered - begin or end
 	 * @param {object} oIconSettings settings for creating an icon
-	 * @param {int} iPosition position to be inserted in the aggregation
 	 * @see sap.ui.core.IconPool.createControlByURI
 	 * @private
 	 * @returns {null|sap.ui.core.Icon}
 	 */
-	InputBase.prototype._addIcon = function (sIconPosition, oIconSettings, iPosition) {
+	InputBase.prototype._addIcon = function (sIconPosition, oIconSettings) {
 		if (["begin", "end"].indexOf(sIconPosition) === -1) {
 			log.error('icon position is not "begin", neither "end", please check again the passed setting');
 			return null;
 		}
 		var oIcon = IconPool.createControlByURI(oIconSettings).addStyleClass(InputBase.ICON_CSS_CLASS);
-
-		if (iPosition !== undefined) {
-			this.insertAggregation("_" + sIconPosition + "Icon", oIcon, iPosition);
-		} else {
-			this.addAggregation("_" + sIconPosition + "Icon", oIcon);
-		}
+		this.addAggregation("_" + sIconPosition + "Icon", oIcon);
 
 		return oIcon;
 	};
@@ -1208,13 +1122,12 @@ function(
 	/**
 	 * Adds an icon to the end of the input
 	 * @param {object} oIconSettings settings for creating an icon
-	 * @param {int} iPosition position to be inserted in the aggregation. If not provided, the icon gets inserted on last position.
 	 * @see sap.ui.core.IconPool.createControlByURI
 	 * @protected
 	 * @returns {null|sap.ui.core.Icon}
 	 */
-	InputBase.prototype.addEndIcon = function (oIconSettings, iPosition) {
-		return this._addIcon("end", oIconSettings, iPosition);
+	InputBase.prototype.addEndIcon = function (oIconSettings) {
+		return this._addIcon("end", oIconSettings);
 	};
 
 	// do not cache jQuery object and define _$input for compatibility reasons

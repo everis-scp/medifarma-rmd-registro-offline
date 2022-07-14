@@ -9,9 +9,8 @@
 		  class="sapSmartTemplatesObjectPageHeaderAddress"
 		  dt:annotation="{parts: [{path: 'parameter>/entityType'}, {value: 'com.sap.vocabularies.UI.v1.HeaderFacets'}, {path: 'headerFacet>Target/AnnotationPath'}, {path: 'headerFacet>'}], formatter: 'sap.suite.ui.generic.template.changeHandler.js.AnnotationHelperForDesignTime.createInstanceMetadataWithPath'}">
 		<template:if test="{headerFacet>Label}">
-			<Label id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::Label"
+			<Title id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::Label"
 				   text="{path: 'headerFacet>Label', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}:"
-				   labelFor="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::Address"
 				   class="sapSmartTemplatesObjectPageHeaderAddressLabel" />
 		</template:if>
 		<Text id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::Address"

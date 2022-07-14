@@ -185,7 +185,6 @@ sap.ui.define([
 			oPendingInteraction = null;
 			oCurrentBrowserEvent = null;
 			isNavigation = false;
-			bMatched = false;
 		}
 	}
 
@@ -218,12 +217,11 @@ sap.ui.define([
 	var bInteractionActive = false,
 		bInteractionProcessed = false,
 		oCurrentBrowserEvent,
-		oBrowserElement,
-		bMatched = false,
 		iInteractionStepTimer,
 		bIdle = false,
 		bSuspended = false,
 		iInteractionCounter = 0,
+		iScrollEventDelayId = 0,
 		descScriptSrc = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, "src");
 
 	/* As UI5 resources gets also loaded via script tags we need to
@@ -598,19 +596,13 @@ sap.ui.define([
 					} else {
 						sType = sEventId;
 					}
+
 					Interaction.start(sType, oElement);
 					oPendingInteraction = Interaction.getPending();
 
 					// update pending interaction infos
 					if (oPendingInteraction && !oPendingInteraction.completed && Interaction.onInteractionStarted) {
 						oPendingInteraction.passportAction = Interaction.onInteractionStarted(oPendingInteraction, bForce);
-					}
-					if (oCurrentBrowserEvent) {
-						oBrowserElement = oCurrentBrowserEvent.srcControl;
-					}
-					// if browser event matches the first control event we take it for trigger/event determination (step name)
-					if (oElement && oElement.getId && oBrowserElement && oElement.getId() === oBrowserElement.getId()) {
-						bMatched = true;
 					}
 					oCurrentBrowserEvent = null;
 					//only handle the first browser event within a call stack. Ignore virtual/harmonization events.
@@ -621,26 +613,7 @@ sap.ui.define([
 						oCurrentBrowserEvent = null;
 						bInteractionProcessed = false;
 					}, 0);
-				} else if (oPendingInteraction && oBrowserElement && !bMatched) {
-					// if browser event matches one of the next control events we take it for trigger/event determination (step name)
-					var elem = oBrowserElement;
-					if (elem && oElement.getId() === elem.getId()) {
-						oPendingInteraction.trigger = oElement.getId();
-						oPendingInteraction.event = sEventId;
-					    bMatched = true;
-					} else {
-						while (elem && elem.getParent()) {
-							elem = elem.getParent();
-							if (oElement.getId() === elem.getId()) {
-								oPendingInteraction.trigger = oElement.getId();
-								oPendingInteraction.event = sEventId;
-								//if we find no direct match we consider the last control event for the trigger/event (step name)
-								break;
-							}
-						}
-					}
 				}
-
 			}
 		},
 
@@ -755,7 +728,19 @@ sap.ui.define([
 		 * @private
 		 */
 		notifyScrollEvent : function(oEvent) {
-			/* Scrolling is disabled as it does not work properly for non user triggered scrolling */
+			if (bInteractionActive) {
+				// notify for a newly started interaction, but not more often than every 250ms.
+				if (!iScrollEventDelayId) {
+					Interaction.notifyEventStart(oEvent);
+				} else {
+					clearTimeout(iScrollEventDelayId);
+				}
+				iScrollEventDelayId = setTimeout(function(){
+					Interaction.notifyStepStart(oEvent.sourceElement);
+					iScrollEventDelayId = 0;
+					Interaction.notifyStepEnd();
+				}, 250);
+			}
 		},
 
 		/**

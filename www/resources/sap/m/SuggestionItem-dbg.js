@@ -22,7 +22,7 @@ sap.ui.define(['./library', 'sap/ui/core/Item', 'sap/ui/core/IconPool'],
 	 * @extends sap.ui.core.Item
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.34
 	 *
 	 * @constructor
@@ -147,5 +147,11 @@ sap.ui.define(['./library', 'sap/ui/core/Item', 'sap/ui/core/IconPool'],
 		return this.getText();
 	};
 
+	// Suppress invalidate of the parent input field by property changes.
+	SuggestionItem.prototype.invalidate = function() {
+		return undefined;
+	};
+
 	return SuggestionItem;
+
 });

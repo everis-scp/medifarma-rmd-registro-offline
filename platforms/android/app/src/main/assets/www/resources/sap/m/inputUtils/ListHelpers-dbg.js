@@ -89,7 +89,7 @@ sap.ui.define([
 	 */
 	ListHelpers.getEnabledItems = function (aItems) {
 		if (!Array.isArray(aItems)) {
-			return [];
+			return;
 		}
 
 		return aItems.filter(function (oItem) {
@@ -100,7 +100,6 @@ sap.ui.define([
 	/**
 	 * Gets the selectable items from the aggregation named <code>items</code>.
 	 *
-	 * @param {sap.ui.core.Item[]} aItems Items to filter
 	 * @returns {sap.ui.core.Item[]} An array containing the selectables items.
 	 */
 	ListHelpers.getSelectableItems = function(aItems) {
@@ -108,21 +107,9 @@ sap.ui.define([
 			return [];
 		}
 
-		return this.getAllSelectableItems(this.getVisibleItems(aItems));
-	};
+		var aVisibleItems = this.getEnabledItems(this.getVisibleItems(aItems));
 
-	/**
-	 * Gets the selectable items from the aggregation named <code>items</code>, including not visible ones.
-	 *
-	 * @param {sap.ui.core.Item[]} aItems Items to filter
-	 * @returns {sap.ui.core.Item[]} An array containing the selectables items.
-	 */
-	ListHelpers.getAllSelectableItems = function(aItems) {
-		if (!Array.isArray(aItems)) {
-			return [];
-		}
-
-		return this.getEnabledItems(aItems).filter(function(oListItem){
+		return aVisibleItems && aVisibleItems.filter(function(oListItem){
 			return !oListItem.isA("sap.ui.core.SeparatorItem");
 		});
 	};

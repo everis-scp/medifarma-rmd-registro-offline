@@ -16,7 +16,7 @@ sap.ui.define(['./ColumnPopoverItem', 'sap/m/Button'], function(ColumnPopoverIte
 	 * @extends sap.m.ColumnPopoverItem
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @since 1.63

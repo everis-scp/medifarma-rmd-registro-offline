@@ -50,7 +50,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -318,7 +318,6 @@ sap.ui.define([
 			} else if ((iKey === KeyCodes.ARROW_UP || iKey === KeyCodes.ARROW_DOWN) && !oEvent.altKey && !oEvent.metaKey) {
 				// Arrows up/down increase/decrease currently active clock
 				oClock && oClock.getEnabled() && oClock.modifyValue(iKey === KeyCodes.ARROW_UP);
-				oEvent.preventDefault();
 			} else if ((iKey === KeyCodes.PAGE_UP || iKey === KeyCodes.PAGE_DOWN) && !oEvent.altKey && !oEvent.metaKey) {
 				oEvent.preventDefault();
 				if (!oEvent.shiftKey && !oEvent.ctrlKey) {

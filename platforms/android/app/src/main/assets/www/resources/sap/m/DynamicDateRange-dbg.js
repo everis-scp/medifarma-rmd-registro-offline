@@ -118,7 +118,7 @@ sap.ui.define([
 		 * is opened. The dialog is closed via a date time period value selection or by pressing the "Cancel" button.
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -258,8 +258,7 @@ sap.ui.define([
 						}
 					}
 				}
-			},
-			renderer: DynamicDateRangeRenderer
+			}
 		});
 
 		MessageMixin.call(DynamicDateRange.prototype);
@@ -403,18 +402,12 @@ sap.ui.define([
 			this.setOptions(aOptions);
 		};
 
-		DynamicDateRange.prototype.getFocusDomRef = function(){
-			return this.getAggregation("_input") && this.getAggregation("_input").getFocusDomRef();
-		};
-
 		DynamicDateRange.prototype._updateInputValue = function(oValue) {
 			var sInputValue;
 
 			if (oValue && oValue.operator !== "PARSEERROR") {
 				sInputValue = this._enhanceInputValue(this._formatValue(oValue), oValue);
 				this._oInput.setValue(sInputValue);
-			} else if (oValue === undefined) {
-				this._oInput.setValue("");
 			}
 		};
 
@@ -619,6 +612,7 @@ sap.ui.define([
 				this._oPopup.attachAfterClose(function() {
 					this._setFooterVisibility(false);
 					this.invalidate();
+					this.getAggregation("_input").focus();
 				}, this);
 
 				this._oPopup.setBeginButton(new Button({
@@ -741,9 +735,12 @@ sap.ui.define([
 				var oToolbar = this._createInfoDatesFooter();
 
 				this._destroyInputControls();
-				this.aInputControls = oOption.createValueHelpUI(this, this._updateInternalControls.bind(this));
+				this.aInputControls = oOption.createValueHelpUI(this, this._updateDatesLabel.bind(this));
 
 				var oSecondPage = this._oNavContainer.getPages()[1];
+
+				//update the label after the controls have received their values
+				this._updateDatesLabel();
 
 				oSecondPage.removeAllContent();
 				this.aInputControls.forEach(function(oControl) {
@@ -754,7 +751,6 @@ sap.ui.define([
 				oSecondPage.setTitle(oOption.getText(this));
 
 				this._setFooterVisibility(true);
-				this._updateInternalControls(oOption);
 
 				this._oNavContainer.to(oSecondPage);
 			}
@@ -796,31 +792,6 @@ sap.ui.define([
 				sFormattedDates = this._getDatesLabelFormatter().format(aResultDates);
 				this._getDatesLabel().setText(oResourceBundle.getText("DDR_INFO_DATES", [sFormattedDates]));
 			}
-		};
-
-		DynamicDateRange.prototype._setApplyButtonEnabled = function(bEnabled) {
-			if (!this._oPopup) {
-				return;
-			}
-
-			var oApplyButton = this._oPopup.getBeginButton();
-
-			if (oApplyButton.getVisible()) {
-				oApplyButton.setEnabled(bEnabled);
-			}
-		};
-
-		/**
-		 * Function triggered when an input control, which is part of a given option UI changes its state.
-		 * @private
-		 * @param {sap.m.DynamicDateOption} oOption the currently selected option.
-		 */
-		DynamicDateRange.prototype._updateInternalControls = function(oOption) {
-			var bValidValueHelpUI = oOption.validateValueHelpUI(this);
-			if (bValidValueHelpUI) {
-				this._updateDatesLabel();
-			}
-			this._setApplyButtonEnabled(bValidValueHelpUI);
 		};
 
 		/**
@@ -916,17 +887,7 @@ sap.ui.define([
 			}
 
 			oElementToFocus.focus();
-
-			this._reApplyFocusToElement(oToPage, oValue);
 		};
-
-		/**
-		 * A hook that provides an option to reapply the focus to another element if needed.
-		 *
-		 * @ui5-restricted sap.ui.comp.config.condition.DateRangeType
-		 * @private
-		 */
-		DynamicDateRange.prototype._reApplyFocusToElement = function (oToPage, oValue) {};
 
 		/**
 		 * Creates the title text for the options page.
@@ -958,7 +919,7 @@ sap.ui.define([
 					if (jQuery(oControl.getDomRef()).firstFocusableDomRef()) {
 						oControl.addAriaLabelledBy(oToPage.getAggregation("_internalHeader"));
 
-						if (!this._isCalendarBasedControl(oControl) && oControl.addAriaDescribedBy) {
+						if (!this._isCalendarBasedControl(oControl)) {
 							oControl.addAriaDescribedBy(oToPage.getFooter().getContent()[0]);
 						}
 					}
@@ -969,7 +930,7 @@ sap.ui.define([
 				// There is a custom initial focus handling logic for both options list page and option details page
 				this._applyNavContainerPageFocus(oToPage);
 			} else {
-				this.focus();
+				this.getAggregation("_input").focus();
 			}
 		};
 
@@ -1049,7 +1010,7 @@ sap.ui.define([
 		};
 
 		DynamicDateRange.prototype._parseValue = function(sInputValue) {
-			var aResults = DynamicDateUtil.parse(sInputValue, this._getFormatter(), this.getOptions()).filter(function(oResult) {
+			var aResults = DynamicDateUtil.parse(sInputValue, this._getFormatter()).filter(function(oResult) {
 				return this.getOptions().indexOf(oResult.operator) !== -1;
 			}, this);
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html style="overflow-y: auto; height: 100%">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <title>Enterprise Search</title>
+        <script
+            id="sap-ui-bootstrap"
+            src="/resources/sap-ui-core.js"
+            data-sap-ui-theme="sap_belize"
+            data-sap-ui-libs="sap.m, sap.ui.layout, sap.ui.vbm, sap.ui.vk, sap.ui.export, sap.suite.ui.microchart, sap.ushell"
+            data-sap-ui-productive="true"
+            data-sap-ui-compatVersion="edge"
+        ></script>
+    </head>
+
+    <body class="sapUiBody sapUiSizeCompact" id="content"></body>
+    <script>
+        sap.ui.loader.config({
+            baseUrl: "../../../../../../resources/",
+            paths: {
+                "sap/esh/search/ui": "/resources/sap/esh/search/ui",
+            },
+        });
+        sap.ui.require(["sap/esh/search/ui/SearchCompositeControl"], function (SearchCompositeControl) {
+            const defaults = {
+                searchOnStart: true,
+                searchTerm: "*",
+                sinaConfiguration: {
+                    provider: "sample",
+                },
+            };
+            const customConfig = sap.esh.search.ui.config || {};
+            const options = Object.assign(customConfig, defaults);
+            var control = new SearchCompositeControl(options);
+            window.addEventListener(
+                "hashchange",
+                function () {
+                    control.getModel().parseURL();
+                },
+                false
+            );
+            control.placeAt("content");
+        });
+    </script>
+</html>

@@ -6,7 +6,8 @@
 							<SegmentedButtonItem
 									tooltip="{i18n>CONTAINER_VIEW_CHARTTABLE}"
 									key="charttable"
-									icon="{alpCustomModel>/icon/hybrid}"/>
+									icon="{alpCustomModel>/icon/hybrid}"
+									enabled="{_templPriv>/alp/enableHybridMode}"/>
 							</template:if>
 							<SegmentedButtonItem
 								tooltip="{i18n>CONTAINER_VIEW_CHART}"

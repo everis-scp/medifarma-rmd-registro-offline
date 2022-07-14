@@ -51,7 +51,7 @@ sap.ui.define([
 	 * </ul>
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.mdc.mixin.FilterIntegrationMixin
 	 * @namespace
 	 * @since 1.82.0
@@ -196,12 +196,12 @@ sap.ui.define([
 		if (bInbuiltEnabled || oFilter) {
 
 			if (oFilter) {
-				pOuterFilterSearch = oFilter.validate();
+				pOuterFilterSearch = oFilter.valid(false);
 			}
 
 			if (bInbuiltEnabled) {
 				pInnerFilterSearch = this.retrieveInbuiltFilter().then(function(oInnerFilter){
-					return oInnerFilter.validate();
+					return oInnerFilter.valid(false);
 				});
 			}
 

@@ -4,11 +4,9 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 sap.ui.define([
-	"sap/m/library",
-	"sap/ui/mdc/enum/ContentMode"
+	"sap/m/library"
 ], function(
-	mLibrary,
-	ContentMode
+	mLibrary
 ) {
 	"use strict";
 
@@ -30,16 +28,13 @@ sap.ui.define([
 		getDisplay: function() {
 			return ["sap/m/Text"];
 		},
-		getDisplayMultiValue: function() {
-			return this.getDisplayMultiLine();
-		},
 		getDisplayMultiLine: function() {
 			return ["sap/m/ExpandableText"];
 		},
 		getEdit: function() {
 			return ["sap/ui/mdc/field/FieldInput"];
 		},
-		getEditMultiValue: function() {
+		getEditMulti: function() {
 			return ["sap/ui/mdc/field/FieldMultiInput", "sap/m/Token"];
 		},
 		getEditMultiLine: function() {
@@ -47,9 +42,6 @@ sap.ui.define([
 		},
 		getEditOperator: function() {
 			return [null];
-		},
-		getEditForHelp: function() {
-			return this.getEdit();
 		},
 		getUseDefaultEnterHandler: function() {
 			return true;
@@ -66,30 +58,24 @@ sap.ui.define([
 		getControlNames: function(sContentMode, sOperator) {
 			var aControlNames;
 			switch (sContentMode) {
-				case ContentMode.Display:
+				case "Display":
 					aControlNames = this.getDisplay();
 					break;
-				case ContentMode.DisplayMultiValue:
-					aControlNames = this.getDisplayMultiValue();
-					break;
-				case ContentMode.DisplayMultiLine:
+				case "DisplayMultiLine":
 					aControlNames = this.getDisplayMultiLine();
 					break;
-				case ContentMode.EditMultiValue:
-					aControlNames = this.getEditMultiValue();
+				case "EditMulti":
+					aControlNames = this.getEditMulti();
 					break;
-				case ContentMode.EditMultiLine:
+				case "EditMultiLine":
 					aControlNames = this.getEditMultiLine();
 					break;
-				case ContentMode.EditOperator:
+				case "EditOperator":
 					if (this.getEditOperator()) {
 						aControlNames = this.getEditOperator()[sOperator] ? this.getEditOperator()[sOperator].name : [null];
 					} else {
 						aControlNames = [null];
 					}
-					break;
-				case ContentMode.EditForHelp:
-					aControlNames = this.getEditForHelp();
 					break;
 				default:
 					aControlNames = this.getEdit();
@@ -110,29 +96,25 @@ sap.ui.define([
 		 */
 		create: function(oContentFactory, sContentMode, sOperator, aControls, sId) {
 			switch (sContentMode) {
-				case ContentMode.Display:
+				case "Display":
 					return this.createDisplay(oContentFactory, aControls, sId);
-				case ContentMode.DisplayMultiValue:
-					return this.createDisplayMultiValue(oContentFactory, aControls, sId);
-				case ContentMode.DisplayMultiLine:
+				case "DisplayMultiLine":
 					return this.createDisplayMultiLine(oContentFactory, aControls, sId);
-				case ContentMode.EditMultiValue:
-					return this.createEditMultiValue(oContentFactory, aControls, sId);
-				case ContentMode.EditMultiLine:
+				case "EditMulti":
+					return this.createEditMulti(oContentFactory, aControls, sId);
+				case "EditMultiLine":
 					return this.createEditMultiLine(oContentFactory, aControls, sId);
-				case ContentMode.EditOperator:
+				case "EditOperator":
 					if (this.getEditOperator()) {
 						return this.getEditOperator()[sOperator] ? this.getEditOperator()[sOperator].create.call(this, oContentFactory, aControls, sId) : [null];
 					}
 					return [null];
-				case ContentMode.EditForHelp:
-					return this.createEditForHelp(oContentFactory, aControls, sId);
 				default:
 					return this.createEdit(oContentFactory, aControls, sId);
 			}
 		},
 		/**
-		 * Creates the suitable controls for content mode <code>Edit</code>.
+		 * Creates the suitable controls for content mode "Edit".
 		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
 		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
 		 * @param {String} sId ID of the field control
@@ -169,13 +151,13 @@ sap.ui.define([
 			return [oInput];
 		},
 		/**
-		 * Creates the suitable controls for content mode <code>EditMultiValue</code>.
+		 * Creates the suitable controls for content mode "EditMulti".
 		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
 		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
 		 * @param {String} sId ID of the field control
 		 * @returns {sap.ui.core.Control[]} Array containing the created controls
 		 */
-		createEditMultiValue: function(oContentFactory, aControlClasses, sId) {
+		createEditMulti: function(oContentFactory, aControlClasses, sId) {
 			var Input = aControlClasses[0];
 			var Token = aControlClasses[1];
 			var oConditionType = oContentFactory.getConditionType();
@@ -203,7 +185,6 @@ sap.ui.define([
 				tokens: { path: "$field>/conditions", template: oToken },
 				dependents: [oToken], // to destroy it if MultiInput is destroyed
 				autocomplete: false,
-				showSuggestion: false, // as true by default
 				change: oContentFactory.getHandleContentChange(),
 				liveChange: oContentFactory.getHandleContentLiveChange(),
 				tokenUpdate: oContentFactory.getHandleTokenUpdate(),
@@ -216,7 +197,7 @@ sap.ui.define([
 			return [oMultiInput];
 		},
 		/**
-		 * Creates the suitable controls for content mode <code>EditMultiLine</code>.
+		 * Creates the suitable controls for content mode "EditMultiLine".
 		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
 		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
 		 * @param {String} sId ID of the field control
@@ -249,7 +230,7 @@ sap.ui.define([
 			return [oTextArea];
 		},
 		/**
-		 * Creates the suitable controls for content mode <code>Display</code>.
+		 * Creates the suitable controls for content mode "Display".
 		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
 		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
 		 * @param {String} sId ID of the field control
@@ -272,7 +253,7 @@ sap.ui.define([
 			return [oText];
 		},
 		/**
-		 * Creates the suitable controls for content mode <code>DisplayMultiLine</code>.
+		 * Creates the suitable controls for content mode "DisplayMultiLine".
 		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
 		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
 		 * @param {String} sId ID of the field control
@@ -286,34 +267,12 @@ sap.ui.define([
 				text: { path: "$field>/conditions", type: oConditionsType },
 				textAlign: "{$field>/textAlign}",
 				textDirection: "{$field>/textDirection}",
-				tooltip: "{$field>/tooltip}",
-				emptyIndicatorMode: EmptyIndicatorMode.Auto
+				tooltip: "{$field>/tooltip}"//,
+//				emptyIndicatorMode: EmptyIndicatorMode.Auto
 			});
 			oContentFactory.setBoundProperty("text");
 
 			return [oExpandableText];
-		},
-		/**
-		 * Creates the suitable controls for content mode <code>DisplayMultiValue</code>.
-		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
-		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
-		 * @param {String} sId ID of the field control
-		 * @returns {sap.ui.core.Control[]} Array containing the created controls
-		 * @since 1.96
-		 */
-		createDisplayMultiValue: function(oContentFactory, aControlClasses, sId) {
-			return this.createDisplayMultiLine(oContentFactory, aControlClasses, sId); // for now just return the same asl in MultiLine mode
-		},
-		/**
-		 * Creates the suitable controls for content mode <code>EditForHelp</code>.
-		 * @param {sap.ui.mdc.field.content.ContentFactory} oContentFactory The content factory that calls the create function
-		 * @param {Object[]} aControlClasses Array containing the control classes which are to be created
-		 * @param {String} sId ID of the field control
-		 * @returns {sap.ui.core.Control[]} Array containing the created controls
-		 * @since 1.96
-		 */
-		createEditForHelp: function(oContentFactory, aControlClasses, sId) {
-			return this.createEdit(oContentFactory, aControlClasses, sId); // In normal cases there is no difference between EditForHelp and Edit.
 		}
 	};
 

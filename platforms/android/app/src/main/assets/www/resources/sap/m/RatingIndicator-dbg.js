@@ -51,7 +51,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -422,21 +422,19 @@ sap.ui.define([
 	};
 
 	RatingIndicator.prototype._toPx = function (cssSize) {
-		var vScopeVal = Math.round(cssSize),
-			oScopeTest;
+		var scopeVal = Math.round(cssSize),
+			scopeTest;
 
-		if (isNaN(vScopeVal)) {
+		if (isNaN(scopeVal)) {
 			if (RegExp("^(auto|0)$|^[+-\.]?[0-9].?([0-9]+)?(px|em|rem|ex|%|in|cm|mm|pt|pc)$").test(cssSize)) {
-				oScopeTest = jQuery('<div>&nbsp;</div>')
-					.css({"display": "none", "width": cssSize, "margin": 0, "padding": 0, "height": "auto", "line-height": 1, "border": 0, "overflow": "hidden"})
-					.appendTo(sap.ui.getCore().getStaticAreaRef());
-				vScopeVal = oScopeTest.width();
-				oScopeTest.remove();
+				scopeTest = jQuery('<div style="display: none; width: ' + cssSize + '; margin: 0; padding:0; height: auto; line-height: 1; font-size: 1; border:0; overflow: hidden">&nbsp;</div>').appendTo(sap.ui.getCore().getStaticAreaRef());
+				scopeVal = scopeTest.width();
+				scopeTest.remove();
 			} else {
 				return false;
 			}
 		}
-		return Math.round(vScopeVal);
+		return Math.round(scopeVal);
 	};
 
 	/**

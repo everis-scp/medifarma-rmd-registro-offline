@@ -2,8 +2,8 @@
 "version":3,
 "file":"sap/fiori/messagebundle-preload__locale__.js",
 "sourceroot":".",
-"sources":["../ca/scfld/md/i18n/i18n_el.properties","../ca/ui/i18n/i18n_el.properties","../m/messagebundle_el.properties","../ui/core/cldr/el.json","../ui/core/cldr/el_CY.json","../ui/core/messagebundle_el.properties","../ui/layout/messagebundle_el.properties","../ui/unified/messagebundle_el.properties","../ushell/renderers/fiori2/resources/resources_el.properties"],
+"sources":["../ca/scfld/md/i18n/i18n_el.properties","../ca/ui/i18n/i18n_el.properties","../m/messagebundle_el.properties","../ui/core/cldr/el.json","../ui/core/cldr/el_CY.json","../ui/core/messagebundle_el.properties","../ui/fl/messagebundle_el.properties","../ui/layout/messagebundle_el.properties","../ui/unified/messagebundle_el.properties","../ushell/renderers/fiori2/resources/resources_el.properties"],
 "names":[],
-"mappings":";;;;;;;;;;;;;",
-"x_com_sap_openui5_sections":[120,893,932,5251,5290,31714,31744,107648,107681,108022,108067,117656,117703,118156,118204,119948,120015,174631]
+"mappings":";;;;;;;;;;;;;;",
+"x_com_sap_openui5_sections":[120,893,932,5251,5290,41497,41527,120980,121013,121354,121399,134577,134620,138134,138181,138634,138682,140678,140745,197577]
 }

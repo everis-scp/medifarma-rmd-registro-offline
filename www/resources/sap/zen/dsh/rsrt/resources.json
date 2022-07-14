@@ -1,0 +1,251 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": "Component-dbg.js",
+			"size": 6241,
+			"isDebug": true
+		},
+		{
+			"name": "Component.js",
+			"size": 1981
+		},
+		{
+			"name": "changes/flexibility-bundle.json",
+			"size": 45
+		},
+		{
+			"name": "controller/App-dbg.controller.js",
+			"size": 22124,
+			"isDebug": true
+		},
+		{
+			"name": "controller/App.controller.js",
+			"size": 11971
+		},
+		{
+			"name": "controller/AxisAction-dbg.controller.js",
+			"size": 6111,
+			"isDebug": true
+		},
+		{
+			"name": "controller/AxisAction.controller.js",
+			"size": 3662
+		},
+		{
+			"name": "controller/Chart-dbg.controller.js",
+			"size": 3445,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Chart.controller.js",
+			"size": 1788
+		},
+		{
+			"name": "controller/ChartSettingsView-dbg.controller.js",
+			"size": 3112,
+			"isDebug": true
+		},
+		{
+			"name": "controller/ChartSettingsView.controller.js",
+			"size": 1772
+		},
+		{
+			"name": "controller/Conditions-dbg.controller.js",
+			"size": 2034,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Conditions.controller.js",
+			"size": 1176
+		},
+		{
+			"name": "controller/Exceptions-dbg.controller.js",
+			"size": 1960,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Exceptions.controller.js",
+			"size": 1124
+		},
+		{
+			"name": "controller/Graph-dbg.controller.js",
+			"size": 1052,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Graph.controller.js",
+			"size": 592
+		},
+		{
+			"name": "controller/Layout-dbg.controller.js",
+			"size": 744,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Layout.controller.js",
+			"size": 551
+		},
+		{
+			"name": "controller/Map-dbg.controller.js",
+			"size": 3205,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Map.controller.js",
+			"size": 1570
+		},
+		{
+			"name": "controller/Params-dbg.js",
+			"size": 217,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Params.js",
+			"size": 162
+		},
+		{
+			"name": "controller/Share-dbg.controller.js",
+			"size": 3637,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Share.controller.js",
+			"size": 1924
+		},
+		{
+			"name": "controller/Utils-dbg.js",
+			"size": 1568,
+			"isDebug": true
+		},
+		{
+			"name": "controller/Utils.js",
+			"size": 967
+		},
+		{
+			"name": "fragments/ASCOND.fragment.xml",
+			"size": 680
+		},
+		{
+			"name": "fragments/ASEXC.fragment.xml",
+			"size": 684
+		},
+		{
+			"name": "fragments/ASFA.fragment.xml",
+			"size": 3316
+		},
+		{
+			"name": "fragments/AxisActionMenu.fragment.xml",
+			"size": 1581
+		},
+		{
+			"name": "fragments/CategoryAxis.fragment.xml",
+			"size": 3620
+		},
+		{
+			"name": "fragments/CategoryAxis2.fragment.xml",
+			"size": 3420
+		},
+		{
+			"name": "fragments/ChartSettings.fragment.xml",
+			"size": 698
+		},
+		{
+			"name": "fragments/Colors.fragment.xml",
+			"size": 1468
+		},
+		{
+			"name": "fragments/General.fragment.xml",
+			"size": 2690
+		},
+		{
+			"name": "fragments/GraphDialog.fragment.xml",
+			"size": 596
+		},
+		{
+			"name": "fragments/Legend.fragment.xml",
+			"size": 901
+		},
+		{
+			"name": "fragments/Messages.fragment.xml",
+			"size": 599
+		},
+		{
+			"name": "fragments/OtherAxes.fragment.xml",
+			"size": 4270
+		},
+		{
+			"name": "fragments/PlotArea.fragment.xml",
+			"size": 866
+		},
+		{
+			"name": "fragments/Share.fragment.xml",
+			"size": 452
+		},
+		{
+			"name": "fragments/ValueAxis.fragment.xml",
+			"size": 3527
+		},
+		{
+			"name": "fragments/ValueAxis2.fragment.xml",
+			"size": 3403
+		},
+		{
+			"name": "i18n/i18n.properties",
+			"size": 6696
+		},
+		{
+			"name": "manifest.json",
+			"size": 3816
+		},
+		{
+			"name": "model/main.json",
+			"size": 171
+		},
+		{
+			"name": "utils/Utilities-dbg.js",
+			"size": 15384,
+			"isDebug": true
+		},
+		{
+			"name": "utils/Utilities.js",
+			"size": 7798
+		},
+		{
+			"name": "view/App.view.xml",
+			"size": 16226
+		},
+		{
+			"name": "view/Chart.view.xml",
+			"size": 1673
+		},
+		{
+			"name": "view/ChartSettings.view.xml",
+			"size": 2183
+		},
+		{
+			"name": "view/Conditions.view.xml",
+			"size": 871
+		},
+		{
+			"name": "view/Exceptions.view.xml",
+			"size": 851
+		},
+		{
+			"name": "view/Graph.view.xml",
+			"size": 1328
+		},
+		{
+			"name": "view/Layout.view.xml",
+			"size": 2380
+		},
+		{
+			"name": "view/Map.view.xml",
+			"size": 1812
+		},
+		{
+			"name": "view/Share.view.xml",
+			"size": 1639
+		}
+	]
+}

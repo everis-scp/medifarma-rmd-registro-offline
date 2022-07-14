@@ -22,7 +22,7 @@ sap.ui.define([
 	 *        is experimental and the API/behaviour is not finalised and hence this should not be used for productive usage.
 	 * @extends sap.ui.core.Element
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @experimental

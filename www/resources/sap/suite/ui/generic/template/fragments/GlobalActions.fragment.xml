@@ -9,7 +9,7 @@
 				<Button id="action::{customAction>id}"
 				text="{customAction>text}"
 				press="{customAction>press}"
-				type="{= ${parameter>/isFiori3Enabled} ? 'Default' : 'Transparent'}">
+				type="Default">
 					<layoutData>
 						<OverflowToolbarLayoutData priority = "{customAction>importance}"/>
 					</layoutData>

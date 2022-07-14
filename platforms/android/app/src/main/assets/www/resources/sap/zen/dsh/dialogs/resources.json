@@ -1,0 +1,107 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": "Component-dbg.js",
+			"size": 3411,
+			"isDebug": true
+		},
+		{
+			"name": "Component.js",
+			"size": 1067
+		},
+		{
+			"name": "Condition-dbg.js",
+			"size": 3855,
+			"isDebug": true
+		},
+		{
+			"name": "Condition.js",
+			"size": 1642
+		},
+		{
+			"name": "ContextMenu-dbg.js",
+			"size": 1593,
+			"isDebug": true
+		},
+		{
+			"name": "ContextMenu.js",
+			"size": 758
+		},
+		{
+			"name": "Exception-dbg.js",
+			"size": 4412,
+			"isDebug": true
+		},
+		{
+			"name": "Exception.js",
+			"size": 1756
+		},
+		{
+			"name": "Formular-dbg.js",
+			"size": 9125,
+			"isDebug": true
+		},
+		{
+			"name": "Formular.js",
+			"size": 3454
+		},
+		{
+			"name": "NewLines-dbg.js",
+			"size": 6946,
+			"isDebug": true
+		},
+		{
+			"name": "NewLines.js",
+			"size": 2748
+		},
+		{
+			"name": "Open-dbg.js",
+			"size": 5576,
+			"isDebug": true
+		},
+		{
+			"name": "Open.js",
+			"size": 2367
+		},
+		{
+			"name": "Restriction-dbg.js",
+			"size": 3988,
+			"isDebug": true
+		},
+		{
+			"name": "Restriction.js",
+			"size": 1700
+		},
+		{
+			"name": "SelectPlanningFunction-dbg.js",
+			"size": 4776,
+			"isDebug": true
+		},
+		{
+			"name": "SelectPlanningFunction.js",
+			"size": 2033
+		},
+		{
+			"name": "Selector-dbg.js",
+			"size": 9436,
+			"isDebug": true
+		},
+		{
+			"name": "Selector.js",
+			"size": 3712
+		},
+		{
+			"name": "i18n/i18n.properties",
+			"size": 363
+		},
+		{
+			"name": "i18n/sharedTexts.properties",
+			"size": 2390
+		},
+		{
+			"name": "manifest.json",
+			"size": 1818
+		}
+	]
+}

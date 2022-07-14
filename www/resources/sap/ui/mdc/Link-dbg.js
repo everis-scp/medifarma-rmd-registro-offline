@@ -45,7 +45,7 @@ sap.ui.define([
 	 * @extends sap.ui.mdc.field.FieldInfoBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @alias sap.ui.mdc.Link
@@ -200,7 +200,7 @@ sap.ui.define([
 
 	/**
 	 * Function that is called in the <code>createPopover</code> function of {@link sap.ui.mdc.field.FieldInfoBase}.
-	 * @param {Function} [fnGetAutoClosedControl] Function returning the <code>Popover</code> control that is created in <code>createPopover</code>
+	 * @param {Function} fnGetAutoClosedControl Function returning the <code>Popover</code> control that is created in <code>createPopover</code>
 	 * @returns {sap.ui.mdc.link.Panel} Popover panel which is to be displayed after clicking the link
 	 * @protected
 	 * @ui5-restricted sap.ui.mdc

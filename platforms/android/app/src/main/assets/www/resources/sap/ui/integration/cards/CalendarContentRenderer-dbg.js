@@ -4,16 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define([
-	"./BaseContentRenderer",
-	"sap/ui/core/IconPool",
+sap.ui.define(["./BaseContentRenderer",
 	"sap/ui/core/InvisibleText",
 	"sap/ui/unified/library",
-	"sap/ui/unified/CalendarLegendRenderer"
-	],
-	function(
-		BaseContentRenderer,
-		IconPool,
+	"sap/ui/unified/CalendarLegendRenderer"],
+	function(BaseContentRenderer,
 		InvisibleText,
 		unifiedLibrary,
 		CalendarLegendRenderer) {

@@ -99,7 +99,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -569,17 +569,9 @@ sap.ui.define([
 	 * @private
 	 */
 	Carousel.prototype._setWidthOfPages = function (iNumberOfItemsToShow) {
-		var $items = this.$().find(".sapMCrslItem"),
-			iItemWidth;
+		var iItemWidth = this._calculatePagesWidth(iNumberOfItemsToShow);
 
-		if (!$items.length) {
-			// pages are not yet rendered, calculation will be done in the next onAfterRendering
-			return;
-		}
-
-		iItemWidth = this._calculatePagesWidth(iNumberOfItemsToShow);
-
-		$items.each(function (iIndex, oPage) {
+		this.$().find(".sapMCrslItem").each(function (iIndex, oPage) {
 			oPage.style.width = iItemWidth  + "%";
 		});
 	};

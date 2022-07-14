@@ -2,21 +2,15 @@
 <chip xmlns="http://schemas.sap.com/sapui2/services/Chip/1">
 	<implementation>
 		<sapui5>
-			<!-- <basePath>../../</basePath>
-			<componentName>tiles.indicatorDualComparison</componentName> -->
 			<basePath>../../</basePath>
-            <viewName>tiles/indicatorDualComparison.DualComparison.view.js</viewName>
+			<viewName>tiles/indicatorDualComparison.DualComparison.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
-		
 		<title />
 		<description />
-		
 	</appearance>
-
 	<contracts>
-
 		<consume id="configuration">
 			<parameters>
 				<parameter name="tileConfiguration" />
@@ -27,7 +21,7 @@
 				<parameter name="col">2</parameter>
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />

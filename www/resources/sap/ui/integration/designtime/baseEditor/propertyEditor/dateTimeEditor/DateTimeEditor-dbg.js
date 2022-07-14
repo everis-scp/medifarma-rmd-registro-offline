@@ -24,7 +24,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.dateTimeEditor.DateTimeEditor
 	 * @author SAP SE
 	 * @since 1.76
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.76
@@ -38,24 +38,11 @@ sap.ui.define([
 		renderer: BasePropertyEditor.getMetadata().getRenderer().render
 	});
 
-	DateTimeEditor.prototype.getFormatterInstance = function (mOptions) {
-		return DateFormat.getDateTimeInstance(mOptions || {
-			pattern: "YYYY-MM-dd'T'HH:mm:ss.SSSSZ"
-		});
+	DateTimeEditor.prototype.getFormatterInstance = function () {
+		return DateFormat.getDateTimeInstance();
 	};
 
-	DateTimeEditor.configMetadata = Object.assign(
-		{},
-		DateEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.DATETIME"
-			},
-			utc: {
-				defaultValue: true
-			}
-		}
-	);
+	DateTimeEditor.configMetadata = Object.assign({}, DateEditor.configMetadata);
 
 	return DateTimeEditor;
 });

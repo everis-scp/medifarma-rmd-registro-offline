@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 // Provides class sap.ui.model.odata.v2.ODataAnnotations
 sap.ui.define([
 	"sap/base/assert",
@@ -35,7 +35,7 @@ sap.ui.define([
 	 * @class Annotation loader for OData V2 services
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.37.0
@@ -684,7 +684,7 @@ sap.ui.define([
 
 	/**
 	 * Loads a given source (sap.ui.model.odata.v2.ODataAnnotations.Source) if necessary and returns a promise that resolves
-	 * if the source could be loaded or no loading is necessary. In case the source type is neither "xml" nor "url" or
+	 * if the source could be loaded or no laoding is necessary. In case the source type is neither "xml" nor "url" or
 	 * the loading of the source fails, the promise rejects.
 	 *
 	 * @param {sap.ui.model.odata.v2.ODataAnnotations.Source} mSource The source to be loaded

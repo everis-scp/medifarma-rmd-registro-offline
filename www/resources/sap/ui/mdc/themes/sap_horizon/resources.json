@@ -43,7 +43,7 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 12271,
+			"size": 11601,
 			"theme": "sap_horizon"
 		},
 		{
@@ -53,7 +53,7 @@
 		},
 		{
 			"name": "library.css",
-			"size": 12271,
+			"size": 11602,
 			"theme": "sap_horizon"
 		},
 		{
@@ -70,12 +70,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 12706,
+			"size": 12036,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 12706,
+			"size": 12037,
 			"theme": "sap_horizon"
 		}
 	]

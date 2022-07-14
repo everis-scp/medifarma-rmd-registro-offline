@@ -47,7 +47,7 @@ sap.ui.define([
 	 * @param {object} [mSettings] Initial settings for the new control
 	 * @class Wrapper to use a table control as content of a <code>FieldValueHelp</code> element
 	 * @extends sap.ui.mdc.field.FieldValueHelpContentWrapperBase
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @experimental As of version 1.88
@@ -768,7 +768,7 @@ sap.ui.define([
 			return;
 		}
 
-		this._updateSelectedItems.call(this);
+		//this._updateSelectedItems.call(this);
 
 		if (this._bNavigate) {
 			this._bNavigate = false;

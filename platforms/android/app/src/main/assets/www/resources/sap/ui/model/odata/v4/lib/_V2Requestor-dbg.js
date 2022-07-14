@@ -970,8 +970,8 @@ sap.ui.define([
 	//*********************************************************************************************
 	function asV2Requestor(oRequestor) {
 		Object.assign(oRequestor, _V2Requestor.prototype);
-		oRequestor.oModelInterface.reportStateMessages = function () {};
-		oRequestor.oModelInterface.reportTransitionMessages = function () {};
+		oRequestor.oModelInterface.reportBoundMessages = function () {};
+		oRequestor.oModelInterface.reportUnboundMessages = function () {};
 	}
 
 	/**

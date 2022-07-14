@@ -10,8 +10,8 @@ sap.ui.define([
 	'sap/ui/core/DeclarativeSupport',
 	'sap/ui/core/UIArea',
 	'./DOMElement',
+	'./Template',
 	"./TemplateControlRenderer",
-	"./_parsePath",
 	"sap/base/strings/capitalize",
 	"sap/base/strings/hyphenate",
 	"sap/base/Log",
@@ -23,8 +23,8 @@ sap.ui.define([
 		DeclarativeSupport,
 		UIArea,
 		DOMElement,
+		Template,
 		TemplateControlRenderer,
-		parsePath,
 		capitalize,
 		hyphenate,
 		Log,
@@ -43,7 +43,7 @@ sap.ui.define([
 	 * @class
 	 * This is the base class for all template controls. Template controls are declared based on templates.
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.15
@@ -263,7 +263,7 @@ sap.ui.define([
 	TemplateControl.prototype.bind = function(sPath, sType) {
 
 		// parse the path and create the binding
-		var oPathInfo = parsePath(sPath),
+		var oPathInfo = Template.parsePath(sPath),
 			oModel = this.getModel(oPathInfo.model),
 			sPath = oPathInfo.path,
 			sModelFunc = sType ? "bind" + capitalize(sType) : "bindProperty",

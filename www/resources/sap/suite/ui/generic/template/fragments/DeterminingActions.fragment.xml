@@ -4,7 +4,7 @@
 	<template:if test="{= ${tmpEntitySet>EntitySet} === ${parameter>/entitySet} }">
 				<Button id="{customaction>id}"
 					text="{customaction>text}"
-					press="{customaction>press}" type="{= ${parameter>/isFiori3Enabled} ? 'Default' : 'Transparent'}">
+					press="{customaction>press}" type="'Default'">
 					<layoutData>
 						<OverflowToolbarLayoutData priority = "{customaction>importance}"/>
 					</layoutData>

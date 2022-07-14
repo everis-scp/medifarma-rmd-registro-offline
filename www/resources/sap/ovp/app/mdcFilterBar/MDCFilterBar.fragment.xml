@@ -1,0 +1,53 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core"
+        xmlns:mdc="sap.ui.mdc"
+        xmlns:mdcf="sap.ui.mdc.field"
+        xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+        xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+        template:require="{
+                MDCFilterFieldHelperODataV4: 'sap/ovp/app/mdcFilterBar/helpers/FilterFieldHelperV4',
+                MDCFilterFieldHelperODataV2: 'sap/ovp/app/mdcFilterBar/helpers/FilterFieldHelperV2'
+        }">
+        <template:with path='ui>mainEntityType' var='entityType'>
+                <mdc:FilterBar
+                        id="ovpGlobalMDCFilter"
+                        liveMode="{ui>/enableLiveFilter}"
+                        search=".onMDCSearch"
+                        delegate="{name: 'sap/ovp/app/mdcFilterBar/MDCFilterBarDelegate'}" 
+                        customData:entityName="{ui>/globalFilterEntityType}"
+                        customData:entityType="{ui>/mainEntityType}"
+                        customData:oDataVersion="{ui>/mainEntityVersion}">
+                        <template:if test="{= ${ui>/mainEntityVersion} === 'ODataV4'}">
+                                <template:then>
+                                        <template:with path='ui>allControlConfiguration' var='selectionField'>
+                                                <template:repeat list="{selectionField>}">
+                                                        <mdc:FilterField
+                                                                delegate="{name: 'sap/ui/mdc/odata/v4/FieldBaseDelegate'}"
+                                                                label="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV4.resolveFilterFieldLabel'}"
+                                                                dataType="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV4.resolveFilterFieldDataType'}"
+                                                                conditions="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV4.resolveFilterFieldConditions'}"
+                                                                required="{path: 'selectionField>', formatter:'MDCFilterFieldHelperODataV4.resolveFilterRequired'}"
+                                                                maxConditions="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV4.resolveFilterMaxConditions'}"
+                                                                />
+                                                </template:repeat>
+                                        </template:with>
+                                </template:then>
+                                <template:else>
+                                        <template:with path='ui>allControlConfiguration' var='selectionField'>
+                                                <template:repeat list="{selectionField>}">
+                                                        <mdc:FilterField
+                                                                delegate="{name: 'sap/ui/mdc/odata/v4/FieldBaseDelegate'}"
+                                                                label="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV2.resolveFilterFieldLabel'}"
+                                                                dataType="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV2.resolveFilterFieldDataType'}"
+                                                                conditions="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV2.resolveFilterFieldConditions'}"
+                                                                required="{path: 'selectionField>', formatter:'MDCFilterFieldHelperODataV2.resolveFilterRequired'}"
+                                                                maxConditions="{parts: [{path: 'selectionField>'}, {path: 'entityType>'}], formatter:'MDCFilterFieldHelperODataV2.resolveFilterMaxConditions'}"
+                                                                />
+                                                </template:repeat>
+                                        </template:with>
+                                </template:else>
+                        </template:if>
+                </mdc:FilterBar>
+        </template:with>
+</core:FragmentDefinition>

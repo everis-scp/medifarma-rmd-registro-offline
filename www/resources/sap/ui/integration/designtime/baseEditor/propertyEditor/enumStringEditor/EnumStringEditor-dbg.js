@@ -47,7 +47,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.enumStringEditor.EnumStringEditor
 	 * @author SAP SE
 	 * @since 1.70
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.70

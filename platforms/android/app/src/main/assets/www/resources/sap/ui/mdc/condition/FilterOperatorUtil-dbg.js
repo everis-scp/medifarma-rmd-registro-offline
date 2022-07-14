@@ -17,8 +17,7 @@ sap.ui.define([
 	'sap/ui/core/date/UniversalDate',
 	'sap/ui/core/date/UniversalDateUtils',
 	'sap/ui/core/format/DateFormat',
-	'sap/ui/model/json/JSONModel',
-	'sap/ui/model/type/Integer'
+	'sap/ui/model/json/JSONModel'
 ],
 
 function(
@@ -35,8 +34,7 @@ function(
 		UniversalDate,
 		UniversalDateUtils,
 		DateFormat,
-		JSONModel,
-		Integer	// the Integer type must be  available for some of the RangeOperators
+		JSONModel
 	) {
 		"use strict";
 
@@ -52,7 +50,7 @@ function(
 		 *
 		 * @namespace
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @since 1.73.0
 		 * @alias sap.ui.mdc.condition.FilterOperatorUtil
 		 *
@@ -725,7 +723,7 @@ function(
 
 							return null;
 						},
-						createControl: function(oType, sPath, iIndex, sId, aClass)  {
+						createControl: function(oType, sPath, iIndex, sId)  {
 							var getMonthItems = function() {
 								if (!this._aMonthsItems) {
 									var aMonths = _getMonths.apply(this);
@@ -742,14 +740,9 @@ function(
 								return this._aMonthsItems;
 							}.bind(this);
 
-							var ListFieldHelp = sap.ui.require("sap/ui/mdc/field/ListFieldHelp");
-							var ListItem = sap.ui.require("sap/ui/core/ListItem");
-							var Field = sap.ui.require("sap/ui/mdc/Field");
-							if (!ListFieldHelp || !ListItem || !Field) {
-								Log.warning("Operator.createControl", "not able to create the control for the operator " + this.name);
-								return null;
-							}
 							if (!this._oListFieldHelp) {
+								var ListFieldHelp = sap.ui.requireSync("sap/ui/mdc/field/ListFieldHelp");
+								var ListItem = sap.ui.requireSync("sap/ui/core/ListItem");
 								this._oListFieldHelp = new ListFieldHelp({
 									id: "LFHForSpecificMonth",
 									items: {
@@ -767,6 +760,7 @@ function(
 								}).setModel(new JSONModel(getMonthItems()), "$items");
 							}
 
+							var Field = sap.ui.requireSync("sap/ui/mdc/Field");
 							var oField = new Field(sId, {
 								value: { path: sPath, type: oType, mode: 'TwoWay', targetType: 'raw' },
 								additionalValue: { path: sPath, formatter: function(iValue) { return this._oListFieldHelp.getTextForKey(iValue); }.bind(this), mode: 'OneWay' },

@@ -35,9 +35,10 @@ sap.ui.define([
 	 *
 	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
 	 * @param {object} [mSettings] initial settings for the new control
-	 * @class The ListView is a list based view to personalize selection and ordering of a Control aggregation.
+	 * @class
 	 * @extends sap.ui.mdc.p13n.panels.BasePanel
 	 * @author SAP SE
+	 * @constructor The ListView is a list based view to personalize selection and ordering of a Control aggregation.
 	 * @private
 	 * @experimental
 	 * @since 1.85
@@ -244,11 +245,8 @@ sap.ui.define([
     };
 
     ListView.prototype._removeFactoryControl = function() {
-        var aItems = this._oListControl.getItems().filter(function(oItem) {
-            return !oItem._bGroupHeader;
-        });
 
-        aItems.forEach(function(oItem){
+        this._oListControl.getItems().forEach(function(oItem){
             var oFirstCell = oItem.getCells()[0];
             if (oFirstCell.getItems().length > 1){
                 oFirstCell.removeItem(oFirstCell.getItems()[1]);

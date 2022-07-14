@@ -48,10 +48,11 @@ sap.ui.define([
 	 * Only the following controls are supported:
 		<div>
 		<table>
+
 		<tr>
-			<th>Control name</th>
-			<th>Supported</th>
-			<th>Not supported</th>
+			<th style="text-align: left;">Control name</th>
+			<th style="text-align: left;">Supported</th>
+			<th style="text-align: left;">Not supported</th>
 		</tr>
 		<tr>
 			<td>sap.m.Text</td>
@@ -120,7 +121,7 @@ sap.ui.define([
 	* @implements sap.tnt.IToolHeader
 	*
 	* @author SAP SE
-	* @version 1.96.9
+	* @version 1.93.4
 	*
 	* @constructor
 	* @public

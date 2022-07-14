@@ -171,8 +171,7 @@ sap.ui.define([
                     text: sap.ui.getCore().getLibraryResourceBundle("sap.ui.mdc").getText("p13nDialog.RESET"),
                     press: function(oEvt) {
 
-                        var oDialog =  oEvt.getSource().getParent().getParent();
-                        var oControl = oDialog.getParent();
+                        var oControl = oEvt.getSource().getParent().getParent().getParent();
 
                         var sResetText = mSettings.warningText ? mSettings.warningText : sap.ui.getCore().getLibraryResourceBundle("sap.ui.mdc").getText("filterbar.ADAPT_RESET_WARNING");
                         MessageBox.warning(sResetText, {
@@ -180,8 +179,6 @@ sap.ui.define([
                             emphasizedAction: MessageBox.Action.OK,
                             onClose: function (sAction) {
                                 if (sAction === MessageBox.Action.OK) {
-                                    // --> focus "OK" button after 'reset' has been triggered
-                                    oDialog.getButtons()[0].focus();
                                     mSettings.reset(oControl);
                                 }
                             }
@@ -196,7 +193,7 @@ sap.ui.define([
         prepareAdaptationData: function(vProperties, fnEnhace, bGroupData) {
 
 			var oPropertyHelper =
-				vProperties && vProperties.getProperties instanceof Function ?
+				vProperties.isA && vProperties.isA("sap.ui.mdc.util.PropertyHelper") ?
 				vProperties : new P13nPropertyHelper(vProperties);
 
             var aItems = [];
@@ -217,7 +214,7 @@ sap.ui.define([
 
                 mItem.name = oProperty.name;
                 mItem.label = oProperty.getLabel() || oProperty.name;
-                mItem.tooltip = oProperty.tooltip;
+                mItem.tooltip = oProperty.tooltip ? oProperty.tooltip : oProperty.getLabel();
 
                 if (mItemsGrouped) {
                     mItem.group = oProperty.group ? oProperty.group : "BASIC";
@@ -240,6 +237,63 @@ sap.ui.define([
 
             return oAdaptationData;
 
+        },
+
+        //TODO: align comp<>mdc
+        prepareP13nData: function(oCurrentState, vProperties, fnEnhace) {
+
+			var oPropertyHelper =
+				vProperties.isA && vProperties.isA("sap.ui.mdc.util.PropertyHelper") ?
+				vProperties : new P13nPropertyHelper(vProperties);
+
+            var aItems = [], mItemsGrouped = {};
+
+            //TODO----
+            var aItemState = oCurrentState.items || [];
+            var mExistingFilters = oCurrentState.filter || [];
+            var mExistingProperties = this.arrayToMap(aItemState);
+            //TODO-----
+
+			oPropertyHelper.getProperties().forEach(function(oProperty) {
+
+                var mItem = merge({}, oProperty, mExistingProperties[oProperty.name]);
+
+                //TODO-----
+                var sKey = oProperty.name;
+                var oExistingProperty = mExistingProperties[sKey];
+                mItem.visible = oExistingProperty ? true : false;
+                mItem.position = oExistingProperty ? oExistingProperty.position : -1;
+                if (mExistingFilters[sKey]) {
+                    var aExistingFilters = mExistingFilters[sKey];
+                    mItem.isFiltered = aExistingFilters && aExistingFilters.length > 0 ? true : false;
+                }
+                //TODO------
+
+
+                if (fnEnhace instanceof Function) {
+                    var bIsValid = fnEnhace(mItem, oProperty);
+                    if (!bIsValid) {
+                        return;
+                    }
+                }
+
+                mItem.name = oProperty.name;
+                mItem.label = oProperty.getLabel() || oProperty.name;
+                mItem.tooltip = oProperty.tooltip ? oProperty.tooltip : oProperty.getLabel();
+                mItem.visibleInDialog = oProperty.hasOwnProperty("visibleInDialog") ? oProperty.visibleInDialog : true;
+
+                mItem.group = mItem.group ? mItem.group : "BASIC";
+                mItemsGrouped[mItem.group] = mItemsGrouped[mItem.group] ? mItemsGrouped[mItem.group] : [];
+                mItemsGrouped[mItem.group].push(mItem);
+
+                aItems.push(mItem);
+
+            });
+
+            return {
+                items: aItems,
+                itemsGrouped: this._buildGroupStructure(mItemsGrouped)
+            };
         },
 
         //TODO: generify

@@ -17,11 +17,9 @@
                                      id="kpiHBoxNumeric" class="numericContentHbox sapUiTinyMarginTop sapOvpKPIHeaderAggregateNumber" >
                                 <items>
                                     <HBox class="innerNumericContentHbox sapOvpKpiContent" alignItems="End" justifyContent="SpaceBetween">
-                                       <template:if test="{ovpCardProperties>/enableFiori3}">
-                                            <template:then>
-                                                <NumericContent id="kpiNumberValue"
+                                        <NumericContent id="kpiNumberValue"
                                                                 size="M" truncateValueTo="8"
-                                                                indicator="{parts:[{path:'dataPoint>'}, {path:'ovpCardProperties>/enableFiori3'}], formatter:'sap.ovp.cards.AnnotationHelper.formThePathForTrendIcon'}"
+                                                                indicator="{parts:[{path:'dataPoint>'}], formatter:'sap.ovp.cards.AnnotationHelper.formThePathForTrendIcon'}"
                                                                 value="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formThePathForAggregateNumber'}"
                                                                 formatterValue="true"
                                                                 valueColor="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formatKPIHeaderState'}"
@@ -29,33 +27,11 @@
                                                                 press="press"
                                                                 withMargin="false">
                                                     <customData>
-                                                        <ovp:CustomData key="role" value="heading" writeToDom="true" />
                                                         <ovp:CustomData key="aria-label"
                                                                         value="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.getKPIHeaderAggregateNumber'} {path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formatKPIHeaderState'}"
                                                                         writeToDom="true"/>
                                                     </customData>
                                                 </NumericContent>
-                                            </template:then>
-                                            <template:else>
-                                                <NumericContent id="kpiNumberValue"
-                                                                size="M" truncateValueTo="8"
-                                                                icon="{parts:[{path:'dataPoint>'}, {path:'ovpCardProperties>/enableFiori3'}], formatter:'sap.ovp.cards.AnnotationHelper.formThePathForTrendIcon'}"
-                                                                value="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formThePathForAggregateNumber'}"
-                                                                formatterValue="true"
-                                                                valueColor="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formatKPIHeaderState'}"
-                                                                state="Loaded" class="sapOvpKPIHeaderNumberValueStyle kpiHeaderClass"
-                                                                press="press"
-                                                                withMargin="false">
-                                                    <customData>
-                                                        <ovp:CustomData key="role" value="heading" writeToDom="true" />
-                                                        <ovp:CustomData key="aria-label"
-                                                                        value="{path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.getKPIHeaderAggregateNumber'} {path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formatKPIHeaderState'}"
-                                                                        writeToDom="true"/>
-                                                    </customData>
-                                                </NumericContent>
-                                            </template:else>
-                                        </template:if>
-
                                         <template:if test="{= ${path:'dataPoint>', formatter: 'sap.ovp.cards.AnnotationHelper.formPathForPercentageChange'} !== ''}">
                                             <FlexBox class="TargetDeviationFlexbox">
                                                 <VBox class="KpiTargetContainer">
@@ -102,13 +78,13 @@
                         </template:if>
 
                         <template:if test="{dataPoint>Value/Path}">
-                            <FlexBox class="UOMFlexbox">
-                                <template:if test="{ovpCardProperties>/valueSelectionInfo}">
+                            <template:if test="{ovpCardProperties>/valueSelectionInfo}">
+                                <FlexBox class="UOMFlexbox">
                                     <Text
                                             id="ovpValueSelectionInfo"
                                             maxLines="1"
                                             text="{ovpCardProperties>/valueSelectionInfo}"
-                                            class="sapOvpKPIHeaderUnitOfMeasureStyle tabindex-1 cardHeaderText">
+                                            class="sapOvpKPIHeaderUnitOfMeasureStyle sapOvpCardSubtitle tabindex-1 cardHeaderText">
                                         <customData>
                                             <ovp:CustomData key="aria-label"
                                                             value="{ovpCardProperties>/valueSelectionInfo}"
@@ -116,10 +92,11 @@
                                             <!--Temporary fix, this field must not typically have role "heading" - we need to fix the
                                             aria-labelledby logic used to retrieve all aria-labels on focus of a card  -->
                                             <ovp:CustomData key="role" value="heading" writeToDom="true" />
+                                            <ovp:CustomData key="aria-level" value="5" writeToDom="true"/>
                                         </customData>
                                     </Text>
-                                </template:if>
-                            </FlexBox>
+                                </FlexBox>
+                            </template:if>
                         </template:if>
 
                         <template:if  test="{= (${ovpCardProperties>/showSortingInHeader} === true) &amp;&amp; ${path:'preVar>', formatter: 'sap.ovp.cards.AnnotationHelper.isPresentationVarientPresent'} === true}">

@@ -10,7 +10,7 @@
 				visible="{= ${path: 'headerFacet>com.sap.vocabularies.UI.v1.Hidden'} ? ${path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getBindingForHiddenPath'} : true}"
 				  displayInline="true"
 				  dt:annotation="{parts: [{path: 'parameter>/entityType'}, {value: 'com.sap.vocabularies.UI.v1.HeaderFacets'}, {path: 'headerFacet>Target/AnnotationPath'}, {path: 'headerFacet>'}], formatter: 'sap.suite.ui.generic.template.changeHandler.js.AnnotationHelperForDesignTime.createInstanceMetadataWithPath'}">
-				<Label id="header::{path: 'headerFacet>', formatter: '.AH.getStableIdPartFromFacet'}::SmartMicroChartTitle"
+				<Title id="header::{path: 'headerFacet>', formatter: '.AH.getStableIdPartFromFacet'}::SmartMicroChartTitle"
 					   class="sapSmartTemplatesObjectPageHeaderMiniChartTitle" />
 				<Label id="header::{path: 'headerFacet>', formatter: '.AH.getStableIdPartFromFacet'}::SmartMicroChartSubTitle"
 					   class="sapSmartTemplatesObjectPageHeaderMiniChartSubTitle" />

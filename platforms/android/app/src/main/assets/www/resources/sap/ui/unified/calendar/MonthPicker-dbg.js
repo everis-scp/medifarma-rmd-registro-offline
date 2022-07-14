@@ -51,7 +51,7 @@ sap.ui.define([
 	 * renders a MonthPicker with ItemNavigation
 	 * This is used inside the calendar. Not for stand alone usage
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -782,7 +782,8 @@ sap.ui.define([
 			oMonthPickerSelectedDates = this.getAggregation("selectedDates"),
 			oStartDate, oFocusedDate;
 
-		this.setProperty("_focusedMonth", iMonth);
+		// Marking internally the focused month
+		this._focusedMonth = iMonth;
 
 		if (!oSelectedDates) {
 			return;

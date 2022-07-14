@@ -25,23 +25,12 @@
 							</template:if>
 						</template:with>
 				</Label>
-			<template:if test="{= ${parameter>/isFiori3Enabled}}">
-				<template:then>
-					<RatingIndicator id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
-									 enabled="true" editable="false"
-									 maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-									 value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-									 iconSize="1.375rem"
-									 class="sapUiTinyMarginTopBottom" />
-				</template:then>
-				<template:else>
-					<RatingIndicator id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
-									 enabled="false"
-									 maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-									 value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
-									 iconSize="1.375rem" />
-				</template:else>
-			</template:if>
+				<RatingIndicator id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicator"
+					enabled="true" editable="false"
+					maxValue="{path: 'dataPoint>TargetValue', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+					value="{path: 'dataPoint>Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+					iconSize="1.375rem"
+					class="sapUiTinyMarginTopBottom" />
 			<Label id="header::{path: 'headerFacet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getStableIdPartFromFacet'}::RatingIndicatorFooter"
 				   text="{parts:[{path: 'dataPoint>Value'}, {path: 'dataPoint>TargetValue'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.buildRatingIndicatorFooterExpression'}"
 				   visible="{= ${dataPoint>SampleSize} ? true : false }">

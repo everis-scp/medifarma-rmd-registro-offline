@@ -268,11 +268,14 @@ sap.ui.define([
 				oMessageDomRef.lastElementChild.setAttribute("id", sID + "-text");
 			}
 
-			oMessageDomRef.id = sID;
+			// If ValueState Message is sap.m.FormattedText
+			if (!oTextDomRef) {
+				oMessageDomRef.lastElementChild.setAttribute("id", sID + "-text");
+			}
 
-			// This element should be hidden from the accessibility tree, since it has only presentation role
-			// The value state announcement is present via hidden span, referenced via aria-describedby/aria-errormessage
-			oMessageDomRef.setAttribute("role", "presentation");
+			oMessageDomRef.id = sID;
+			oMessageDomRef.setAttribute("role", "tooltip");
+			oMessageDomRef.setAttribute("aria-live", "off");
 			oMessageDomRef.setAttribute("aria-hidden", "true");
 
 			return oMessageDomRef;

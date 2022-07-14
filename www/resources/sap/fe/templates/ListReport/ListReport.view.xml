@@ -4,67 +4,195 @@
 	xmlns:f="sap.f"
 	xmlns:v="sap.ui.fl.variants"
 	xmlns:macro="sap.fe.macros"
+	xmlns:control="sap.fe.core.controls"
 	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
 	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
 	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	template:require="{
-		macroLibrary: 'sap/fe/macros/macroLibrary',
 		CORE: 'sap/fe/core/AnnotationHelper',
-		ID: 'sap/fe/macros/StableIdHelper',
-		COMMON: 'sap/fe/macros/CommonHelper'
+		ID: 'sap/fe/core/helpers/StableIdHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		FILTER: 'sap/fe/core/templating/FilterHelper'
 	}"
-	controllerName="sap.fe.templates.ListReport.ListReportController">
-
-	<f:DynamicPage unittest:id="listReportFooterTest" showFooter="{= CORE.hasDeterminingActions(${entitySet>./@})}">
-		<f:title>
-			<f:DynamicPageTitle>
-				<f:heading>
-					<Title unittest:id="listReportTitleTest" text="{= ${manifest>/sap.app/appSubTitle} || ${manifest>/sap.app/title} }" />
-				</f:heading>
-				<f:snappedContent>
-					<Text text="{sap.fe.templates.ListReport>/filterSummary}"></Text>
-				</f:snappedContent>
-			</f:DynamicPageTitle>
-		</f:title>
-		<template:with path="entitySet>" helper="CORE.getPresentationContext" var="annotationPath">
-			<f:header>
-				<f:DynamicPageHeader pinnable="true">
-					<macro:FilterBar
-						unittest:id="listReportFilterBarTest"
-						id="{= COMMON.getStableId(['fe', 'fb', ${entitySet>@sapui.name}]) }"
-						metadataContexts="{model: 'entitySet', path:'',  name: 'entitySet'}"
-						listBindingNames="{= COMMON.getStableId(['fe', 'table', ${entitySet>@sapui.name}, ${annotationPath>@sapui.name}.replace(RegExp('.*\\.'), '')]) }"
-						search=".handlers.onSearch"
-						draftEditStateModelName="{= (${entitySet>@com.sap.vocabularies.Common.v1.DraftRoot} || ${entitySet>@com.sap.vocabularies.Common.v1.DraftNode}) ? '$draft' : '' }"
-						liveMode="true"
-					/>
-				</f:DynamicPageHeader>
-			</f:header>
-			<f:content>
-				<core:Fragment fragmentName="sap.fe.controls.ViewSwitchContainer.ViewSwitchContainer" type="XML"/>
-			</f:content>
-		</template:with>
-		<f:footer>
-			<OverflowToolbar unittest:id="listReportOverflowToolbarTest" id="{= ID.generate(['fe','lr', 'footer', ${entitySet>@sapui.name}] )}" visible="{=  CORE.showFooter(${entitySet>$Type@com.sap.vocabularies.UI.v1.LineItem},false) }">
-				<template:with path="entitySet>./" var="entityType">
-				<ToolbarSpacer />
-					<template:repeat list="{entityType>./@com.sap.vocabularies.UI.v1.LineItem}" var="dataField">
-						<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
-						   <template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>Determining} === true}">
-						   	<template:if test="{= ${dataField>Action@OperationAvailable} === false ? false : true}">
-								<Button
-									id="{= ID.generate(['fe','lr', 'footer', ${entitySet>@sapui.name}, ${dataField>Action}] )}"
-									text="{dataField>Label}"
-									press="{= '.transaction.onCallAction(\'' + ${dataField>Action} + '\',
-									{ model: ${$source>}.getModel(), label: \'' + ${dataField>Label} + '\'})'}"
-									visible="{= (${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === false ? true : %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} &amp;&amp;'{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}') || (${dataField>Action@OperationAvailable} === false ? false : true) }"
-									hideText="false" importance="Medium" type="Default"/>
+	controllerName="sap.fe.templates.ListReport.ListReportController"
+>
+	<template:with path="converterContext>mainEntitySet" var="entitySet">
+		<template:with path="converterContext>mainEntityType" var="entityType">
+			<f:DynamicPage
+				id="fe::ListReport"
+				unittest:id="listReportFooterTest"
+				customData:singleTableId="{converterContext>singleTableId}"
+				customData:singleChartId="{converterContext>singleChartId}"
+				customData:filterBarId="{converterContext>filterBarId}"
+				customData:defaultPath="{= CORE.getDefaultPath(${converterContext>views})}"
+				customData:visualFilterBarId="{= ID.generate(['visualFilter',${converterContext>filterBarId}])}"
+				customData:filterBarVariantId="{converterContext>variantManagement/id}"
+				customData:ListReportTitle="{= ${manifest>/sap.app/title} }"
+				customData:isMultiEntitySets="{converterContext>isMultiEntitySets}"
+				customData:hasMultiVisualizations="{converterContext>hasMultiVisualizations}"
+				customData:ListReportSubtitle="{= ${manifest>/sap.app/appSubTitle} || '' }"
+				customData:KPIData="{= COMMON.stringifyCustomData(${converterContext>kpiDefinitions})}"
+				showFooter="false"
+				busy="{ui>/busy}"
+				busyIndicatorDelay="0"
+				class="{= !${converterContext>hasMultiVisualizations} &amp;&amp; ${converterContext>views}.length > 1 ? 'sapUiNoContentPadding' : 'sapUiResponsiveContentPadding'}"
+			>
+				<f:title>
+					<f:DynamicPageTitle>
+						<f:heading>
+							<template:with path="converterContext>kpiDefinitions" var="definitions">
+								<template:if test="{definitions>length}">
+								<template:then>
+									<l:HorizontalLayout class="sapUiContentPadding">
+										<template:if test="{= ${viewData>/variantManagement} === 'Page'}">
+										<template:then>
+											<v:VariantManagement
+														id="fe::PageVariantManagement"
+														unittest:id="listReportVMPageTest"
+														for="{converterContext>variantManagement/targetControlIds}"
+														showSetAsDefault="true"
+														select=".handlers.onVariantSelected"
+														save=".handlers.onVariantSaved"
+														displayTextForExecuteOnSelectionForStandardVariant="{= ${viewData>/initialLoad} === 'Auto' ? ${sap.fe.i18n>T_LR_VARIANT_APPLY_AUTOMATICALLY_WHEN_FILTER_SET} : undefined }"
+														executeOnSelectionForStandardDefault="{= ${viewData>/initialLoad} === 'Enabled'}"
+													/>
+										</template:then>
+										<template:elseif test="{= ${viewData>/variantManagement} === 'Control'}">
+											<v:VariantManagement
+														id="{= ID.generate([ ${converterContext>filterBarId}, 'VariantManagement']) }"
+														unittest:id="listReportVMControlTest"
+														for="{converterContext>filterBarId}"
+														showSetAsDefault="true"
+														select=".handlers.onVariantSelected"
+														save=".handlers.onVariantSaved"
+														displayTextForExecuteOnSelectionForStandardVariant="{= ${viewData>/initialLoad} === 'Auto' ? ${sap.fe.i18n>T_LR_VARIANT_APPLY_AUTOMATICALLY_WHEN_FILTER_SET} : undefined }"
+														executeOnSelectionForStandardDefault="{= ${viewData>/initialLoad} === 'Enabled'}"
+													/>
+										</template:elseif>
+										<template:else>
+											<Title unittest:id="listReportTitleTest" text="{= ${manifest>/sap.app/subTitle} || ${manifest>/sap.app/title} }" />
+										</template:else>
+										</template:if>
+										<template:repeat list="{converterContext>kpiDefinitions}" var="kpi">
+											<template:with path="kpi>datapoint" var="datapoint">
+												<macro:KPITag id="{kpi>id}" metaPath="{datapoint>annotationPath}" hasUnit="{= ${datapoint>unit} !== undefined}" />
+											</template:with>
+										</template:repeat>
+									</l:HorizontalLayout>
+								</template:then>
+								<template:else>
+									<template:if test="{= ${viewData>/variantManagement} === 'Page'}">
+									<template:then>
+										<v:VariantManagement
+													id="fe::PageVariantManagement"
+													unittest:id="listReportVMPageTest"
+													for="{converterContext>variantManagement/targetControlIds}"
+													showSetAsDefault="true"
+													select=".handlers.onVariantSelected"
+													save=".handlers.onVariantSaved"
+													displayTextForExecuteOnSelectionForStandardVariant="{= ${viewData>/initialLoad} === 'Auto' ? ${sap.fe.i18n>T_LR_VARIANT_APPLY_AUTOMATICALLY_WHEN_FILTER_SET} : undefined }"
+													executeOnSelectionForStandardDefault="{= ${viewData>/initialLoad} === 'Enabled'}"
+												/>
+									</template:then>
+									<template:elseif test="{= ${viewData>/variantManagement} === 'Control'}">
+										<v:VariantManagement
+													id="{= ID.generate([ ${converterContext>filterBarId}, 'VariantManagement']) }"
+													unittest:id="listReportVMControlTest"
+													for="{converterContext>filterBarId}"
+													showSetAsDefault="true"
+													select=".handlers.onVariantSelected"
+													save=".handlers.onVariantSaved"
+													displayTextForExecuteOnSelectionForStandardVariant="{= ${viewData>/initialLoad} === 'Auto' ? ${sap.fe.i18n>T_LR_VARIANT_APPLY_AUTOMATICALLY_WHEN_FILTER_SET} : undefined }"
+													executeOnSelectionForStandardDefault="{= ${viewData>/initialLoad} === 'Enabled'}"
+												/>
+									</template:elseif>
+									<template:else>
+										<Title unittest:id="listReportTitleTest" text="{= ${manifest>/sap.app/subTitle} || ${manifest>/sap.app/title} }" />
+									</template:else>
+									</template:if>
+								</template:else>
 								</template:if>
-						   </template:if>
+							</template:with>
+						</f:heading>
+						<f:snappedContent>
+							<Text text="{internal>appliedFilters}" />
+						</f:snappedContent>
+						<f:actions>
+							<ToolbarSpacer />
+							<template:if test="{converterContext>headerActions}">
+								<template:repeat list="{converterContext>headerActions}" var="headerAction">
+									<Button
+										core:require="{FPM: 'sap/fe/core/helpers/FPMHelper'}"
+										id="{= ID.generate(['fe',${headerAction>id}])}"
+										text="{headerAction>text}"
+										press="{= CORE.buildActionWrapper(${headerAction>})}"
+										type="Transparent"
+										visible="{headerAction>visible}"
+										enabled="{headerAction>enabled}"
+									/>
+								</template:repeat>
+							</template:if>
+							<template:if test="{= ${converterContext>/filterLayout} === 'compactvisual'}">
+								<SegmentedButton
+									id="{= ID.generate([ ${converterContext>filterBarId}, 'LayoutToggle']) }"
+									selectedKey="{converterContext>/filterInitialLayout}"
+								>
+									<items>
+										<SegmentedButtonItem tooltip="{sap.fe.i18n>T_SEGMENTED_BUTTON_TOOLTIP_COMPACT}" key="compact" icon="sap-icon://filter-fields" />
+										<SegmentedButtonItem tooltip="{sap.fe.i18n>T_SEGMENTED_BUTTON_TOOLTIP_VISUAL}" key="visual" icon="sap-icon://filter-analytics" />
+									</items>
+								</SegmentedButton>
+							</template:if>
+							<macro:Share id="fe::Share" visible="{= ${fclhelper>/} ? ${fclhelper>/showShareIcon} : true }" />
+						</f:actions>
+					</f:DynamicPageTitle>
+				</f:title>
+				<f:header>
+					<template:with path="converterContext>filterBar" var="filterBarContext">
+						<f:DynamicPageHeader pinnable="{converterContext>showPinnableToggle}">
+							<VBox>
+								<macro:FilterBar
+									unittest:id="listReportFilterBarTest"
+									id="{converterContext>filterBarId}"
+									entityType="{entityType>}"
+									variantBackreference="{= CORE.getVariantBackReference(${viewData>}, ${converterContext>} )}"
+									selectionFields="{filterBarContext>selectionFields}"
+									filtersChanged=".handlers.onFiltersChanged"
+									filterConditions="{parts:[{path:'converterContext>filterConditions'}, {path:'entitySet>'}], formatter: 'FILTER.getFilterConditions'}"
+									search=".handlers.onSearch"
+									hideBasicSearch="{filterBarContext>hideBasicSearch}"
+									liveMode="{viewData>/liveMode}"
+									showAdaptFiltersButton="true"
+									p13nMode="Item,Value"
+									useSemanticDateRange="{converterContext>useSemanticDateRange}"
+									suspendSelection="true"
+									toggleControlId="{= ${converterContext>/filterLayout} === 'compactvisual' ? ID.generate([ ${converterContext>filterBarId}, 'LayoutToggle']) : undefined }"
+									initialLayout="{= ${converterContext>/filterLayout} === 'compactvisual' ? ${converterContext>/filterInitialLayout} : undefined }"
+								/>
+							</VBox>
+						</f:DynamicPageHeader>
+					</template:with>
+				</f:header>
+				<f:content>
+					<template:if test="{= ${converterContext>views}.length > 0}">
+						<template:if test="{= ${converterContext>views}.length > 1 &amp;&amp; !${converterContext>hasMultiVisualizations} }">
+							<template:then>
+								<core:Fragment fragmentName="sap.fe.templates.ListReport.view.fragments.MultipleMode" type="XML" />
+							</template:then>
+							<template:elseif test="{= ${converterContext>views}.length === 1 &amp;&amp; !${converterContext>hasMultiVisualizations} }">
+								<template:with path="converterContext>views/0/presentation" var="presentationContext">
+									<core:Fragment fragmentName="sap.fe.templates.ListReport.view.fragments.CollectionVisualization" type="XML" />
+								</template:with>
+							</template:elseif>
+							<template:else>
+								<core:Fragment fragmentName="sap.fe.templates.ListReport.view.fragments.CollectionVisualization" type="XML" />
+							</template:else>
 						</template:if>
-					</template:repeat>
-				</template:with>
-			</OverflowToolbar>
-		</f:footer>
-	</f:DynamicPage>
+					</template:if>
+				</f:content>
+			</f:DynamicPage>
+		</template:with>
+	</template:with>
 </mvc:View>

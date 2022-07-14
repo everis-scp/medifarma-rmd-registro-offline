@@ -1,26 +1,13 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.ovp",
     "type": "library",
     "embeds": [
-      "app",
-      "cards/charts/analytical",
-      "cards/charts/generic",
-      "cards/charts/smart/chart",
-      "cards/custom",
-      "cards/error",
-      "cards/generic",
-      "cards/linklist",
-      "cards/list",
-      "cards/map/Analytical",
-      "cards/map",
-      "cards/quickview",
-      "cards/stack",
-      "cards/table"
+      "app"
     ],
     "applicationVersion": {
-      "version": "1.71.12"
+      "version": "1.93.2"
     },
     "title": "SAP library: sap.ovp",
     "description": "SAP library: sap.ovp",
@@ -37,42 +24,100 @@
       "sap_belize_plus",
       "sap_bluecrystal",
       "sap_fiori_3",
-      "sap_fiori_3_dark"
+      "sap_fiori_3_dark",
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
+      "sap_horizon"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
         },
         "sap.ui.layout": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
         },
         "sap.ui.generic.app": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.0"
         },
         "sap.m": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
         },
         "sap.f": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
         },
         "sap.ui.comp": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
         },
         "sap.viz": {
-          "minVersion": "1.71.21",
-          "lazy": true
+          "minVersion": "1.93.2"
         },
         "sap.suite.ui.microchart": {
-          "minVersion": "1.71.21"
+          "minVersion": "1.93.2"
+        },
+        "sap.ui.rta": {
+          "minVersion": "1.93.2"
         }
       }
     },
     "library": {
-      "i18n": "messagebundle.properties",
+      "i18n": {
+        "bundleUrl": "messagebundle.properties",
+        "supportedLocales": [
+          "",
+          "ar",
+          "bg",
+          "ca",
+          "cs",
+          "cy",
+          "da",
+          "de",
+          "el",
+          "en",
+          "en-GB",
+          "en-US-sappsd",
+          "en-US-saprigi",
+          "en-US-saptrc",
+          "es",
+          "es-MX",
+          "et",
+          "fi",
+          "fr",
+          "fr-CA",
+          "hi",
+          "hr",
+          "hu",
+          "id",
+          "it",
+          "iw",
+          "ja",
+          "kk",
+          "ko",
+          "lt",
+          "lv",
+          "ms",
+          "nl",
+          "no",
+          "pl",
+          "pt",
+          "pt-PT",
+          "ro",
+          "ru",
+          "sh",
+          "sk",
+          "sl",
+          "sv",
+          "th",
+          "tr",
+          "uk",
+          "vi",
+          "zh-CN",
+          "zh-TW"
+        ]
+      },
       "content": {
         "controls": [],
         "elements": [],

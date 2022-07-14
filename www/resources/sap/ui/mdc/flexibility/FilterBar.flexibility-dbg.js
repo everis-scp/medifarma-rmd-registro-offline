@@ -12,7 +12,7 @@ sap.ui.define(['./FilterItemFlex', './ConditionFlex'], function(FilterItemFlex, 
 	 *
 	 * @alias sap.ui.mdc.flexibility.FilterBar
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 
 	return {

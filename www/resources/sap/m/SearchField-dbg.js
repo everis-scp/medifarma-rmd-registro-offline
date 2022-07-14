@@ -67,7 +67,7 @@ sap.ui.define([
 	* @extends sap.ui.core.Control
 	* @implements sap.ui.core.IFormContent
 	* @author SAP SE
-	* @version 1.96.9
+	* @version 1.93.4
 	*
 	* @constructor
 	* @public
@@ -310,7 +310,6 @@ sap.ui.define([
 	SearchField.prototype.onBeforeRendering = function() {
 		this._unregisterEventListeners();
 		this._updateTranslations();
-		updateSuggestions(this);
 	};
 
 	SearchField.prototype.onAfterRendering = function() {
@@ -335,10 +334,7 @@ sap.ui.define([
 			.on("blur", this.onBlur.bind(this));
 
 		jQuery(this.getDomRef("F"))
-			.on("click", this.onFormClick.bind(this))
-			.on("submit", function (e) {
-				e.preventDefault();
-			});
+			.on("click", this.onFormClick.bind(this));
 
 		if (Device.system.desktop || Device.system.combi) {
 			// Listen to native touchstart/mousedown.
@@ -1007,5 +1003,37 @@ sap.ui.define([
 		oSF._oSuggest && oSF._oSuggest.update();
 	}
 
+	/* =========================================================== */
+	/*           begin: aggregation methods overrides		       */
+	/* =========================================================== */
+
+	// Suppress invalidate by changes in the suggestionItems aggregation.
+	var SUGGESTION_ITEMS = "suggestionItems";
+
+	SearchField.prototype.insertSuggestionItem = function(oObject, iIndex, bSuppressInvalidate) {
+		updateSuggestions(this);
+		return Control.prototype.insertAggregation.call(this, SUGGESTION_ITEMS, oObject, iIndex, true);
+	};
+
+	SearchField.prototype.addSuggestionItem = function(oObject, bSuppressInvalidate) {
+		updateSuggestions(this);
+		return Control.prototype.addAggregation.call(this, SUGGESTION_ITEMS, oObject, true);
+	};
+
+	SearchField.prototype.removeSuggestionItem = function(oObject, bSuppressInvalidate) {
+		updateSuggestions(this);
+		return Control.prototype.removeAggregation.call(this, SUGGESTION_ITEMS, oObject, true);
+	};
+
+	SearchField.prototype.removeAllSuggestionItems = function(bSuppressInvalidate) {
+		updateSuggestions(this);
+		return Control.prototype.removeAllAggregation.call(this, SUGGESTION_ITEMS, true);
+	};
+
+	/* =========================================================== */
+	/*           end: aggregation methods overrides		           */
+	/* =========================================================== */
+
 	return SearchField;
+
 });

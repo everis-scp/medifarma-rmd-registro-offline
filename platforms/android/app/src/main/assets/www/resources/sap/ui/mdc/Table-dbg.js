@@ -38,8 +38,7 @@ sap.ui.define([
 	"sap/ui/mdc/p13n/subcontroller/AggregateController",
 	"sap/m/ColumnPopoverSelectListItem",
 	"sap/m/ColumnPopoverActionItem",
-	"sap/ui/mdc/p13n/subcontroller/ColumnWidthController",
-	"sap/ui/mdc/actiontoolbar/ActionToolbarAction"
+	"sap/ui/mdc/p13n/subcontroller/ColumnWidthController"
 ], function(
 	Control,
 	ActionToolbar,
@@ -74,8 +73,7 @@ sap.ui.define([
 	AggregateController,
 	ColumnPopoverSelectListItem,
 	ColumnPopoverActionItem,
-	ColumnWidthController,
-	ActionToolbarAction
+	ColumnWidthController
 ) {
 	"use strict";
 
@@ -121,6 +119,7 @@ sap.ui.define([
 	 *        <b>Note:</b> The control is experimental and the API/behavior is not finalized and hence this should not be used for productive usage.
 	 * @extends sap.ui.mdc.Control
 	 * @author SAP SE
+	 * @constructor The API/behavior is not finalized and hence this control should not be used for productive usage.
 	 * @private
 	 * @experimental
 	 * @since 1.58
@@ -356,16 +355,6 @@ sap.ui.define([
 					defaultValue: false
 				},
 				/**
-				 * Determines whether the Paste button is enabled.
-				 *
-				 * @since 1.96
-				 */
-				enablePaste: {
-					type: "boolean",
-					group: "Behavior",
-					defaultValue: true
-				},
-				/**
 				 * Defines the multi-selection mode for the control.
 				 * If this property is set to the <code>Default</code> value, the <code>ResponsiveTable</code> type control renders
 				 * the Select All checkbox in the column header, otherwise the Deselect All icon is rendered.
@@ -377,24 +366,6 @@ sap.ui.define([
 					type: "sap.ui.mdc.MultiSelectMode",
 					group: "Behavior",
 					defaultValue: MultiSelectMode.Default
-				},
-
-				/**
-				 * Enables automatic column width calculation based on metadata information if set to <code>true</code>.
-				 * The column width calculation takes the type, column label, referenced properties, and many other metadata parameters into account.
-				 * Providing a more precise <code>maxLength</code> value for the <code>String</code> type or <code>precision</code> value for numeric types can help this algorithm to produce better results.
-				 * The calculated column widths can have a minimum of 3rem and a maximum of 20rem.
-				 *
-				 * <b>Note:</b> To customize the automatic column width calculation the <code>visualSettings.widthSettings</code> key of the <code>PropertyInfo</code> can be used.
-				 * To avoid the heuristic column width calculation for a particular column, the <code>visualSettings.widthSettings</code> key of the <code>PropertyInfo</code> must be set to <code>null</code>.
-				 * This feature has no effect if the <code>width</code> property of the column is bound or its value is set.
-				 *
-				 * @since 1.95
-				 */
-				enableAutoColumnWidth: {
-					type: "boolean",
-					group: "Behavior",
-					defaultValue: false
 				}
 			},
 			aggregations: {
@@ -664,42 +635,8 @@ sap.ui.define([
 	};
 
 	Table.prototype.getDataStateIndicatorPluginOwner = function(oDataStateIndicator) {
+		oDataStateIndicator.setEnableFiltering(false);
 		return this._oTable || this._oFullInitialize.promise;
-	};
-
-	Table.prototype.setDataStateIndicator = function(oDataStateIndicator) {
-		this._handleDataStateEvents(this.getDataStateIndicator(), "detach");
-		this.setAggregation("dataStateIndicator", oDataStateIndicator, true);
-		this._handleDataStateEvents(this.getDataStateIndicator(), "attach");
-		return this;
-	};
-
-	Table.prototype._handleDataStateEvents = function(oDataStateIndicator, sAction) {
-		if (oDataStateIndicator) {
-			oDataStateIndicator[sAction + "ApplyFilter"](this._onApplyMessageFilter, this);
-			oDataStateIndicator[sAction + "ClearFilter"](this._onClearMessageFilter, this);
-			oDataStateIndicator[sAction + "Event"]("filterInfoPress", onShowFilterDialog, this);
-		}
-	};
-
-	/**
-	 * This gets called from the DataStateIndicator plugin when data state message filter is applied
-	 * @private
-	 */
-	 Table.prototype._onApplyMessageFilter = function(oEvent) {
-		this._oMessageFilter = oEvent.getParameter("filter");
-		oEvent.preventDefault();
-		this.rebind();
-	};
-
-	/**
-	 * This gets called from the DataStateIndicator plugin when the data state message filter is cleared
-	 * @private
-	 */
-	Table.prototype._onClearMessageFilter = function(oEvent) {
-		this._oMessageFilter = null;
-		oEvent.preventDefault();
-		this.rebind();
 	};
 
 	// ----Type----
@@ -953,7 +890,7 @@ sap.ui.define([
 		var bOldEnableColumnResize = this.getEnableColumnResize();
 		this.setProperty("enableColumnResize", bEnableColumnResize, true);
 
-		if (this.getEnableColumnResize() !== bOldEnableColumnResize) {
+		if (bEnableColumnResize !== bOldEnableColumnResize) {
 			this._updateColumnResizer();
 			this._updateAdaptation(this.getP13nMode());
 		}
@@ -1103,7 +1040,7 @@ sap.ui.define([
 			}
 
 			oFilterInfoBar.setVisible(false);
-			getFilterInfoBarInvisibleText(oTable).setText("");
+			oTable._oTable.removeAriaLabelledBy(oFilterInfoBarText);
 
 			return;
 		}
@@ -1118,10 +1055,10 @@ sap.ui.define([
 
 			if (!oFilterInfoBar.getVisible()) {
 				oFilterInfoBar.setVisible(true);
+				oTable._oTable.addAriaLabelledBy(oFilterInfoBarText);
 			}
 
 			oFilterInfoBarText.setText(sFilterText);
-			getFilterInfoBarInvisibleText(oTable).setText(sFilterText);
 		});
 	}
 
@@ -1144,19 +1081,9 @@ sap.ui.define([
 			oTable._oTable.insertExtension(oFilterInfoBar, 1);
 		}
 
-		var oInvisibleText = getFilterInfoBarInvisibleText(oTable);
-		oTable._oTable.addAriaLabelledBy(oInvisibleText.getId());
-	}
-
-	function getFilterInfoBarInvisibleText(oTable) {
-		if (!oTable) {
-			return null;
+		if (oFilterInfoBar.getVisible()) {
+			oTable._oTable.addAriaLabelledBy(getFilterInfoBarText(oTable));
 		}
-
-		if (!oTable._oFilterInfoBarInvisibleText) {
-			oTable._oFilterInfoBarInvisibleText = new InvisibleText().toStatic();
-		}
-		return oTable._oFilterInfoBarInvisibleText;
 	}
 
 	function createFilterInfoBar(oTable) {
@@ -1178,7 +1105,9 @@ sap.ui.define([
 					wrapping: false
 				})
 			],
-			press: [onShowFilterDialog, oTable]
+			press: function() {
+				TableSettings.showPanel(oTable, "Filter", oFilterInfoToolbar);
+			}
 		});
 
 		// If the toolbar is hidden while it has the focus, the focus moves to the body. This can happen, for example, when all filters are removed in
@@ -1430,31 +1359,18 @@ sap.ui.define([
 		if ((bShowPasteButton = !!bShowPasteButton) == this.getShowPasteButton()) {
 			return this;
 		}
+
 		this.setProperty("showPasteButton", bShowPasteButton, true);
 		if (bShowPasteButton && !this._oPasteButton && this._oToolbar) {
 			this._oToolbar.insertEnd(this._getPasteButton(), 0);
-			this._oPasteButton.setEnabled(this.getEnablePaste());
 		} else if (this._oPasteButton) {
 			this._oPasteButton.setVisible(bShowPasteButton);
-			this._oPasteButton.setEnabled(this.getEnablePaste());
 		}
 
-		return this;
-	};
-
-	Table.prototype.setEnablePaste = function(bEnablePaste) {
-		this.setProperty("enablePaste", bEnablePaste, true);
-		if (this._oPasteButton) {
-			this._oPasteButton.setEnabled(this.getEnablePaste());
-		}
 		return this;
 	};
 
 	Table.prototype._createToolbar = function() {
-		if (this.isDestroyStarted() || this.isDestroyed()) {
-			return;
-		}
-
 		if (!this._oToolbar) {
 			// Create Title
 			this._oTitle = new Title(this.getId() + "-title", {
@@ -1465,6 +1381,7 @@ sap.ui.define([
 			// Create Toolbar
 			this._oToolbar = new ActionToolbar(this.getId() + "-toolbar", {
 				design: ToolbarDesign.Transparent,
+				style: this._isOfType(TableType.ResponsiveTable) ? ToolbarStyle.Standard : ToolbarStyle.Clear,
 				begin: [
 					this._oTitle
 				],
@@ -1475,7 +1392,6 @@ sap.ui.define([
 				]
 			});
 		}
-		this._oToolbar.setStyle(this._bMobileTable ? ToolbarStyle.Standard : ToolbarStyle.Clear);
 		return this._oToolbar;
 	};
 
@@ -1611,10 +1527,12 @@ sap.ui.define([
 		var aP13nMode = this.getP13nMode();
 		var aButtons = [];
 
-		// Note: 'Aggregate' does not have a p13n UI, if only 'Aggregate' is enabled no settings icon is necessary
+		//Note: 'Aggregate' does not have a p13n UI, if only 'Aggregate' is enabled no settings icon is necessary
 		var bAggregateP13nOnly = aP13nMode.length === 1 && aP13nMode[0] === "Aggregate";
 		if (aP13nMode.length > 0 && !bAggregateP13nOnly) {
-			aButtons.push(TableSettings.createSettingsButton(this.getId(), [onShowSettingsDialog, this]));
+			aButtons.push(TableSettings["createSettingsButton"](this.getId(), [
+				this._showSettings, this
+			]));
 		}
 
 		return aButtons;
@@ -1713,7 +1631,6 @@ sap.ui.define([
 	 * @private
 	 */
 	Table.prototype._onExport = function(mCustomConfig) {
-		var that = this;
 		return this._createExportColumnConfiguration(mCustomConfig).then(function(aResult) {
 			var aSheetColumns = aResult[0];
 			var oPropertyHelper = aResult[1];
@@ -1724,22 +1641,21 @@ sap.ui.define([
 					MessageBox.error(Core.getLibraryResourceBundle("sap.ui.mdc").getText("table.NO_COLS_EXPORT"), {
 						styleClass: (this.$() && this.$().closest(".sapUiSizeCompact").length) ? "sapUiSizeCompact" : ""
 					});
-				}.bind(that));
+				}.bind(this));
 				return;
 			}
 
-			var oRowBinding = that._getRowBinding();
+			var oRowBinding = this._getRowBinding();
 			var mExportSettings = {
 				workbook: {
 					columns: aSheetColumns
 				},
 				dataSource: oRowBinding,
-				fileType: mCustomConfig.selectedFileType == "pdf" ? "PDF" : "XLSX",
-				fileName: mCustomConfig ? mCustomConfig.fileName : that.getHeader()
+				fileName: mCustomConfig ? mCustomConfig.fileName : this.getHeader()
 			};
 
-			that._loadExportLibrary().then(function() {
-				sap.ui.require(["sap/ui/export/ExportUtils"], function(ExportUtils) {
+			this._loadExportLibrary().then(function() {
+				sap.ui.require(["sap/ui/export/ExportUtils", "sap/ui/export/Spreadsheet"], function(ExportUtils, Spreadsheet) {
 					var oProcessor = Promise.resolve();
 
 					if (mCustomConfig.includeFilterSettings) {
@@ -1768,23 +1684,22 @@ sap.ui.define([
 							mUserSettings.includeFilterSettings = mCustomConfig.includeFilterSettings;
 						}
 
-						ExportUtils.getExportInstance(mExportSettings).then(function(oSheet){
-							oSheet.attachBeforeExport(function(oEvent) {
+						var oSheet = new Spreadsheet(mExportSettings);
+						oSheet.attachBeforeExport(function(oEvent) {
 							var oExportSettings = oEvent.getParameter("exportSettings");
 
-							that.fireBeforeExport({
+							this.fireBeforeExport({
 								exportSettings: oExportSettings,
 								userExportSettings: mUserSettings
-							  });
-						    }, that);
-							oSheet.build().finally(function() {
-								oSheet.destroy();
 							});
+						}, this);
+						oSheet.build().finally(function() {
+							oSheet.destroy();
 						});
-					});
-				});
-			});
-		});
+					}.bind(this));
+				}.bind(this));
+			}.bind(this));
+		}.bind(this));
 	};
 
 	/**
@@ -1792,13 +1707,12 @@ sap.ui.define([
 	 *
 	 * @private
 	 */
-	Table.prototype._onExportAs = function(mCustomConfig) {
+	Table.prototype._onExportAs = function() {
 		var that = this;
 
 		this._loadExportLibrary().then(function() {
 			sap.ui.require(['sap/ui/export/ExportUtils'], function(ExportUtils) {
-				var bEnablePDFExport = new URL(window.location.href).search.indexOf("sap-ui-xx-enablePDFExport=true") > -1;
-				ExportUtils.getExportSettingsViaDialog(that._cachedExportSettings, that, undefined, bEnablePDFExport).then(function(oUserInput) {
+				ExportUtils.getExportSettingsViaDialog(that._cachedExportSettings, that).then(function(oUserInput) {
 					that._cachedExportSettings = oUserInput;
 					that._onExport(oUserInput);
 				});
@@ -1959,11 +1873,6 @@ sap.ui.define([
 		} else {
 			oTableType.disableColumnResizer(this, this._oTable);
 		}
-
-		var aMDCColumns = this.getColumns();
-		aMDCColumns.forEach(function(oColumn) {
-			oColumn.updateColumnResizing(bEnableColumnResizer);
-		}, this);
 	};
 
 	Table.prototype._updateSelectionBehavior = function() {
@@ -1992,14 +1901,14 @@ sap.ui.define([
 	};
 
 	Table.prototype._onColumnPress = function(oColumn) {
-		if (this._bSuppressOpenMenu) {
-			return;
-		}
+		var iIndex,
+			oParent = oColumn.getParent(),
+			oMDCColumn,
+			bResizeButton = window.matchMedia("(hover:none)").matches && this._bMobileTable && this.getEnableColumnResize();
 
-		var oParent = oColumn.getParent(),
-			iIndex = oParent.indexOfColumn(oColumn),
-			oMDCColumn = this.getColumns()[iIndex],
-			bResizeButton = this._bMobileTable && this.getEnableColumnResize();
+		iIndex = oParent.indexOfColumn(oColumn);
+
+		oMDCColumn = this.getColumns()[iIndex];
 
 		this._fullyInitialized().then(function() {
 			var oResourceBundle = Core.getLibraryResourceBundle("sap.ui.mdc");
@@ -2057,28 +1966,26 @@ sap.ui.define([
 				var oFilter = new ColumnPopoverSelectListItem({
 					label: oResourceBundle.getText("table.SETTINGS_FILTER"),
 					icon: "sap-icon://filter",
-					action: [onShowFilterDialog, this]
+					action: [this._showFilter, this]
 				});
 				aHeaderItems.unshift(oFilter);
 			}
 
 			if (bResizeButton) {
-				var oColumnResize = ResponsiveTableType.startColumnResize(this._oTable, oColumn);
-				oColumnResize && aHeaderItems.push(oColumnResize);
+				var oColumnResize = new ColumnPopoverActionItem({
+					text: oResourceBundle.getText("table.SETTINGS_RP_RESIZE"),
+					icon: "sap-icon://resize-horizontal",
+					press: [function() {
+						ResponsiveTableType.startColumnResize(this._oTable, oColumn);
+					}, this]
+				});
+				aHeaderItems.push(oColumnResize);
 			}
 
-			aHeaderItems.forEach(function(oItem) {
-				this._createPopover(oItem, oColumn);
-			}, this);
-
-			if (this._oPopover) {
-				this._oPopover.openBy(oColumn);
-				this._oPopover.getAggregation("_popover").attachAfterClose(function() {
-					this._bSuppressOpenMenu = false;
-				}, this);
-				this._bSuppressOpenMenu = true;
-			}
-
+			aHeaderItems && aHeaderItems.forEach(function(item) {
+				item && this._createPopover(item, oColumn);
+			}.bind(this));
+			this._oPopover && this._oPopover.openBy(oColumn);
 		}.bind(this));
 	};
 
@@ -2117,25 +2024,10 @@ sap.ui.define([
 		TableSettings.createAggregation(this, sSortProperty);
 	};
 
-	Table.prototype._setColumnWidth = function(oMDCColumn) {
-		if (!this.getEnableAutoColumnWidth() || oMDCColumn.getWidth() || oMDCColumn.isBound("width")) {
-			return;
-		}
-
-		var oPropertyHelper = this._oPropertyHelper;
-		if (oPropertyHelper) {
-			oPropertyHelper.setColumnWidth(oMDCColumn);
-		} else {
-			this.awaitPropertyHelper().then(this._setColumnWidth.bind(this, oMDCColumn));
-		}
-	};
-
 	Table.prototype._insertInnerColumn = function(oMDCColumn, iIndex) {
 		if (!this._oTable) {
 			return;
 		}
-
-		this._setColumnWidth(oMDCColumn);
 
 		var oColumn = this._createColumn(oMDCColumn);
 		setColumnTemplate(this, oMDCColumn, oColumn, iIndex);
@@ -2216,7 +2108,7 @@ sap.ui.define([
 			width: oMDCColumn.getWidth(),
 			minWidth: Math.round(oMDCColumn.getMinWidth() * parseFloat(MLibrary.BaseFontSize)),
 			hAlign: oMDCColumn.getHAlign(),
-			label: oMDCColumn.getColumnHeaderControl(this._bMobileTable, this.getEnableColumnResize()),
+			label: oMDCColumn.getColumnHeaderControl(this._bMobileTable),
 			resizable: this.getEnableColumnResize(),
 			autoResizable: this.getEnableColumnResize()
 		});
@@ -2234,7 +2126,7 @@ sap.ui.define([
 			width: oMDCColumn.getWidth(),
 			autoPopinWidth: oMDCColumn.getMinWidth(),
 			hAlign: oMDCColumn.getHAlign(),
-			header: oMDCColumn.getColumnHeaderControl(this._bMobileTable, this.getEnableColumnResize()),
+			header: oMDCColumn.getColumnHeaderControl(this._bMobileTable),
 			importance: oMDCColumn.getImportance(),
 			popinDisplay: "Inline"
 		});
@@ -2257,10 +2149,8 @@ sap.ui.define([
 			oColumn = this._oTable.removeColumn(oMDCColumn.getId() + "-innerColumn");
 			this._oTable.insertColumn(oColumn, iIndex);
 
+			// update template for ResponsiveTable
 			if (this._bMobileTable) {
-				// responsive table requires the column order to be updated.
-				this._setMobileColumnOrder();
-				// update template for ResponisveTable
 				this._updateColumnTemplate(oMDCColumn, iIndex);
 			}
 		}
@@ -2270,7 +2160,7 @@ sap.ui.define([
 		oMDCColumn = this.removeAggregation("columns", oMDCColumn, true);
 		if (this._oTable) {
 			var oColumn = this._oTable.removeColumn(oMDCColumn.getId() + "-innerColumn");
-			oColumn.destroy("KeepDom");
+			oColumn.destroy(); // TODO: avoid destroy
 
 			// update template for ResponsiveTable
 			if (this._bMobileTable) {
@@ -2319,25 +2209,6 @@ sap.ui.define([
 				}
 			});
 		}
-	};
-
-	/**
-	 * Sets the column order for the responsive table. The order is set according to the index of the mdc columns.
-	 * Updating the responsive table's column order and invalidating avoid rebinds.
-	 * @private
-	 */
-	 Table.prototype._setMobileColumnOrder = function() {
-		this.getColumns().forEach(function(oMDCColumn) {
-			var oColumn = Core.byId(oMDCColumn.getId() + "-innerColumn");
-			if (!oColumn) {
-				return;
-			}
-			// since we ensure correct index of the mdcColumn control we can set the same order to the inner responsive table columns
-			oColumn.setOrder(this.indexOfColumn(oMDCColumn));
-		}, this);
-
-		// invalidate the inner table to apply the correct order on the UI. See sap.m.Column#setOrder
-		this._oTable.invalidate();
 	};
 
 	Table._removeItemCell = function(oItem, iRemoveIndex, iInsertIndex) {
@@ -2479,7 +2350,12 @@ sap.ui.define([
 			return;
 		}
 
-		var oBindingInfo = {};
+		// TODO: Temporary, until the FE delegate calls updateBindingInfo on the the base delegate. See sap.ui.mdc.TableDelegate.updateBindingInfo
+		var oBindingInfo = {
+			parameters: {},
+			filters: [],
+			sorter: this._getSorters()
+		};
 
 		this.getControlDelegate().updateBindingInfo(this, this.getPayload(), oBindingInfo);
 
@@ -2701,7 +2577,6 @@ sap.ui.define([
 		}
 	};
 
-	// TODO: Delete!
 	Table.prototype.rebindTable = function() {
 		this.rebind();
 	};
@@ -2715,13 +2590,27 @@ sap.ui.define([
 		}
 	};
 
-	function onShowSettingsDialog(oEvent) {
-		TableSettings.showPanel(this, "Columns", oEvent.getSource());
-	}
+	/**
+	 * Just for test purpose --> has to be finalised
+	 *
+	 * @param {object} oEvt Event object that gets processed
+	 * @experimental
+	 */
+	Table.prototype._showSettings = function(oEvt) {
+		TableSettings.showPanel(this, "Columns", oEvt.getSource());
+	};
 
-	function onShowFilterDialog(oEvent) {
-		TableSettings.showPanel(this, "Filter", oEvent.getSource());
-	}
+	Table.prototype._showSort = function(oEvt) {
+		TableSettings.showPanel(this, "Sort", oEvt.getSource());
+	};
+
+	Table.prototype._showFilter = function(oEvt) {
+		TableSettings.showPanel(this, "Filter", oEvt.getSource());
+	};
+
+	Table.prototype._showGroup = function (oEvt) {
+		TableSettings.showPanel(this, "Group", oEvt.getSource());
+	};
 
 	// TODO: move to a base util that can be used by most aggregations
 	Table.prototype._getSorters = function() {
@@ -2741,9 +2630,6 @@ sap.ui.define([
 	// Called when a paste event is fired from the inner table
 	// Fires the MDCTable paste event
 	Table.prototype._onInnerTablePaste = function(oEvent) {
-		if (!this.getEnablePaste()) {
-			return;
-		}
 		this.firePaste({
 			data: oEvent.getParameter("data")
 		});
@@ -2775,22 +2661,7 @@ sap.ui.define([
 		this._oFullInitialize = null;
 		this._oPasteButton = null;
 
-		if (this._oFilterInfoBarInvisibleText) {
-			this._oFilterInfoBarInvisibleText.destroy();
-			this._oFilterInfoBarInvisibleText = null;
-		}
-
 		Control.prototype.exit.apply(this, arguments);
-	};
-
-	Table.prototype.addAction = function(oControl) {
-		if (oControl.getMetadata().getName() !== "sap.ui.mdc.actiontoolbar.ActionToolbarAction") {
-			oControl = new ActionToolbarAction(oControl.getId() + "-action", {
-				action: oControl
-			});
-		}
-
-		return Control.prototype.addAggregation.apply(this, ["actions", oControl]);
 	};
 
 	return Table;

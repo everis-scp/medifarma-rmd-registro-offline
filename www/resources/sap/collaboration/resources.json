@@ -2,26 +2,32 @@
 	"_version": "1.1.0",
 	"resources": [
 		{
-			"name": ".library"
+			"name": ".library",
+			"size": 1046
 		},
 		{
-			"name": ".theming"
+			"name": ".theming",
+			"size": 80
 		},
 		{
 			"name": "AppType.type",
+			"size": 490,
 			"designtime": true
 		},
 		{
 			"name": "DisplayFeedType.type",
+			"size": 628,
 			"designtime": true
 		},
 		{
 			"name": "FeedType.type",
+			"size": 2621,
 			"designtime": true
 		},
 		{
 			"name": "components/controls/FeedEntryEmbedded-dbg.js",
 			"module": "sap/collaboration/components/controls/FeedEntryEmbedded.js",
+			"size": 17600,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -40,6 +46,7 @@
 		{
 			"name": "components/controls/FeedEntryEmbedded.js",
 			"module": "sap/collaboration/components/controls/FeedEntryEmbedded.js",
+			"size": 7697,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/controls/PlaceholderUtility.js",
@@ -57,6 +64,7 @@
 		{
 			"name": "components/controls/FeedEntryEmbeddedRenderer-dbg.js",
 			"module": "sap/collaboration/components/controls/FeedEntryEmbeddedRenderer.js",
+			"size": 5932,
 			"isDebug": true,
 			"required": [
 				"sap/ui/core/HTML.js"
@@ -65,6 +73,7 @@
 		{
 			"name": "components/controls/FeedEntryEmbeddedRenderer.js",
 			"module": "sap/collaboration/components/controls/FeedEntryEmbeddedRenderer.js",
+			"size": 2126,
 			"required": [
 				"sap/ui/core/HTML.js"
 			]
@@ -72,6 +81,7 @@
 		{
 			"name": "components/controls/FilterPopover-dbg.js",
 			"module": "sap/collaboration/components/controls/FilterPopover.js",
+			"size": 9873,
 			"isDebug": true,
 			"required": [
 				"sap/m/List.js",
@@ -84,6 +94,7 @@
 		{
 			"name": "components/controls/FilterPopover.js",
 			"module": "sap/collaboration/components/controls/FilterPopover.js",
+			"size": 3483,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/ResponsivePopover.js",
@@ -95,6 +106,7 @@
 		{
 			"name": "components/controls/PlaceholderUtility-dbg.js",
 			"module": "sap/collaboration/components/controls/PlaceholderUtility.js",
+			"size": 7257,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -103,6 +115,7 @@
 		{
 			"name": "components/controls/PlaceholderUtility.js",
 			"module": "sap/collaboration/components/controls/PlaceholderUtility.js",
+			"size": 1517,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -110,6 +123,7 @@
 		{
 			"name": "components/controls/ReplyPopover-dbg.js",
 			"module": "sap/collaboration/components/controls/ReplyPopover.js",
+			"size": 16762,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -134,6 +148,7 @@
 		{
 			"name": "components/controls/ReplyPopover.js",
 			"module": "sap/collaboration/components/controls/ReplyPopover.js",
+			"size": 7302,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/LanguageBundle.js",
@@ -157,6 +172,7 @@
 		{
 			"name": "components/controls/SocialTextArea-dbg.js",
 			"module": "sap/collaboration/components/controls/SocialTextArea.js",
+			"size": 25569,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -174,6 +190,7 @@
 		{
 			"name": "components/controls/SocialTextArea.js",
 			"module": "sap/collaboration/components/controls/SocialTextArea.js",
+			"size": 9599,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/controls/SuggestionUtility.js",
@@ -190,6 +207,7 @@
 		{
 			"name": "components/controls/SuggestionUtility-dbg.js",
 			"module": "sap/collaboration/components/controls/SuggestionUtility.js",
+			"size": 12783,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -198,6 +216,7 @@
 		{
 			"name": "components/controls/SuggestionUtility.js",
 			"module": "sap/collaboration/components/controls/SuggestionUtility.js",
+			"size": 2837,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -205,6 +224,7 @@
 		{
 			"name": "components/controls/TimelineEntryEmbedded-dbg.js",
 			"module": "sap/collaboration/components/controls/TimelineEntryEmbedded.js",
+			"size": 8698,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -221,6 +241,7 @@
 		{
 			"name": "components/controls/TimelineEntryEmbedded.js",
 			"module": "sap/collaboration/components/controls/TimelineEntryEmbedded.js",
+			"size": 3576,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/LanguageBundle.js",
@@ -236,15 +257,18 @@
 		{
 			"name": "components/controls/TimelineEntryEmbeddedRenderer-dbg.js",
 			"module": "sap/collaboration/components/controls/TimelineEntryEmbeddedRenderer.js",
+			"size": 1120,
 			"isDebug": true
 		},
 		{
 			"name": "components/controls/TimelineEntryEmbeddedRenderer.js",
-			"module": "sap/collaboration/components/controls/TimelineEntryEmbeddedRenderer.js"
+			"module": "sap/collaboration/components/controls/TimelineEntryEmbeddedRenderer.js",
+			"size": 276
 		},
 		{
 			"name": "components/feed/BOMode-dbg.js",
 			"module": "sap/collaboration/components/feed/BOMode.js",
+			"size": 18616,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/feed/Mode.js",
@@ -255,6 +279,7 @@
 		{
 			"name": "components/feed/BOMode.js",
 			"module": "sap/collaboration/components/feed/BOMode.js",
+			"size": 6978,
 			"required": [
 				"sap/collaboration/components/feed/Mode.js",
 				"sap/collaboration/components/utils/PendingRequestsUtil.js",
@@ -264,6 +289,7 @@
 		{
 			"name": "components/feed/Component-dbg.js",
 			"module": "sap/collaboration/components/feed/Component.js",
+			"size": 8432,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -276,6 +302,7 @@
 		{
 			"name": "components/feed/Component.js",
 			"module": "sap/collaboration/components/feed/Component.js",
+			"size": 1902,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/suite/ui/commons/library.js",
@@ -285,11 +312,13 @@
 			]
 		},
 		{
-			"name": "components/feed/Component.json"
+			"name": "components/feed/Component.json",
+			"size": 249
 		},
 		{
 			"name": "components/feed/GroupIDsMode-dbg.js",
 			"module": "sap/collaboration/components/feed/GroupIDsMode.js",
+			"size": 8676,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -300,6 +329,7 @@
 		{
 			"name": "components/feed/GroupIDsMode.js",
 			"module": "sap/collaboration/components/feed/GroupIDsMode.js",
+			"size": 3846,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/feed/Mode.js",
@@ -309,6 +339,7 @@
 		{
 			"name": "components/feed/Mode-dbg.js",
 			"module": "sap/collaboration/components/feed/Mode.js",
+			"size": 7879,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -322,6 +353,7 @@
 		{
 			"name": "components/feed/Mode.js",
 			"module": "sap/collaboration/components/feed/Mode.js",
+			"size": 3503,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
 				"sap/ui/base/Object.js",
@@ -334,6 +366,7 @@
 		{
 			"name": "components/feed/ModeFactory-dbg.js",
 			"module": "sap/collaboration/components/feed/ModeFactory.js",
+			"size": 2414,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/feed/BOMode.js",
@@ -345,6 +378,7 @@
 		{
 			"name": "components/feed/ModeFactory.js",
 			"module": "sap/collaboration/components/feed/ModeFactory.js",
+			"size": 1004,
 			"required": [
 				"sap/collaboration/components/feed/BOMode.js",
 				"sap/collaboration/components/feed/GroupIDsMode.js",
@@ -355,6 +389,7 @@
 		{
 			"name": "components/feed/UserMode-dbg.js",
 			"module": "sap/collaboration/components/feed/UserMode.js",
+			"size": 5465,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/feed/Mode.js"
@@ -363,6 +398,7 @@
 		{
 			"name": "components/feed/UserMode.js",
 			"module": "sap/collaboration/components/feed/UserMode.js",
+			"size": 1807,
 			"required": [
 				"sap/collaboration/components/feed/Mode.js"
 			]
@@ -370,6 +406,7 @@
 		{
 			"name": "components/feed/fragments/CustomListItem.fragment.xml",
 			"module": "sap/collaboration/components/feed/fragments/CustomListItem.fragment.xml",
+			"size": 265,
 			"required": [
 				"sap/m/CustomListItem.js",
 				"sap/m/Label.js",
@@ -379,6 +416,7 @@
 		{
 			"name": "components/feed/fragments/GroupSelector.fragment.xml",
 			"module": "sap/collaboration/components/feed/fragments/GroupSelector.fragment.xml",
+			"size": 568,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/ResponsivePopover.js",
@@ -389,6 +427,7 @@
 		{
 			"name": "components/feed/views/GroupFeed-dbg.controller.js",
 			"module": "sap/collaboration/components/feed/views/GroupFeed.controller.js",
+			"size": 52024,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -421,6 +460,7 @@
 		{
 			"name": "components/feed/views/GroupFeed.controller.js",
 			"module": "sap/collaboration/components/feed/views/GroupFeed.controller.js",
+			"size": 23850,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/controls/FeedEntryEmbedded.js",
@@ -452,6 +492,7 @@
 		{
 			"name": "components/feed/views/GroupFeed.view.xml",
 			"module": "sap/collaboration/components/feed/views/GroupFeed.view.xml",
+			"size": 568,
 			"required": [
 				"sap/collaboration/components/feed/views/GroupFeed.controller.js",
 				"sap/suite/ui/commons/Timeline.js",
@@ -461,6 +502,7 @@
 		{
 			"name": "components/fiori/feed/Component-dbg.js",
 			"module": "sap/collaboration/components/fiori/feed/Component.js",
+			"size": 11021,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -475,6 +517,7 @@
 		{
 			"name": "components/fiori/feed/Component.js",
 			"module": "sap/collaboration/components/fiori/feed/Component.js",
+			"size": 4101,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -488,6 +531,7 @@
 		{
 			"name": "components/fiori/feed/app/App-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/app/App.controller.js",
+			"size": 13236,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -502,6 +546,7 @@
 		{
 			"name": "components/fiori/feed/app/App-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/feed/app/App.view.js",
+			"size": 1373,
 			"isDebug": true,
 			"required": [
 				"sap/m/App.js",
@@ -511,6 +556,7 @@
 		{
 			"name": "components/fiori/feed/app/App.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/app/App.controller.js",
+			"size": 5532,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -524,6 +570,7 @@
 		{
 			"name": "components/fiori/feed/app/App.view.js",
 			"module": "sap/collaboration/components/fiori/feed/app/App.view.js",
+			"size": 475,
 			"required": [
 				"sap/m/App.js",
 				"sap/ui/core/mvc/JSView.js"
@@ -532,6 +579,7 @@
 		{
 			"name": "components/fiori/feed/commons/Detail-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/commons/Detail.controller.js",
+			"size": 4393,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -543,6 +591,7 @@
 		{
 			"name": "components/fiori/feed/commons/Detail-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/feed/commons/Detail.view.js",
+			"size": 1854,
 			"isDebug": true,
 			"required": [
 				"sap/m/Page.js",
@@ -553,6 +602,7 @@
 		{
 			"name": "components/fiori/feed/commons/Detail.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/commons/Detail.controller.js",
+			"size": 1978,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/JamUtil.js",
@@ -563,6 +613,7 @@
 		{
 			"name": "components/fiori/feed/commons/Detail.view.js",
 			"module": "sap/collaboration/components/fiori/feed/commons/Detail.view.js",
+			"size": 767,
 			"required": [
 				"sap/m/Page.js",
 				"sap/m/ScrollContainer.js",
@@ -572,6 +623,7 @@
 		{
 			"name": "components/fiori/feed/dialog/Component-dbg.js",
 			"module": "sap/collaboration/components/fiori/feed/dialog/Component.js",
+			"size": 24234,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -591,6 +643,7 @@
 		{
 			"name": "components/fiori/feed/dialog/Component.js",
 			"module": "sap/collaboration/components/fiori/feed/dialog/Component.js",
+			"size": 8636,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -609,6 +662,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/FeedTypeMaster-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/FeedTypeMaster.controller.js",
+			"size": 4882,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/JamUtil.js",
@@ -619,6 +673,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/FeedTypeMaster-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/FeedTypeMaster.view.js",
+			"size": 2954,
 			"isDebug": true,
 			"required": [
 				"sap/m/List.js",
@@ -631,6 +686,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/FeedTypeMaster.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/FeedTypeMaster.controller.js",
+			"size": 1845,
 			"required": [
 				"sap/collaboration/components/utils/JamUtil.js",
 				"sap/collaboration/library.js",
@@ -640,6 +696,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/FeedTypeMaster.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/FeedTypeMaster.view.js",
+			"size": 1302,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/Page.js",
@@ -651,6 +708,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/GroupMaster-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/GroupMaster.controller.js",
+			"size": 5210,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/JamUtil.js",
@@ -665,6 +723,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/GroupMaster-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/GroupMaster.view.js",
+			"size": 1677,
 			"isDebug": true,
 			"required": [
 				"sap/m/List.js",
@@ -675,6 +734,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/GroupMaster.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/GroupMaster.controller.js",
+			"size": 2633,
 			"required": [
 				"sap/collaboration/components/utils/JamUtil.js",
 				"sap/collaboration/components/utils/OdataUtil.js",
@@ -688,6 +748,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/GroupMaster.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/GroupMaster.view.js",
+			"size": 702,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/Page.js",
@@ -697,6 +758,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/SplitApp-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/SplitApp.controller.js",
+			"size": 5980,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -709,6 +771,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/SplitApp-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/SplitApp.view.js",
+			"size": 1503,
 			"isDebug": true,
 			"required": [
 				"sap/m/SplitApp.js",
@@ -718,6 +781,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/SplitApp.controller.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/SplitApp.controller.js",
+			"size": 2553,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/OdataUtil.js",
@@ -729,6 +793,7 @@
 		{
 			"name": "components/fiori/feed/splitApp/SplitApp.view.js",
 			"module": "sap/collaboration/components/fiori/feed/splitApp/SplitApp.view.js",
+			"size": 515,
 			"required": [
 				"sap/m/SplitApp.js",
 				"sap/ui/core/mvc/JSView.js"
@@ -737,6 +802,7 @@
 		{
 			"name": "components/fiori/notification/Component-dbg.js",
 			"module": "sap/collaboration/components/fiori/notification/Component.js",
+			"size": 6146,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -750,6 +816,7 @@
 		{
 			"name": "components/fiori/notification/Component.js",
 			"module": "sap/collaboration/components/fiori/notification/Component.js",
+			"size": 2591,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -762,6 +829,7 @@
 		{
 			"name": "components/fiori/notification/Notification-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/notification/Notification.controller.js",
+			"size": 20042,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -775,6 +843,7 @@
 		{
 			"name": "components/fiori/notification/Notification-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/notification/Notification.view.js",
+			"size": 5571,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/fiori/notification/NotificationContainer.js",
@@ -789,6 +858,7 @@
 		{
 			"name": "components/fiori/notification/Notification.controller.js",
 			"module": "sap/collaboration/components/fiori/notification/Notification.controller.js",
+			"size": 10645,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
 				"sap/collaboration/components/utils/NotificationTypeUtil.js",
@@ -801,6 +871,7 @@
 		{
 			"name": "components/fiori/notification/Notification.view.js",
 			"module": "sap/collaboration/components/fiori/notification/Notification.view.js",
+			"size": 3763,
 			"required": [
 				"sap/collaboration/components/fiori/notification/NotificationContainer.js",
 				"sap/collaboration/library.js",
@@ -814,6 +885,7 @@
 		{
 			"name": "components/fiori/notification/NotificationContainer-dbg.js",
 			"module": "sap/collaboration/components/fiori/notification/NotificationContainer.js",
+			"size": 884,
 			"isDebug": true,
 			"required": [
 				"sap/ui/core/Control.js"
@@ -822,6 +894,7 @@
 		{
 			"name": "components/fiori/notification/NotificationContainer.js",
 			"module": "sap/collaboration/components/fiori/notification/NotificationContainer.js",
+			"size": 578,
 			"required": [
 				"sap/ui/core/Control.js"
 			]
@@ -829,6 +902,7 @@
 		{
 			"name": "components/fiori/sharing/Component-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/Component.js",
+			"size": 11730,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -842,6 +916,7 @@
 		{
 			"name": "components/fiori/sharing/Component.js",
 			"module": "sap/collaboration/components/fiori/sharing/Component.js",
+			"size": 4990,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -854,6 +929,7 @@
 		{
 			"name": "components/fiori/sharing/FolderSelection-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/FolderSelection.controller.js",
+			"size": 10117,
 			"isDebug": true,
 			"required": [
 				"sap/m/StandardListItem.js",
@@ -865,6 +941,7 @@
 		{
 			"name": "components/fiori/sharing/FolderSelection-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/FolderSelection.view.js",
+			"size": 1538,
 			"isDebug": true,
 			"required": [
 				"sap/m/List.js",
@@ -875,6 +952,7 @@
 		{
 			"name": "components/fiori/sharing/FolderSelection.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/FolderSelection.controller.js",
+			"size": 4683,
 			"required": [
 				"sap/m/StandardListItem.js",
 				"sap/m/library.js",
@@ -885,6 +963,7 @@
 		{
 			"name": "components/fiori/sharing/FolderSelection.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/FolderSelection.view.js",
+			"size": 786,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/VBox.js",
@@ -894,6 +973,7 @@
 		{
 			"name": "components/fiori/sharing/NoGroups-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/NoGroups.controller.js",
+			"size": 1275,
 			"isDebug": true,
 			"required": [
 				"sap/ui/core/mvc/Controller.js"
@@ -902,6 +982,7 @@
 		{
 			"name": "components/fiori/sharing/NoGroups-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/NoGroups.view.js",
+			"size": 2335,
 			"isDebug": true,
 			"required": [
 				"sap/m/Link.js",
@@ -915,6 +996,7 @@
 		{
 			"name": "components/fiori/sharing/NoGroups.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/NoGroups.controller.js",
+			"size": 392,
 			"required": [
 				"sap/ui/core/mvc/Controller.js"
 			]
@@ -922,6 +1004,7 @@
 		{
 			"name": "components/fiori/sharing/NoGroups.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/NoGroups.view.js",
+			"size": 1113,
 			"required": [
 				"sap/m/Link.js",
 				"sap/m/VBox.js",
@@ -934,6 +1017,7 @@
 		{
 			"name": "components/fiori/sharing/Sharing-dbg.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/Sharing.controller.js",
+			"size": 27745,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -951,6 +1035,7 @@
 		{
 			"name": "components/fiori/sharing/Sharing-dbg.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/Sharing.view.js",
+			"size": 6323,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/controls/SocialTextArea.js",
@@ -967,6 +1052,7 @@
 		{
 			"name": "components/fiori/sharing/Sharing.controller.js",
 			"module": "sap/collaboration/components/fiori/sharing/Sharing.controller.js",
+			"size": 14655,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/fiori/sharing/helper/AttachmentsUtil.js",
@@ -983,6 +1069,7 @@
 		{
 			"name": "components/fiori/sharing/Sharing.view.js",
 			"module": "sap/collaboration/components/fiori/sharing/Sharing.view.js",
+			"size": 3598,
 			"required": [
 				"sap/collaboration/components/controls/SocialTextArea.js",
 				"sap/m/CheckBox.js",
@@ -998,6 +1085,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/Attachment-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/Attachment.js",
+			"size": 2624,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException.js",
@@ -1008,6 +1096,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/Attachment.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/Attachment.js",
+			"size": 1197,
 			"required": [
 				"sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException.js",
 				"sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentParameterException.js",
@@ -1017,6 +1106,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException.js",
+			"size": 810,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1025,6 +1115,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentConstructorArgumentsException.js",
+			"size": 399,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1032,6 +1123,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/InvalidAttachmentParameterException-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentParameterException.js",
+			"size": 535,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1040,6 +1132,7 @@
 		{
 			"name": "components/fiori/sharing/attachment/InvalidAttachmentParameterException.js",
 			"module": "sap/collaboration/components/fiori/sharing/attachment/InvalidAttachmentParameterException.js",
+			"size": 382,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1047,6 +1140,7 @@
 		{
 			"name": "components/fiori/sharing/dialog/Component-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/dialog/Component.js",
+			"size": 15211,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1062,6 +1156,7 @@
 		{
 			"name": "components/fiori/sharing/dialog/Component.js",
 			"module": "sap/collaboration/components/fiori/sharing/dialog/Component.js",
+			"size": 7086,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -1076,6 +1171,7 @@
 		{
 			"name": "components/fiori/sharing/helper/AttachmentsUtil-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/helper/AttachmentsUtil.js",
+			"size": 7717,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -1098,6 +1194,7 @@
 		{
 			"name": "components/fiori/sharing/helper/AttachmentsUtil.js",
 			"module": "sap/collaboration/components/fiori/sharing/helper/AttachmentsUtil.js",
+			"size": 4034,
 			"required": [
 				"sap/collaboration/components/utils/CommonUtil.js",
 				"sap/m/Bar.js",
@@ -1119,6 +1216,7 @@
 		{
 			"name": "components/fiori/sharing/helper/ShareUtil-dbg.js",
 			"module": "sap/collaboration/components/fiori/sharing/helper/ShareUtil.js",
+			"size": 16986,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1129,6 +1227,7 @@
 		{
 			"name": "components/fiori/sharing/helper/ShareUtil.js",
 			"module": "sap/collaboration/components/fiori/sharing/helper/ShareUtil.js",
+			"size": 8404,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/m/SelectDialog.js",
@@ -1136,332 +1235,448 @@
 			]
 		},
 		{
-			"name": "components/resources/css/EmbeddedControl.css"
+			"name": "components/resources/css/EmbeddedControl.css",
+			"size": 311
 		},
 		{
-			"name": "components/resources/css/MorePopover.css"
+			"name": "components/resources/css/MorePopover.css",
+			"size": 74
 		},
 		{
-			"name": "components/resources/css/ReplyPopover.css"
+			"name": "components/resources/css/ReplyPopover.css",
+			"size": 197
 		},
 		{
-			"name": "components/resources/css/Sharing.css"
+			"name": "components/resources/css/Sharing.css",
+			"size": 237
 		},
 		{
-			"name": "components/resources/css/SocialProfile.css"
+			"name": "components/resources/css/SocialProfile.css",
+			"size": 402
 		},
 		{
-			"name": "components/resources/css/SocialTextArea.css"
+			"name": "components/resources/css/SocialTextArea.css",
+			"size": 128
 		},
 		{
-			"name": "components/resources/css/SocialTimeline.css"
+			"name": "components/resources/css/SocialTimeline.css",
+			"size": 0
 		},
 		{
 			"name": "components/resources/i18n/messagebundle.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle.properties",
+			"size": 24367,
 			"locale": "",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ar.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ar.properties",
+			"size": 36700,
 			"locale": "ar",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_bg.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_bg.properties",
+			"size": 43818,
 			"locale": "bg",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ca.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ca.properties",
+			"size": 14862,
 			"locale": "ca",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_cs.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_cs.properties",
+			"size": 16487,
 			"locale": "cs",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_cy.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_cy.properties",
+			"size": 14910,
+			"locale": "cy",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_da.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_da.properties",
+			"size": 13866,
 			"locale": "da",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_de.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_de.properties",
+			"size": 14909,
 			"locale": "de",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_el.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_el.properties",
+			"size": 43526,
 			"locale": "el",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_en.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_en.properties",
+			"size": 13085,
 			"locale": "en",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_en_GB.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_en_GB.properties",
+			"size": 13105,
+			"locale": "en_GB",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_en_US_sappsd.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_en_US_sappsd.properties",
+			"size": 50876,
 			"locale": "en_US_sappsd",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_en_US_saprigi.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_en_US_saprigi.properties",
+			"size": 87298,
+			"locale": "en_US_saprigi",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_en_US_saptrc.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_en_US_saptrc.properties",
+			"size": 19031,
 			"locale": "en_US_saptrc",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_es.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_es.properties",
+			"size": 15037,
 			"locale": "es",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_es_MX.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_es_MX.properties",
+			"size": 14656,
+			"locale": "es_MX",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_et.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_et.properties",
+			"size": 14220,
 			"locale": "et",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_fi.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_fi.properties",
+			"size": 15596,
 			"locale": "fi",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_fr.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_fr.properties",
+			"size": 15774,
 			"locale": "fr",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_fr_CA.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_fr_CA.properties",
+			"size": 16276,
+			"locale": "fr_CA",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_hi.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_hi.properties",
+			"size": 41886,
 			"locale": "hi",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_hr.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_hr.properties",
+			"size": 14380,
 			"locale": "hr",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_hu.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_hu.properties",
+			"size": 17713,
 			"locale": "hu",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_id.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_id.properties",
+			"size": 13898,
+			"locale": "id",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_it.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_it.properties",
+			"size": 14480,
 			"locale": "it",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_iw.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_iw.properties",
+			"size": 31836,
 			"locale": "iw",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ja.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ja.properties",
+			"size": 26493,
 			"locale": "ja",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_kk.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_kk.properties",
+			"size": 42906,
 			"locale": "kk",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ko.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ko.properties",
+			"size": 23288,
 			"locale": "ko",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_lt.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_lt.properties",
+			"size": 16366,
 			"locale": "lt",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_lv.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_lv.properties",
+			"size": 16891,
 			"locale": "lv",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ms.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ms.properties",
+			"size": 13961,
 			"locale": "ms",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_nl.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_nl.properties",
+			"size": 14048,
 			"locale": "nl",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_no.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_no.properties",
+			"size": 13893,
 			"locale": "no",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_pl.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_pl.properties",
+			"size": 16630,
 			"locale": "pl",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_pt.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_pt.properties",
+			"size": 15110,
 			"locale": "pt",
+			"raw": "components/resources/i18n/messagebundle.properties"
+		},
+		{
+			"name": "components/resources/i18n/messagebundle_pt_PT.properties",
+			"module": "sap/collaboration/components/resources/i18n/messagebundle_pt_PT.properties",
+			"size": 14545,
+			"locale": "pt_PT",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ro.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ro.properties",
+			"size": 15659,
 			"locale": "ro",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_ru.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_ru.properties",
+			"size": 47151,
 			"locale": "ru",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_sh.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_sh.properties",
+			"size": 14039,
 			"locale": "sh",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_sk.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_sk.properties",
+			"size": 16810,
 			"locale": "sk",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_sl.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_sl.properties",
+			"size": 14062,
 			"locale": "sl",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_sv.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_sv.properties",
+			"size": 14400,
 			"locale": "sv",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_th.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_th.properties",
+			"size": 41870,
 			"locale": "th",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_tr.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_tr.properties",
+			"size": 16112,
 			"locale": "tr",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_uk.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_uk.properties",
+			"size": 42929,
 			"locale": "uk",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_vi.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_vi.properties",
+			"size": 25520,
 			"locale": "vi",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_zh_CN.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_zh_CN.properties",
+			"size": 17938,
 			"locale": "zh_CN",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
 			"name": "components/resources/i18n/messagebundle_zh_TW.properties",
 			"module": "sap/collaboration/components/resources/i18n/messagebundle_zh_TW.properties",
+			"size": 18255,
 			"locale": "zh_TW",
 			"raw": "components/resources/i18n/messagebundle.properties"
 		},
 		{
-			"name": "components/resources/images/AssignedGroup.png"
+			"name": "components/resources/images/AssignedGroup.png",
+			"size": 499
 		},
 		{
-			"name": "components/resources/images/GroupActionAssign.png"
+			"name": "components/resources/images/GroupActionAssign.png",
+			"size": 549
 		},
 		{
-			"name": "components/resources/images/GroupActionCopy.png"
+			"name": "components/resources/images/GroupActionCopy.png",
+			"size": 206
 		},
 		{
-			"name": "components/resources/images/GroupActionCreate.png"
+			"name": "components/resources/images/GroupActionCreate.png",
+			"size": 386
 		},
 		{
-			"name": "components/resources/images/GroupActionEdit.png"
+			"name": "components/resources/images/GroupActionEdit.png",
+			"size": 418
 		},
 		{
-			"name": "components/resources/images/GroupActionTrash.png"
+			"name": "components/resources/images/GroupActionTrash.png",
+			"size": 1404
 		},
 		{
-			"name": "components/resources/images/GroupActionUnassign.png"
+			"name": "components/resources/images/GroupActionUnassign.png",
+			"size": 3567
 		},
 		{
-			"name": "components/resources/images/GroupTypePrivateExternal.png"
+			"name": "components/resources/images/GroupTypePrivateExternal.png",
+			"size": 3070
 		},
 		{
-			"name": "components/resources/images/GroupTypePublicInternal.png"
+			"name": "components/resources/images/GroupTypePublicInternal.png",
+			"size": 274
 		},
 		{
-			"name": "components/resources/images/GroupTypepPrivateInternal.png"
+			"name": "components/resources/images/GroupTypepPrivateInternal.png",
+			"size": 285
 		},
 		{
-			"name": "components/resources/images/InvitationAccept.png"
+			"name": "components/resources/images/InvitationAccept.png",
+			"size": 5487
 		},
 		{
-			"name": "components/resources/images/InvitationDecline.png"
+			"name": "components/resources/images/InvitationDecline.png",
+			"size": 554
 		},
 		{
-			"name": "components/resources/images/MemberDelete.png"
+			"name": "components/resources/images/MemberDelete.png",
+			"size": 1404
 		},
 		{
-			"name": "components/resources/images/MemberInviteConfirmed.png"
+			"name": "components/resources/images/MemberInviteConfirmed.png",
+			"size": 693
 		},
 		{
-			"name": "components/resources/images/MemberInviteDeclined.png"
+			"name": "components/resources/images/MemberInviteDeclined.png",
+			"size": 3829
 		},
 		{
-			"name": "components/resources/images/MemberInviteOpen.png"
+			"name": "components/resources/images/MemberInviteOpen.png",
+			"size": 3829
 		},
 		{
-			"name": "components/resources/images/UnTag.png"
+			"name": "components/resources/images/UnTag.png",
+			"size": 3567
 		},
 		{
 			"name": "components/socialprofile/Component-dbg.js",
 			"module": "sap/collaboration/components/socialprofile/Component.js",
+			"size": 13354,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1479,6 +1694,7 @@
 		{
 			"name": "components/socialprofile/Component.js",
 			"module": "sap/collaboration/components/socialprofile/Component.js",
+			"size": 4400,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -1495,6 +1711,7 @@
 		{
 			"name": "components/socialprofile/SocialProfile-dbg.controller.js",
 			"module": "sap/collaboration/components/socialprofile/SocialProfile.controller.js",
+			"size": 7234,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1508,6 +1725,7 @@
 		{
 			"name": "components/socialprofile/SocialProfile-dbg.view.js",
 			"module": "sap/collaboration/components/socialprofile/SocialProfile.view.js",
+			"size": 6239,
 			"isDebug": true,
 			"required": [
 				"sap/m/HBox.js",
@@ -1523,6 +1741,7 @@
 		{
 			"name": "components/socialprofile/SocialProfile.controller.js",
 			"module": "sap/collaboration/components/socialprofile/SocialProfile.controller.js",
+			"size": 3725,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -1535,6 +1754,7 @@
 		{
 			"name": "components/socialprofile/SocialProfile.view.js",
 			"module": "sap/collaboration/components/socialprofile/SocialProfile.view.js",
+			"size": 3414,
 			"required": [
 				"sap/m/HBox.js",
 				"sap/m/Image.js",
@@ -1549,6 +1769,7 @@
 		{
 			"name": "components/socialtimeline/Component-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/Component.js",
+			"size": 65091,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1585,6 +1806,7 @@
 		{
 			"name": "components/socialtimeline/Component.js",
 			"module": "sap/collaboration/components/socialtimeline/Component.js",
+			"size": 26322,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/controls/FilterPopover.js",
@@ -1620,6 +1842,7 @@
 		{
 			"name": "components/socialtimeline/annotations/Metadata-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/Metadata.js",
+			"size": 3661,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1628,6 +1851,7 @@
 		{
 			"name": "components/socialtimeline/annotations/Metadata.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/Metadata.js",
+			"size": 1649,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1635,6 +1859,7 @@
 		{
 			"name": "components/socialtimeline/annotations/MetadataException-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/MetadataException.js",
+			"size": 544,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1643,6 +1868,7 @@
 		{
 			"name": "components/socialtimeline/annotations/MetadataException.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/MetadataException.js",
+			"size": 424,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1650,6 +1876,7 @@
 		{
 			"name": "components/socialtimeline/annotations/TimelineTermsUtility-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/TimelineTermsUtility.js",
+			"size": 14456,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1660,6 +1887,7 @@
 		{
 			"name": "components/socialtimeline/annotations/TimelineTermsUtility.js",
 			"module": "sap/collaboration/components/socialtimeline/annotations/TimelineTermsUtility.js",
+			"size": 6606,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/socialtimeline/annotations/MetadataException.js",
@@ -1669,6 +1897,7 @@
 		{
 			"name": "components/socialtimeline/controls/TimelineItemEmbedded-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/controls/TimelineItemEmbedded.js",
+			"size": 3702,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/controls/FeedEntryEmbedded.js",
@@ -1679,6 +1908,7 @@
 		{
 			"name": "components/socialtimeline/controls/TimelineItemEmbedded.js",
 			"module": "sap/collaboration/components/socialtimeline/controls/TimelineItemEmbedded.js",
+			"size": 1269,
 			"required": [
 				"sap/collaboration/components/controls/FeedEntryEmbedded.js",
 				"sap/collaboration/components/controls/TimelineEntryEmbedded.js",
@@ -1688,15 +1918,18 @@
 		{
 			"name": "components/socialtimeline/controls/TimelineItemEmbeddedRenderer-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/controls/TimelineItemEmbeddedRenderer.js",
+			"size": 765,
 			"isDebug": true
 		},
 		{
 			"name": "components/socialtimeline/controls/TimelineItemEmbeddedRenderer.js",
-			"module": "sap/collaboration/components/socialtimeline/controls/TimelineItemEmbeddedRenderer.js"
+			"module": "sap/collaboration/components/socialtimeline/controls/TimelineItemEmbeddedRenderer.js",
+			"size": 242
 		},
 		{
 			"name": "components/socialtimeline/datahandlers/JamDataHandler-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/JamDataHandler.js",
+			"size": 32911,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1707,6 +1940,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/JamDataHandler.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/JamDataHandler.js",
+			"size": 11461,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/OdataUtil.js",
@@ -1716,6 +1950,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/SMIntegrationDataHandler-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/SMIntegrationDataHandler.js",
+			"size": 4326,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1726,6 +1961,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/SMIntegrationDataHandler.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/SMIntegrationDataHandler.js",
+			"size": 1812,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/OdataUtil.js",
@@ -1735,6 +1971,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/ServiceDataHandler-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/ServiceDataHandler.js",
+			"size": 3393,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1744,6 +1981,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/ServiceDataHandler.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/ServiceDataHandler.js",
+			"size": 1294,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/base/Object.js"
@@ -1752,6 +1990,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/TimelineDataHandler-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/TimelineDataHandler.js",
+			"size": 25494,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1762,6 +2001,7 @@
 		{
 			"name": "components/socialtimeline/datahandlers/TimelineDataHandler.js",
 			"module": "sap/collaboration/components/socialtimeline/datahandlers/TimelineDataHandler.js",
+			"size": 9136,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/socialtimeline/filter/FilterType.js",
@@ -1771,6 +2011,7 @@
 		{
 			"name": "components/socialtimeline/filter/FilterType-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/filter/FilterType.js",
+			"size": 526,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1779,6 +2020,7 @@
 		{
 			"name": "components/socialtimeline/filter/FilterType.js",
 			"module": "sap/collaboration/components/socialtimeline/filter/FilterType.js",
+			"size": 416,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1786,6 +2028,7 @@
 		{
 			"name": "components/socialtimeline/validation/InputValidator-dbg.js",
 			"module": "sap/collaboration/components/socialtimeline/validation/InputValidator.js",
+			"size": 8426,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1797,6 +2040,7 @@
 		{
 			"name": "components/socialtimeline/validation/InputValidator.js",
 			"module": "sap/collaboration/components/socialtimeline/validation/InputValidator.js",
+			"size": 3905,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/socialtimeline/annotations/TimelineTermsUtility.js",
@@ -1807,6 +2051,7 @@
 		{
 			"name": "components/utils/CommonUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/CommonUtil.js",
+			"size": 7630,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1819,6 +2064,7 @@
 		{
 			"name": "components/utils/CommonUtil.js",
 			"module": "sap/collaboration/components/utils/CommonUtil.js",
+			"size": 3582,
 			"required": [
 				"jquery.sap.global.js",
 				"jquery.sap.resources.js",
@@ -1830,6 +2076,7 @@
 		{
 			"name": "components/utils/DateUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/DateUtil.js",
+			"size": 1570,
 			"isDebug": true,
 			"required": [
 				"sap/collaboration/components/utils/LanguageBundle.js",
@@ -1840,6 +2087,7 @@
 		{
 			"name": "components/utils/DateUtil.js",
 			"module": "sap/collaboration/components/utils/DateUtil.js",
+			"size": 800,
 			"required": [
 				"sap/collaboration/components/utils/LanguageBundle.js",
 				"sap/ui/base/Object.js",
@@ -1849,6 +2097,7 @@
 		{
 			"name": "components/utils/JamUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/JamUtil.js",
+			"size": 8078,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1859,6 +2108,7 @@
 		{
 			"name": "components/utils/JamUtil.js",
 			"module": "sap/collaboration/components/utils/JamUtil.js",
+			"size": 4078,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/library.js",
@@ -1868,6 +2118,7 @@
 		{
 			"name": "components/utils/LanguageBundle-dbg.js",
 			"module": "sap/collaboration/components/utils/LanguageBundle.js",
+			"size": 1066,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1878,6 +2129,7 @@
 		{
 			"name": "components/utils/LanguageBundle.js",
 			"module": "sap/collaboration/components/utils/LanguageBundle.js",
+			"size": 648,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/base/Object.js",
@@ -1887,6 +2139,7 @@
 		{
 			"name": "components/utils/MediaTypeToSAPIcon-dbg.js",
 			"module": "sap/collaboration/components/utils/MediaTypeToSAPIcon.js",
+			"size": 2406,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1895,6 +2148,7 @@
 		{
 			"name": "components/utils/MediaTypeToSAPIcon.js",
 			"module": "sap/collaboration/components/utils/MediaTypeToSAPIcon.js",
+			"size": 1787,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1902,6 +2156,7 @@
 		{
 			"name": "components/utils/MessageQueueUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/MessageQueueUtil.js",
+			"size": 2799,
 			"isDebug": true,
 			"required": [
 				"sap/m/MessageBox.js",
@@ -1912,6 +2167,7 @@
 		{
 			"name": "components/utils/MessageQueueUtil.js",
 			"module": "sap/collaboration/components/utils/MessageQueueUtil.js",
+			"size": 1230,
 			"required": [
 				"sap/m/MessageBox.js",
 				"sap/m/MessageToast.js",
@@ -1921,6 +2177,7 @@
 		{
 			"name": "components/utils/NotificationTypeUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/NotificationTypeUtil.js",
+			"size": 2789,
 			"isDebug": true,
 			"required": [
 				"sap/ui/base/Object.js"
@@ -1929,6 +2186,7 @@
 		{
 			"name": "components/utils/NotificationTypeUtil.js",
 			"module": "sap/collaboration/components/utils/NotificationTypeUtil.js",
+			"size": 1790,
 			"required": [
 				"sap/ui/base/Object.js"
 			]
@@ -1936,6 +2194,7 @@
 		{
 			"name": "components/utils/OdataUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/OdataUtil.js",
+			"size": 26403,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1946,6 +2205,7 @@
 		{
 			"name": "components/utils/OdataUtil.js",
 			"module": "sap/collaboration/components/utils/OdataUtil.js",
+			"size": 10954,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/collaboration/components/utils/CommonUtil.js",
@@ -1955,23 +2215,29 @@
 		{
 			"name": "components/utils/PendingRequestsUtil-dbg.js",
 			"module": "sap/collaboration/components/utils/PendingRequestsUtil.js",
+			"size": 1661,
 			"isDebug": true
 		},
 		{
 			"name": "components/utils/PendingRequestsUtil.js",
-			"module": "sap/collaboration/components/utils/PendingRequestsUtil.js"
+			"module": "sap/collaboration/components/utils/PendingRequestsUtil.js",
+			"size": 750
 		},
 		{
 			"name": "library-dbg.js",
 			"module": "sap/collaboration/library.js",
+			"size": 4064,
 			"isDebug": true,
 			"required": [
-				"sap/ui/core/Core.js"
+				"sap/suite/ui/commons/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/library.js"
 			]
 		},
 		{
 			"name": "library-h2-preload.js",
 			"module": "sap/collaboration/library-h2-preload.js",
+			"size": 18376,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -2116,11 +2382,13 @@
 		},
 		{
 			"name": "library-h2-preload.js.map",
+			"size": 755,
 			"isDebug": true
 		},
 		{
 			"name": "library-preload.js",
 			"module": "sap/collaboration/library-preload.js",
+			"size": 284766,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -2265,194 +2533,748 @@
 		},
 		{
 			"name": "library-preload.js.map",
+			"size": 224103,
 			"isDebug": true
-		},
-		{
-			"name": "library.dependencies.xml",
-			"designtime": true
 		},
 		{
 			"name": "library.js",
 			"module": "sap/collaboration/library.js",
+			"size": 938,
 			"required": [
-				"sap/ui/core/Core.js"
+				"sap/suite/ui/commons/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/library.js"
 			]
 		},
 		{
 			"name": "manifest.json",
-			"module": "sap/collaboration/manifest.json"
+			"module": "sap/collaboration/manifest.json",
+			"size": 1300
 		},
 		{
-			"name": "resources.json"
+			"name": "resources.json",
+			"size": 47585
 		},
 		{
 			"name": "themes/base/.theming",
+			"size": 64,
 			"theme": "base"
 		},
 		{
-			"name": "themes/base/library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "themes/base/css_variables.css",
+			"size": 120,
+			"theme": "base"
+		},
+		{
+			"name": "themes/base/css_variables.less",
+			"size": 234,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "themes/base/css_variables.source.less",
+			"size": 91297,
+			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library-RTL.css",
-			"theme": "base"
-		},
-		{
-			"name": "themes/base/library-dbg.css",
-			"isDebug": true,
+			"size": 293,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library-parameters.json",
+			"size": 2,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library.css",
+			"size": 293,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library.less",
+			"size": 610,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library.source.less",
+			"size": 250,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
+			"name": "themes/base/library_skeleton-RTL.css",
+			"size": 173,
+			"theme": "base"
+		},
+		{
+			"name": "themes/base/library_skeleton.css",
+			"size": 173,
+			"theme": "base"
+		},
+		{
 			"name": "themes/base/shared.less",
+			"size": 142,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "themes/sap_belize/.theming",
+			"size": 650,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/Notification.less",
+			"size": 9700,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
-			"name": "themes/sap_belize/library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "themes/sap_belize/css_variables.css",
+			"size": 193,
+			"theme": "sap_belize"
+		},
+		{
+			"name": "themes/sap_belize/css_variables.less",
+			"size": 94542,
+			"designtime": true,
+			"theme": "sap_belize"
+		},
+		{
+			"name": "themes/sap_belize/css_variables.source.less",
+			"size": 94182,
+			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/library-RTL.css",
-			"theme": "sap_belize"
-		},
-		{
-			"name": "themes/sap_belize/library-dbg.css",
-			"isDebug": true,
+			"size": 10545,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/library-parameters.json",
+			"size": 42,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/library.css",
+			"size": 10541,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/library.less",
+			"size": 10331,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/library.source.less",
+			"size": 331,
 			"designtime": true,
+			"theme": "sap_belize"
+		},
+		{
+			"name": "themes/sap_belize/library_skeleton-RTL.css",
+			"size": 11104,
+			"theme": "sap_belize"
+		},
+		{
+			"name": "themes/sap_belize/library_skeleton.css",
+			"size": 11100,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "themes/sap_belize/shared.less",
+			"size": 53,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
+			"name": "themes/sap_belize_hcb/.theming",
+			"size": 93,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/css_variables.css",
+			"size": 120,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/css_variables.less",
+			"size": 90935,
+			"designtime": true,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/css_variables.source.less",
+			"size": 90567,
+			"designtime": true,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library-RTL.css",
+			"size": 5949,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library-parameters.json",
+			"size": 2,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library.css",
+			"size": 5945,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library.less",
+			"size": 10609,
+			"designtime": true,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library.source.less",
+			"size": 315,
+			"designtime": true,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcb/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_belize_hcb"
+		},
+		{
+			"name": "themes/sap_belize_hcw/.theming",
+			"size": 93,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/css_variables.css",
+			"size": 120,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/css_variables.less",
+			"size": 91000,
+			"designtime": true,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/css_variables.source.less",
+			"size": 90632,
+			"designtime": true,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library-RTL.css",
+			"size": 5949,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library-parameters.json",
+			"size": 2,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library.css",
+			"size": 5945,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library.less",
+			"size": 10609,
+			"designtime": true,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library.source.less",
+			"size": 315,
+			"designtime": true,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_belize_hcw"
+		},
+		{
+			"name": "themes/sap_belize_hcw/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_belize_hcw"
+		},
+		{
 			"name": "themes/sap_belize_plus/.theming",
+			"size": 611,
 			"theme": "sap_belize_plus"
 		},
 		{
-			"name": "themes/sap_belize_plus/library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "themes/sap_belize_plus/css_variables.css",
+			"size": 197,
+			"theme": "sap_belize_plus"
+		},
+		{
+			"name": "themes/sap_belize_plus/css_variables.less",
+			"size": 94552,
+			"designtime": true,
+			"theme": "sap_belize_plus"
+		},
+		{
+			"name": "themes/sap_belize_plus/css_variables.source.less",
+			"size": 94182,
+			"designtime": true,
 			"theme": "sap_belize_plus"
 		},
 		{
 			"name": "themes/sap_belize_plus/library-RTL.css",
-			"theme": "sap_belize_plus"
-		},
-		{
-			"name": "themes/sap_belize_plus/library-dbg.css",
-			"isDebug": true,
+			"size": 10790,
 			"theme": "sap_belize_plus"
 		},
 		{
 			"name": "themes/sap_belize_plus/library-parameters.json",
+			"size": 46,
 			"theme": "sap_belize_plus"
 		},
 		{
 			"name": "themes/sap_belize_plus/library.css",
+			"size": 10786,
 			"theme": "sap_belize_plus"
 		},
 		{
 			"name": "themes/sap_belize_plus/library.less",
+			"size": 482,
 			"designtime": true,
 			"theme": "sap_belize_plus"
 		},
 		{
 			"name": "themes/sap_belize_plus/library.source.less",
+			"size": 294,
 			"designtime": true,
 			"theme": "sap_belize_plus"
 		},
 		{
+			"name": "themes/sap_belize_plus/library_skeleton-RTL.css",
+			"size": 11345,
+			"theme": "sap_belize_plus"
+		},
+		{
+			"name": "themes/sap_belize_plus/library_skeleton.css",
+			"size": 11341,
+			"theme": "sap_belize_plus"
+		},
+		{
 			"name": "themes/sap_bluecrystal/.theming",
+			"size": 137,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/Notification.less",
+			"size": 9628,
 			"designtime": true,
 			"theme": "sap_bluecrystal"
 		},
 		{
-			"name": "themes/sap_bluecrystal/library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "themes/sap_bluecrystal/css_variables.css",
+			"size": 120,
+			"theme": "sap_bluecrystal"
+		},
+		{
+			"name": "themes/sap_bluecrystal/css_variables.less",
+			"size": 107487,
+			"designtime": true,
+			"theme": "sap_bluecrystal"
+		},
+		{
+			"name": "themes/sap_bluecrystal/css_variables.source.less",
+			"size": 107117,
+			"designtime": true,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/library-RTL.css",
-			"theme": "sap_bluecrystal"
-		},
-		{
-			"name": "themes/sap_bluecrystal/library-dbg.css",
-			"isDebug": true,
+			"size": 5834,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/library-parameters.json",
+			"size": 2,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/library.css",
+			"size": 5830,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/library.less",
+			"size": 10273,
 			"designtime": true,
 			"theme": "sap_bluecrystal"
 		},
 		{
 			"name": "themes/sap_bluecrystal/library.source.less",
+			"size": 340,
 			"designtime": true,
 			"theme": "sap_bluecrystal"
 		},
 		{
+			"name": "themes/sap_bluecrystal/library_skeleton-RTL.css",
+			"size": 6261,
+			"theme": "sap_bluecrystal"
+		},
+		{
+			"name": "themes/sap_bluecrystal/library_skeleton.css",
+			"size": 6257,
+			"theme": "sap_bluecrystal"
+		},
+		{
 			"name": "themes/sap_bluecrystal/shared.less",
+			"size": 53,
 			"designtime": true,
 			"theme": "sap_bluecrystal"
+		},
+		{
+			"name": "themes/sap_fiori_3/.theming",
+			"size": 90,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/css_variables.css",
+			"size": 120,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/css_variables.less",
+			"size": 93708,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/css_variables.source.less",
+			"size": 93346,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library-RTL.css",
+			"size": 5979,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library-parameters.json",
+			"size": 2,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library.css",
+			"size": 5975,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library.less",
+			"size": 10600,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library.source.less",
+			"size": 309,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/.theming",
+			"size": 95,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/css_variables.css",
+			"size": 120,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/css_variables.less",
+			"size": 93731,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/css_variables.source.less",
+			"size": 93359,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library-RTL.css",
+			"size": 5994,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library-parameters.json",
+			"size": 2,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library.css",
+			"size": 5990,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library.less",
+			"size": 10615,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library.source.less",
+			"size": 319,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_dark/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/.theming",
+			"size": 94,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/css_variables.css",
+			"size": 120,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/css_variables.less",
+			"size": 90966,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/css_variables.source.less",
+			"size": 90596,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library-RTL.css",
+			"size": 5949,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library-parameters.json",
+			"size": 2,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library.css",
+			"size": 5945,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library.less",
+			"size": 10612,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library.source.less",
+			"size": 317,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcb/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_fiori_3_hcb"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/.theming",
+			"size": 94,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/css_variables.css",
+			"size": 120,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/css_variables.less",
+			"size": 91031,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/css_variables.source.less",
+			"size": 90661,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library-RTL.css",
+			"size": 5949,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library-parameters.json",
+			"size": 2,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library.css",
+			"size": 5945,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library.less",
+			"size": 10612,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library.source.less",
+			"size": 317,
+			"designtime": true,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_fiori_3_hcw/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_fiori_3_hcw"
+		},
+		{
+			"name": "themes/sap_horizon/.theming",
+			"size": 90,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/Notification.less",
+			"size": 10072,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/css_variables.css",
+			"size": 120,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/css_variables.less",
+			"size": 93159,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/css_variables.source.less",
+			"size": 92797,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library-RTL.css",
+			"size": 6225,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library-parameters.json",
+			"size": 2,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library.css",
+			"size": 6221,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library.less",
+			"size": 10600,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library.source.less",
+			"size": 309,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library_skeleton-RTL.css",
+			"size": 6552,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "themes/sap_horizon/library_skeleton.css",
+			"size": 6548,
+			"theme": "sap_horizon"
 		}
 	]
 }

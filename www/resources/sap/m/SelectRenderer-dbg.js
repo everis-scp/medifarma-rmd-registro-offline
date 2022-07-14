@@ -257,8 +257,7 @@ sap.ui.define(['sap/ui/core/Renderer', 'sap/ui/core/IconPool', 'sap/m/library', 
 		 * @private
 		 */
 		SelectRenderer.renderArrow = function(oRm, oSelect) {
-			var CSS_CLASS = SelectRenderer.CSS_CLASS,
-				sTooltip = oSelect.getTooltip_AsString();
+			var CSS_CLASS = SelectRenderer.CSS_CLASS;
 
 			oRm.openStart("span", oSelect.getId() + "-arrow");
 			oRm.attr("aria-hidden", true);
@@ -266,10 +265,6 @@ sap.ui.define(['sap/ui/core/Renderer', 'sap/ui/core/IconPool', 'sap/m/library', 
 
 			if (oSelect.getValueState() !== ValueState.None) {
 				oRm.class(CSS_CLASS + "ArrowState");
-			}
-
-			if (sTooltip) {
-				oRm.attr("title", sTooltip);
 			}
 
 			oRm.openEnd().close("span");

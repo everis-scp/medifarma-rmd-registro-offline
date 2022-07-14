@@ -95,7 +95,7 @@ sap.ui.define([
 	* @extends sap.ui.core.Control
 	*
 	* @author SAP SE
-	* @version 1.96.9
+	* @version 1.93.4
 	*
 	* @constructor
 	* @public
@@ -576,8 +576,6 @@ sap.ui.define([
 				/**
 				* The <code>customShareActions</code> are placed in the <code>ShareMenu</code> area of the
 				* <code>SemanticPage</code> title, right after the semantic actions.
-				*
-				* The text and icon of the button inside the <code>customShareActions</code> aggregation, can be customized.
 				*
 				* <b>Note:</b> If the <code>titleSnappedOnMobile</code> aggregation is set, its
 				* content overrides this aggregation when the control is viewed on a phone mobile

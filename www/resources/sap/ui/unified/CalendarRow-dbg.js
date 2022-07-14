@@ -76,7 +76,7 @@ sap.ui.define([
 	 * @class
 	 * A calendar row with a header and appointments. The Appointments will be placed in the defined interval.
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -456,8 +456,6 @@ sap.ui.define([
 		var iYear = oStartDate.getFullYear();
 		CalendarUtils._checkYearInValidRange(iYear);
 
-		this._oUTCStartDate = CalendarUtils._createUniversalUTCDate(oStartDate, undefined, true);
-
 		this.setProperty("startDate", oStartDate);
 
 		return this;
@@ -708,7 +706,6 @@ sap.ui.define([
 				case CalendarIntervalType.Day:
 				case CalendarIntervalType.Week:
 				case CalendarIntervalType.OneMonth:
-				case "OneMonth":
 					iTime = 1800000;
 					break;
 
@@ -875,7 +872,7 @@ sap.ui.define([
 	 * returns if the appointments are rendered as list instead in a table
 	 */
 	CalendarRow.prototype._isOneMonthsRowOnSmallSizes = function() {
-		return (this.getIntervalType() === CalendarIntervalType.OneMonth || this.getIntervalType() === "OneMonth") && this.getIntervals() === 1;
+		return this.getIntervalType() === CalendarIntervalType.OneMonth && this.getIntervals() === 1;
 	};
 
 	/*
@@ -1026,7 +1023,6 @@ sap.ui.define([
 		case CalendarIntervalType.Day:
 		case CalendarIntervalType.Week:
 		case CalendarIntervalType.OneMonth:
-		case "OneMonth":
 			oEndDate = new UniversalDate(this._oUTCStartDate.getTime());
 			oEndDate.setUTCDate(oEndDate.getUTCDate() + iIntervals * this.getIntervalSize());
 			break;
@@ -1066,7 +1062,6 @@ sap.ui.define([
 		case CalendarIntervalType.Day:
 		case CalendarIntervalType.Week:
 		case CalendarIntervalType.OneMonth:
-		case "OneMonth":
 			oUTCStartDate.setUTCHours(0);
 			oUTCStartDate.setUTCMinutes(0);
 			oUTCStartDate.setUTCSeconds(0);
@@ -1456,7 +1451,6 @@ sap.ui.define([
 						case CalendarIntervalType.Day:
 						case CalendarIntervalType.Week:
 						case CalendarIntervalType.OneMonth:
-						case "OneMonth":
 							oIntervalEndDate.setUTCDate(oIntervalEndDate.getUTCDate() + 1);
 							if (j > 0) {
 								oIntervalStartDate.setUTCDate(oIntervalStartDate.getUTCDate() + 1);
@@ -1551,6 +1545,7 @@ sap.ui.define([
 				if (oAppointment.end < 0) {
 					oAppointment.end = 0;
 				}
+				oAppointment.level = -1; // level must be new calculated
 				bChanged = true;
 				$Appointment.addClass("sapUiCalendarAppSmall");
 			} else if ($Appointment.hasClass("sapUiCalendarAppSmall")){
@@ -1558,10 +1553,6 @@ sap.ui.define([
 				oAppointment.end = oAppointment.calculatedEnd;
 				bChanged = true;
 				$Appointment.removeClass("sapUiCalendarAppSmall");
-			}
-
-			if (bChanged) {
-				oAppointment.level = -1; // level must be new calculated
 			}
 
 			if (bChanged && !bHorizontalFit) {
@@ -2009,7 +2000,6 @@ sap.ui.define([
 		case CalendarIntervalType.Day:
 		case CalendarIntervalType.Week:
 		case CalendarIntervalType.OneMonth:
-		case "OneMonth":
 			oStartDate.setUTCDate(1);
 			oEndDate.setUTCMonth(oEndDate.getUTCMonth() + 1);
 			oEndDate.setUTCDate(1);
@@ -2101,7 +2091,6 @@ sap.ui.define([
 		case CalendarIntervalType.Day:
 		case CalendarIntervalType.Week:
 		case CalendarIntervalType.OneMonth:
-		case "OneMonth":
 			oIntervalStartDate.setUTCDate(oIntervalStartDate.getUTCDate() + iInterval);
 			if (bSubInterval) {
 				oIntervalStartDate.setUTCHours(oIntervalStartDate.getUTCHours() + iSubInterval * 24 / iSubIntervals);

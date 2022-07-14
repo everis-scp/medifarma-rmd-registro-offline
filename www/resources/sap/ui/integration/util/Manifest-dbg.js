@@ -60,7 +60,7 @@ sap.ui.define([
 	 * @extends sap.ui.base.Object
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -72,7 +72,6 @@ sap.ui.define([
 			BaseObject.call(this);
 
 			this._aChanges = aChanges;
-			this._sSection = sSection;
 
 			this.PARAMETERS = MANIFEST_PARAMETERS.replace("{SECTION}", sSection);
 			this.FILTERS = MANIFEST_FILTERS.replace("{SECTION}", sSection);
@@ -93,7 +92,7 @@ sap.ui.define([
 				}
 
 				if (this._aChanges) {
-					oMergedManifest = this.mergeDeltaChanges(oManifestJson);
+					oMergedManifest = CardMerger.mergeCardDelta(oManifestJson, this._aChanges);
 				} else {
 					oMergedManifest = oManifestJson;
 				}
@@ -103,16 +102,6 @@ sap.ui.define([
 			}
 		}
 	});
-
-	/**
-	 * Merge the manifest json with changes
-	 *
-	 * @param {Object} oManifestJson The manifest json
-	 * @returns {Object} The merged manifest json
-	 */
-	Manifest.prototype.mergeDeltaChanges = function (oManifestJson) {
-		return CardMerger.mergeCardDelta(oManifestJson, this._aChanges, this._sSection);
-	};
 
 	/**
 	 * @returns {Object} A copy of the Manifest JSON.
@@ -221,7 +210,7 @@ sap.ui.define([
 				this._oInitialJson = deepClone(oManifestJson, 500);
 
 				if (this._aChanges) {
-					return this.mergeDeltaChanges(oManifestJson);
+					return CardMerger.mergeCardDelta(oManifestJson, this._aChanges);
 				}
 
 				return oManifestJson;

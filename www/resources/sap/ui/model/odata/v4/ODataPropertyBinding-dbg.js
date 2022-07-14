@@ -57,16 +57,14 @@ sap.ui.define([
 	 * @mixes sap.ui.model.odata.v4.ODataBinding
 	 * @public
 	 * @since 1.37.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getGroupId as #getGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getRootBinding as #getRootBinding
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#getUpdateGroupId as #getUpdateGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#hasPendingChanges as #hasPendingChanges
+	 * @borrows sap.ui.model.odata.v4.ODataBinding#getUpdateGroupId as #getUpdateGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#isInitial as #isInitial
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#refresh as #refresh
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#requestRefresh as #requestRefresh
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#resetChanges as #resetChanges
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#toString as #toString
 	 */
 	var ODataPropertyBinding
 		= PropertyBinding.extend("sap.ui.model.odata.v4.ODataPropertyBinding", {
@@ -87,18 +85,16 @@ sap.ui.define([
 					this.setIgnoreMessages(mParameters.$$ignoreMessages);
 				} else {
 					this.sGroupId = undefined;
-					this.bNoPatch = false;
 				}
 				this.oCheckUpdateCallToken = undefined;
+				// Note: no system query options supported at property binding
+				this.mQueryOptions = this.oModel.buildQueryOptions(_Helper.clone(mParameters),
+					/*bSystemQueryOptionsAllowed*/false);
+				this.fetchCache(oContext);
 				this.oContext = oContext;
 				this.bHasDeclaredType = undefined; // whether the binding info declares a type
 				this.bInitial = true;
-				// Note: system query options supported at property binding only for ".../$count"
-				this.mQueryOptions = this.oModel.buildQueryOptions(_Helper.clone(mParameters),
-					/*bSystemQueryOptionsAllowed*/sPath.endsWith("$count"));
 				this.vValue = undefined;
-				// BEWARE: #doFetchQueryOptions uses #isRoot which relies on this.oContext!
-				this.fetchCache(oContext);
 				oModel.bindingCreated(this);
 			},
 			metadata : {

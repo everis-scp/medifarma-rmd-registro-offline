@@ -1,7 +1,7 @@
 /*!
  * SAPUI5
 
-		(c) Copyright 2009-2019 SAP SE. All rights reserved
+		(c) Copyright 2009-2021 SAP SE. All rights reserved
 	
  */
 /**
@@ -29,15 +29,15 @@ sap.ui.define(["sap/ui/support/library"],
 		enabled: true,
 		minversion: "1.48",
 		title: "SmartForm: Use of ResponsiveLayout",
-		description: "ResponsiveLayout should not be used any longer because of UX requirements",
-		resolution: "If you set useHorizontalLayout to true add a Layout to the SmartForm and fill gridDataSpan",
+		description: "ResponsiveLayout must not be used any longer because of UX requirements",
+		resolution: "Use ColumnLayout as layout aggregation of the SmartForm",
 		resolutionurls: [{
 				text: "API Reference: SmartForm",
 				href:"https://sapui5.hana.ondemand.com/#docs/api/symbols/sap.ui.comp.smartform.SmartForm.html"
 			},
 			{
-				text: "API Reference: Layout",
-				href:"https://sapui5.hana.ondemand.com/#docs/api/symbols/sap.ui.comp.smartform.Layout.html"
+				text: "API Reference: ColumnLayout",
+				href:"https://sapui5.hana.ondemand.com/#docs/api/symbols/sap.ui.comp.smartform.ColumnLayout.html"
 			}],
 		check: function (oIssueManager, oCoreFacade, oScope) {
 			oScope.getElementsByClassName("sap.ui.comp.smartform.SmartForm")

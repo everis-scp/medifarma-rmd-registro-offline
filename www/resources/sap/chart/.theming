@@ -1,5 +1,6 @@
 {
-  "sEntity" : "Library",
-  "sId" : "sap/chart",
-  "sVersion" : "1.71.23"
+  "sEntity": "Library",
+  "sId": "sap/chart",
+  "sVersion": "1.93.4",
+  "bIgnore": true
 }

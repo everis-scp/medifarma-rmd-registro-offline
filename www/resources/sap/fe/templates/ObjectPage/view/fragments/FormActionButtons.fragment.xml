@@ -1,28 +1,79 @@
 <core:FragmentDefinition
 	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:macrodata="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"
-	xmlns:uxap="sap.uxap"
 	template:require="{
-		COMMON: 'sap/fe/macros/CommonHelper',
-		OP: 'sap/fe/templates/ObjectPage/AnnotationHelper'
-	}">
-
-		<template:if test="{= ${metaPath>/currentPath}.get().indexOf('com.sap.vocabularies.UI.v1.HeaderFacets') === -1 &amp;&amp; (${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification#') > -1 || ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1 || ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.StatusInfo') > -1) }">
-			<template:with path="facet>Target/$AnnotationPath" helper="OP.getDataFieldCollection" var="collection">
-				<template:repeat list="{collection>}" var="dataField">
-					<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true)}">
-						<template:if test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>Action@Org.OData.Core.V1.OperationAvailable} !== false }">
-							<Button
-								id="{= COMMON.getStableId(['fe', 'fab', { Facet: ${facet>} }, ${dataField>Action}.replace(RegExp('.*\\.'), '')]) }"
-								text="{dataField>Label}"
-								type="Transparent"
-								press="{= '.editFlow.onCallAction(\'' + ${dataField>Action} + '\', { contexts: ${$view>/#fe::op/}.getBindingContext(), invocationGrouping : \'' + (${dataField>InvocationGrouping/$EnumMember} === 'com.sap.vocabularies.UI.v1.OperationGroupingType/ChangeSet' ? 'ChangeSet' : 'Isolated') + '\', label: \'' + ${dataField>Label} + '\'})'}"
-								visible="{= (${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === false ? true : %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} &amp;&amp;'{= !%' + %{dataField>./@com.sap.vocabularies.UI.v1.Hidden@@MODEL.value} + '}') || ${dataField>Action/0/$IsBound} !== true || (${dataField>Action@Org.OData.Core.V1.OperationAvailable} === null ? '{= %{#' + ${dataField>Action} + '} ? true : false }' : true)}"/>
-						</template:if>
-					</template:if>
-				</template:repeat>
-			</template:with>
-		</template:if>
-
+		CORE: 'sap/fe/core/AnnotationHelper',
+		ID: 'sap/fe/core/helpers/StableIdHelper',
+		COMMON: 'sap/fe/macros/CommonHelper'
+	}"
+>	
+	<template:if test="{= ${action>type} === 'Menu'}">
+		<template:then>
+			<MenuButton
+				text="{action>text}"
+				menuPosition="BeginBottom"
+				id="{= ID.generate(['fe',${action>id}])}"
+				visible="{= COMMON.handleVisibilityOfMenuActions(${action>visible}) }"
+				enabled="{action>enabled}"
+				class="sapUiSmallMarginBegin"
+			>
+				<menu>
+					<Menu>
+						<template:repeat list="{action>menu}" var="menuItemAction">
+								<template:if test="{= ${menuItemAction>type} === 'Default'}">
+									<template:then>
+										<MenuItem
+										core:require="{FPM: 'sap/fe/core/helpers/FPMHelper'}"
+										id="{= ID.generate(['fe',${menuItemAction>id}])}"
+										text="{menuItemAction>text}"
+										press="{= CORE.buildActionWrapper(${menuItemAction>})}"
+										visible="{menuItemAction>visible}"
+										enabled="{menuItemAction>enabled}"
+									/>	
+									</template:then>
+									<template:else>
+										<MenuItem
+										id="{menuItemAction>id}"
+										binding="{menuItemAction>binding}"
+										text="{menuItemAction>text}"
+										press="{menuItemAction>press}"
+										ariaHasPopup="{menuItemAction>requiresDialog}"
+										visible="{menuItemAction>visible}"
+										enabled="{menuItemAction>enabled}"
+										macrodata:IBNData="{menuItemAction>customData}"
+									/>
+									</template:else>
+								</template:if>
+						</template:repeat>
+					</Menu>
+				</menu>
+			</MenuButton>
+		</template:then>				
+		<template:elseif test="{= ${action>type} === 'Default'}">
+			<Button
+				core:require="{FPM: 'sap/fe/core/helpers/FPMHelper'}"
+				id="{= ID.generate(['fe',${action>id}])}"
+				text="{action>text}"
+				press="{= CORE.buildActionWrapper(${action>})}"
+				type="Transparent"
+				visible="{action>visible}"
+				enabled="{action>enabled}"
+			/>
+		</template:elseif>
+		<template:else>
+			<Button
+				id="{action>id}"
+				binding="{action>binding}"
+				text="{action>text}"
+				press="{action>press}"
+				type="{action>buttonType}"
+				ariaHasPopup="{action>requiresDialog}"
+				visible="{action>visible}"
+				enabled="{action>enabled}"
+				macrodata:IBNData="{action>customData}"
+			/>
+		</template:else>
+	</template:if>
 </core:FragmentDefinition>

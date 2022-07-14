@@ -33,7 +33,7 @@ sap.ui.define([
 	 * Grid row's height is dynamically determined by the height of the highest grid element on this row.
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @extends sap.ui.layout.cssgrid.GridLayoutBase
 	 *
@@ -85,8 +85,7 @@ sap.ui.define([
 	/**
 	 * Handler for IGridConfigurable onAfterRendering
 	 *
-	 * @override
-	 * @protected
+	 * @private
 	 * @param {sap.ui.layout.cssgrid.IGridConfigurable} oGrid The grid
 	 */
 	ResponsiveColumnLayout.prototype.onGridAfterRendering = function (oGrid) {
@@ -108,8 +107,7 @@ sap.ui.define([
 	 * Resize handler for the ResponsiveColumnLayout.
 	 *
 	 * @param {object} oEvent - The event from a resize
-	 * @override
-	 * @protected
+	 * @private
 	 */
 	ResponsiveColumnLayout.prototype.onGridResize = function (oEvent) {
 		if (!oEvent || oEvent.size.width === 0) {

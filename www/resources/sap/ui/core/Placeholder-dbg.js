@@ -5,12 +5,10 @@
  */
 sap.ui.define([
 	'sap/ui/base/Object',
-	'sap/base/util/Deferred',
 	'sap/base/util/LoaderExtensions',
 	'sap/ui/core/BlockLayerUtils'
 ], function(
 	BaseObject,
-	Deferred,
 	LoaderExtensions,
 	BlockLayerUtils
 ) {
@@ -38,9 +36,9 @@ sap.ui.define([
 		 * @param {object} mParameters Object containing the placeholder HTML file name
 		 * @param {string} [mParameters.html] Name of the HTML file that provides the placeholder content
 		 *
-		 * @private
-		 * @ui5-restricted SAPUI5 Distribution libraries only
+		 * @ui5-restricted sap.fe
 		 * @since 1.92
+		 * @public
 		 */
 		constructor : function(mParameters) {
 			BaseObject.call(this);
@@ -64,7 +62,6 @@ sap.ui.define([
 		 */
 		show: function(oControl, sBlockedSection) {
 			this.bShow = true;
-
 			return this._load().then(function(sPlaceholderContent) {
 				// Because it's in a 'then' method the loading promise, it could happen that the 'hide' function is
 				// already called. Therefore it's need to check the 'this.bShow' flag before inserting the placeholder
@@ -72,7 +69,7 @@ sap.ui.define([
 				// The 'show' method can be called from a rerendering delegate of a control. It's checked here whether
 				// the DOM element of the control contains the placeholder. Only when the control doesn't have the
 				// placeholder, a new placeholder DOM element is generated and inserted into the control.
-				if (sPlaceholderContent && this.bShow && !oControl.getDomRef().contains(this.placeholder)) {
+				if (this.bShow && !oControl.getDomRef().contains(this.placeholder)) {
 					// unblock old blockstate when multiple rendering happens
 					if (this.blockState) {
 						BlockLayerUtils.unblock(this.blockState);
@@ -84,7 +81,6 @@ sap.ui.define([
 					oDomRef.insertAdjacentHTML("beforeend", sPlaceholderContent);
 					this.placeholder = oDomRef;
 				}
-
 				return sPlaceholderContent;
 			}.bind(this));
 		},
@@ -102,10 +98,6 @@ sap.ui.define([
 				this.placeholder = undefined;
 				this.blockState = undefined;
 			}
-
-			if (this.pLoaded) {
-				this.pLoaded.resolve();
-			}
 		},
 
 		/**
@@ -115,22 +107,17 @@ sap.ui.define([
 		 * @private
 		 */
 		_load: function() {
-			if (!this.pLoaded) {
-				this.pLoaded = new Deferred();
-				if (this.placeholderHTML) {
-					LoaderExtensions.loadResource(this.placeholderHTML, {
-						async: true,
-						dataType: "html"
-					}).then(function(sPlaceholder) {
-						this.placeholderContent = sPlaceholder;
-						this.pLoaded.resolve(sPlaceholder);
-					}.bind(this));
-				} else {
-					this.pLoaded.reject();
-				}
+			if (!this.placeholderContent && this.placeholderHTML) {
+				return LoaderExtensions.loadResource(this.placeholderHTML, {
+					async: true,
+					dataType: "html"
+				}).then(function(sPlaceholder) {
+					this.placeholderContent = sPlaceholder;
+					return sPlaceholder;
+				}.bind(this));
+			} else {
+				return Promise.resolve(this.placeholderContent);
 			}
-
-			return this.pLoaded.promise;
 		}
 	});
 
@@ -140,8 +127,8 @@ sap.ui.define([
 	 *
 	 * @param  {function} fnProvider Provider function which provides the placeholder HTML file name
 	 *
-	 * @private
-	 * @ui5-restricted SAPUI5 Distribution libraries only
+	 * @public
+	 * @ui5-restricted sap.fe
 	 * @since 1.92
 	 */
 	Placeholder.registerProvider = function(fnProvider) {

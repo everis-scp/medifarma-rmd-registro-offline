@@ -21,7 +21,7 @@ sap.ui.define(['sap/ui/core/Renderer', './InputBaseRenderer', 'sap/ui/core/libra
 	 * @param {sap.m.DatePicker} oDP An object representation of the control that should be rendered.
 	 */
 	DatePickerRenderer.writeInnerValue = function(oRm, oDP) {
-		if (oDP._bValid || oDP._bOutOfAllowedRange) {
+		if (oDP._bValid) {
 			oRm.attr("value", oDP._formatValue(oDP.getDateValue()));
 		} else {
 			oRm.attr("value", oDP.getValue());
@@ -43,6 +43,9 @@ sap.ui.define(['sap/ui/core/Renderer', './InputBaseRenderer', 'sap/ui/core/libra
 		}
 	};
 
+	DatePickerRenderer.getAriaRole = function(oDP) {
+		return "combobox";
+	};
 
 	DatePickerRenderer.getAccessibilityState = function(oDP) {
 		var mAccessibilityState = InputBaseRenderer.getAccessibilityState.apply(this, arguments);

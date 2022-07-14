@@ -2,7 +2,9 @@
 						 xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
 						 xmlns:dt="sap.ui.dt"
 						 xmlns:fl="sap.ui.fl"
-						 template:require="sap.suite.ui.generic.template.changeHandler.js.AnnotationHelperForDesignTime"
+						 template:require="{
+						 AHDesignTime: 'sap/suite/ui/generic/template/changeHandler/js/AnnotationHelperForDesignTime',
+						 SemanticDateRangeTypeHelper: 'sap/suite/ui/generic/template/listTemplates/semanticDateRangeTypeHelper'}"
 						 xmlns:build="sap.build">
 
 	<smartfilterbar:SmartFilterBar id="listReportFilter" entityType="{parameter>/entityType}"
@@ -10,26 +12,31 @@
 								   enableBasicSearch="{= !(${entitySet>Org.OData.Capabilities.V1.SearchRestrictions/Searchable/Bool} === 'false') }"
 								   initialise="._templateEventHandlers.onSmartFilterBarInitialise"
 								   initialized="._templateEventHandlers.onSmartFilterBarInitialized"
-								   search="._templateEventHandlers.onSearchButtonPressed"
+								   search="cmd:Search"
 								   beforeVariantFetch="._templateEventHandlers.onBeforeSFBVariantFetch"
 								   afterVariantSave="._templateEventHandlers.onAfterSFBVariantSave"
 								   afterVariantLoad="._templateEventHandlers.onAfterSFBVariantLoad"
 								   assignedFiltersChanged="._templateEventHandlers.onAssignedFiltersChanged"
 								   filterChange="._templateEventHandlers.onFilterChange"
+								   filtersDialogBeforeOpen="._templateEventHandlers.onFiltersDialogBeforeOpen"
+								   filtersDialogClosed="._templateEventHandlers.onFiltersDialogClosed"
+								   showMessages="false"
 								   useToolbar="false"
 								   smartVariant="{= (!${parameter>/settings/variantManagementHidden}) ? 'template::PageVariant' : null}"
-								   considerAnalyticalParameters="{parameter>/manifest/sap.ui.generic.app/settings/considerAnalyticalParameters}"
+								   considerAnalyticalParameters="{appSettings>/considerAnalyticalParameters}"
+								   useDateRangeType="{parameter>/templateSpecific/filterSettings/dateSettings/useDateRange}"
 								   dt:designtime="sap/suite/ui/generic/template/designtime/SmartFilterBar.designtime"
 								   fl:flexibility="sap/suite/ui/generic/template/flexibility/SmartFilterBar.flexibility"
 								   >
-		<smartfilterbar:controlConfiguration>
-			<template:repeat list="{entityType>com.sap.vocabularies.UI.v1.SelectionFields}"
-							 var="selectionField">
-				<smartfilterbar:ControlConfiguration key="{= (${selectionField>PropertyPath}).replace('/', '.') }"
-													 visibleInAdvancedArea="true" groupId="_BASIC"
-													 index="{path: 'selectionField>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getRepeatIndex'}"
-													dt:annotation="{parts: [{path: 'parameter>/entityType'}, {value: 'com.sap.vocabularies.UI.v1.SelectionFields'}, {path: 'selectionField>PropertyPath'}], formatter: 'sap.suite.ui.generic.template.changeHandler.js.AnnotationHelperForDesignTime.createInstanceMetadataForDesignTime'}"
-													/>
+		<smartfilterbar:controlConfiguration >
+			<template:repeat list="{parameter>/templateSpecific/controlConfigurationSettings}" var="controlConfigurationSetting">
+					<smartfilterbar:ControlConfiguration
+						key="{controlConfigurationSetting>key}"
+						groupId="{controlConfigurationSetting>groupId}"
+						index="{controlConfigurationSetting>index}"
+						visibleInAdvancedArea="{controlConfigurationSetting>visibleInAdvancedArea}"
+						conditionType="{controlConfigurationSetting>conditionType}"
+						historyEnabled="{controlConfigurationSetting>historyEnabled}"/>
 			</template:repeat>
 			<template:if test="{parameter>/isDraftEnabled}">
 				<template:with path="entitySet>Org.OData.Capabilities.V1.NavigationRestrictions/RestrictedProperties/[${path:'NavigationProperty/NavigationPropertyPath'} === 'DraftAdministrativeData']/" var="draftAdminData">
@@ -38,7 +45,7 @@
 															 label="{i18n>EDITING_STATUS}"
 															 groupId="_BASIC">
 							<smartfilterbar:customControl>
-								<Select selectedKey="0" id="editStateFilter" change="._templateEventHandlers.onStateFilterChange">
+								<Select selectedKey="{_templPriv>/listReport/vDraftState}" id="editStateFilter">
 									<items>
 										<core:Item key="0" text="{i18n>ALL_OBJECTS}"/>
 										<core:Item key="2" text="{i18n>DRAFT_OBJECT_FILTER}"/>
@@ -47,7 +54,7 @@
 										<core:Item key="1" text="{i18n>UNCHANGED}"/>
 									</items>
 									<customData>
-										<core:CustomData key="hasValue" value="true" />
+										<core:CustomData key="hasValue" value="{= ${_templPriv>/listReport/vDraftState} !== '0'}" />
 									</customData>
 								</Select>
 							</smartfilterbar:customControl>

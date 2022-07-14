@@ -3,13 +3,16 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 241,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 200
 		},
 		{
-			"name": "manifest.json"
+			"name": "manifest.json",
+			"size": 2485
 		}
 	]
 }

@@ -6,7 +6,7 @@
 
 // Disable some ESLint rules. camelcase (some "_" in names to indicate indexed variables (like in math)), valid-jsdoc (not completed yet), no-warning-comments (some TODOs are left)
 // All other warnings, errors should be resolved
-/*eslint camelcase:0, valid-jsdoc:0, no-warning-comments:0, max-len:0 */
+/*eslint camelcase:0, valid-jsdoc:0, no-warning-comments:0 */
 
 // Provides class sap.ui.model.odata.ODataListBinding
 sap.ui.define([
@@ -52,9 +52,7 @@ sap.ui.define([
 	 * <li>if an associated property (e.g. text property) of an additional measure is contained in
 	 * the select binding parameter
 	 * <li>if a dimension or a measure of the current analytical info is not contained in the select
-	 * binding parameter, unless the dimension or measure has been added automatically by the
-	 * binding, because a property associated to the dimension or measure has been added as a
-	 * "visible" or "inResult" column
+	 * binding parameter
 	 * </ul>
 	 *
 	 * @param {sap.ui.model.analytics.AnalyticalBinding} oBinding
@@ -63,10 +61,16 @@ sap.ui.define([
 	 *   array if there are no additional select properties needed
 	 */
 	function getAdditionalSelects(oBinding) {
-		var oColumn, aComputedSelect, sComputedSelect, oDimension, i, j, oMeasure, n, sPropertyName,
-			oAnalyticalQueryRequest
+		var oAnalyticalQueryRequest
 				= new odata4analytics.QueryResultRequest(oBinding.oAnalyticalQueryResult),
-
+			aComputedSelect,
+			sComputedSelect,
+			oDimension,
+			i,
+			j,
+			oMeasure,
+			n,
+			sPropertyName,
 			aSelect = oBinding.mParameters.select.split(","),
 			bError = trimAndCheckForDuplicates(aSelect, oBinding.sPath);
 
@@ -102,10 +106,6 @@ sap.ui.define([
 				sPropertyName = aComputedSelect[i];
 				j = aSelect.indexOf(sPropertyName);
 				if (j < 0) {
-					oColumn = oBinding.mAnalyticalInfoByProperty[sPropertyName];
-					if (!oColumn || (!oColumn.visible && !oColumn.inResult)) {
-						continue; // ignore automatically added columns
-					}
 					oLogger.warning("Ignored the 'select' binding parameter, because"
 							+ " it does not contain the property '" + sPropertyName + "'",
 						oBinding.sPath);
@@ -248,10 +248,10 @@ sap.ui.define([
 	 *   A comma-separated list of property names that need to be selected.<br/>
 	 *   If the <code>select</code> parameter is given, it has to contain all properties that are
 	 *   contained in the analytical information (see
-	 *   {@link sap.ui.model.analytics.AnalyticalBinding#updateAnalyticalInfo}). It must not contain
-	 *   additional dimensions or measures or associated properties for additional dimensions or
-	 *   measures. But it may contain additional properties like a text property of a dimension that
-	 *   is also selected.<br/>
+	 *   {@link sap.ui.model.analytics.AnalyticalBinding#updateAnalyticalInfo}) and their associated
+	 *   dimensions and measures. It must not contain additional dimensions or measures or
+	 *   associated properties for additional dimensions or measures. But it may contain additional
+	 *   properties like a text property of a dimension that is also selected.<br/>
 	 *   All properties of the <code>select</code> parameter are also considered in
 	 *   {@link sap.ui.model.analytics.AnalyticalBinding#getDownloadUrl}.<br/>
 	 *   The <code>select</code> parameter must not contain any duplicate entry.<br/>
@@ -335,16 +335,13 @@ sap.ui.define([
 
 			// considering different count mode settings
 			if (mParameters && mParameters.countMode == CountMode.None) {
-				oLogger.fatal("requested count mode is ignored; OData requests will include"
-					+ " $inlinecount options");
+				oLogger.fatal("requested count mode is ignored; OData requests will include $inlinecout options");
 			} else if (mParameters
 					&& (mParameters.countMode == CountMode.Request
 						|| mParameters.countMode == CountMode.Both)) {
-				oLogger.warning("default count mode is ignored; OData requests will include"
-					+ " $inlinecount options");
+				oLogger.warning("default count mode is ignored; OData requests will include $inlinecout options");
 			} else if (this.oModel.sDefaultCountMode == CountMode.Request) {
-				oLogger.warning("default count mode is ignored; OData requests will include"
-					+ " $inlinecount options");
+				oLogger.warning("default count mode is ignored; OData requests will include $inlinecout options");
 			}
 
 			// detect ODataModel version
@@ -1128,53 +1125,42 @@ sap.ui.define([
 	/**
 	 * Updates the binding's structure with new analytical information.
 	 *
-	 * Analytical information is the mapping of UI columns to properties in the bound OData entity
-	 * set. Every column object contains the <code>name</code> of the bound property and in
-	 * addition:
+	 * Analytical information is the mapping of UI columns to properties in the bound OData entity set. Every column object contains
+	 * the name of the bound property and in addition:
 	 * <ol>
 	 *   <li>A column bound to a dimension property has further boolean properties:
 	 *     <ul>
-	 *       <li>grouped: dimension is used for building groups</li>
-	 *       <li>inResult: if the column is not visible, but declared to be part of the result,
-	 *         values for the related property are also fetched from the OData service</li>
-	 *       <li>visible: if the column is visible, values for the related property are fetched from
-	 *         the OData service</li>
+	 *       <li>grouped: dimension will be used for building groups</li>
+	 *       <li>visible: if the column is visible, values for the related property will be fetched from the OData service</li>
+	 *       <li>inResult: if the column is not visible, but declared to be part of the result, values for the related property
+	 *       will also be fetched from the OData service</li>
 	 *     </ul>
 	 *   </li>
 	 *   <li>A column bound to a measure property has further boolean properties:
 	 *     <ul>
-	 *       <li>inResult: if the column is not visible, but declared to be part of the result,
-	 *         values for the related property are also fetched from the OData service</li>
-	 *       <li>total: totals and sub-totals are provided for the measure at all aggregation
-	 *         levels</li>
-	 *       <li>visible: if the column is visible, values for the related property are fetched from
-	 *         the OData service</li>
+	 *       <li>total: totals and sub-totals will be provided for the measure at all aggregation levels</li>
 	 *     </ul>
 	 *   </li>
 	 *   <li>A column bound to a hierarchy property has further properties:
 	 *     <ul>
-	 *       <li>grouped: boolean value; indicates whether the hierarchy is used for building
+	 *       <li>grouped: boolean value; indicates whether the hierarchy will be used for building
 	 *           groups</li>
 	 *       <li>level: integer value; the hierarchy level is mandatory for at least one of those
-	 *           columns that represent the same hierarchy</li>
+	 *           columns that represent the same hierarchy.</li>
 	 *     </ul>
 	 *   </li>
 	 * </ol>
 	 *
-	 * Invoking this function resets the state of the binding and subsequent data requests such as
-	 * calls to getNodeContexts() trigger OData requests in order to fetch the data that are in line
-	 * with this analytical information.
+	 * Invoking this function resets the state of the binding and subsequent data requests such as calls to getNodeContexts() will
+	 * need to trigger OData requests in order to fetch the data that are in line with this analytical information.
 	 *
-	 * Be aware that a call of this function might lead to additional back-end requests, as well as
-	 * a control re-rendering later on.
+	 * Please be aware that a call of this function might lead to additional back-end requests, as well as a control re-rendering later on.
 	 * Whenever possible use the API of the analytical control, instead of relying on the binding.
 	 *
 	 * @function
 	 * @name sap.ui.model.analytics.AnalyticalBinding.prototype.updateAnalyticalInfo
-	 * @param {object[]} aColumns
-	 *   An array with objects holding the analytical information for every column
-	 * @param {boolean} bForceChange
-	 *   Whether to fire a change event asynchronously even if columns didn't change
+	 * @param {array}
+	 *            aColumns an array with objects holding the analytical information for every column, from left to right.
 	 * @protected
 	 */
 	AnalyticalBinding.prototype.updateAnalyticalInfo = function(aColumns, bForceChange) {
@@ -3394,7 +3380,6 @@ sap.ui.define([
 		// function implementation starts here
 
 		if (oData.results.length == 0) {
-			this.bNeedsUpdate = true;
 			return;
 		}
 		// Collecting contexts

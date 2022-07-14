@@ -8,7 +8,7 @@
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
 			"__comment": "applicationVersion oder componentversion??",
-			"version": "1.71.23"
+			"version": "1.93.4"
 		},
 		"title": "{{TITLE}}",
 		"description": "{{DESCRIPTION}}",
@@ -16,6 +16,7 @@
 			"keywords": ["{{TITLE}}"]
 		},
 		"ach": "CA-UI5-ST-ALP",
+		"embeddedBy": "../",
 		"offline": false,
 		"resources": "resources.json"
 	},
@@ -64,7 +65,8 @@
 					"minVersion": "1.30.1"
 				},
 				"sap.suite.ui.microchart": {
-					"minVersion": "1.34.1"
+					"minVersion": "1.34.1",
+					"lazy" : false
 				},
 				"sap.ui.layout": {
 					"minVersion": "1.34.1"
@@ -77,6 +79,9 @@
 			  	},
 				"sap.suite.ui.generic.template" : {
 					"minVersion": "1.30.1"
+			  	},
+			  	"sap.fe.placeholder":{
+			  		"minVersion":"1.86.0"
 			  	}
 			}
 		},
@@ -85,9 +90,26 @@
 			"i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "uri": "i18n/i18n.properties"
-            }
+            },
+			"i18n||Parent": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "../listTemplates/i18n/i18n.properties"
+			}
 		},
-
+		"commands": {
+			"Share": {
+				"name": "Share",
+				"shortcut": "Shift+Ctrl+S"
+			},
+			"Search": {
+				"name": "Search",
+				"shortcut": "Enter"
+			},
+			"VisualFilterSearch": {
+				"name": "Search",
+				"shortcut": "Enter"
+			}
+		},
 		"contentDensities": {
 		  "compact": true,
 		  "cozy": true

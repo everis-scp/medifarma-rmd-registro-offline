@@ -14,7 +14,6 @@
 sap.ui.define([
 	'sap/ui/Device',
 	'sap/ui/base/Object',
-	'sap/ui/core/Core',
 	'sap/ui/core/IntervalTrigger',
 	'sap/ui/core/ResizeHandler',
 	"sap/ui/thirdparty/jquery",
@@ -23,7 +22,6 @@ sap.ui.define([
 	function(
 		Device,
 		BaseObject,
-		Core,
 		IntervalTrigger,
 		ResizeHandler,
 		jQuery,
@@ -58,7 +56,7 @@ sap.ui.define([
 		 *
 		 * @protected
 		 * @alias sap.ui.core.delegate.ScrollEnablement
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @author SAP SE
 		 */
 		var ScrollEnablement = BaseObject.extend("sap.ui.core.delegate.ScrollEnablement", /** @lends sap.ui.core.delegate.ScrollEnablement.prototype */ {
@@ -391,8 +389,7 @@ sap.ui.define([
 							}
 
 							if (!this.getVertical()) {
-								left = Core.getConfiguration().getRTL() ?
-									container.clientWidth - container.scrollWidth : this._scrollX;
+								left = this._scrollX;
 							}
 
 							this._customScrollTo(left, top, oEvent);
@@ -808,7 +805,7 @@ sap.ui.define([
 					if (oConfig.nonTouchScrolling === true) {
 						this._bDragScroll = true; // optional drag instead of native scrolling
 					}
-					if (Core.getConfiguration().getRTL()) {
+					if (sap.ui.getCore().getConfiguration().getRTL()) {
 						this._scrollX = 9999; // in RTL case initially scroll to the very right
 					}
 				},

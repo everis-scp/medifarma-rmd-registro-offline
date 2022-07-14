@@ -20,7 +20,7 @@ sap.ui.define([
 	 *
 	 * @alias sap.ui.layout.changeHandler.MoveSimpleForm
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @experimental Since 1.34.0
 	 */
 	var MoveSimpleForm = {};
@@ -465,7 +465,9 @@ sap.ui.define([
 	MoveSimpleForm.getChangeVisualizationInfo = function(oChange, oAppComponent) {
 		var oMovedElement = oChange.getContent().movedElements[0];
 		var oGroupSelector = oMovedElement.source.groupSelector;
-		var oAffectedControlSelector = JsControlTreeModifier.bySelector(oMovedElement.elementSelector, oAppComponent).getParent().getId();
+		var oAffectedControlSelector = oChange.getChangeType() === "moveSimpleFormGroup"
+			? JsControlTreeModifier.bySelector(oMovedElement.elementSelector, oAppComponent).getParent().getId()
+			: oMovedElement.elementSelector;
 		return {
 			affectedControls: [oAffectedControlSelector],
 			dependentControls: [

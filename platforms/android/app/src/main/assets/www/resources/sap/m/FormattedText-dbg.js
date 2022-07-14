@@ -13,8 +13,7 @@ sap.ui.define([
 	'./FormattedTextRenderer',
 	"sap/base/Log",
 	"sap/base/security/URLListValidator",
-	"sap/base/security/sanitizeHTML",
-	"sap/ui/util/openWindow"
+	"sap/base/security/sanitizeHTML"
 ],
 function(
 	library,
@@ -24,8 +23,7 @@ function(
 	FormattedTextRenderer,
 	Log,
 	URLListValidator,
-	sanitizeHTML0,
-	openWindow
+	sanitizeHTML0
 	) {
 		"use strict";
 
@@ -44,7 +42,7 @@ function(
 		 * @class
 		 * The FormattedText control allows the usage of a limited set of tags for inline display of formatted text in HTML format.
 		 * @extends sap.ui.core.Control
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -319,18 +317,20 @@ function(
 			});
 		}
 
-		// open links href using safe API
-		function openLink (oEvent) {
+		// prohibit a new window from accessing window.opener.location
+		function openExternalLink (oEvent) {
+			var newWindow = window.open();
+			newWindow.opener = null;
+			newWindow.location = oEvent.currentTarget.href;
 			oEvent.preventDefault();
-			openWindow(oEvent.currentTarget.href, oEvent.currentTarget.target);
 		}
 
 		FormattedText.prototype.onAfterRendering = function () {
-			this.$().find('a').on("click", openLink);
+			this.$().find('a[target="_blank"]').on("click", openExternalLink);
 		};
 
 		FormattedText.prototype.onBeforeRendering = function () {
-			this.$().find('a').off("click", openLink);
+			this.$().find('a[target="_blank"]').off("click", openExternalLink);
 		};
 
 		FormattedText.prototype._getDisplayHtml = function (){
@@ -367,9 +367,6 @@ function(
 			this._renderingRules = bLimit ? _limitedRenderingRules : _defaultRenderingRules;
 		};
 
-		FormattedText.prototype.getFocusDomRef = function () {
-			return this.getDomRef() && this.getDomRef().querySelector("a");
-		};
 
 		return FormattedText;
 	});

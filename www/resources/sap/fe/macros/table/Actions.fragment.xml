@@ -1,65 +1,209 @@
 <core:FragmentDefinition
 	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
-	xmlns:core="sap.ui.core" xmlns="sap.m"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	xmlns:macrodata="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:core="sap.ui.core"
+	xmlns:macros="sap.fe.macros"
+	xmlns:mdcat="sap.ui.mdc.actiontoolbar"
+	xmlns="sap.m"
 	template:require="{
-		ID: 'sap/fe/macros/StableIdHelper',
-		COMMON: 'sap/fe/macros/CommonHelper'
+		ID: 'sap/fe/core/helpers/StableIdHelper',
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		CORE: 'sap/fe/core/AnnotationHelper',
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		TABLE: 'sap/fe/macros/table/TableHelper'
 	}"
 >
-
-		<template:if test="{= ${this>onCallAction} &amp;&amp; ${this>selectedContextsModel} &amp;&amp; (${this>namedBindingId} || ${this>id})}">
-			<template:repeat list="{presentation>}" var="dataField">
-				<template:if test="{= !(${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === true) &amp;&amp; !(${dataField>Action@Org.OData.Core.V1.OperationAvailable} === false)}">
-					<template:if
-						test="{= ${dataField>$Type} === 'com.sap.vocabularies.UI.v1.DataFieldForAction' &amp;&amp; ${dataField>Inline} !== true &amp;&amp; !(${dataField>Determining} === true ) }">
+	<template:if test="{tableDefinition>actions}">
+		<template:repeat list="{tableDefinition>actions}" var="action">
+			<template:if test="{= ${action>type} === 'Default'}">
+				<template:then>
+					<mdcat:ActionToolbarAction>
 						<Button
-							id="{= ID.generate([${this>id}, ${dataField>Action}])}"
-							binding="{= (${this>navigationPath}) ? '{' + ${this>navigationPath} + '}' : undefined }"
-							text="{dataField>Label}"
-							press="{= ${this>onCallAction} + '(\'' + ${dataField>Action} + '\' , { contexts:
-							${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/selectedContexts},
-							 invocationGrouping : \'' + (${dataField>InvocationGrouping/$EnumMember} === 'com.sap.vocabularies.UI.v1.OperationGroupingType/ChangeSet' ?'ChangeSet' : 'Isolated') + '\',
-							model: ${$source>/}.getModel(),
-							label: \'' + ${dataField>Label} + '\'})'}"
-							enabled="{= ${dataField>Action@Org.OData.Core.V1.OperationAvailable} === null
-							? (${dataField>Action/0/$IsBound} !== true
-							? 'true'
-							: '{= %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/' + ${dataField>Action} + '}
-							? %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/' + ${dataField>Action} + '}
-							:false}')
-							: ${dataField>Action/0/$IsBound} !== true
-							? 'true'
-							: '{= %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/numberOfSelectedContexts} > 0}' }"
-							visible="{= ${dataField>./@com.sap.vocabularies.UI.v1.Hidden} === false ? true : ${dataField>@@.FIELD.getHiddenPathExpression}}"
-							>
-						</Button>
-					</template:if>
-				</template:if>
-			</template:repeat>
-		</template:if>
-
-		<template:if test="{= ${this>onCreate} &amp;&amp; ${this>creationMode} !== 'CreationRow' &amp;&amp; (${this>showCreate} !== undefined &amp;&amp; ${this>showCreate} !== null) ? ${this>showCreate} : (${targetCollection>@com.sap.vocabularies.Session.v1.StickySessionSupported/NewAction} ? (${targetCollection>@com.sap.vocabularies.Session.v1.StickySessionSupported/NewAction@Org.OData.Core.V1.OperationAvailable} !== false) :  (${targetCollection>@com.sap.vocabularies.Common.v1.DraftRoot/NewAction} ? (${targetCollection>@com.sap.vocabularies.Common.v1.DraftRoot/NewAction@Org.OData.Core.V1.OperationAvailable} !== false) : (${targetCollection>@Org.OData.Capabilities.V1.InsertRestrictions/Insertable} !== false)))}">
-			<!-- temporary check to disable create document option in non-draft -->
-			<!-- template:if test="{= ${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${collection>@com.sap.vocabularies.Common.v1.DraftNode} }" -->
-			<Button
-				id="{= ID.generate([${this>id},'Create'])}"
-				text="{this.i18n>table.CREATE}"
-				press="{= ${this>onCreate} + '(\'' + (${this>namedBindingId} || ${this>id}) +'\', {creationMode: ${$source>}.getParent().getParent().getParent().data(\'creationMode\'), createAtEnd: ${$source>}.getParent().getParent().getParent().data(\'createAtEnd\')})' }"
-				type="Transparent"
-				visible="{= ${this>showCreate} || true }"
-				/>
-				<!-- /template:if -->
-		</template:if>
-		<template:if test="{= (${this>showDelete} !== undefined &amp;&amp; ${this>showDelete} !== null) ? ${this>showDelete} : !(${targetCollection>@Org.OData.Capabilities.V1.DeleteRestrictions/Deletable} === false)}">
-			<template:if test="{= ${this>selectedContextsModel} &amp;&amp; (${this>namedBindingId} || ${this>id}) &amp;&amp; ${this>onDelete} }">
+							core:require="{FPM: 'sap/fe/core/helpers/FPMHelper'}"
+							id="{= ID.generate([${this>id},${action>id}])}"
+							text="{action>text}"
+							press="{= ${action>noWrap} ? ${action>press} : CORE.buildActionWrapper(${action>}, ${this>})}"
+							type="Transparent"
+							visible="{action>visible}"
+							enabled="{action>enabled}"
+						/>
+					</mdcat:ActionToolbarAction>
+				</template:then>
+				<template:elseif test="{= ${action>type} === 'Menu' }">
+					<mdcat:ActionToolbarAction>
+							<MenuButton
+							text="{action>text}"
+							menuPosition="BeginBottom"
+							id="{= ID.generate([${this>id},${action>id}])}"
+							visible="{action>visible}"
+							enabled="{action>enabled}"
+						>
+								<menu>
+									<Menu>
+										<template:repeat list="{action>menu}" var="menuItemAction">
+											<template:with path="menuItemAction>annotationPath" var="dataField">
+												<template:if test="{= ${menuItemAction>type} === 'ForAction'}">
+													<template:then>
+															<template:with path="dataField>Action" helper="COMMON.getActionContext" var="actionContext">
+																<template:with path="dataField>Action" helper="COMMON.getPathToBoundActionOverload" var="isBound">
+																	<template:if test="{= ${isBound>$IsBound} !== true || ${actionContext>@Org.OData.Core.V1.OperationAvailable} !== false }">
+																		<MenuItem
+																	text="{dataField>Label}"
+																	press="{= TABLE.pressEventDataFieldForActionButton(${this>}, ${dataField>}, ${collection>@sapui.name}, ${tableDefinition>operationAvailableMap}, ${actionContext>},${action>isNavigable}, ${action>enableAutoScroll}, ${action>defaultValuesExtensionFunction}) }"
+																	enabled="{= ${menuItemAction>enabled} !== undefined ? ${menuItemAction>enabled} : TABLE.isDataFieldForActionEnabled(${this>},${dataField>},${isBound>$IsBound}, undefined, ${actionContext>}, ${action>enableOnSelect})}"
+																	visible="{menuItemAction>visible}"
+																/>
+																	</template:if>
+																</template:with>
+															</template:with>
+													</template:then>
+													<template:elseif test="{= ${menuItemAction>type} === 'ForNavigation'}">
+														<MenuItem
+														text="{dataField>Label}"
+														press="{= COMMON.getPressHandlerForDataFieldForIBN(${dataField>}, '${internal>selectedContexts}', !${tableDefinition>enableAnalytics} )}"
+														enabled="{= ${menuItemAction>enabled} !== undefined ? ${menuItemAction>enabled} : TABLE.isDataFieldForActionEnabled(${this>}, ${dataField>}, ${dataField>RequiresContext}, true, undefined, ${dataField>NavigationAvailable@@MODEL.value})}"
+														visible="{menuItemAction>visible}"
+														macrodata:IBNData="{= !${dataField>RequiresContext} ? '{semanticObject: \'' +  ${dataField>SemanticObject} + '\' , action : \'' + ${dataField>Action} + '\'}' : undefined}"
+													/>
+													</template:elseif>
+													<template:else>
+														<MenuItem
+														core:require="{FPM: 'sap/fe/core/helpers/FPMHelper'}"
+														text="{menuItemAction>text}"
+														press="{= ${action>noWrap} ? ${action>press} : CORE.buildActionWrapper(${menuItemAction>}, ${this>})}"
+														visible="{menuItemAction>visible}"
+														enabled="{menuItemAction>enabled}"
+													/>
+													</template:else>
+												</template:if>
+											</template:with>
+										</template:repeat>
+									</Menu>
+								</menu>
+							</MenuButton>
+					</mdcat:ActionToolbarAction>
+				</template:elseif>
+				<template:else>
+					<template:with path="action>annotationPath" var="dataField">
+						<template:if test="{= ${action>type} === 'ForAction'}">
+							<template:then>
+								<template:with path="dataField>Action" helper="COMMON.getActionContext" var="actionContext">
+									<template:with path="dataField>Action" helper="COMMON.getPathToBoundActionOverload" var="isBound">
+										<template:if test="{= ${isBound>$IsBound} !== true || ${actionContext>@Org.OData.Core.V1.OperationAvailable} !== false }">
+											<mdcat:ActionToolbarAction>
+												<Button
+													unittest:id="DataFieldForActionButton"
+													id="{= ID.generate([${this>id}, ${dataField>}])}"
+													text="{dataField>Label}"
+													ariaHasPopup="{actionContext>@@COMMON.isDialog}"
+													press="{= TABLE.pressEventDataFieldForActionButton(${this>}, ${dataField>}, ${collection>@sapui.name}, ${tableDefinition>operationAvailableMap}, ${actionContext>},${action>isNavigable}, ${action>enableAutoScroll}, ${action>defaultValuesExtensionFunction}) }"
+													enabled="{= ${action>enabled} !== undefined ? ${action>enabled} : TABLE.isDataFieldForActionEnabled(${this>},${dataField>},${isBound>$IsBound}, undefined, ${actionContext>}, ${action>enableOnSelect})}"
+													visible="{action>visible}"
+												>
+												</Button>
+											</mdcat:ActionToolbarAction>
+										</template:if>
+									</template:with>
+								</template:with>
+							</template:then>
+							<template:elseif test="{= ${action>type} === 'ForNavigation'}">
+								<mdcat:ActionToolbarAction>
+									<Button
+										unittest:id="DataFieldForIntentBasedNavigationButton"
+										id="{= ID.generate([${this>id}, ${dataField>}])}"
+										text="{dataField>Label}"
+										press="{= COMMON.getPressHandlerForDataFieldForIBN(${dataField>}, '${internal>selectedContexts}', !${tableDefinition>enableAnalytics} )}"
+										enabled="{= ${action>enabled} !== undefined ? ${action>enabled} : TABLE.isDataFieldForActionEnabled(${this>}, ${dataField>}, ${dataField>RequiresContext}, true, undefined, ${dataField>NavigationAvailable@@MODEL.value})}"
+										visible="{action>visible}"
+										macrodata:IBNData="{= !${dataField>RequiresContext} ? '{semanticObject: \'' +  ${dataField>SemanticObject} + '\' , action : \'' + ${dataField>Action} + '\'}' : undefined}"
+									/>
+								</mdcat:ActionToolbarAction>
+							</template:elseif>
+						</template:if>
+					</template:with>
+				</template:else>
+			</template:if>
+		</template:repeat>
+	</template:if>
+	<template:if
+		test="{= ${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${targetCollection>@com.sap.vocabularies.Common.v1.DraftNode} || ${collection>@@CORE.isStickySessionSupported} || TABLE.getIBNData(${this>}) || (COMMON.isDraftParentEntityForContainment(${targetCollection>$ContainsTarget}, ${this>}) ? ${this>showCreate} : 'false')}"
+	>
+		<template:if test="{= TABLE.createButtonTemplating(${this>}, false) }">
+			<mdcat:ActionToolbarAction>
 				<Button
-					id="{= ID.generate([${this>id},'Delete'])}"
-					text="{this.i18n>table.DELETE}"
-					press="{= ${this>onDelete} + '(${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/deletableContexts},{id:\'' + (${this>namedBindingId} || ${this>id}) +'\', numberOfSelectedContexts:${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/selectedContexts}.length , unSavedContexts:${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/unSavedContexts}, lockedContexts:${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/lockedContexts}, controlId:${' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/controlId} })' }"
+					unittest:id="CreateButtonTemplate"
+					id="{= ID.generate([${this>id}, 'StandardAction', 'Create'])}"
+					text="{this.i18n>M_COMMON_TABLE_CREATE}"
+					press="cmd:Create"
+					type="Transparent"
+					visible="{= ${this>showCreate} || true }"
+					enabled="{= TABLE.isCreateButtonEnabled(
+						${collection>},
+						${collection>@sapui.name},
+						${parentEntitySet>@Org.OData.Capabilities.V1.NavigationRestrictions/RestrictedProperties},
+						${targetCollection>@Org.OData.Capabilities.V1.InsertRestrictions/Insertable}
+					)}"
+					macrodata:IBNData="{= TABLE.getIBNData(${this>})}"
+				/>
+			</mdcat:ActionToolbarAction>
+		</template:if>
+	</template:if>
+	<template:if
+		test="{= ${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${targetCollection>@com.sap.vocabularies.Common.v1.DraftNode} || ${collection>@@CORE.isStickySessionSupported} || (COMMON.isDraftParentEntityForContainment(${targetCollection>$ContainsTarget}, ${this>}) ? ${this>showCreate} : 'false')}"
+	>
+		<template:if test="{= TABLE.deleteButtonTemplating(${this>}) }">
+			<mdcat:ActionToolbarAction>
+				<Button
+					unittest:id="DeleteButtonTemplate"
+					id="{= ID.generate([${this>id}, 'StandardAction', 'Delete'])}"
+					text="{this.i18n>M_COMMON_TABLE_DELETE}"
+					press="cmd:DeleteEntry"
 					type="Transparent"
 					visible="{this>showDelete}"
-					enabled="{= '{= ((%{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/deletableContexts} &amp;&amp; %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/deletableContexts}.length > 0) || (%{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/unSavedContexts} &amp;&amp; %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/unSavedContexts}.length > 0)) ? %{' + ${this>selectedContextsModel} + '>/$contexts/' + (${this>namedBindingId} || ${this>id}) + '/deleteEnabled} : false}' }"
+					enabled="{= TABLE.isDeleteButtonEnabled(${this>})}"
+					ariaHasPopup="Dialog"
 				/>
-			</template:if>
+			</mdcat:ActionToolbarAction>
 		</template:if>
+	</template:if>
+	<template:if
+		test="{= ${collection>@com.sap.vocabularies.Common.v1.DraftRoot} || ${targetCollection>@com.sap.vocabularies.Common.v1.DraftNode} || ${collection>@@CORE.isStickySessionSupported} || TABLE.getIBNData(${this>}) || (COMMON.isDraftParentEntityForContainment(${targetCollection>$ContainsTarget}, ${this>}) ? ${this>showCreate} : 'false')}"
+	>
+		<mdcat:ActionToolbarAction>
+			<Button
+				id="{= ID.generate([${this>id}, 'StandardAction', 'Paste'])}"
+				text="{this.i18n>M_COMMON_TABLE_PASTE}"
+				visible="{this>_pasteVisible}"
+				press="API.onPasteButtonPressed"
+			/>
+		</mdcat:ActionToolbarAction>
+		<template:if test="{this>massEditVisible}">
+			<mdcat:ActionToolbarAction>
+				<Button
+					id="{= ID.generate([${this>id}, 'StandardAction', 'MassEdit'])}"
+					text="{this.i18n>M_COMMON_TABLE_MASSEDIT}"
+					press="API.onMassEditButtonPressed($event, $controller)"
+					visible="{this>massEditVisible}"
+					enabled="{= TABLE.getEnablementMassEdit(${this>}) }"
+					ariaHasPopup="Dialog"
+				/>
+			</mdcat:ActionToolbarAction>
+		</template:if>
+	</template:if>
+	<template:if test="{this>enableFullScreen}">
+		<mdcat:ActionToolbarAction>
+			<Button
+				core:require="{TableFullScreenUtil: 'sap/fe/macros/table/TableFullScreenUtil'}"
+				id="{= ID.generate([${this>id}, 'StandardAction', 'FullScreen'])}"
+				tooltip="{this.i18n>M_COMMON_TABLE_FULLSCREEN_MAXIMIZE}"
+				icon="sap-icon://full-screen"
+				press="TableFullScreenUtil.onFullScreenToggle(${$source>/})"
+				type="Transparent"
+				visible="{this>enableFullScreen}"
+				enabled="true"
+			/>
+		</mdcat:ActionToolbarAction>
+	</template:if>
 </core:FragmentDefinition>

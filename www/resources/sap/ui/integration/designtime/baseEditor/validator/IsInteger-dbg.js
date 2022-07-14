@@ -15,7 +15,7 @@ sap.ui.define([
 	 *
 	 * @namespace sap.ui.integration.designtime.baseEditor.validator.IsInteger
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @static
 	 * @since 1.81
@@ -36,6 +36,10 @@ sap.ui.define([
 		 * @name sap.ui.integration.designtime.baseEditor.validator.IsInteger.validate
 		 */
 		validate: function (vValue) {
+			//format the value when updating a string parameter with digit value to integer
+			if (vValue !== undefined && vValue !== "") {
+				vValue = parseFloat(vValue);
+			}
 			return vValue === undefined
 				|| IsValidBinding.validate(vValue, { allowPlainStrings: false })
 				|| (!isNaN(vValue) && Number.isInteger(vValue));

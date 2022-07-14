@@ -5,7 +5,7 @@
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.96.9"
+      "version": "1.93.4"
     },
     "title": "The SAPUI5 Core Runtime.",
     "description": "The SAPUI5 Core Runtime.\n\n  Contains the UI5 jQuery plugins (jQuery.sap.*), the Core and all its components,\n  base classes for Controls, Components and the Model View Controller classes.",
@@ -151,7 +151,7 @@
       {
         "name": "urijs",
         "packagedWithMySelf": true,
-        "version": "1.19.10"
+        "version": "1.19.7"
       },
       {
         "name": "punycodejs",
@@ -216,7 +216,7 @@
       {
         "name": "hyphenopoly",
         "packagedWithMySelf": true,
-        "version": "3.4.0"
+        "version": "2.4.0"
       },
       {
         "name": "p-cancelable",
@@ -254,7 +254,7 @@
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.96",
+      "minUI5Version": "1.93",
       "libs": {}
     },
     "library": {

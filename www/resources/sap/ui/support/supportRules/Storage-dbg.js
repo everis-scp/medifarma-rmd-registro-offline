@@ -57,7 +57,7 @@ sap.ui.define([
 	 * @name sap.ui.support.Storage
 	 * @alias sap.ui.support.Storage
 	 * @author SAP SE.
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @private
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */

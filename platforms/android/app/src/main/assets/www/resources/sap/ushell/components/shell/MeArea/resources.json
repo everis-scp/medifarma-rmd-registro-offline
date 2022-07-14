@@ -4,6 +4,7 @@
 		{
 			"name": "Component-dbg.js",
 			"module": "sap/ushell/components/shell/MeArea/Component.js",
+			"size": 2463,
 			"isDebug": true,
 			"required": [
 				"sap/ui/core/UIComponent.js",
@@ -14,7 +15,8 @@
 		},
 		{
 			"name": "Component-h2-preload.js",
-			"module": "Component-h2-preload.js",
+			"module": "sap/ushell/components/shell/MeArea/Component-h2-preload.js",
+			"size": 2434,
 			"merged": true,
 			"required": [
 				"sap/base/Log.js",
@@ -24,7 +26,6 @@
 				"sap/m/Title.js",
 				"sap/m/Toolbar.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/ElementMetadata.js",
 				"sap/ui/core/Fragment.js",
 				"sap/ui/core/UIComponent.js",
@@ -38,7 +39,6 @@
 				"sap/ushell/ui/QuickAccess.js",
 				"sap/ushell/ui/footerbar/AboutButton.js",
 				"sap/ushell/ui/footerbar/ContactSupportButton.js",
-				"sap/ushell/ui/footerbar/EndUserFeedback.js",
 				"sap/ushell/ui/launchpad/ActionItem.js"
 			],
 			"included": [
@@ -48,8 +48,14 @@
 			]
 		},
 		{
+			"name": "Component-h2-preload.js.map",
+			"size": 1174,
+			"isDebug": true
+		},
+		{
 			"name": "Component-preload.js",
-			"module": "Component-preload.js",
+			"module": "sap/ushell/components/shell/MeArea/Component-preload.js",
+			"size": 9580,
 			"merged": true,
 			"required": [
 				"sap/base/Log.js",
@@ -59,7 +65,6 @@
 				"sap/m/Title.js",
 				"sap/m/Toolbar.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/ElementMetadata.js",
 				"sap/ui/core/Fragment.js",
 				"sap/ui/core/UIComponent.js",
@@ -73,7 +78,6 @@
 				"sap/ushell/ui/QuickAccess.js",
 				"sap/ushell/ui/footerbar/AboutButton.js",
 				"sap/ushell/ui/footerbar/ContactSupportButton.js",
-				"sap/ushell/ui/footerbar/EndUserFeedback.js",
 				"sap/ushell/ui/launchpad/ActionItem.js"
 			],
 			"included": [
@@ -81,10 +85,16 @@
 				"sap/ushell/components/shell/MeArea/MeArea.controller.js",
 				"sap/ushell/components/shell/MeArea/MeAreaPopover.fragment.xml"
 			]
+		},
+		{
+			"name": "Component-preload.js.map",
+			"size": 8214,
+			"isDebug": true
 		},
 		{
 			"name": "Component.js",
 			"module": "sap/ushell/components/shell/MeArea/Component.js",
+			"size": 1248,
 			"required": [
 				"sap/ui/core/UIComponent.js",
 				"sap/ushell/Config.js",
@@ -95,13 +105,14 @@
 		{
 			"name": "MeArea-dbg.controller.js",
 			"module": "sap/ushell/components/shell/MeArea/MeArea.controller.js",
+			"size": 16928,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/StandardListItem.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/ElementMetadata.js",
+				"sap/ui/core/Fragment.js",
 				"sap/ui/core/mvc/Controller.js",
 				"sap/ui/model/json/JSONModel.js",
 				"sap/ui/performance/Measurement.js",
@@ -112,19 +123,19 @@
 				"sap/ushell/ui/QuickAccess.js",
 				"sap/ushell/ui/footerbar/AboutButton.js",
 				"sap/ushell/ui/footerbar/ContactSupportButton.js",
-				"sap/ushell/ui/footerbar/EndUserFeedback.js",
 				"sap/ushell/ui/launchpad/ActionItem.js"
 			]
 		},
 		{
 			"name": "MeArea.controller.js",
 			"module": "sap/ushell/components/shell/MeArea/MeArea.controller.js",
+			"size": 7490,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/StandardListItem.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/ElementMetadata.js",
+				"sap/ui/core/Fragment.js",
 				"sap/ui/core/mvc/Controller.js",
 				"sap/ui/model/json/JSONModel.js",
 				"sap/ui/performance/Measurement.js",
@@ -135,13 +146,13 @@
 				"sap/ushell/ui/QuickAccess.js",
 				"sap/ushell/ui/footerbar/AboutButton.js",
 				"sap/ushell/ui/footerbar/ContactSupportButton.js",
-				"sap/ushell/ui/footerbar/EndUserFeedback.js",
 				"sap/ushell/ui/launchpad/ActionItem.js"
 			]
 		},
 		{
 			"name": "MeAreaPopover.fragment.xml",
 			"module": "sap/ushell/components/shell/MeArea/MeAreaPopover.fragment.xml",
+			"size": 848,
 			"required": [
 				"sap/m/List.js",
 				"sap/m/Popover.js",
@@ -151,7 +162,8 @@
 			]
 		},
 		{
-			"name": "resources.json"
+			"name": "resources.json",
+			"size": 3289
 		}
 	]
 }

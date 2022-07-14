@@ -654,7 +654,8 @@ sap.ui.define([
 		},
 
 		/**
-		 * Extracts all (top and detail) messages from the given error instance.
+		 * Extracts all (top and detail) messages from the given error instance into lists of
+		 * unbound and bound messages.
 		 *
 		 * @param {Error} oError
 		 *   An error instance as created by {@link .createError} or {@link .decomposeError}
@@ -668,14 +669,15 @@ sap.ui.define([
 		 * @param {string} [oError.requestUrl]
 		 *   The absolute request URL of the failed OData request; required to resolve a long text
 		 *   URL
-		 * @returns {object[]}
-		 *   An array of raw message objects suitable for
-		 *   {@link sap.ui.model.odata.v4.ODataModel#createUI5Message}
+		 * @returns {object}
+		 *   An object containing "unbound" and "bound" properties each containing an array of raw
+		 *   message objects suitable for {@link sap.ui.model.odata.v4.ODataModel#createUI5Message}
 		 *
 		 * @private
 		 */
 		extractMessages : function (oError) {
-			var aMessages = [];
+			var aBound = [],
+				aUnbound = [];
 
 			/*
 			 * Creates a raw message object taking all relevant properties, converts the annotations
@@ -711,17 +713,18 @@ sap.ui.define([
 					}
 				});
 
-				if (typeof oMessage.target === "string") {
-					if (oMessage.target[0] === "$" || !oError.resourcePath) {
-						// target for the bound message is a system query option or cannot be
-						// resolved -> report as unbound message
-						oRawMessage.message = oMessage.target + ": " + oMessage.message;
-					} else {
-						oRawMessage.target = oMessage.target;
-					}
+				if (typeof oMessage.target !== "string") {
+					aUnbound.push(oRawMessage);
+				} else if (oMessage.target[0] === "$" || !oError.resourcePath) {
+					// target for the bound message is a system query option or cannot be resolved
+					// -> report as unbound message
+					oRawMessage.message = oMessage.target + ": " + oMessage.message;
+					aUnbound.push(oRawMessage);
+				} else {
+					oRawMessage.target = oMessage.target;
+					oRawMessage.transition = true;
+					aBound.push(oRawMessage);
 				}
-				oRawMessage.transition = true;
-				aMessages.push(oRawMessage);
 			}
 
 			if (oError.error) {
@@ -736,7 +739,7 @@ sap.ui.define([
 			} else {
 				addMessage(oError, 4 /*Error*/, true);
 			}
-			return aMessages;
+			return {bound : aBound, unbound : aUnbound};
 		},
 
 		/**
@@ -996,28 +999,23 @@ sap.ui.define([
 		},
 
 		/**
-		 * Returns the instance annotation key with a given name for the given object, ignoring the
+		 * Returns the instance annotation key with a given name for the given message, ignoring the
 		 * alias. Logs a warning if duplicates are found.
 		 *
-		 * @param {object} oObject
-		 *   Any object
-		 * @param {string} sName
-		 *   The name of the annotation w/o prefix "@" and namespace, e.g. ".ContentID" for a
+		 * @param {object} oMessage
+		 *   A single message from an OData error response
+		 * @param {object} sName
+		 *   The name of the annotation without prefix "@" and namespace, e.g. ".ContentID" for a
 		 *   annotation "@Org.OData.Core.V1.ContentID"
-		 * @param {string} [sProperty]
-		 *   The name of the annotated property, e.g. "Budget" in "Budget@Core.Permissions" for a
-		 *   property "Budget" annotated with "@Core.Permissions"
 		 * @returns {string|undefined}
 		 *   The key of the annotation, or <code>undefined</code> in case there is not exactly one
 		 *   such annotation (ignoring the alias)
 		 */
-		getAnnotationKey : function (oObject, sName, sProperty) {
-			var sAnnotationKey,
-				bDuplicate,
-				sPrefix = (sProperty || "") + "@";
+		getAnnotationKey : function (oMessage, sName) {
+			var sAnnotationKey, bDuplicate;
 
-			Object.keys(oObject).forEach(function (sKey) {
-				if (sKey.startsWith(sPrefix) && sKey.endsWith(sName)) {
+			Object.keys(oMessage).forEach(function (sKey) {
+				if (sKey[0] === "@" && sKey.endsWith(sName)) {
 					if (sAnnotationKey) {
 						Log.warning("Cannot distinguish " + sAnnotationKey + " from " + sKey,
 							undefined, sClassName);
@@ -1845,7 +1843,7 @@ sap.ui.define([
 		/**
 		 * Converts given value to an array.
 		 * <code>null</code> and <code>undefined</code> are converted to the empty array, a
-		 * non-array value is wrapped with an array and an array is returned as a shallow copy.
+		 * non-array value is wrapped with an array and an array is returned as it is.
 		 *
 		 * @param {any} [vElement]
 		 *   The element to be converted into an array.
@@ -1857,7 +1855,7 @@ sap.ui.define([
 				return [];
 			}
 			if (Array.isArray(vElement)) {
-				return vElement.slice();
+				return vElement;
 			}
 			return [vElement];
 		},

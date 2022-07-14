@@ -8,7 +8,6 @@
 sap.ui.define([
 	'./library',
 	'./Button',
-	'./Select',
 	'sap/ui/core/Control',
 	'sap/ui/core/EnabledPropagator',
 	'sap/ui/core/delegate/ItemNavigation',
@@ -20,7 +19,6 @@ sap.ui.define([
 function(
 	library,
 	Button,
-	Select,
 	Control,
 	EnabledPropagator,
 	ItemNavigation,
@@ -52,7 +50,7 @@ function(
 	 * @implements sap.ui.core.IFormContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -402,7 +400,7 @@ function(
 			}
 		}
 
-		iCurrentWidth = Math.floor(this.getDomRef().getBoundingClientRect().width);
+		iCurrentWidth = this.$().width();
 
 		if (this._previousWidth !== undefined && iCurrentWidth !== this._previousWidth && !this._bInOverflow) {
 			this.fireEvent("_containerWidthChanged");
@@ -859,14 +857,24 @@ function(
 		oEvent.preventDefault();
 	};
 
+	/** Select form function **/
+
 	/**
-	 * Hidden select aggregation factory function.
+	 * Lazy loader for the select hidden aggregation.
 	 * @private
 	 */
-	SegmentedButton.prototype._fnSelectFormFactory = function() {
-		return new Select(this.getId() + "-select")
-			.attachChange(this._selectChangeHandler, this)
-			.addStyleClass("sapMSegBSelectWrapper");
+	SegmentedButton.prototype._lazyLoadSelectForm = function() {
+		var oSelect = this.getAggregation("_select");
+
+		if (!oSelect) {
+			// lazy load sap.m.Select, TODO should be loaded async
+			jQuery.sap.require("sap.m.Select");
+			var Select = sap.ui.require("sap/m/Select");
+			oSelect = new Select(this.getId() + "-select");
+			oSelect.attachChange(this._selectChangeHandler, this);
+			oSelect.addStyleClass("sapMSegBSelectWrapper");
+			this.setAggregation("_select", oSelect, true);
+		}
 	};
 
 	/**
@@ -929,10 +937,7 @@ function(
 	SegmentedButton.prototype._toSelectMode = function() {
 		this._bInOverflow = true;
 		this.addStyleClass("sapMSegBSelectWrapper");
-		if (!this.getAggregation("_select")) {
-			this.setAggregation("_select", this._fnSelectFormFactory(), true);
-		}
-
+		this._lazyLoadSelectForm();
 		this._syncSelect();
 		this._syncAriaAssociations();
 	};

@@ -24,7 +24,7 @@ sap.ui.define([
 	 * @namespace
 	 * @name sap.uxap
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.36
 	 * @public
 	 */
@@ -69,7 +69,7 @@ sap.ui.define([
 			"sap.uxap.ObjectPageHeaderLayoutData",
 			"sap.uxap.ObjectPageLazyLoader"
 		],
-		version: "1.96.9",
+		version: "1.93.4",
 		extensions: {
 			flChangeHandlers: {
 				"sap.uxap.ObjectPageHeader": "sap/uxap/flexibility/ObjectPageHeader",

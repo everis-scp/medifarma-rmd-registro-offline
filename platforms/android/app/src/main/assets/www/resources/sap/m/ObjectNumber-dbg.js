@@ -47,7 +47,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.core.Control
 	 * @implements sap.ui.core.IFormContent
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -178,18 +178,6 @@ sap.ui.define([
 	ObjectNumber.prototype.ontap = function(oEvent) {
 		if (this._isClickable(oEvent)) {
 			this.firePress();
-		}
-	};
-
-	/**
-	 * Ensures that parent interactive controls will not handle
-	 * the touch/mouse events a second time.
-	 * @private
-	 * @param {object} oEvent The fired event
-	 */
-	ObjectNumber.prototype.ontouchstart = function(oEvent) {
-		if (this._isClickable(oEvent)) {
-			oEvent.setMarked();
 		}
 	};
 

@@ -1,1 +1,0 @@
-sap.ui.define(function(){"use strict";const n=n=>{const t=[];n.forEach(n=>{t.push(n)});return t};return n});

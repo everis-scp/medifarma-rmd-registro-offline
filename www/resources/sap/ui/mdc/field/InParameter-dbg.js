@@ -20,7 +20,7 @@ sap.ui.define([
 	 * @param {object} [mSettings] Initial settings for the new control
 	 * @class The <code>InParameter</code> element is used in the {@link sap.ui.mdc.field.FieldValueHelp FieldValueHelp} element.
 	 * @extends sap.ui.core.Element
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @abstract
 	 * @private

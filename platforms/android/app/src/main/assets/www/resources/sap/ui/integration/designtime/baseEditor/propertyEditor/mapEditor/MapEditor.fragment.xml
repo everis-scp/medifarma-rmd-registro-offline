@@ -51,7 +51,7 @@
 						</Button>
 						<Button
 							icon="sap-icon://delete"
-							tooltip="{i18n>BASE_EDITOR.MAP.REMOVE}"
+							tooltip="{i18n>BASE_EDITOR.MAP.REMOVE_PARAMETER}"
 							press="_onRemoveElement"
 							visible="{config/allowAddAndRemove}"
 						/>
@@ -68,13 +68,7 @@
 			</Panel>
 		</VBox>
 		<Button
-			text="{
-				parts: [
-					'i18n>BASE_EDITOR.MAP.ADD',
-					'config/addItemLabelI18n'
-				],
-				formatter: '.formatAddItemText'
-			}"
+			text="{i18n>BASE_EDITOR.MAP.ADD_PARAMETER}"
 			press="_onAddElement"
 			visible="{config/allowAddAndRemove}"
 		/>

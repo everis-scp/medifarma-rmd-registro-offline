@@ -1,11 +1,12 @@
 <core:FragmentDefinition
-        xmlns="sap.m" xmlns:core="sap.ui.core">
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
     <Popover
-            id="sapUshellMeAreaPopover"
-            placement="Bottom"
-            showArrow="true"
-            showHeader="false"
-            class="sapUshellPopupContainer sapUiSizeCompact">
+        id="sapUshellMeAreaPopover"
+        placement="Bottom"
+        showArrow="true"
+        showHeader="false"
+        class="sapUshellPopupContainer sapContrastPlus">
         <content>
             <List
                 class="sapUshellPopoverList"
@@ -17,10 +18,10 @@
                 }">
                 <headerToolbar>
                     <Toolbar style="Clear">
-                        <Title level="H5" text="{/userName}"/>
+                        <Title level="H1" text="{/userName}" />
                     </Toolbar>
                 </headerToolbar>
             </List>
-       </content>
+        </content>
     </Popover>
 </core:FragmentDefinition>

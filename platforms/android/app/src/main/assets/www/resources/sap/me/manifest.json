@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.me",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.23"
+      "version": "1.93.4"
     },
     "title": "SAPUI5 library with controls specialized for mobile devices (extension).",
     "description": "SAPUI5 library with controls specialized for mobile devices (extension).",
@@ -18,17 +18,24 @@
     "supportedThemes": [
       "base",
       "sap_belize",
+      "sap_belize_hcb",
+      "sap_belize_hcw",
       "sap_belize_plus",
       "sap_bluecrystal",
-      "sap_hcb"
+      "sap_fiori_3",
+      "sap_fiori_3_dark",
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
+      "sap_hcb",
+      "sap_horizon"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         }
       }
     },

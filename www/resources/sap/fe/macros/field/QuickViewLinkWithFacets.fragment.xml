@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:core="sap.ui.core"
+	xmlns:macro="sap.fe.macros"
+	xmlns:control="sap.fe.core.controls"
+	xmlns="sap.m"
+	template:require="{
+				MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+				CONTACT: 'sap/fe/macros/ContactHelper',
+				FORM: 'sap/fe/macros/form/FormHelper'
+				}"
+>
+	<template:repeat list="{entityType>./@com.sap.vocabularies.UI.v1.QuickViewFacets}" var="facet">
+		<template:if test="{= ${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.Communication.v1.Contact') > -1 }">
+			<template:then>
+				<template:with path="facet>Target/$AnnotationPath" var="contact">
+					<core:Fragment fragmentName="sap.fe.macros.field.QuickViewLinkContactContent" type="XML" />
+				</template:with>
+			</template:then>
+			<template:elseif
+				test="{=
+												(${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.FieldGroup') > -1 ||
+														${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.Identification') > -1) ||
+														${facet>Target/$AnnotationPath}.indexOf('com.sap.vocabularies.UI.v1.DataPoint') > -1
+											}"
+			>
+				<control:customContent>
+					<macro:Form
+						class="{= FORM.getMarginClass('sapUiMediumMarginTop', ${entityType>./@com.sap.vocabularies.UI.v1.QuickViewFacets}[0].Target.$AnnotationPath === '@com.sap.vocabularies.Communication.v1.Contact') }"
+						editMode="Display"
+						facet="{facet>}"
+						entitySet="{entityType>}"
+						useFormContainerLabels="true"
+						layoutMode="ResponsiveGridLayout"
+					/>
+				</control:customContent>
+			</template:elseif>
+		</template:if>
+	</template:repeat>
+</core:FragmentDefinition>

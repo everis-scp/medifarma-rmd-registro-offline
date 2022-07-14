@@ -13,16 +13,12 @@
 				</template:then>
 				<template:else>
 					<variants:SmartVariantManagement id="template::PageVariant" persistencyKey="{= ${parameter>/settings/smartVariantManagement} ? '_ST_SmartVariantManagement' : 'searchListReportVariant'}"
-													 showShare="true" showExecuteOnSelection="true"/>
+													 showShare="true" showExecuteOnSelection="true" displayTextForExecuteOnSelectionForStandardVariant="{= (${parameter>/settings/dataLoadSettings/loadDataOnAppLaunch} === 'ifAnyFilterExist' || ${parameter>/settings/dataLoadSettings/loadDataOnAppLaunch} === undefined) ? '{i18n>ST_LIST_DISPLAY_TEXT_FOR_EXECUTE_ON_SELECTION}' : undefined}" />
 				</template:else>
 				</template:if>
 			</f:heading>
 			<f:actions>
 				<ToolbarSpacer/>
-				<!-- hide toggle filter button if worklist -->
-				<template:if test="{= ${tableType>value} !== 'ResponsiveTable' &amp;&amp; !${parameter>/settings/isWorklist}}">
-					<Button id="template::ToggleFilters" text="{= ${_templPriv>/listReport/isHeaderExpanded} ? ${i18n>HIDE_FILTERS} : ${i18n>SHOW_FILTERS} }" type="Transparent" press="._templateEventHandlers.onToggleFiltersPressed"/>
-				</template:if>
 				<!-- global breakout actions-->
 				<template:repeat list="{parameter>/manifest/sap.ui5/extends/extensions/sap.ui.controllerExtensions/sap.suite.ui.generic.template.ListReport.view.ListReport/sap.ui.generic.app}" var="tmpEntitySet">
 					<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.GlobalActions" type="XML"/>
@@ -30,10 +26,13 @@
 				<OverflowToolbarButton id="template::Share"
 						icon="sap-icon://action"
 						type="Transparent"
-						press="._templateEventHandlers.onShareListReportActionButtonPress"
-						visible="{= ${parameter>/manifest/sap.ui.generic.app/settings/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
+						press="cmd:Share"
+						visible="{:= ${appSettings>/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
 						tooltip="{i18n>SHARE}"
 						text="{i18n>SHARE}">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow"/>
+						</layoutData>
 				</OverflowToolbarButton>
 			</f:actions>
 			<f:snappedContent>

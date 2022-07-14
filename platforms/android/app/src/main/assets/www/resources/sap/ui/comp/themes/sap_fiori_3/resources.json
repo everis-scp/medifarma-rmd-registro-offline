@@ -3,38 +3,67 @@
 	"resources": [
 		{
 			"name": ".theming",
+			"size": 90,
 			"theme": "sap_fiori_3"
 		},
 		{
-			"name": "library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "SmartTable.less",
+			"size": 335,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "css_variables.css",
+			"size": 217,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 94015,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 93647,
+			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library-RTL.css",
-			"theme": "sap_fiori_3"
-		},
-		{
-			"name": "library-dbg.css",
-			"isDebug": true,
+			"size": 22687,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library-parameters.json",
+			"size": 2,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.css",
+			"size": 22679,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.less",
+			"size": 839,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.source.less",
+			"size": 284,
 			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 23762,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 23754,
 			"theme": "sap_fiori_3"
 		}
 	]

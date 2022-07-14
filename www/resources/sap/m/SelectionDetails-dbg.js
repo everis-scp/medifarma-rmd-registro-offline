@@ -39,7 +39,7 @@ function(
 	 * <b><i>Note:</i></b>It is protected and should only be used within the framework itself.
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @extends sap.ui.core.Control
 	 * @constructor
@@ -489,7 +489,7 @@ function(
 	 * @private
 	 */
 	SelectionDetails.prototype._updateButton = function() {
-		var sText, iCount, oButton = this.getAggregation("_button"), bEnabled;
+		var sText, iCount, oButton = this.getAggregation("_button");
 		if (this._oSelectionData && this._oSelectionData.length >= 0) {
 			iCount = this._oSelectionData.length;
 		} else {
@@ -498,14 +498,15 @@ function(
 
 		if (iCount > 0) {
 			sText = this._oRb.getText("SELECTIONDETAILS_BUTTON_TEXT_WITH_NUMBER", [ iCount ]);
-			bEnabled = true;
+			oButton.setProperty("text", sText, true);
+			oButton.setProperty("enabled", true, true);
+			oButton.setAggregation("tooltip", sText, true);
 		} else {
 			sText = this._oRb.getText("SELECTIONDETAILS_BUTTON_TEXT");
-			bEnabled = false;
+			oButton.setProperty("text", sText, true);
+			oButton.setProperty("enabled", false, true);
+			oButton.setAggregation("tooltip", sText, true);
 		}
-		oButton.setText(sText);
-		oButton.setEnabled(bEnabled);
-		oButton.setTooltip(sText);
 	};
 
 	/**
@@ -917,6 +918,7 @@ function(
 		if (Array.isArray(oEventParams)) {
 			this._oSelectionData = oEventParams;
 			this._updateButton();
+			this.getAggregation("_button").rerender();
 		}
 	};
 

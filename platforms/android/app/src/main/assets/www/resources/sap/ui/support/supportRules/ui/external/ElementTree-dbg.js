@@ -60,7 +60,7 @@ sap.ui.define(["jquery.sap.global"],
 		 * @private
 		 */
 		function _getElementTreeLeftColumnOfListItem(controls, paddingLeft) {
-			var html = "<offset data-indent=\"" + paddingLeft + "\" >";
+			var html = "<offset style=\"padding-left:" + paddingLeft + "px\" >";
 
 			if (controls.content.length > 0) {
 				html += "<arrow down=\"true\"></arrow>";
@@ -334,25 +334,6 @@ sap.ui.define(["jquery.sap.global"],
 			var controls = this.getData().controls;
 
 			this._treeContainer.innerHTML = this._createTreeHTML(controls);
-
-			this._provideIndentation();
-		};
-
-		/**
-		 * Sets the padding for each row in the element tree.
-		 * @private
-		 */
-		ElementTree.prototype._provideIndentation = function () {
-			var aOffsets = this._treeContainer.getElementsByTagName("offset"),
-				oOffset,
-				iIndex;
-
-			for (iIndex = 0; iIndex < aOffsets.length; iIndex++) {
-				oOffset = aOffsets[iIndex];
-				if (oOffset.dataset && oOffset.dataset.indent) {
-					oOffset.style.paddingLeft = oOffset.dataset.indent + "px";
-				}
-			}
 		};
 
 		/**

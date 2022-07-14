@@ -76,7 +76,7 @@ function(
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -505,9 +505,7 @@ function(
 		}
 
 		if (!this.DeleteIconURI) {
-			ListItemBase.prototype.DeleteIconURI = IconPool.getIconURI(
-				ThemeParameters.get({name: "_sap_m_ListItemBase_DeleteIcon"}) || "decline"
-			);
+			ListItemBase.prototype.DeleteIconURI = IconPool.getIconURI(ThemeParameters.get("_sap_m_ListItemBase_DeleteIcon"));
 		}
 
 		this._oDeleteControl = new Button({
@@ -522,15 +520,15 @@ function(
 		this._oDeleteControl._bExcludeFromTabChain = true;
 
 		// prevent disabling of internal controls by the sap.ui.core.EnabledPropagator
-		this._oDeleteControl.useEnabledPropagator(false);
+		this._oDeleteControl.getEnabled = function() {
+			return true;
+		};
 
 		return this._oDeleteControl;
 	};
 
 	ListItemBase.prototype.onThemeChanged = function() {
-		ListItemBase.prototype.DeleteIconURI = IconPool.getIconURI(
-			ThemeParameters.get({name: "_sap_m_ListItemBase_DeleteIcon"})
-		);
+		ListItemBase.prototype.DeleteIconURI = IconPool.getIconURI(ThemeParameters.get("_sap_m_ListItemBase_DeleteIcon"));
 		if (this._oDeleteControl) {
 			this._oDeleteControl.setIcon(this.DeleteIconURI);
 		}
@@ -560,7 +558,9 @@ function(
 		this._oDetailControl._bExcludeFromTabChain = true;
 
 		// prevent disabling of internal controls by the sap.ui.core.EnabledPropagator
-		this._oDetailControl.useEnabledPropagator(false);
+		this._oDetailControl.getEnabled = function() {
+			return true;
+		};
 
 		return this._oDetailControl;
 	};
@@ -611,7 +611,9 @@ function(
 		}, this);
 
 		// prevent disabling of internal controls by the sap.ui.core.EnabledPropagator
-		this._oSingleSelectControl.useEnabledPropagator(false);
+		this._oSingleSelectControl.getEnabled = function() {
+			return true;
+		};
 
 		return this._oSingleSelectControl;
 	};
@@ -647,7 +649,9 @@ function(
 		}, this);
 
 		// prevent disabling of internal controls by the sap.ui.core.EnabledPropagator
-		this._oMultiSelectControl.useEnabledPropagator(false);
+		this._oMultiSelectControl.getEnabled = function() {
+			return true;
+		};
 
 		return this._oMultiSelectControl;
 	};
@@ -996,10 +1000,6 @@ function(
 		if (this._eventHandledByControl ||
 			oEvent.touches.length != 1 ||
 			!this.hasActiveType()) {
-			if (this.getListProperty("includeItemInSelection") && this.getList()._mRangeSelection) {
-				// prevet text selection when rangeSelection is detected
-				oEvent.preventDefault();
-			}
 			return;
 		}
 
@@ -1275,7 +1275,6 @@ function(
 		}
 
 		this.informList("FocusIn", oEvent.srcControl);
-		oEvent.setMarked();
 
 		if (oEvent.srcControl === this) {
 			return;
@@ -1288,6 +1287,7 @@ function(
 
 		// inform the list async that this item should be focusable
 		setTimeout(oList["setItemFocusable"].bind(oList, this), 0);
+		oEvent.setMarked();
 	};
 
 	// inform the list for the vertical navigation

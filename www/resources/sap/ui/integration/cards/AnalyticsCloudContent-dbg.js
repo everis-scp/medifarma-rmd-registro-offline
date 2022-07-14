@@ -30,7 +30,7 @@ sap.ui.define([
 	 * @extends sap.ui.integration.cards.BaseContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -51,9 +51,8 @@ sap.ui.define([
 		BaseContent.prototype.init.apply(this, arguments);
 
 		var sId = this.getId() + "-highchartContainer";
-		// Add "sapFCardAnalyticsCloudContentHCC" class to the container content for CSP compliance
 		this._oHighchartContainer = new HTML(sId, {
-			content: "<div id=" + sId + " class='sapFCardAnalyticsCloudContentHCC'></div>"
+			content: "<div id=" + sId + " style='height:100%; width:100%'></div>"
 		});
 		this.setAggregation("_content", this._oHighchartContainer);
 	};

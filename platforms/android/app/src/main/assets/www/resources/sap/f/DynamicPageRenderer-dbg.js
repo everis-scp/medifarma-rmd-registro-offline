@@ -45,6 +45,10 @@ sap.ui.define(["sap/ui/Device"], function (Device) {
 		oRm.attr("aria-roledescription", oDynamicPage._getAriaRoleDescription());
 		oRm.accessibilityState(oDynamicPage, oDynamicPage._formatLandmarkInfo(oLandmarkInfo, "Root"));
 		oRm.openEnd();
+		// Renders Dynamic Page Custom ScrollBar for Desktop mode
+		if (Device.system.desktop) {
+			oRm.renderControl(oDynamicPage._getScrollBar());
+		}
 
 		// Renders Dynamic Page Title.
 		oRm.openStart(sHeaderTag, oDynamicPage.getId() + "-header");
@@ -80,17 +84,9 @@ sap.ui.define(["sap/ui/Device"], function (Device) {
 			oRm.class("sapFDynamicPageContentWrapper" + oDynamicPage.getBackgroundDesign());
 		}
 		oRm.openEnd();
-
-
-		oRm.openStart("div", oDynamicPage.getId() + "-headerWrapper");
-		oRm.class("sapFDynamicPageHeaderWrapper");
-		oRm.openEnd();
 		if (!bHeaderInTitleArea) {
 			oRm.renderControl(oDynamicPageHeader);
 		}
-		oRm.close("div");
-
-
 		oRm.openStart("div", oDynamicPage.getId() + "-content");
 		oRm.class("sapFDynamicPageContent");
 		oRm.accessibilityState(oDynamicPage, oDynamicPage._formatLandmarkInfo(oLandmarkInfo, "Content"));

@@ -21,7 +21,7 @@ sap.ui.define([
 	 * The metadata information is provided via the {@link sap.ui.mdc.FilterBarDelegate FilterBarDelegate} implementation. This implementation has to be provided by the application.
 	 * @extends sap.ui.mdc.filterbar.FilterBarBase
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @experimental As of version 1.61
 	 * @private
@@ -40,6 +40,15 @@ sap.ui.define([
 				 * <b>Note</b>: If the <code>p13nMode</code> property does not contain the value <code>Item</code>, it is ignored.
 				 */
 				showAdaptFiltersButton: {
+					type: "boolean",
+					defaultValue: true
+				},
+
+				/**
+				 * Determines whether the Go button is visible in the filter bar.<br>
+				 * <b>Note</b>: If the <code>liveMode</code> property is set to <code>true</code>, it is ignored.
+				 */
+				showGoButton: {
 					type: "boolean",
 					defaultValue: true
 				},

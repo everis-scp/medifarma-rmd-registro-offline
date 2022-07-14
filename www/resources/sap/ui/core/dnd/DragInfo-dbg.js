@@ -22,7 +22,7 @@ sap.ui.define(["./DragDropBase"],
 	 * @extends sap.ui.core.dnd.DragDropBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.56
@@ -172,7 +172,7 @@ sap.ui.define(["./DragDropBase"],
 			if (oParent && oParent.bOutput == true) {
 				var sSourceAggregation = this.getSourceAggregation();
 				if (sSourceAggregation) {
-					[].concat(oParent.getAggregation(sSourceAggregation)).forEach(function(oAggregation) {
+					[].concat(this.getAggregation(sSourceAggregation)).forEach(function(oAggregation) {
 						if (oAggregation && oAggregation.bOutput == true) {
 							oAggregation.invalidate();
 						}

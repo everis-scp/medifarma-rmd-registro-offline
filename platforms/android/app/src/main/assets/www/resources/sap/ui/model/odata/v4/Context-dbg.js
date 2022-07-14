@@ -98,7 +98,7 @@ sap.ui.define([
 	 * @hideconstructor
 	 * @public
 	 * @since 1.39.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 	var Context = BaseContext.extend("sap.ui.model.odata.v4.Context", {
 			constructor : function (oModel, oBinding, sPath, iIndex, oCreatePromise, iGeneration) {
@@ -1440,8 +1440,7 @@ sap.ui.define([
 	 * @since 1.67.0
 	 */
 	Context.prototype.setProperty = function (sPath, vValue, sGroupId, bRetry) {
-		var oGroupLock = null,
-			that = this;
+		var oGroupLock = null;
 
 		this.oBinding.checkSuspended();
 		if (typeof vValue === "function" || (vValue && typeof vValue === "object")) {
@@ -1457,8 +1456,6 @@ sap.ui.define([
 				if (oGroupLock) {
 					oGroupLock.unlock(true);
 				}
-				that.oModel.reportError("Failed to update path " + that.oModel.resolve(sPath, that),
-					sClassName, oError);
 				throw oError;
 			});
 	};

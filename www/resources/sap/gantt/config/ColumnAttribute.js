@@ -4,4 +4,4 @@
 		(c) Copyright 2009-2015 SAP SE. All rights reserved
 	
  */
-sap.ui.define(['sap/ui/core/Element'],function(E){"use strict";var C=E.extend("sap.gantt.config.ColumnAttribute",{metadata:{properties:{objectTypeKey:{type:"string",defaultValue:null},attribute:{type:"string",defaultValue:null}}}});return C;},true);
+sap.ui.define(['sap/ui/core/Element'],function(E){"use strict";var C=E.extend("sap.gantt.config.ColumnAttribute",{metadata:{library:"sap.gantt",properties:{objectTypeKey:{type:"string",defaultValue:null},attribute:{type:"string",defaultValue:null}}}});return C;},true);

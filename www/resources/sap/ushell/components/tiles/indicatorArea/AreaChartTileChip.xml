@@ -3,7 +3,7 @@
 	<implementation>
 		<sapui5>
 			<basePath>../../../../../</basePath>
-            <viewName>sap.ushell.components.tiles.indicatorArea.AreaChartTile.view.js</viewName>
+			<viewName>sap.ushell.components.tiles.indicatorArea.AreaChartTile.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
@@ -19,7 +19,7 @@
 				<parameter name="cacheTimeStamp" />
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />

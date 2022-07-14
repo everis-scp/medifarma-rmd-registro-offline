@@ -19,7 +19,7 @@ sap.ui.define([
 	// delegate further initialization of this library to the Core
 	sap.ui.getCore().initLibrary({
 		name: "sap.ui.integration",
-		version: "1.96.9",
+		version: "1.93.4",
 		dependencies: ["sap.ui.core", "sap.f", "sap.m"],
 		types: [
 			"sap.ui.integration.CardActionType",
@@ -48,7 +48,7 @@ sap.ui.define([
 	 * @namespace
 	 * @alias sap.ui.integration
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.62
 	 * @public
 	 */
@@ -147,26 +147,6 @@ sap.ui.define([
 		 * @public
 		 */
 		Content: "Content"
-	};
-
-	/**
-	 * Defines the layout type of the List card attributes.
-	 * @enum {string}
-	 * @public
-	 * @since 1.96
-	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
-	 */
-	thisLib.AttributesLayoutType = {
-		/**
-		 * One column.
-		 * @public
-		 */
-		OneColumn: "OneColumn",
-		/**
-		 * Two columns.
-		 * @public
-		 */
-		TwoColumns: "TwoColumns"
 	};
 
 	/**

@@ -178,7 +178,7 @@ sap.ui.define([
 				.close("header");
 		}
 
-		if (oSubHeader && oSubHeader.getVisible()) {
+		if (oSubHeader) {
 			oSubHeader._applyContextClassFor("subheader");
 			oRM.openStart("header")
 				.class("sapMDialogSubHeader")

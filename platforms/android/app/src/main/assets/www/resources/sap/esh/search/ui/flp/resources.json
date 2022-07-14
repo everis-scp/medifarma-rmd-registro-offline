@@ -1,0 +1,32 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": "App-dbg.controller.js",
+			"size": 2237,
+			"isDebug": true
+		},
+		{
+			"name": "App-dbg.view.js",
+			"size": 567,
+			"isDebug": true
+		},
+		{
+			"name": "App.controller.js",
+			"size": 1181
+		},
+		{
+			"name": "App.view.js",
+			"size": 369
+		},
+		{
+			"name": "Component-dbg.js",
+			"size": 984,
+			"isDebug": true
+		},
+		{
+			"name": "Component.js",
+			"size": 598
+		}
+	]
+}

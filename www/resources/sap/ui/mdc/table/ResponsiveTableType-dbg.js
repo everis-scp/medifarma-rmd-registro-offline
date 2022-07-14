@@ -12,6 +12,7 @@ sap.ui.define([
 	var InnerTable, InnerColumn, InnerRow;
 	var GrowingMode = library.GrowingMode;
 	var RowAction = library.RowAction;
+
 	/**
 	 * Constructor for a new ResponsiveTableType.
 	 *
@@ -22,6 +23,7 @@ sap.ui.define([
 	 *        The control is experimental and the API/behaviour is not finalised and hence this should not be used for productive usage.
 	 * @extends sap.ui.mdc.table.TableTypeBase
 	 * @author SAP SE
+	 * @constructor The API/behaviour is not finalised and hence this control should not be used for productive usage.
 	 * @private
 	 * @experimental
 	 * @since 1.65
@@ -72,16 +74,6 @@ sap.ui.define([
 				detailsButtonSetting: {
 					type: "sap.ui.core.Priority[]",
 					group: "Behavior"
-				},
-				/**
-				 * Defines the layout in which the table pop-in rows are rendered.
-				 *
-				 * @since 1.96
-				 */
-				popinLayout: {
-					type : "sap.m.PopinLayout",
-					group : "Appearance",
-					defaultValue : "Block"
 				}
 			}
 		}
@@ -99,8 +91,6 @@ sap.ui.define([
 				oTable.setGrowing(vValue !== GrowingMode.None);
 			} else if (sProperty === "showDetailsButton") {
 				this.updateShowDetailsButton(oTable, vValue);
-			} else if (sProperty === "popinLayout") {
-				oTable.setPopinLayout(vValue);
 			}
 		}
 	};
@@ -214,13 +204,7 @@ sap.ui.define([
 	};
 
 	ResponsiveTableType.startColumnResize = function(oInnerTable, oColumn) {
-		var oColumnResizer = ColumnResizer.getPlugin(oInnerTable);
-
-		if (!oColumnResizer) {
-			return;
-		}
-
-		return oColumnResizer.getColumnResizeButton(oColumn);
+		ColumnResizer.getPlugin(oInnerTable).startResizing(oColumn.getDomRef());
 	};
 
 	/**

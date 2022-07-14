@@ -20,7 +20,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 * @abstract
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.mdc.Control
 	 *
 	 * @borrows sap.ui.mdc.mixin.DelegateMixin.awaitControlDelegate as awaitControlDelegate
@@ -37,10 +37,9 @@ sap.ui.define([
  	 * @borrows sap.ui.mdc.mixin.AdaptationMixin.getInbuiltFilter as getInbuiltFilter
 	 *
 	 * @private
+	 * @experimental
 	 * @since 1.61
-	 * @experimental As of version 1.61
-	 * @ui5-restricted sap.ui.mdc
-	 */
+	*/
 	var Control = CoreControl.extend("sap.ui.mdc.Control", /** @lends sap.ui.mdc.Control.prototype */ {
 		metadata: {
 			library: "sap.ui.mdc",

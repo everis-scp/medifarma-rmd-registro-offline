@@ -147,7 +147,7 @@ sap.ui.define([
 	ObjectPageSection.prototype._updateImportance = function (oCurrentMedia) {
 		var oObjectPage = this._getObjectPageLayout(),
 			sImportanceLevelToHide = this._getImportanceLevelToHide(oCurrentMedia),
-			oHeaderDOM = this.bOutput && this.getDomRef("header");
+			oHeaderDOM = this.bOutput && document.getElementById(this.getId() + "-header");
 
 		this.getSubSections().forEach(function (oSubSection) {
 			oSubSection._applyImportanceRules(sImportanceLevelToHide);

@@ -57,7 +57,7 @@ sap.ui.define([
 	 * @class
 	 * <code>CalendarDateInterval</code> only visualizes the dates in a one-line interval and allows the selection of a single day.
 	 * @extends sap.ui.unified.Calendar
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -265,7 +265,7 @@ sap.ui.define([
 			oCalendar.setPopupMode(true);
 			oCalendar.attachEvent("select", this._handleCalendarPickerDateSelect, this);
 			oCalendar.attachEvent("cancel", function (oEvent) {
-				this._closeCalendarPicker(true);
+				this._closeCalendarPicker();
 				var oDomRefB1 = this.getAggregation("header").getDomRef("B1");
 				if (oDomRefB1) {
 					oDomRefB1.focus();
@@ -682,11 +682,12 @@ sap.ui.define([
 	 */
 	CalendarDateInterval.prototype._focusDateExtend = function(oDate, bOtherMonth, bNoEvent) {
 		if (bOtherMonth) {
-			var oMonth = this.getAggregation("month")[0],
-				iFocusDayIndex = oMonth._oItemNavigation ? oMonth._oItemNavigation.getFocusedIndex() : 0,
+			var oOldFocusedDate = this._getFocusedDate(),
+				oOldStartDate = this._getStartDate(),
+				iDay = CalendarUtils._daysBetween(oOldFocusedDate, oOldStartDate),
 				oNewStartDate = new CalendarDate(oDate, this.getPrimaryCalendarType());
 
-			oNewStartDate.setDate(oNewStartDate.getDate() - iFocusDayIndex);
+			oNewStartDate.setDate(oNewStartDate.getDate() - iDay);
 
 			this._setStartDate(oNewStartDate, false, true);
 
@@ -696,6 +697,7 @@ sap.ui.define([
 		}
 
 		return false;
+
 	};
 
 	/**

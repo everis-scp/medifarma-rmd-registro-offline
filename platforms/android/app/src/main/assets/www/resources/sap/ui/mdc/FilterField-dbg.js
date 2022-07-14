@@ -6,13 +6,11 @@
 sap.ui.define([
 	'sap/ui/mdc/field/FieldBase',
 	'sap/ui/mdc/field/FieldBaseRenderer',
-	'sap/base/util/merge',
-	'sap/base/util/deepEqual'
+	'sap/base/util/merge'
 ], function(
 		FieldBase,
 		FieldBaseRenderer,
-		merge,
-		deepEqual
+		merge
 	) {
 	"use strict";
 
@@ -31,12 +29,12 @@ sap.ui.define([
 	 * @extends sap.ui.mdc.field.FieldBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @alias sap.ui.mdc.FilterField
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.48.0
 	 *
 	 * @experimental As of version 1.48
@@ -126,28 +124,6 @@ sap.ui.define([
 	FilterField.prototype.exit = function() {
 
 		FieldBase.prototype.exit.apply(this, arguments);
-
-	};
-
-	FilterField.prototype.setProperty = function(sPropertyName, oValue, bSuppressInvalidate) {
-
-		if (sPropertyName === "conditions" && this._bParseError && deepEqual(this.getConditions(), this.validateProperty(sPropertyName, oValue))) {
-			// in parse error and same Conditions - no update on property - so remove error here
-			// As ConditionModel triggers checkUpdate in forced mode on addCondition, setConditions... also unchanged conditions will be updated
-			// So e.g. if a variant is applied an error will be removed.
-			if (this._oContentFactory.getBoundProperty()) { // single value case
-				this._oManagedObjectModel.checkUpdate(true, true); // async. to reduce updates (additionalValue will follow)
-			} else { // Multi value case - don't update tokens, initialize value
-				var oContent = this._getContent()[0];
-				if (oContent && oContent.setValue) {
-					oContent.setValue(); // TODO: custom controls with different property?
-				}
-				this._removeUIMessage();
-			}
-			this._bParseError = false;
-		}
-
-		return FieldBase.prototype.setProperty.apply(this, arguments);
 
 	};
 

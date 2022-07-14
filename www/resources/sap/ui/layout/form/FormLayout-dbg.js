@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -901,7 +901,7 @@ sap.ui.define([
 	FormLayout.prototype.getContainerRenderedDomRef = function(oContainer) {
 
 		if (this.getDomRef()) {
-			return oContainer.getDomRef();
+			return (oContainer.getId() ? window.document.getElementById(oContainer.getId()) : null);
 		} else  {
 			return null;
 		}
@@ -918,7 +918,7 @@ sap.ui.define([
 	FormLayout.prototype.getElementRenderedDomRef = function(oElement) {
 
 		if (this.getDomRef()) {
-			return oElement.getDomRef();
+			return (oElement.getId() ? window.document.getElementById(oElement.getId()) : null);
 		} else  {
 			return null;
 		}

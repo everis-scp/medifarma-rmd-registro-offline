@@ -13,9 +13,9 @@ sap.ui.define([
 	'./UIComponentMetadata',
 	'./mvc/Controller',
 	'./mvc/View',
-	'sap/base/util/ObjectPath',
-	'sap/base/Log',
-	'sap/ui/core/Core' // to ensure correct behaviour of sap.ui.getCore()
+	"sap/base/util/ObjectPath",
+	"sap/base/Log",
+	"sap/ui/core/Core" // to ensure correct behaviour of sap.ui.getCore()
 ],
 	function(
 		ManagedObject,
@@ -54,7 +54,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Component
 	 * @abstract
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.core.UIComponent
 	 * @since 1.9.2
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
@@ -298,7 +298,7 @@ sap.ui.define([
 		}
 
 		function setRootControl(vRootControl) {
-			var fnFireInstanceInitialized = function() {
+			var fnFireInstanceCreated = function() {
 				if (typeof UIComponent._fnOnInstanceInitialized === "function") {
 					UIComponent._fnOnInstanceInitialized(that);
 				}
@@ -309,19 +309,19 @@ sap.ui.define([
 			if (vRootControl instanceof Promise) {
 				that.pRootControlLoaded = that.pRootControlLoaded.then(function(oRootControl) {
 					fnAggregateRootControl(oRootControl);
-					fnFireInstanceInitialized();
+					fnFireInstanceCreated();
 					return oRootControl;
 				});
 			} else if (vRootControl instanceof View && vRootControl.oAsyncState && vRootControl.oAsyncState.promise) {
 				fnAggregateRootControl(vRootControl);
 				that.pRootControlLoaded = that.pRootControlLoaded.then(function(oRootControl) {
 					// notify Component initialization callback handler
-					fnFireInstanceInitialized();
+					fnFireInstanceCreated();
 					return oRootControl;
 				});
 			} else {
 				fnAggregateRootControl(vRootControl);
-				fnFireInstanceInitialized();
+				fnFireInstanceCreated();
 			}
 		}
 
@@ -359,39 +359,18 @@ sap.ui.define([
 
 		// create the router for the component instance
 		if (vRoutes) {
-			var fnRouterConstructor;
-			var sRouterClassName = this._getRouterClassName();
-
-			// if a classname is configured, the Router class MUST be loaded
-			if (sRouterClassName) {
-				fnRouterConstructor = getConstructorFunctionFor(sRouterClassName);
-			} else {
-				// require default Router class
-				fnRouterConstructor = sap.ui.require("sap/ui/core/routing/Router")
-					|| sap.ui.requireSync("sap/ui/core/routing/Router"); // legacy-relevant: Sync path
-			}
+			var Router = sap.ui.requireSync("sap/ui/core/routing/Router");
+			var fnRouterConstructor = getConstructorFunctionFor(this._getRouterClassName() || Router);
 			this._oRouter = new fnRouterConstructor(vRoutes, oRoutingConfig, this, oRoutingManifestEntry.targets, this._oRouterHashChanger);
 			this._oTargets = this._oRouter.getTargets();
 			this._oViews = this._oRouter.getViews();
 		} else if (oRoutingManifestEntry.targets) {
-			// legacy-relevant: Sync path via sync component factory.
-			// For async, no sync request is triggered as the class is already loaded by the component factory.
-			var Views = sap.ui.require("sap/ui/core/routing/Views")
-				|| sap.ui.requireSync("sap/ui/core/routing/Views"); // legacy-relevant: Sync path
-
+			var Targets = sap.ui.requireSync("sap/ui/core/routing/Targets");
+			var Views = sap.ui.requireSync("sap/ui/core/routing/Views");
 			this._oViews = new Views({
 				component: this
 			});
-			var fnTargetsConstructor;
-
-			// if a targets classname is configured, the Targets class MUST be loaded
-			if (oRoutingConfig.targetsClass) {
-				fnTargetsConstructor = getConstructorFunctionFor(oRoutingConfig.targetsClass);
-			} else {
-				// For async, no sync request is triggered as the class is already loaded by the component factory.
-				fnTargetsConstructor = sap.ui.require("sap/ui/core/routing/Targets")
-					|| sap.ui.requireSync("sap/ui/core/routing/Targets"); // legacy-relevant: Sync path
-			}
+			var fnTargetsConstructor = getConstructorFunctionFor(oRoutingConfig.targetsClass || Targets);
 			this._oTargets = new fnTargetsConstructor({
 				targets: oRoutingManifestEntry.targets,
 				config: oRoutingConfig,
@@ -665,7 +644,7 @@ sap.ui.define([
 	 *
 	 * A <code>sap.ui.core.UIComponent</code> subclass can additionally implement the {@link sap.ui.core.IAsyncContentCreation} interface.
 	 * When implementing this interface the loading and processing of an asynchronous <code>rootView</code> will be chained into
-	 * the result Promise of the {@link sap.ui.core.Component.create Component.create} factory. An additional async flag can be omitted.
+	 * the result Promise of the {@link sap.ui.core.Component.create Component.create} factory.
 	 * See Sample 1 below.
 	 *
 	 * Samples 2 and 3 show how subclasses can overwrite the <code>createContent</code> function
@@ -680,7 +659,8 @@ sap.ui.define([
 	 *             rootView: {
 	 *                 viewName: "my.sample.views.Main",
 	 *                 type: "XML",
-	 *                 id: "sampleMainView"
+	 *                 id: "sampleMainView",
+	 *                 async: true
 	 *             },
 	 *             interfaces: ["sap.ui.core.IAsyncContentCreation"]
 	 *         }
@@ -735,12 +715,6 @@ sap.ui.define([
 				type: ViewType.XML
 			});
 		} else if (oRootView && typeof oRootView === "object") {
-
-			// default ViewType to XML, except for typed views
-			if (!oRootView.type && !View._getModuleName(oRootView)) {
-				oRootView.type = ViewType.XML;
-			}
-
 			// make sure to prefix the ID of the rootView
 			if (oRootView.id) {
 				oRootView.id = this.createId(oRootView.id);

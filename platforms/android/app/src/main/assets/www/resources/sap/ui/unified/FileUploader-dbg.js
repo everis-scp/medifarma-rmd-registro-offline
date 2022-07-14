@@ -63,7 +63,7 @@ sap.ui.define([
 	 * @implements sap.ui.core.IFormContent, sap.ui.unified.IProcessableBlobs
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -851,7 +851,7 @@ sap.ui.define([
 	 * what's visible on the screen.
 	 */
 	FileUploader.prototype._updateAccDescription = function () {
-		var oAccDescriptionHolder = this.getDomRef("AccDescr"),
+		var oAccDescriptionHolder = document.getElementById(this.getId() + "-AccDescr"),
 			sNewDescription = this._generateAccDescriptionText();
 
 		if (oAccDescriptionHolder) {
@@ -893,17 +893,8 @@ sap.ui.define([
 			sap.ui.getCore().getStaticAreaRef().removeChild(this.oIFrameRef);
 			this.oIFrameRef = null;
 		}
-
 		if (this.oFileUpload) {
 			this._clearInputField();
-		}
-
-		if (this.FUEl) {
-			this.FUEl = null;
-		}
-
-		if (this.FUDataEl) {
-			this.FUDataEl = null;
 		}
 	};
 
@@ -1498,7 +1489,7 @@ sap.ui.define([
 			if (this.oFileUpload) {
 				this.setValue("", true);
 			}
-		} else if (iKeyCode === eKC.SPACE) {
+		} else if (iKeyCode == eKC.SPACE || iKeyCode == eKC.ENTER) {
 			this.oFileUpload.click();
 			oEvent.preventDefault();
 			oEvent.stopPropagation();
@@ -2028,7 +2019,7 @@ sap.ui.define([
 		if (this.oBrowse &&  this.oBrowse.$().length) {
 			$browse = this.oBrowse.$();
 			$browse.attr("type', 'button"); // The default type of button is submit that's why on click of label there are submit of the form. This way we are avoiding the submit of form.
-			$browse.off("click").on("click", function(e) {
+			$browse.on("click", function(e) {
 				e.preventDefault();
 				this.FUEl.click(); // The default behaviour on click on label is to open "open file" dialog. The only way to attach click event that is transferred from the label to the button is this way. AttachPress and attachTap don't work in this case.
 			}.bind(this));

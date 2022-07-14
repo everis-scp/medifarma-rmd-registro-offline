@@ -90,7 +90,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -1193,9 +1193,8 @@ sap.ui.define([
 	 * @private
 	 */
 	DynamicPageTitle.prototype._focusExpandButton = function () {
-		var sTextToAnnounce = this._getExpandButton().getTooltip() + " " +  this._oRB.getText("SNAPPED_HEADER");
 		this._getExpandButton().$().trigger("focus");
-		this._oInvisibleMessage.announce(sTextToAnnounce, InvisibleMessageMode.Polite);
+		this._oInvisibleMessage.announce(this._getExpandButton().getTooltip(), InvisibleMessageMode.Polite);
 	};
 
 	/**

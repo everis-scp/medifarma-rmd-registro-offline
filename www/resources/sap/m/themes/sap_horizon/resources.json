@@ -122,7 +122,7 @@
 		},
 		{
 			"name": "GenericTile.less",
-			"size": 9266,
+			"size": 8968,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -158,7 +158,7 @@
 		},
 		{
 			"name": "InputBase.less",
-			"size": 7053,
+			"size": 7054,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -200,7 +200,7 @@
 		},
 		{
 			"name": "MessageBox.less",
-			"size": 1015,
+			"size": 699,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -224,7 +224,7 @@
 		},
 		{
 			"name": "MultiComboBox.less",
-			"size": 1407,
+			"size": 919,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -236,7 +236,7 @@
 		},
 		{
 			"name": "NewsContent.less",
-			"size": 885,
+			"size": 1098,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -266,7 +266,7 @@
 		},
 		{
 			"name": "ObjectNumber.less",
-			"size": 2102,
+			"size": 432,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -308,7 +308,7 @@
 		},
 		{
 			"name": "Popover.less",
-			"size": 2252,
+			"size": 2251,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -344,13 +344,13 @@
 		},
 		{
 			"name": "RangeSlider.less",
-			"size": 2264,
+			"size": 2263,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "RatingIndicator.less",
-			"size": 1002,
+			"size": 1023,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -374,7 +374,7 @@
 		},
 		{
 			"name": "SegmentedButton.less",
-			"size": 6089,
+			"size": 6091,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -428,7 +428,7 @@
 		},
 		{
 			"name": "SliderTooltip.less",
-			"size": 891,
+			"size": 779,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -506,7 +506,7 @@
 		},
 		{
 			"name": "TileContent.less",
-			"size": 505,
+			"size": 682,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -584,7 +584,7 @@
 		},
 		{
 			"name": "WizardProgressNavigator.less",
-			"size": 3041,
+			"size": 3223,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -596,39 +596,39 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 49355,
+			"size": 48155,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "css_variables.less",
-			"size": 155406,
+			"size": 154962,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 155044,
+			"size": 154600,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 759889,
+			"size": 738990,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 20463,
+			"size": 19923,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library.css",
-			"size": 759814,
+			"size": 738923,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library.less",
-			"size": 204106,
+			"size": 201816,
 			"designtime": true,
 			"theme": "sap_horizon"
 		},
@@ -640,12 +640,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 810206,
+			"size": 790066,
 			"theme": "sap_horizon"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 810131,
+			"size": 789999,
 			"theme": "sap_horizon"
 		}
 	]

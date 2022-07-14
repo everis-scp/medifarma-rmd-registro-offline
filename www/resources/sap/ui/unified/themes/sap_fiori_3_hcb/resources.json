@@ -78,7 +78,7 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 171290,
+			"size": 169331,
 			"theme": "sap_fiori_3_hcb"
 		},
 		{
@@ -88,7 +88,7 @@
 		},
 		{
 			"name": "library.css",
-			"size": 171157,
+			"size": 169198,
 			"theme": "sap_fiori_3_hcb"
 		},
 		{
@@ -105,12 +105,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 182649,
+			"size": 180693,
 			"theme": "sap_fiori_3_hcb"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 182516,
+			"size": 180560,
 			"theme": "sap_fiori_3_hcb"
 		}
 	]

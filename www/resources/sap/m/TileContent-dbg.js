@@ -4,11 +4,9 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define(['./library', 'sap/ui/core/library', 'sap/ui/core/Control', './TileContentRenderer'],
-	function(library, Core, Control, TileContentRenderer) {
+sap.ui.define(['./library', 'sap/ui/core/Control', './TileContentRenderer'],
+	function(library, Control, TileContentRenderer) {
 	"use strict";
-
-	var Priority = Core.Priority;
 
 	/**
 	 * Constructor for a new sap.m.TileContent control.
@@ -20,7 +18,7 @@ sap.ui.define(['./library', 'sap/ui/core/library', 'sap/ui/core/Control', './Til
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.34.0
 	 *
 	 * @public
@@ -56,12 +54,7 @@ sap.ui.define(['./library', 'sap/ui/core/library', 'sap/ui/core/Control', './Til
 				/**
 				 * Frame types: 1x1, 2x1, and auto.
 				 */
-				"frameType" : {type : "sap.m.FrameType", group : "Appearance", defaultValue : "Auto"},
-				/**
-				 * Adds a priority badge before the content. Works only in Generic Tile ActionMode.
-				 * @experimental Since 1.96
-				 */
-				"priority" : {type: "sap.ui.core.Priority", group: "Misc", defaultValue: Priority.None}
+				"frameType" : {type : "sap.m.FrameType", group : "Appearance", defaultValue : "Auto"}
 			},
 			defaultAggregation : "content",
 			aggregations : {
@@ -234,17 +227,6 @@ sap.ui.define(['./library', 'sap/ui/core/library', 'sap/ui/core/Control', './Til
 	TileContent.prototype.setRenderContent = function(value) {
 		this._bRenderContent = value;
 		return this;
-	};
-
-	/**
-	 * Returns priority text from resource bundle
-	 * @param {string} sPriority The priority value
-	 * @returns {string} The priority text
-	 * @private
-	 */
-	TileContent.prototype._getPriorityText = function(sPriority) {
-		var oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
-		return oResourceBundle.getText('ACTION_PRIORITY_' + sPriority.toUpperCase());
 	};
 
 	return TileContent;

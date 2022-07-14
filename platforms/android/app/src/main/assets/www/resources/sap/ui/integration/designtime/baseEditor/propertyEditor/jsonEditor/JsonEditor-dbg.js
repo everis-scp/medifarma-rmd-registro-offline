@@ -24,7 +24,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.jsonEditor.JsonEditor
 	 * @author SAP SE
 	 * @since 1.72
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.72
@@ -40,7 +40,6 @@ sap.ui.define([
 			var oInput = this.getContent();
 			var oJsonValue = this._parseJson(oInput.getValue());
 			if (oJsonValue instanceof Error) {
-				this.setHasOwnError(true);
 				oInput.setValueState("Error");
 				oInput.setValueStateText("Error: " + oJsonValue);
 			} else {
@@ -141,15 +140,7 @@ sap.ui.define([
 		renderer: BasePropertyEditor.getMetadata().getRenderer().render
 	});
 
-	JsonEditor.configMetadata = Object.assign(
-		{},
-		BasePropertyEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.JSON"
-			}
-		}
-	);
+	JsonEditor.configMetadata = Object.assign({}, BasePropertyEditor.configMetadata);
 
 	return JsonEditor;
 });

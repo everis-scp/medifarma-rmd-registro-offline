@@ -3,53 +3,79 @@
 	"resources": [
 		{
 			"name": ".theming",
+			"size": 64,
 			"theme": "base"
 		},
 		{
 			"name": "Gantt.less",
+			"size": 14936,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "GanttPrinting.less",
+			"size": 1699,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "GanttSyncedControl.less",
+			"size": 1910,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
-			"name": "library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "css_variables.css",
+			"size": 1079,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 234,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 92414,
+			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library-RTL.css",
-			"theme": "base"
-		},
-		{
-			"name": "library-dbg.css",
-			"isDebug": true,
+			"size": 14351,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
+			"size": 398,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
+			"size": 14343,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
+			"size": 19166,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library.source.less",
+			"size": 327,
 			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 15603,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 15595,
 			"theme": "base"
 		}
 	]

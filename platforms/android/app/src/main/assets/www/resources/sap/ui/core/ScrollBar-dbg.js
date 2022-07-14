@@ -44,7 +44,7 @@ sap.ui.define([
 	 * The ScrollBar control can be used for virtual scrolling of a certain area.
 	 * This means: to simulate a very large scrollable area when technically the area is small and the control takes care of displaying the respective part only. E.g. a Table control can take care of only rendering the currently visible rows and use this ScrollBar control to make the user think he actually scrolls through a long list.
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @deprecated as of version 1.56
@@ -148,7 +148,7 @@ sap.ui.define([
 		this._iMaxContentDivSize = 1000000;  // small value that all browsers still can render without any problems
 
 		if (EventSimulation.touchEventMode === "ON") {
-			sap.ui.requireSync("sap/ui/thirdparty/zyngascroll"); // legacy-relevant: sap.ui.core.ScrollBar is deprecated
+			sap.ui.requireSync("sap/ui/thirdparty/zyngascroll");
 
 			// Remember last touch scroller position to prevent unneeded rendering
 			this._iLastTouchScrollerPosition = null;

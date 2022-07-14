@@ -146,11 +146,14 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Config.
  */
 sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime.support',[
 	"sap/ui/support/library",
-	"sap/base/Log",
-	"sap/base/util/now"
-], function(SupportLib, Log, now) {
+	"sap/suite/ui/generic/template/genericUtilities/FeLogger",
+	"sap/base/util/now",
+	"sap/suite/ui/generic/template/genericUtilities/polyFill"
+
+], function(SupportLib, FeLogger, now) {
 	"use strict";
 
+	var oLogger = new FeLogger("support.SupportAssistant.Runtime").getLogger();
 	// shortcuts
 	var Categories = SupportLib.Categories; // Accessibility, Performance, Memory, ...
 	var Severity = SupportLib.Severity; // Hint, Warning, Error
@@ -213,20 +216,25 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime
 					mElemIds = mElements.map(function (element) {
 						return element.getId();
 					}),
-					$busy = jQuery(".sapUiLocalBusy"); // Set by sap.me.BusyIndicator
+					oBusy = document.querySelectorAll(".sapUiLocalBusy"); // Set by sap.me.BusyIndicator
 
-				$busy.each(function() {
-					var $item = jQuery(this),
-						sId = $item.attr("id"),
-						oElement = sap.ui.getCore().byId(sId),
+				oBusy.forEach(function(item) {
+						var sId = item.getAttribute("id");
+						var oElement = sap.ui.getCore().byId(sId),
 						sElementId;
-
+					// Element.closest is not supported by IE11 so we are injecting polyFill as dependency
 					if (!oElement) {
-						oElement = $item.control(0); // Maybe parent control
+						var domElement = item.closest("[data-sap-ui]"); // Maybe parent control
+						var domElementId;
+						if (domElement) {
+							domElementId = domElement.id;
+							oElement = sap.ui.getCore().byId(domElementId);
+						}
+
 					}
 					sElementId = (oElement) ? oElement.getId() : "";
 
-					if (jQuery.inArray(sElementId, mElemIds) > -1) { // Only if in scope
+					if (mElemIds.indexOf(sElementId) > -1) { // Only if in scope
 						// Special handling for Fiori loading dialog busy indicator which is always in state busy
 						if (sElementId !== "fiori2LoadingDialogBusyIndicator" || sap.ui.getCore().byId("Fiori2LoadingDialog").isOpen()) {
 							if (!mIssueLogged[sId]) {
@@ -240,7 +248,7 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime
 					}
 				});
 
-				if (jQuery("body").attr("aria-busy")) { // Set by sap.ui.core.BusyIndicator
+				if (document.querySelector("body").getAttribute("aria-busy")) { // Set by sap.ui.core.BusyIndicator
 					mIssueList.push({
 						timestamp: now(),
 						id: "WEBPAGE",
@@ -256,7 +264,7 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime
 
 					switch (oIssue.busyType) {
 						case "checkBusyLocal":
-							if (jQuery(document.getElementById(sId)).hasClass("sapUiLocalBusy")) { // Use ID where the class was found
+							if (document.getElementById(sId).classList.contains("sapUiLocalBusy")) { // Use ID where the class was found
 								// Special handling for Fiori loading dialog busy indicator which is always in state busy
 								if (sId !== "fiori2LoadingDialogBusyIndicator" || sap.ui.getCore().byId("Fiori2LoadingDialog").isOpen()) {
 									oIssueManager.addIssue({
@@ -271,7 +279,7 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime
 							}
 							break;
 						case "checkBusyGlobal":
-							if (jQuery("body").attr("aria-busy")) {
+							if (document.querySelector("body").getAttribute("aria-busy")) {
 								oIssueManager.addIssue({
 									severity: Severity.Low,
 									details: "There is a global busy indicator for at least "
@@ -283,7 +291,7 @@ sap.ui.predefine('sap/suite/ui/generic/template/support/SupportAssistant/Runtime
 							}
 							break;
 						default:
-							Log.warning("Unknown busy type: " + oIssue.busyType);
+							oLogger.warning("Unknown busy type: " + oIssue.busyType);
 							break;
 					}
 				});

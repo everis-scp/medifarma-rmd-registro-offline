@@ -20,7 +20,7 @@ sap.ui.define([
 	 *
 	 * @alias sap.m.changeHandler.SplitMenuButton
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @experimental Since 1.48
 	 */
 	var SplitMenuButton = {};
@@ -121,7 +121,9 @@ sap.ui.define([
 							oModifier.bindProperty(oButton, "icon", sModelName + ">/icon");
 							oModifier.bindProperty(oButton, "enabled", sModelName + ">/enabled");
 							oModifier.bindProperty(oButton, "visible", sModelName + ">/visible");
-							return oModifier.createControl(
+							return oModifier.bindAggregation(oButton, "customData", {
+								path: sModelName + ">/customData",
+								template: oModifier.createControl(
 									"sap.ui.core.CustomData",
 									oAppComponent,
 									oView,
@@ -136,12 +138,7 @@ sap.ui.define([
 											path: sModelName + ">value"
 										}
 									}
-								);
-						})
-						.then(function(oTemplate){
-							return oModifier.bindAggregation(oButton, "customData", {
-								path: sModelName + ">/customData",
-								template: oTemplate,
+								),
 								templateShareable: false
 							});
 						})
@@ -152,8 +149,7 @@ sap.ui.define([
 								"sap.m.changeHandler.SplitMenuButton.pressHandler",
 								{
 									selector: oModifier.getSelector(oMenuItem, oAppComponent),
-									appComponentId: oAppComponent.getId(),
-									menu: oMenu
+									appComponentId: oAppComponent.getId()
 								}
 							);
 						})
@@ -257,8 +253,6 @@ sap.ui.define([
 	SplitMenuButton.pressHandler = function (oEvent, mParameters) {
 		var oMenuItem = JsControlTreeModifier.bySelector(mParameters.selector, Component.get(mParameters.appComponentId));
 		oMenuItem.firePress();
-
-		mParameters.menu.fireItemSelected({ item: oMenuItem });
 	};
 
 	return SplitMenuButton;

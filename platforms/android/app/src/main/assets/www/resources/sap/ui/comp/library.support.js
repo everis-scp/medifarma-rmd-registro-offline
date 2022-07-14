@@ -1,18 +1,27 @@
 /*!
  * SAPUI5
 
-		(c) Copyright 2009-2019 SAP SE. All rights reserved
+		(c) Copyright 2009-2021 SAP SE. All rights reserved
 	
  */
 /**
- * Adds support rules of the sap.m library to the support infrastructure.
+ * Adds support rules of the sap.ui.comp library to the support infrastructure.
  */
 sap.ui.define([
-	"./rules/SmartForm.support",
-	"./rules/SmartLink.support",
-	"./rules/SmartFilterBar.support",
-	"./rules/SmartTable.support"
-], function(SmartFormSupport, SmartLinkSupport, SmartFilterBarSupport, SmartTableSupport) {
+	'./rules/SmartForm.support',
+	'./rules/SmartLink.support',
+	'./rules/SmartFilterBar.support',
+	"./rules/SmartField.support",
+	"./rules/SmartTable.support",
+	"./rules/SmartChart.support"
+], function(
+		SmartFormSupport,
+		SmartLinkSupport,
+		SmartFilterBarSupport,
+		SmartFieldSupport,
+		SmartTableSupport,
+		SmartChartSupport
+) {
 	"use strict";
 
 	return {
@@ -22,7 +31,9 @@ sap.ui.define([
 			SmartFormSupport,
 			SmartLinkSupport,
 			SmartFilterBarSupport,
-			SmartTableSupport
+			SmartFieldSupport,
+			SmartTableSupport,
+			SmartChartSupport
 		]
 	};
 

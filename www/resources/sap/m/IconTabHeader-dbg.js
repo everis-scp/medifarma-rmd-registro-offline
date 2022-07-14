@@ -77,7 +77,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -220,13 +220,7 @@ sap.ui.define([
 					 * The key of the selected item
 					 * @since 1.15.0
 					 */
-					key : {type : "string"},
-
-					/**
-					 * The key of the previous selected item
-					 * @since 1.96
-					 */
-					previousKey : {type : "string"}
+					key : {type : "string"}
 				}
 			}
 		}
@@ -529,7 +523,6 @@ sap.ui.define([
 
 		var oParent = this.getParent();
 		var bIsParentIconTabBar = this._isInsideIconTabBar();
-		var sPrevKey = this.getSelectedKey();
 
 		//if the old selected tab and the new selected tab both have no own content, which means they both use the same content from the icontabbar
 		//there is no need to rerender the content
@@ -602,8 +595,7 @@ sap.ui.define([
 					selectedItem: this.oSelectedItem,
 					selectedKey: sSelectedKey,
 					item: this.oSelectedItem,
-					key: sSelectedKey,
-					previousKey: sPrevKey
+					key: sSelectedKey
 				});
 			} else {
 				// fire event on header
@@ -611,8 +603,7 @@ sap.ui.define([
 					selectedItem: this.oSelectedItem,
 					selectedKey: sSelectedKey,
 					item: this.oSelectedItem,
-					key: sSelectedKey,
-					previousKey: sPrevKey
+					key: sSelectedKey
 				});
 			}
 		}
@@ -1052,9 +1043,6 @@ sap.ui.define([
 
 		oOverflow.$().addClass("sapMITHOverflowVisible");
 		this.$().addClass("sapMITHEndOverflowList");
-
-		// width has changed after the overflow became visible
-		iTabStripWidth = oTabStrip.offsetWidth;
 
 		// has "end", but no "start" overflow
 		if (!bHasStartOverflow) {

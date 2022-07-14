@@ -65,7 +65,7 @@ sap.ui.define([
 	 * @extends sap.m.ListBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -500,12 +500,6 @@ sap.ui.define([
 			this._clearAllButton.destroy();
 			this._clearAllButton = null;
 		}
-		if (this._aPopinHeaders) {
-			this._aPopinHeaders.forEach(function(oPopinHeader) {
-				oPopinHeader.destroy();
-			});
-			this._aPopinHeaders = null;
-		}
 	};
 
 	Table.prototype.destroyItems = function() {
@@ -767,7 +761,6 @@ sap.ui.define([
 				$firstVisibleCol.width("");	// cover the space
 			}
 		} else {
-			$firstVisibleCol.removeClass("sapMTableLastColumn");
 			// set original width of columns
 			aVisibleColumns.each(function() {
 				this.style.width = this.getAttribute("data-sap-width") || "";
@@ -856,7 +849,9 @@ sap.ui.define([
 		}
 
 		// prevent disabling of internal controls by the sap.ui.core.EnabledPropagator
-		this._selectAllCheckBox.useEnabledPropagator(false);
+		this._selectAllCheckBox.getEnabled = function() {
+			return this._selectAllCheckBox.getProperty("enabled");
+		}.bind(this);
 
 		return this._selectAllCheckBox;
 	};

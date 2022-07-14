@@ -4,9 +4,9 @@
         2009-2014 SAP SE. All rights reserved
     
  */
-sap.ui.predefine('sap/ca/scfld/md/library',["sap/ui/core/Core","sap/ui/core/library","sap/m/library","sap/ca/ui/library"],function(){sap.ui.getCore().initLibrary({name:"sap.ca.scfld.md",dependencies:["sap.ui.core","sap.m","sap.ca.ui"],types:[],interfaces:[],controls:[],elements:[],noLibraryCSS:true,version:"1.71.0"});return sap.ca.scfld.md;});
+sap.ui.predefine('sap/ca/scfld/md/library',["sap/ui/core/Core","sap/ui/core/library","sap/m/library","sap/ca/ui/library"],function(){sap.ui.getCore().initLibrary({name:"sap.ca.scfld.md",dependencies:["sap.ui.core","sap.m","sap.ca.ui"],types:[],interfaces:[],controls:[],elements:[],noLibraryCSS:true,version:"1.93.1"});return sap.ca.scfld.md;});
 sap.ui.require.preload({
-	"sap/ca/scfld/md/manifest.json":'{"_version":"1.9.0","sap.app":{"id":"sap.ca.scfld.md","type":"library","embeds":[],"applicationVersion":{"version":"1.71.0"},"title":"SAP UI library: Scaffolding for Master Detail applications","description":"SAP UI library: Scaffolding for Master Detail applications","resources":"resources.json","offline":true},"sap.ui":{"technology":"UI5","supportedThemes":[]},"sap.ui5":{"dependencies":{"minUI5Version":"1.71","libs":{"sap.ui.core":{"minVersion":"1.71.0"},"sap.m":{"minVersion":"1.71.0"},"sap.ca.ui":{"minVersion":"1.71.0"}}},"library":{"i18n":false,"css":false,"content":{"controls":[],"elements":[],"types":[],"interfaces":[]}}}}'
+	"sap/ca/scfld/md/manifest.json":'{"_version":"1.21.0","sap.app":{"id":"sap.ca.scfld.md","type":"library","embeds":[],"applicationVersion":{"version":"1.93.1"},"title":"SAP UI library: Scaffolding for Master Detail applications","description":"SAP UI library: Scaffolding for Master Detail applications","resources":"resources.json","offline":true},"sap.ui":{"technology":"UI5","supportedThemes":[]},"sap.ui5":{"dependencies":{"minUI5Version":"1.93","libs":{"sap.ui.core":{"minVersion":"1.93.2"},"sap.m":{"minVersion":"1.93.2"},"sap.ca.ui":{"minVersion":"1.93.1"}}},"library":{"i18n":false,"css":false,"content":{"controls":[],"elements":[],"types":[],"interfaces":[]}}}}'
 },"sap/ca/scfld/md/library-h2-preload"
 );
 sap.ui.loader.config({depCacheUI5:{

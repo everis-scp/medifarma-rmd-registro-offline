@@ -4,9 +4,9 @@
 	xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:build="sap.build">
 
 	<IconTabBar class="sapUiResponsiveContentPadding" id="{:= ${parameter>/stableId}.getStableId({type: 'QuickVariantSelectionX', subType: 'IconTabBar'})}"
-		 expandable="false" stretchContentHeight="true" headerMode="Inline" selectedKey="{_templPriv>/listReport/multipleViews/selectedKey}">
+		 expandable="false" headerMode="Inline" stretchContentHeight="{= (${parameter>/templateSpecific/isResponsiveTable} ? false : true) }" selectedKey="{_templPriv>/listReport/multipleViews/selectedKey}">
 		<items>
-			<template:repeat list="{parameter>/settings/quickVariantSelectionX/variants}" var="tabItem">
+			<template:repeat list="{parameter>/templateSpecific/quickVariantSelectionX/variants}" var="tabItem">
 				<IconTabFilter id="{:= ${parameter>/stableId}.getStableId({type: 'QuickVariantSelectionX', subType: 'IconTabFilter', sQuickVariantKey: ${tabItem>key}})}"
 							   key="{path: 'tabItem>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getIconTabFilterKey'}"
 							   text="{parts: [{path: 'parameter>/settings/quickVariantSelectionX'}, {path: 'tabItem>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelperMultipleViews.getTextForItem'}">
@@ -16,15 +16,15 @@
 		<content>
 			<MessageStrip
 				id="listReportFilterMessage"
-				text="{_templPriv>/listReport/multipleViews/finalMessage}"
+				text="{parts:[{path: '_templPriv>/listReport/multipleViews/implementingHelper/ignoredFilters'}, {path: '_templPriv>/listReport/multipleViews/selectedKey'}],
+				formatter: '._templateFormatters.formatMessageStrip'}"
 				type="Information" showIcon="true" showCloseButton="true" class="sapUiSmallMargin"
-				visible="{_templPriv>/listReport/multipleViews/msgVisibility}"
-				close="._templateEventHandlers.onMessageCloseActionPress">
+				visible="{= ${_templPriv>/listReport/multipleViews/implementingHelper/ignoredFilters}.length > 0}">
 			</MessageStrip>
-			<template:repeat list="{parameter>/settings/quickVariantSelectionX/variants}" var="tabItem">
+			<template:repeat list="{parameter>/templateSpecific/quickVariantSelectionX/variants}" var="tabItem">
 				<template:with path="tabItem>" helper="sap.suite.ui.generic.template.ListReport.AnnotationHelper.getEntityType" var="entityType">
 					<template:with path="tabItem>" helper="sap.suite.ui.generic.template.ListReport.AnnotationHelper.getEntitySet" var="entitySet">
-						<template:if test="{parts:[{path: 'entityType>'}, {path: 'tabItem>'}],  formatter: 'sap.suite.ui.generic.template.ListReport.AnnotationHelper.checkIfSmartChart'}">
+						<template:if test="{tabItem>isSmartChart}">
 							<template:then>
 								<template:with path="tabItem>" helper="sap.suite.ui.generic.template.ListReport.AnnotationHelper.getChartAnnotationPath" var="chartAnnotationPath">
 									<template:with path="entitySet>dummy" var="facet">
@@ -34,7 +34,12 @@
 							</template:then>
 						<template:else>
 							<template:with path="tabItem>" helper="sap.suite.ui.generic.template.ListReport.AnnotationHelper.getTableAnnotationPath" var="tableAnnotationPath">
-								<core:Fragment fragmentName="sap.suite.ui.generic.template.ListReport.view.fragments.SmartTable" type="XML" />
+							    <template:with path="tabItem>tableSettings" var="tableSettings">
+									<core:Fragment fragmentName="sap.suite.ui.generic.template.ListReport.view.fragments.SmartTableOrList" type="XML" />
+									<template:with path="tableSettings>createWithParameterDialog" var="createWithParameterDialog">
+										<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.CreateWithDialog" type="XML"/>
+									</template:with>
+								</template:with>
 							</template:with>
 						</template:else>
 						</template:if>

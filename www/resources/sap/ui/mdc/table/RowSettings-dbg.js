@@ -19,7 +19,7 @@ sap.ui.define([
 	 * The <code>RowSettings</code> control allows you to configure a row.
 	 * You can only use this control in the context of the <code>sap.ui.mdc.Table</code> control to define row settings.
 	 * @extends sap.ui.core.Element
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private

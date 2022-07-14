@@ -1,25 +1,30 @@
 {
-    "_version": "1.1.0",
+    "_version": "1.21.0",
     "sap.flp": {
         "type": "tile",
-        "tileSize": "1x1"
+        "tileSize": "1x1",
+        "vizOptions": {
+            "displayFormats": {
+                "supported": ["tile", "link", "flat", "flatWide"],
+                "default": "tile"
+            }
+        }
     },
     "sap.app": {
         "id": "sap.ushell.components.tiles.cdm.applauncher",
-        "_version": "1.0.0",
         "type": "component",
         "applicationVersion": {
             "version": "1.0.0"
         },
-        "title": "{{title}}",
-        "description": "",
+        "title": "",
         "tags": {
             "keywords": []
         },
-        "ach": "CA-FE-FLP-EU"
+        "ach": "CA-FE-FLP-COR"
     },
     "sap.ui": {
         "_version": "1.1.0",
+        "technology": "UI5",
         "icons": {
             "icon": ""
         },
@@ -43,16 +48,14 @@
                 "sap.m": {}
             }
         },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/i18n.properties"
-            }
-        },
         "rootView": {
             "viewName": "sap.ushell.components.tiles.cdm.applauncher.StaticTile",
-            "type": "JS"
+            "type": "XML"
         },
-        "handleValidation": false
+        "handleValidation": false,
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        }
     }
 }

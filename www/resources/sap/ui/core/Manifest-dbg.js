@@ -137,7 +137,7 @@ sap.ui.define([
 	 * @class The Manifest class.
 	 * @extends sap.ui.base.Object
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.core.Manifest
 	 * @since 1.33.0
 	 */
@@ -410,8 +410,7 @@ sap.ui.define([
 
 			var sComponentName = this.getComponentName();
 
-			// [Deprecated since 1.94]: Load JS files.
-			//                          Standard dependencies should be used instead.
+			// load JS files
 			var aJSResources = mResources["js"];
 			if (aJSResources) {
 				var requireAsync = function (sModule) {
@@ -438,7 +437,7 @@ sap.ui.define([
 							if (bAsync) {
 								oPromise = oPromise.then(requireAsync(sJsUrl));
 							} else {
-								sap.ui.requireSync(sJsUrl); // legacy-relevant: Sync path
+								sap.ui.requireSync(sJsUrl);
 							}
 						}
 					}
@@ -687,8 +686,19 @@ sap.ui.define([
 		 */
 		init: function(oInstance) {
 			if (this._iInstanceCount === 0) {
+
 				this.loadDependenciesAndIncludes();
+
+				// activate the static customizing
+				this.activateCustomizing();
+
 			}
+
+			// activate the instance customizing
+			if (oInstance) {
+				this.activateCustomizing(oInstance);
+			}
+
 			this._iInstanceCount++;
 		},
 
@@ -740,7 +750,16 @@ sap.ui.define([
 			// ensure that the instance count is never negative
 			var iInstanceCount = Math.max(this._iInstanceCount - 1, 0);
 
+			// deactivate the instance customizing
+			if (oInstance) {
+				this.deactivateCustomizing(oInstance);
+			}
+
 			if (iInstanceCount === 0) {
+
+				// deactivcate the customizing
+				this.deactivateCustomizing();
+
 				// remove the custom scripts and CSS files
 				this.removeIncludes();
 
@@ -749,6 +768,44 @@ sap.ui.define([
 
 			this._iInstanceCount = iInstanceCount;
 
+		},
+
+		/**
+		 * Activates the customizing for the component or a dedicated component
+		 * instance when providing the component instance as parameter.
+		 * @param {sap.ui.core.Component} [oInstance] Reference to the Component instance
+		 * @private
+		 */
+		activateCustomizing: function(oInstance) {
+			// activate the customizing configuration
+			var oUI5Manifest = this.getEntry("sap.ui5", true),
+				mExtensions = oUI5Manifest && oUI5Manifest["extends"] && oUI5Manifest["extends"].extensions;
+			if (!isEmptyObject(mExtensions)) {
+				var CustomizingConfiguration = sap.ui.requireSync('sap/ui/core/CustomizingConfiguration');
+				if (!oInstance) {
+					CustomizingConfiguration.activateForComponent(this.getComponentName());
+				} else {
+					CustomizingConfiguration.activateForComponentInstance(oInstance);
+				}
+			}
+		},
+
+		/**
+		 * Deactivates the customizing for the component or a dedicated component
+		 * instance when providing the component instance as parameter.
+		 * @param {sap.ui.core.Component} [oInstance] Reference to the Component instance
+		 * @private
+		 */
+		deactivateCustomizing: function(oInstance) {
+			// deactivate the customizing configuration
+			var CustomizingConfiguration = sap.ui.require('sap/ui/core/CustomizingConfiguration');
+			if (CustomizingConfiguration) {
+				if (!oInstance) {
+					CustomizingConfiguration.deactivateForComponent(this.getComponentName());
+				} else {
+					CustomizingConfiguration.deactivateForComponentInstance(oInstance);
+				}
+			}
 		}
 
 	});

@@ -140,22 +140,14 @@ sap.ui.define([
 	ContentFactory.prototype.getContentMode = function(oContentType, sEditMode, iMaxConditions, bMultipleLines, aOperators) {
 		var sContentMode = ContentMode.Edit;
 		if (sEditMode === EditMode.Display) {
-			if (iMaxConditions !== 1) {
-				sContentMode = ContentMode.DisplayMultiValue;
-			} else if (bMultipleLines) {
-				sContentMode = ContentMode.DisplayMultiLine;
-			} else {
-				sContentMode = ContentMode.Display;
-			}
+			sContentMode = bMultipleLines ? ContentMode.DisplayMultiLine : ContentMode.Display;
 		} else if (iMaxConditions !== 1) {
-			sContentMode = ContentMode.EditMultiValue;
+			sContentMode = ContentMode.EditMulti;
 		} else if (bMultipleLines) {
 			sContentMode = ContentMode.EditMultiLine;
 		} else if (aOperators.length === 1 && oContentType.getEditOperator() && oContentType.getEditOperator()[aOperators[0]]) {
 			this._sOperator = aOperators[0];
 			sContentMode = ContentMode.EditOperator;
-		} else if (this.getField().getFieldHelp()) { // if FieldHelp assigned use control supporting help
-			sContentMode = ContentMode.EditForHelp;
 		}
 		return sContentMode;
 	};
@@ -271,8 +263,8 @@ sap.ui.define([
 		return this._bHideOperator;
 	};
 
-	ContentFactory.prototype.getConditionType = function(bSkipConditionTypeGeneration) {
-		if (!bSkipConditionTypeGeneration && !this._oConditionType) {
+	ContentFactory.prototype.getConditionType = function() {
+		if (!this._oConditionType) {
 			var oFormatOptions = this.getField()._getFormatOptions();
 			this._oConditionType = new ConditionType(oFormatOptions);
 			this._oConditionType._bCreatedByField = true;
@@ -285,8 +277,8 @@ sap.ui.define([
 		this._oConditionType = oConditionType;
 	};
 
-	ContentFactory.prototype.getConditionsType = function(bSkipConditionsTypeGeneration) {
-		if (!bSkipConditionsTypeGeneration && !this._oConditionsType) {
+	ContentFactory.prototype.getConditionsType = function() {
+		if (!this._oConditionsType) {
 			var oFormatOptions = this.getField()._getFormatOptions();
 			this._oConditionsType = new ConditionsType(oFormatOptions);
 			this._oConditionsType._bCreatedByField = true;
@@ -299,8 +291,8 @@ sap.ui.define([
 		this._oConditionsType = oConditionsType;
 	};
 
-	ContentFactory.prototype.getUnitConditionsType = function(bSkipConditionsTypeGeneration) {
-		if (!bSkipConditionsTypeGeneration && !this._oUnitConditionsType) {
+	ContentFactory.prototype.getUnitConditionsType = function() {
+		if (!this._oUnitConditionsType) {
 			var oFormatOptions = this.getField()._getUnitFormatOptions();
 			this._oUnitConditionsType = new ConditionsType(oFormatOptions);
 			this._oUnitConditionsType._bCreatedByField = true;

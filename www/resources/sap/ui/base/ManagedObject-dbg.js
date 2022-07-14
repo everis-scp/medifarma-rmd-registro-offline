@@ -266,7 +266,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.base.EventProvider
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @public
 	 * @alias sap.ui.base.ManagedObject
 	 */
@@ -1151,7 +1151,7 @@ sap.ui.define([
 					if (oBindingInfo && typeof oBindingInfo === "object") {
 						this.bindProperty(sKey, oBindingInfo);
 					} else {
-						this[oKeyInfo._sMutator](typeof oBindingInfo === "string" ? oBindingInfo : oValue);
+						this[oKeyInfo._sMutator](oBindingInfo || oValue);
 					}
 					break;
 				case 1: // SINGLE_AGGREGATION
@@ -1166,7 +1166,7 @@ sap.ui.define([
 							}
 							oValue = oValue[0];
 						}
-						this[oKeyInfo._sMutator](makeObject(typeof oBindingInfo === "string" ? oBindingInfo : oValue, oKeyInfo, oScope));
+						this[oKeyInfo._sMutator](makeObject(oBindingInfo || oValue, oKeyInfo, oScope));
 					}
 					break;
 				case 2: // MULTIPLE_AGGREGATION
@@ -1174,7 +1174,7 @@ sap.ui.define([
 					if (oBindingInfo && typeof oBindingInfo === "object" ) {
 						this.bindAggregation(sKey, oBindingInfo);
 					} else {
-						oValue = typeof oBindingInfo === "string" ? oBindingInfo : oValue; // could be an unescaped string if altTypes contains 'string'
+						oValue = oBindingInfo || oValue; // could be an unescaped string if altTypes contains 'string'
 						if ( oValue ) {
 							if ( Array.isArray(oValue) ) {
 								addAllToAggregation(oValue); // wrap a single object as array
@@ -4292,7 +4292,6 @@ sap.ui.define([
 	ManagedObject.prototype.updateBindings = function(bUpdateAll, sModelName) {
 		var that = this,
 			sName,
-			bCanCreate,
 			oBindingInfo;
 
 		/*
@@ -4377,18 +4376,14 @@ sap.ui.define([
 		// create object bindings if they don't exist yet
 		for ( sName in this.mObjectBindingInfos ) {
 			oBindingInfo = this.mObjectBindingInfos[sName];
-			bCanCreate = canCreate(oBindingInfo);
+
 			// if there is a binding and if it became invalid through the current model change, then remove it
 			if ( oBindingInfo.binding && becameInvalid(oBindingInfo) ) {
 				removeBinding(oBindingInfo);
-				// if model does not exists anymore, also delete the BindingContext
-				if (!bCanCreate) {
-					delete this.mElementBindingContexts[sName];
-				}
 			}
 
 			// if there is no binding and if all required information is available, create a binding object
-			if ( !oBindingInfo.binding && bCanCreate ) {
+			if ( !oBindingInfo.binding && canCreate(oBindingInfo) ) {
 				this._bindObject(oBindingInfo);
 			}
 		}
@@ -4661,7 +4656,7 @@ sap.ui.define([
 	 * <b>Note:</b> A ManagedObject inherits binding contexts from the Core only when it is a descendant of a UIArea.
 	 *
 	 * @param {string} [sModelName] the name of the model or <code>undefined</code>
-	 * @returns {sap.ui.model.Context|null|undefined} The binding context of this object
+	 * @return {sap.ui.model.Context} The binding context of this object
 	 * @public
 	 */
 	ManagedObject.prototype.getBindingContext = function(sModelName){

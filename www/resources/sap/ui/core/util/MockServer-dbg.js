@@ -13,12 +13,9 @@ sap.ui
 			'sap/ui/thirdparty/sinon',
 			'sap/base/Log',
 			'sap/base/util/isEmptyObject',
-			'sap/ui/core/util/MockServerAnnotationsHandler',
-			'sap/ui/core/util/DraftEnabledMockServer',
-			'jquery.sap.xml',
 			'jquery.sap.sjax'
 		],
-		function(jQuery, ManagedObject, sinon, Log, isEmptyObject, MockServerAnnotationsHandler, DraftEnabledMockServer/*, jQuerySapXml, jQuerySapSjax*/) {
+		function(jQuery, ManagedObject, sinon, Log, isEmptyObject/*, jQuerySapSjax*/) {
 			"use strict";
 
 			/**
@@ -34,7 +31,7 @@ sap.ui
 			 * @extends sap.ui.base.ManagedObject
 			 * @abstract
 			 * @author SAP SE
-			 * @version 1.96.9
+			 * @version 1.93.4
 			 * @public
 			 * @alias sap.ui.core.util.MockServer
 			 */
@@ -1955,7 +1952,9 @@ sap.ui
 				}
 				// create mockserver annotations handler only when metadata exists
 				if (this._sMetadata) {
+					var MockServerAnnotationsHandler = sap.ui.requireSync("sap/ui/core/util/MockServerAnnotationsHandler");
 					var oAnnotations = MockServerAnnotationsHandler.parse(this._oMetadata, this._sMetadata);
+					var DraftEnabledMockServer = sap.ui.requireSync("sap/ui/core/util/DraftEnabledMockServer");
 					DraftEnabledMockServer.handleDraft(oAnnotations, this);
 				}
 				this._resetPseudoRandomNumberGenerator();
@@ -2160,6 +2159,7 @@ sap.ui
 					method: "GET",
 					path: new RegExp("\\$metadata([?#].*)?"),
 					response: function(oXhr) {
+						sap.ui.requireSync("jquery.sap.xml");
 						Log.debug("MockServer: incoming request for url: " + oXhr.url);
 						var mHeaders = {
 							"Content-Type": "application/xml;charset=utf-8"

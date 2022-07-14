@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @class Item that represents one file to be uploaded using the {@link sap.m.upload.UploadSet} control.
 	 * @extends sap.ui.core.Element
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @public
 	 * @since 1.63
@@ -170,7 +170,7 @@ sap.ui.define([
 				}
 				oRm.openEnd();
 
-				oRm.openStart("div").class("sapMUSTextInnerContainer").openEnd();
+				oRm.openStart("div").style("display", "flex").openEnd();
 				oRm.renderControl(oItem._bInEditMode ? oItem._getFileNameEdit() : oItem._getFileNameLink());
 				oItem._renderMarkers(oRm);
 				oRm.close("div");
@@ -668,12 +668,7 @@ sap.ui.define([
 		var oResult = {};
 		var oRegex = /(?:\.([^.]+))?$/;
 		var aFileExtension = oRegex.exec(sFileName);
-		if (!aFileExtension[0]) {
-			aFileExtension[0] = "";
-			oResult.name = sFileName;
-		} else {
-			oResult.name = sFileName ? sFileName.slice(0, sFileName.indexOf(aFileExtension[0])) : "";
-		}
+		oResult.name = sFileName.slice(0, sFileName.indexOf(aFileExtension[0]));
 		if (bWithDot) {
 			oResult.extension = aFileExtension[0];
 		} else {
@@ -821,7 +816,7 @@ sap.ui.define([
 			oRm.openStart("div").class("sapMUCAttrContainer").openEnd();
 			this.getAttributes().forEach(function (oAttribute, iIndex) {
 				oRm.renderControl(oAttribute.addStyleClass("sapMUCAttr"));
-				if (iIndex < iLastAttribure && oAttribute.getVisible()) {
+				if (iIndex < iLastAttribure) {
 					oRm.openStart("div").class("sapMUCSeparator").openEnd();
 					oRm.text("\u00a0\u00B7\u00a0").close("div");
 				}

@@ -59,7 +59,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -209,18 +209,6 @@ sap.ui.define([
 	 */
 	ProgressIndicator.prototype._onResize = function (oEvent) {
 		this._updateHoverableScenario();
-	};
-
-	/**
-	 * Handles the start of <code>ProgressIndicator</code> press event and marks the event as handled
-	 * by <code>ProgressIndicator</code> to prevent event bubbling when the information popover should be opened.
-	 * @param {jQuery.Event} oEvent The <code>tap</code> event object
-	 * @private
-	 */
-	ProgressIndicator.prototype.ontouchstart = function (oEvent) {
-		if (this._isHoverable()) {
-			oEvent.setMarked();
-		}
 	};
 
 	/**

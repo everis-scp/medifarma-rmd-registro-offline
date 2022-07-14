@@ -13,7 +13,7 @@ sap.ui.define([
 	"use strict";
 
 	function isChildOfFormElement(oElement) {
-		return oElement.getParent() && oElement.getParent().isA("sap.ui.layout.form.FormElement");
+		return oElement.getParent().isA("sap.ui.layout.form.FormElement");
 	}
 
 	function fnIsLayoutSupported(oForm){

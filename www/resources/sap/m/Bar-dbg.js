@@ -56,7 +56,7 @@ sap.ui.define([
 	 * @implements sap.m.IBar
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -221,7 +221,7 @@ sap.ui.define([
 		this._removeAllListeners();
 
 		var bContentLeft = !!this.getContentLeft().length,
-			bContentMiddle = !!this.getContentMiddle().length || (this._oflexBox && !!this._oflexBox.getItems().length),
+			bContentMiddle = !!this.getContentMiddle().length,
 			bContentRight = !!this.getContentRight().length;
 
 		//Invisible bars also do not need resize listeners
@@ -335,20 +335,15 @@ sap.ui.define([
 		var iMidBarPlaceholderWidth = this._$MidBarPlaceHolder.outerWidth(true),
 			bRtl = sap.ui.getCore().getConfiguration().getRTL(),
 			sLeftOrRight = bRtl ? "right" : "left",
-			sRightOrLeft = bRtl ? "left" : "right",
-			oMidBarCss = { visibility : "" },
-			aContentLeftControls = this.getContentLeft().filter(function(oControl) { return oControl.getVisible(); }),
-			aContentRightControls = this.getContentRight().filter(function(oControl) { return oControl.getVisible(); }),
-			iContentLeftPadding = aContentLeftControls.length ? 0 : parseInt(this._$LeftBar.css('padding-' + sLeftOrRight)),
-			iContentRightPadding = aContentRightControls.length ? 0 : parseInt(this._$RightBar.css('padding-' + sRightOrLeft));
+			oMidBarCss = { visibility : "" };
 
 		if (this.getEnableFlexBox()) {
 
 			iMidBarPlaceholderWidth = iBarWidth - iLeftBarWidth - iRightBarWidth - parseInt(this._$MidBarPlaceHolder.css('margin-left')) - parseInt(this._$MidBarPlaceHolder.css('margin-right'));
 
 			oMidBarCss.position = "absolute";
-			oMidBarCss.width = iMidBarPlaceholderWidth + iContentLeftPadding + iContentRightPadding + "px";
-			oMidBarCss[sLeftOrRight] = iLeftBarWidth - iContentLeftPadding;
+			oMidBarCss.width = iMidBarPlaceholderWidth + "px";
+			oMidBarCss[sLeftOrRight] = iLeftBarWidth;
 
 			//calculation for flex is done
 			return oMidBarCss;
@@ -369,10 +364,9 @@ sap.ui.define([
 			oMidBarCss.position = "absolute";
 
 			//Use the remaining space
-			oMidBarCss.width = iSpaceBetweenLeftAndRight + iContentLeftPadding + iContentRightPadding + "px";
+			oMidBarCss.width = iSpaceBetweenLeftAndRight + "px";
 
-			//Set left or right depending on LTR/RTL
-			oMidBarCss[sLeftOrRight] = iLeftBarWidth - iContentLeftPadding;
+			oMidBarCss.left = bRtl ? iRightBarWidth : iLeftBarWidth;
 		}
 
 		return oMidBarCss;

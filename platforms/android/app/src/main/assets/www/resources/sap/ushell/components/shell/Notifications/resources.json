@@ -4,24 +4,26 @@
 		{
 			"name": "Component-dbg.js",
 			"module": "sap/ushell/components/shell/Notifications/Component.js",
+			"size": 10102,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/Popover.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/IconPool.js",
+				"sap/ui/core/InvisibleText.js",
 				"sap/ui/core/UIComponent.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ushell/EventHub.js",
 				"sap/ushell/resources.js",
-				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/shell/ShellHeadItem.js",
 				"sap/ushell/utils.js"
 			]
 		},
 		{
 			"name": "Component-h2-preload.js",
-			"module": "Component-h2-preload.js",
+			"module": "sap/ushell/components/shell/Notifications/Component-h2-preload.js",
+			"size": 7491,
 			"merged": true,
 			"required": [
 				"sap/base/Log.js",
@@ -30,7 +32,6 @@
 				"sap/m/Column.js",
 				"sap/m/ColumnListItem.js",
 				"sap/m/CustomListItem.js",
-				"sap/m/FlexBox.js",
 				"sap/m/HBox.js",
 				"sap/m/IconTabBar.js",
 				"sap/m/IconTabFilter.js",
@@ -49,6 +50,7 @@
 				"sap/ui/core/Fragment.js",
 				"sap/ui/core/Icon.js",
 				"sap/ui/core/IconPool.js",
+				"sap/ui/core/InvisibleText.js",
 				"sap/ui/core/UIComponent.js",
 				"sap/ui/core/library.js",
 				"sap/ui/core/mvc/XMLView.js",
@@ -58,7 +60,7 @@
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ushell/EventHub.js",
 				"sap/ushell/resources.js",
-				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/shell/ShellHeadItem.js",
 				"sap/ushell/utils.js"
 			],
 			"included": [
@@ -72,8 +74,14 @@
 			]
 		},
 		{
+			"name": "Component-h2-preload.js.map",
+			"size": 3762,
+			"isDebug": true
+		},
+		{
 			"name": "Component-preload.js",
-			"module": "Component-preload.js",
+			"module": "sap/ushell/components/shell/Notifications/Component-preload.js",
+			"size": 42789,
 			"merged": true,
 			"required": [
 				"sap/base/Log.js",
@@ -82,7 +90,6 @@
 				"sap/m/Column.js",
 				"sap/m/ColumnListItem.js",
 				"sap/m/CustomListItem.js",
-				"sap/m/FlexBox.js",
 				"sap/m/HBox.js",
 				"sap/m/IconTabBar.js",
 				"sap/m/IconTabFilter.js",
@@ -101,6 +108,7 @@
 				"sap/ui/core/Fragment.js",
 				"sap/ui/core/Icon.js",
 				"sap/ui/core/IconPool.js",
+				"sap/ui/core/InvisibleText.js",
 				"sap/ui/core/UIComponent.js",
 				"sap/ui/core/library.js",
 				"sap/ui/core/mvc/XMLView.js",
@@ -110,7 +118,7 @@
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ushell/EventHub.js",
 				"sap/ushell/resources.js",
-				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/shell/ShellHeadItem.js",
 				"sap/ushell/utils.js"
 			],
 			"included": [
@@ -122,27 +130,34 @@
 				"sap/ushell/components/shell/Notifications/Settings.controller.js",
 				"sap/ushell/components/shell/Notifications/Settings.view.js"
 			]
+		},
+		{
+			"name": "Component-preload.js.map",
+			"size": 34358,
+			"isDebug": true
 		},
 		{
 			"name": "Component.js",
 			"module": "sap/ushell/components/shell/Notifications/Component.js",
+			"size": 5205,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/Popover.js",
 				"sap/m/library.js",
-				"sap/ui/Device.js",
 				"sap/ui/core/IconPool.js",
+				"sap/ui/core/InvisibleText.js",
 				"sap/ui/core/UIComponent.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ushell/EventHub.js",
 				"sap/ushell/resources.js",
-				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/shell/ShellHeadItem.js",
 				"sap/ushell/utils.js"
 			]
 		},
 		{
 			"name": "Notifications-dbg.controller.js",
 			"module": "sap/ushell/components/shell/Notifications/Notifications.controller.js",
+			"size": 63036,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
@@ -163,6 +178,7 @@
 		{
 			"name": "Notifications.controller.js",
 			"module": "sap/ushell/components/shell/Notifications/Notifications.controller.js",
+			"size": 25048,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/CustomListItem.js",
@@ -182,6 +198,7 @@
 		{
 			"name": "Notifications.view.xml",
 			"module": "sap/ushell/components/shell/Notifications/Notifications.view.xml",
+			"size": 2826,
 			"required": [
 				"sap/m/IconTabBar.js",
 				"sap/m/IconTabFilter.js",
@@ -196,17 +213,20 @@
 		{
 			"name": "NotificationsGroupListItem.fragment.xml",
 			"module": "sap/ushell/components/shell/Notifications/NotificationsGroupListItem.fragment.xml",
+			"size": 1597,
 			"required": [
 				"sap/m/Button.js",
 				"sap/m/List.js",
 				"sap/m/NotificationListGroup.js",
 				"sap/ui/core/Fragment.js",
-				"sap/ushell/components/shell/Notifications/NotificationsListItem.fragment.xml"
+				"sap/ushell/components/shell/Notifications/NotificationsListItem.fragment.xml",
+				"sap/ushell/utils.js"
 			]
 		},
 		{
 			"name": "NotificationsListItem.fragment.xml",
 			"module": "sap/ushell/components/shell/Notifications/NotificationsListItem.fragment.xml",
+			"size": 965,
 			"required": [
 				"sap/m/Button.js",
 				"sap/m/NotificationListItem.js",
@@ -216,6 +236,7 @@
 		{
 			"name": "Settings-dbg.controller.js",
 			"module": "sap/ushell/components/shell/Notifications/Settings.controller.js",
+			"size": 9892,
 			"isDebug": true,
 			"required": [
 				"sap/ui/model/json/JSONModel.js",
@@ -225,12 +246,12 @@
 		{
 			"name": "Settings-dbg.view.js",
 			"module": "sap/ushell/components/shell/Notifications/Settings.view.js",
+			"size": 11890,
 			"isDebug": true,
 			"required": [
 				"sap/m/CheckBox.js",
 				"sap/m/Column.js",
 				"sap/m/ColumnListItem.js",
-				"sap/m/FlexBox.js",
 				"sap/m/HBox.js",
 				"sap/m/Label.js",
 				"sap/m/Switch.js",
@@ -247,6 +268,7 @@
 		{
 			"name": "Settings.controller.js",
 			"module": "sap/ushell/components/shell/Notifications/Settings.controller.js",
+			"size": 4001,
 			"required": [
 				"sap/ui/model/json/JSONModel.js",
 				"sap/ui/thirdparty/jquery.js"
@@ -255,11 +277,11 @@
 		{
 			"name": "Settings.view.js",
 			"module": "sap/ushell/components/shell/Notifications/Settings.view.js",
+			"size": 4100,
 			"required": [
 				"sap/m/CheckBox.js",
 				"sap/m/Column.js",
 				"sap/m/ColumnListItem.js",
-				"sap/m/FlexBox.js",
 				"sap/m/HBox.js",
 				"sap/m/Label.js",
 				"sap/m/Switch.js",
@@ -274,7 +296,8 @@
 			]
 		},
 		{
-			"name": "resources.json"
+			"name": "resources.json",
+			"size": 5936
 		}
 	]
 }

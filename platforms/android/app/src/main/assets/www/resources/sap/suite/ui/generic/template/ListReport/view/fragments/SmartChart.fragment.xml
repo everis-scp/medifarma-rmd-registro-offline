@@ -27,11 +27,13 @@
 			showDrillBreadcrumbs="true"
 			showDetailsButton="true"
 			showDrillButtons="false"
+			noData="{i18n>SMARTCHART_INITIAL_NODATA}"
 			entitySet="{entitySet>name}"
 			initialized="._templateEventHandlers.onChartInitialized"
 			selectionDetailsActionPress="._templateEventHandlers.onSelectionDetailsActionPress"
 			beforeRebindChart="._templateEventHandlers.onBeforeRebindChart">
 			<smartChart:customData>
+				<core:CustomData key="dateFormatSettings" value='\{"UTC":true,"style":"medium"\}'/>
 				<core:CustomData key="presentationVariantQualifier" value="{parts:[{path: 'workingContext>'}, {path: 'tabItem>'}],  formatter: 'sap.suite.ui.generic.template.ListReport.AnnotationHelper.getPresentationVariantQualifier'}"/>
 				<template:if test="{parts:[{path: 'workingContext>'}, {path: 'tabItem>'}],  formatter: 'sap.suite.ui.generic.template.ListReport.AnnotationHelper.checkIfChartQualifier'}">
 					<template:then>

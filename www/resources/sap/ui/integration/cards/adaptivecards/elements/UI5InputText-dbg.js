@@ -16,7 +16,7 @@ sap.ui.define(["sap/ui/integration/thirdparty/adaptivecards"], function (Adaptiv
 	 * <code>ui5-input</code> or <code>ui5-textarea<code> UI5 web component.
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @since 1.74

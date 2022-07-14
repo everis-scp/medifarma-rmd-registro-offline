@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.ca.scfld.md",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.0"
+      "version": "1.93.1"
     },
     "title": "SAP UI library: Scaffolding for Master Detail applications",
     "description": "SAP UI library: Scaffolding for Master Detail applications",
@@ -18,16 +18,16 @@
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.0"
+          "minVersion": "1.93.2"
         },
         "sap.m": {
-          "minVersion": "1.71.0"
+          "minVersion": "1.93.2"
         },
         "sap.ca.ui": {
-          "minVersion": "1.71.0"
+          "minVersion": "1.93.1"
         }
       }
     },

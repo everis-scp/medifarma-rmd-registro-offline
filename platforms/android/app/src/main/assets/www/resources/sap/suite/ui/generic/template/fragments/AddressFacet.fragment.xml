@@ -12,7 +12,7 @@
 		<template:if test="address>label}">
 			<!-- same coding for SmartField is used in SmartFormDataField.fragment.xml -->
 			<sfi:SmartField id="{:= ${parameter>/stableId}.getStableId({ type:'ObjectPageSection', subType:'AddressValue', sFacet: ${facetId>id}}) }"
-			                value="{path: 'address>label', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"/>
+				value="{path: 'address>label', formatter: 'sap.ui.model.odata.AnnotationHelper.simplePath'}"/>
 		</template:if>
 	</VBox>
 

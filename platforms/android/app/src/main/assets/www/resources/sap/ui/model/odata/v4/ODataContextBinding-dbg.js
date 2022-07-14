@@ -68,8 +68,8 @@ sap.ui.define([
 	 * @author SAP SE
 	 * @class Context binding for an OData V4 model.
 	 *   An event handler can only be attached to this binding for the following events:
-	 *   'AggregatedDataStateChange', 'change', 'dataReceived', 'dataRequested', 'DataStateChange',
-	 *   'patchCompleted', and 'patchSent'. For other events, an error is thrown.
+	 *   'AggregatedDataStateChange', 'change', 'dataReceived', 'dataRequested', and
+	 *   'DataStateChange'. For other events, an error is thrown.
 	 *
 	 *   A context binding can also be used as an <i>operation binding</i> to support bound actions,
 	 *   action imports, bound functions and function imports. If you want to control the execution
@@ -106,7 +106,7 @@ sap.ui.define([
 	 * @mixes sap.ui.model.odata.v4.ODataParentBinding
 	 * @public
 	 * @since 1.37.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getGroupId as #getGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getRootBinding as #getRootBinding
@@ -114,9 +114,7 @@ sap.ui.define([
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#hasPendingChanges as #hasPendingChanges
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#isInitial as #isInitial
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#refresh as #refresh
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#requestRefresh as #requestRefresh
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#resetChanges as #resetChanges
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#toString as #toString
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#attachPatchCompleted as
 	 *   #attachPatchCompleted
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#attachPatchSent as #attachPatchSent
@@ -124,13 +122,13 @@ sap.ui.define([
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#detachPatchCompleted as
 	 *   #detachPatchCompleted
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#detachPatchSent as #detachPatchSent
+	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#initialize as #initialize
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#resume as #resume
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#suspend as #suspend
 	 */
 	var ODataContextBinding = ContextBinding.extend("sap.ui.model.odata.v4.ODataContextBinding", {
 			constructor : function (oModel, sPath, oContext, mParameters) {
-				var iPos = sPath.indexOf("(...)"),
-					that = this;
+				var iPos = sPath.indexOf("(...)");
 
 				ContextBinding.call(this, oModel, sPath);
 				// initialize mixin members
@@ -180,13 +178,6 @@ sap.ui.define([
 				}
 				this.setContext(oContext);
 				oModel.bindingCreated(this);
-
-				Promise.resolve().then(function () {
-					// bInitial must be true initially, but false later. Then suspend on a just
-					// created binding causes a change event on resume; otherwise further changes
-					// on the suspended binding are required (see doSuspend)
-					that.bInitial = false;
-				});
 			},
 			metadata : {
 				publicMethods : []
@@ -296,7 +287,7 @@ sap.ui.define([
 			return that.refreshDependentBindings("", oGroupLock.getGroupId(), true);
 		}
 
-		oPromise = oMetaModel.fetchObject(_Helper.getMetaPath(sResolvedPath) + "/@$ui5.overload")
+		oPromise = oMetaModel.fetchObject(oMetaModel.getMetaPath(sResolvedPath) + "/@$ui5.overload")
 			.then(function (aOperationMetadata) {
 				var fnGetEntity, iIndex, sPath;
 
@@ -403,9 +394,7 @@ sap.ui.define([
 		this.mParameters = mParameters; // store mParameters at binding after validation
 
 		if (this.isRootBindingSuspended()) {
-			if (!this.oOperation) {
-				this.sResumeChangeReason = ChangeReason.Change;
-			}
+			this.sResumeChangeReason = ChangeReason.Change;
 		} else if (!this.oOperation) {
 			this.fetchCache(this.oContext);
 			if (sChangeReason) {
@@ -603,7 +592,7 @@ sap.ui.define([
 			oCache,
 			vEntity = fnGetEntity,
 			oModel = this.oModel,
-			sMetaPath = _Helper.getMetaPath(sPath) + "/@$ui5.overload/0/$ReturnType",
+			sMetaPath = oModel.getMetaModel().getMetaPath(sPath) + "/@$ui5.overload/0/$ReturnType",
 			sOriginalResourcePath = sPath.slice(1),
 			oRequestor = oModel.oRequestor,
 			that = this;
@@ -636,18 +625,18 @@ sap.ui.define([
 		 * @throws {Error} If <code>fnOnStrictHandlingFailed</code> does not return a promise
 		 */
 		function onStrictHandling(oError) {
-			var oResult;
+			var oRawMessages, oResult;
 
 			_Helper.adjustTargetsInError(oError, oOperationMetadata,
 				that.oParameterContext.getPath(),
 				that.bRelative ? that.oContext.getPath() : undefined);
 			oError.error.$ignoreTopLevel = true;
+			oRawMessages = _Helper.extractMessages(oError);
 
 			oResult = fnOnStrictHandlingFailed(
-				_Helper.extractMessages(oError).map(function (oRawMessage) {
+				oRawMessages.bound.concat(oRawMessages.unbound).map(function (oRawMessage) {
 					return that.oModel.createUI5Message(oRawMessage);
-				})
-			);
+			}));
 
 			if (!(oResult instanceof Promise)) {
 				throw new Error("Not a promise: " + oResult);
@@ -716,6 +705,7 @@ sap.ui.define([
 			this.oReturnValueContext = undefined;
 		}
 		this.oModel.bindingDestroyed(this);
+		this.mCacheByResourcePath = undefined;
 		this.oOperation = undefined;
 		this.mParameters = undefined;
 		this.mQueryOptions = undefined;
@@ -771,17 +761,6 @@ sap.ui.define([
 				oGroupLock.unlock();
 			}
 			return SyncPromise.resolve();
-		}
-	};
-
-	/**
-	 * @override
-	 * @see sap.ui.model.odata.v4.ODataParentBinding#doSuspend
-	 */
-	ODataContextBinding.prototype.doSuspend = function () {
-		if (this.bInitial && !this.oOperation) {
-			// if the binding is still initial, it must fire an event in resume
-			this.sResumeChangeReason = ChangeReason.Change;
 		}
 	};
 
@@ -915,7 +894,6 @@ sap.ui.define([
 		return oCachePromise.then(function (oCache) {
 			var bDataRequested = false,
 				oGroupLock,
-				sResolvedPath = that.getResolvedPath(),
 				sRelativePath = oCache || that.oOperation
 					? that.getRelativePath(sPath)
 					: undefined,
@@ -966,7 +944,7 @@ sap.ui.define([
 				}, function (oError) {
 					oGroupLock.unlock(true);
 					if (bDataRequested) {
-						that.oModel.reportError("Failed to read path " + sResolvedPath, sClassName,
+						that.oModel.reportError("Failed to read path " + that.sPath, sClassName,
 							oError);
 						that.fireDataReceived(oError.canceled ? {data : {}} : {error : oError});
 					}
@@ -1032,9 +1010,7 @@ sap.ui.define([
 			mQueryOptions = Object.assign({}, mQueryOptions);
 			// keep $select before $expand
 			if ("$select" in mInheritableQueryOptions) {
-				// avoid that this.mQueryOptions.$select is modified
-				mQueryOptions.$select = mQueryOptions.$select && mQueryOptions.$select.slice();
-				_Helper.addToSelect(mQueryOptions, mInheritableQueryOptions.$select);
+				mQueryOptions.$select = mInheritableQueryOptions.$select;
 			}
 			if ("$expand" in mInheritableQueryOptions) {
 				mQueryOptions.$expand = mInheritableQueryOptions.$expand;
@@ -1102,17 +1078,17 @@ sap.ui.define([
 	 * @private
 	 */
 	ODataContextBinding.prototype.hasReturnValueContext = function (oMetadata) {
-		var aMetaSegments;
+		var oMetaModel = this.oModel.getMetaModel(),
+			aMetaSegments;
 
 		if (!this.isReturnValueLikeBindingParameter(oMetadata)) {
 			return false;
 		}
 
-		aMetaSegments = _Helper.getMetaPath(this.getResolvedPath()).split("/");
+		aMetaSegments = oMetaModel.getMetaPath(this.getResolvedPath()).split("/");
 
-		// case 4b
 		return aMetaSegments.length === 3
-			&& this.oModel.getMetaModel().getObject("/" + aMetaSegments[1]).$kind === "EntitySet";
+			&& oMetaModel.getObject("/" + aMetaSegments[1]).$kind === "EntitySet"; // case 4b
 	};
 
 	/**
@@ -1125,11 +1101,12 @@ sap.ui.define([
 	 */
 	// @override sap.ui.model.Binding#initialize
 	ODataContextBinding.prototype.initialize = function () {
-		this.bInitial = false;
-		// Here no other code but the event for the ManagedObject is expected. The binding should be
-		// useable for controller code without calling initialize.
-		if (this.isResolved() && !this.getRootBinding().isSuspended()) {
-			this._fireChange({reason : ChangeReason.Change});
+		if (this.isResolved()) {
+			if (this.getRootBinding().isSuspended()) {
+				this.sResumeChangeReason = ChangeReason.Change;
+			} else {
+				this._fireChange({reason : ChangeReason.Change});
+			}
 		}
 	};
 
@@ -1158,53 +1135,6 @@ sap.ui.define([
 			&& oMetadata.$ReturnType && !oMetadata.$ReturnType.$isCollection
 				&& oMetadata.$EntitySetPath // case 2
 			&& !oMetadata.$EntitySetPath.includes("/"); // case 3
-	};
-
-	/**
-	 * Moves the bound entity into the given list binding. This binding loses its data. The method
-	 * may only be called when this binding has finished loading. You can verify this by calling
-	 * <code>oBinding.getBoundContext().requestObject()</code>. If that promise resolves, the
-	 * binding has finished loading.
-	 *
-	 * @param {sap.ui.model.odata.v4.ODataListBinding} oListBinding
-	 *   The list binding to take the entity
-	 * @throws {Error}
-	 *   If
-	 *   <ul>
-	 *     <li> this binding is not a root binding,
-	 *     <li> this binding has not finished loading yet,
-	 *     <li> not all key properties of the bound entity have been selected (so that it is
-	 *       impossible to determine its key predicate),
-	 *     <li> the bound entity is not an entity of the list binding's collection,
-	 *     <li> this binding is an operation binding,
-	 *     <li> this binding has pending changes (see {@link #hasPendingChanges}),
-	 *     <li> this binding has a <code>$expand</code> to a collection or a dependent list binding
-	 *       without <code>$$ownRequest</code>,
-	 *     <li> the list binding is not suspended,
-	 *     <li> the list binding is relative and does not use the <code>$$ownRequest</code>
-	 *       parameter (see {@link sap.ui.model.odata.v4.ODataModel#bindList}).
-	 *     <li> the list binding uses data aggregation
-	 *       (@see sap.ui.model.odata.v4.ODataListBinding#setAggregation)
-	 *   </ul>
-	 *
-	 * @deprecated since 1.96.5
-	 * @experimental
-	 * @public
-	 * @since 1.95.0
-	 */
-	ODataContextBinding.prototype.moveEntityTo = function (oListBinding) {
-		if (!this.isRoot()) {
-			throw new Error(this + ": must be a root binding");
-		}
-		if (this.oOperation) {
-			throw new Error(this + ": must not be an operation binding");
-		}
-		if (this.hasPendingChanges()) {
-			throw new Error(this + ": has pending changes");
-		}
-
-		oListBinding.moveEntityHere(this.oElementContext);
-		this.oElementContext = null;
 	};
 
 	/**
@@ -1253,7 +1183,7 @@ sap.ui.define([
 				if (bKeepCacheOnError && oPromise) {
 					oPromise = oPromise.catch(function (oError) {
 						return that.fetchResourcePath(that.oContext).then(function (sResourcePath) {
-							if (!that.bRelative || oCache.getResourcePath() === sResourcePath) {
+							if (!that.bRelative || oCache.$resourcePath === sResourcePath) {
 								that.oCache = oCache;
 								that.oCachePromise = SyncPromise.resolve(oCache);
 								oCache.setActive(true);
@@ -1398,31 +1328,23 @@ sap.ui.define([
 	 * @see sap.ui.model.odata.v4.ODataParentBinding#resumeInternal
 	 */
 	ODataContextBinding.prototype.resumeInternal = function (bCheckUpdate, bParentHasChanges) {
-		var sResumeChangeReason = this.sResumeChangeReason,
-			that = this;
-
-		function resumeDependents() {
-			that.getDependentBindings().forEach(function (oDependentBinding) {
-				oDependentBinding.resumeInternal(bCheckUpdate, !!sResumeChangeReason);
-			});
-		}
+		var sResumeChangeReason = this.sResumeChangeReason;
 
 		this.sResumeChangeReason = undefined;
 
-		if (this.oOperation) {
-			resumeDependents();
-			return;
-		}
-
-		if (bParentHasChanges || sResumeChangeReason) {
-			this.mAggregatedQueryOptions = {};
-			this.bAggregatedQueryOptionsInitial = true;
-			this.removeCachesAndMessages("");
-			this.fetchCache(this.oContext);
-		}
-		resumeDependents();
-		if (sResumeChangeReason) {
-			this._fireChange({reason : sResumeChangeReason});
+		if (!this.oOperation) {
+			if (bParentHasChanges || sResumeChangeReason) {
+				this.mAggregatedQueryOptions = {};
+				this.bAggregatedQueryOptionsInitial = true;
+				this.removeCachesAndMessages("");
+				this.fetchCache(this.oContext);
+			}
+			this.getDependentBindings().forEach(function (oDependentBinding) {
+				oDependentBinding.resumeInternal(bCheckUpdate, !!sResumeChangeReason);
+			});
+			if (sResumeChangeReason) {
+				this._fireChange({reason : sResumeChangeReason});
+			}
 		}
 	};
 

@@ -18,7 +18,7 @@ sap.ui.define([
      * @extends sap.ui.mdc.p13n.panels.BasePanel
      *
      * @author SAP SE
-     * @version 1.96.9
+     * @version 1.93.4
      *
      * @private
      * @ui5-restricted sap.ui.mdc
@@ -119,7 +119,6 @@ sap.ui.define([
         aItems.forEach(function (oNonPresent, iIndex) {
             aAvailableItems.push(new Item({
                 key: oNonPresent.name,
-                tooltip: oNonPresent.tooltip,
                 text: oNonPresent.label,
                 enabled: {
                     path: this.P13N_MODEL + ">/items/" + iIndex + "/" + this._getPresenceAttribute(),
@@ -209,16 +208,14 @@ sap.ui.define([
 
     QueryPanel.prototype._handleActivated = function(oHoveredItem) {
         var oQueryRow = oHoveredItem.getContent()[0];
-        if (oQueryRow) {
-            var iItemLength = oQueryRow.getContent().length - 1;
-            var oButtonBox = oHoveredItem.getContent()[0].getContent()[iItemLength];
+        var iItemLength = oQueryRow.getContent().length - 1;
+        var oButtonBox = oHoveredItem.getContent()[0].getContent()[iItemLength];
 
-            //Only add the buttons if 1) an hovered item is provided 2) the buttons are not already there
-            if (oHoveredItem && oButtonBox.getItems().length < 2) {
-                oButtonBox.insertItem(this._getMoveUpButton(), 0);
-                oButtonBox.insertItem(this._getMoveDownButton(), 1);
-                this._updateEnableOfMoveButtons(oHoveredItem, false);
-            }
+        //Only add the buttons if 1) an hovered item is provided 2) the buttons are not already there
+        if (oHoveredItem && oButtonBox.getItems().length < 2) {
+            oButtonBox.insertItem(this._getMoveUpButton(), 0);
+            oButtonBox.insertItem(this._getMoveDownButton(), 1);
+            this._updateEnableOfMoveButtons(oHoveredItem, false);
         }
     };
 
@@ -280,10 +277,6 @@ sap.ui.define([
                         this._updatePresence(oRow.getContent()[0].getContent()[0]._key, false);
                         if (this._oListControl.getItems().length === 0) {
                             this._addQueryRow();
-                        } else {
-                            //In case an item has been removed, focus the Select control of the new 'none' row
-                            var iLastIndex = this._oListControl.getItems().length - 1;
-                            this._oListControl.getItems()[iLastIndex].getContent()[0].getContent()[0].focus();
                         }
                     }.bind(this)
                 })

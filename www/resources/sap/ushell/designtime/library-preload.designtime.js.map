@@ -2,8 +2,8 @@
 "version":3,
 "file":"sap/ushell/designtime/library-preload.designtime.js",
 "sourceroot":".",
-"sources":["ApplicationContainer.designtime-dbg.js"],
+"sources":["ApplicationContainer-dbg.designtime.js"],
 "names":[],
-"mappings":";;AAMA,gBAAa,yDAAC,GAAI,UAAW,CACzB,aAEA,MAAO,CACH,aAAc,CACV,MAAO,EACX,CACJ,EACJ,EAAkB;",
-"x_com_sap_openui5_sections":[66,263]
+"mappings":";;AAMA,gBAAa,yDAAC,GAAI,QAAS,EAAG,CAC1B,aAEA,MAAO,CACH,aAAc,CAAE,MAAO,EAAG,CAC9B,EACJ;",
+"x_com_sap_openui5_sections":[66,257]
 }

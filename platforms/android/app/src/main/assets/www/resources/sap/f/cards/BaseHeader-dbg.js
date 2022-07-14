@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @abstract
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -77,12 +77,7 @@ sap.ui.define([
 				 * @experimental Since 1.86
 				 * @since 1.86
 				 */
-				toolbar: { type: "sap.ui.core.Control", multiple: false },
-
-				/**
-				 * Defines an error which will be displayed in the header.
-				 */
-				_error: { type: "sap.ui.core.Control", multiple: false, visibility: "hidden" }
+				toolbar: { type: "sap.ui.core.Control", multiple: false }
 			}
 		}
 	});
@@ -222,27 +217,6 @@ sap.ui.define([
 		}
 
 		return BaseHeader._oTimestampIntervalTrigger;
-	};
-
-	/**
-	 * @ui5-restricted
-	 */
-	BaseHeader.prototype.getAriaRole = function () {
-		return this.hasListeners("press") ? "button" : "heading";
-	};
-
-	/**
-	 * @ui5-restricted
-	 */
-	BaseHeader.prototype.getAriaHeadingLevel = function () {
-		return this.hasListeners("press") ? undefined : "3";
-	};
-
-	/**
-	 * @ui5-restricted
-	 */
-	BaseHeader.prototype.getAriaRoleDescription = function () {
-		return this.hasListeners("press") ? this._oRb.getText("ARIA_ROLEDESCRIPTION_INTERACTIVE_CARD_HEADER") : this._oRb.getText("ARIA_ROLEDESCRIPTION_CARD_HEADER");
 	};
 
 	return BaseHeader;

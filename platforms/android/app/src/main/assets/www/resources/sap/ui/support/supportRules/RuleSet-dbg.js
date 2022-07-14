@@ -38,7 +38,7 @@ function (jQuery, library, storage, constants) {
 	 * @name sap.ui.support.RuleSet
 	 * @memberof sap.ui.support
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @param {object} oSettings Name of the initiated
 	 * @returns {void}
 	 */
@@ -141,7 +141,8 @@ function (jQuery, library, storage, constants) {
 			return "Support rule with the id " + oSettings.id + " needs a description.";
 		}
 
-		if (!oSettings.resolution && (!oSettings.resolutionurls || oSettings.resolutionurls.length === 0)) {
+		// eslint-disable-next-line no-unsafe-negation
+		if (!oSettings.resolution && (!oSettings.resolutionurls || !oSettings.resolutionurls.length > 0)) {
 			jQuery.sap.log.error("Support rule with the id " + oSettings.id + " needs either a resolution or resolutionurls or should have a ticket handler function");
 			return "Support rule with the id " + oSettings.id + " needs either a resolution or resolutionurls or should have a ticket handler function";
 		}

@@ -107,7 +107,7 @@ sap.ui.define([
 	};
 
 	GenericTagRenderer._getAriaLabelledBy = function(oControl) {
-		var aLabelledBy = oControl.getAriaLabelledBy().slice(),
+		var aLabelledBy = [],
 			sId = oControl.getId(),
 			sTagValueId = this._getTagValueId(oControl);
 

@@ -94,7 +94,7 @@ sap.ui.define([
 	 * @implements sap.m.ObjectHeaderContainer, sap.f.IDynamicPageStickyContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.m.IconTabBar
@@ -288,12 +288,6 @@ sap.ui.define([
 					 * @since 1.15.0
 					 */
 					key : {type : "string"},
-
-					/**
-					 * The key of the previous selected item
-					 * @since 1.96
-					 */
-					previousKey : {type : "string"},
 
 					/**
 					 * The selected item
@@ -633,7 +627,6 @@ sap.ui.define([
 			this._getIconTabHeader().$().remove();
 		}
 	};
-
 	/* =========================================================== */
 	/*           begin: reflectors for header properties           */
 	/* =========================================================== */

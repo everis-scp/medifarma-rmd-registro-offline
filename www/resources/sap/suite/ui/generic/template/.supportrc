@@ -1,4 +1,4 @@
 {
   "publicRules": true,
-  "internalRules": false
+  "internalRules": true
 }

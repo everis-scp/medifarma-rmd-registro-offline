@@ -7,12 +7,6 @@
 			"theme": "base"
 		},
 		{
-			"name": "AbstractContainer.less",
-			"size": 399,
-			"designtime": true,
-			"theme": "base"
-		},
-		{
 			"name": "ActionListItem.less",
 			"size": 1514,
 			"designtime": true,
@@ -86,7 +80,7 @@
 		},
 		{
 			"name": "CheckBox.less",
-			"size": 5493,
+			"size": 5539,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -98,7 +92,7 @@
 		},
 		{
 			"name": "ColumnListItem.less",
-			"size": 5193,
+			"size": 4985,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -158,7 +152,7 @@
 		},
 		{
 			"name": "Dialog.less",
-			"size": 11844,
+			"size": 12477,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -242,7 +236,7 @@
 		},
 		{
 			"name": "GenericTile.less",
-			"size": 30924,
+			"size": 22548,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -260,7 +254,7 @@
 		},
 		{
 			"name": "IconTabBar.less",
-			"size": 37593,
+			"size": 37595,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -284,7 +278,7 @@
 		},
 		{
 			"name": "Input.less",
-			"size": 2990,
+			"size": 2713,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -320,7 +314,7 @@
 		},
 		{
 			"name": "ListBase.less",
-			"size": 6932,
+			"size": 6882,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -350,13 +344,13 @@
 		},
 		{
 			"name": "MessageBox.less",
-			"size": 1842,
+			"size": 1874,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "MessagePage.less",
-			"size": 1928,
+			"size": 1976,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -380,13 +374,13 @@
 		},
 		{
 			"name": "MessageView.less",
-			"size": 4529,
+			"size": 4477,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "MultiComboBox.less",
-			"size": 3873,
+			"size": 3521,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -404,7 +398,7 @@
 		},
 		{
 			"name": "NewsContent.less",
-			"size": 2193,
+			"size": 1361,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -428,7 +422,7 @@
 		},
 		{
 			"name": "NumericContent.less",
-			"size": 5909,
+			"size": 4103,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -458,25 +452,25 @@
 		},
 		{
 			"name": "ObjectMarker.less",
-			"size": 960,
+			"size": 900,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ObjectNumber.less",
-			"size": 6341,
+			"size": 6188,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ObjectStatus.less",
-			"size": 19822,
+			"size": 19550,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "OverflowToolbarAssociativePopover.less",
-			"size": 1915,
+			"size": 2080,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -493,14 +487,8 @@
 			"theme": "base"
 		},
 		{
-			"name": "P13nContainer.less",
-			"size": 353,
-			"designtime": true,
-			"theme": "base"
-		},
-		{
 			"name": "P13nDialog.less",
-			"size": 725,
+			"size": 628,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -698,7 +686,7 @@
 		},
 		{
 			"name": "SinglePlanningCalendarGrid.less",
-			"size": 19360,
+			"size": 19366,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -710,7 +698,7 @@
 		},
 		{
 			"name": "SlideTile.less",
-			"size": 4062,
+			"size": 3897,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -746,7 +734,7 @@
 		},
 		{
 			"name": "StandardListItem.less",
-			"size": 6904,
+			"size": 6822,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -776,7 +764,7 @@
 		},
 		{
 			"name": "SuggestionsPopover.less",
-			"size": 3241,
+			"size": 3214,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -806,7 +794,7 @@
 		},
 		{
 			"name": "Table.less",
-			"size": 12278,
+			"size": 12467,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -830,7 +818,7 @@
 		},
 		{
 			"name": "TextArea.less",
-			"size": 3117,
+			"size": 3109,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -848,7 +836,7 @@
 		},
 		{
 			"name": "TileContent.less",
-			"size": 3196,
+			"size": 2928,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -896,13 +884,13 @@
 		},
 		{
 			"name": "Token.less",
-			"size": 3102,
+			"size": 3180,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Tokenizer.less",
-			"size": 2249,
+			"size": 2060,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -938,7 +926,7 @@
 		},
 		{
 			"name": "UploadSet.less",
-			"size": 262,
+			"size": 203,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -956,7 +944,7 @@
 		},
 		{
 			"name": "ViewSettingsDialog.less",
-			"size": 2579,
+			"size": 1903,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -980,7 +968,7 @@
 		},
 		{
 			"name": "WizardProgressNavigator.less",
-			"size": 7730,
+			"size": 7747,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -992,7 +980,7 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 43350,
+			"size": 42991,
 			"theme": "base"
 		},
 		{
@@ -1003,63 +991,45 @@
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 146351,
+			"size": 145841,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 588162,
+			"size": 572453,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 18189,
+			"size": 18049,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
-			"size": 588134,
+			"size": 572433,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
-			"size": 678169,
+			"size": 663298,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library.source.less",
-			"size": 5404,
+			"size": 5271,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 622713,
+			"size": 606681,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 622685,
-			"theme": "base"
-		},
-		{
-			"name": "p13n.Container.less",
-			"size": 353,
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "p13n.QueryPanel.less",
-			"size": 113,
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "p13n.SelectionPanel.less",
-			"size": 923,
-			"designtime": true,
+			"size": 606661,
 			"theme": "base"
 		},
 		{

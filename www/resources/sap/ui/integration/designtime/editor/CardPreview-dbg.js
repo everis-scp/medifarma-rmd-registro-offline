@@ -26,7 +26,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.editor.CardPreview
 	 * @author SAP SE
 	 * @since 1.83.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @private
 	 * @experimental since 1.83.0
 	 * @ui5-restricted
@@ -60,9 +60,6 @@ sap.ui.define([
 			oRm.addClass("sapUiIntegrationDTPreview");
 			if (isDark()) {
 				oRm.addClass("sapUiIntegrationDTPreviewDark");
-			}
-			if (oControl.getSettings().preview.position && (oControl.getSettings().preview.position === "top" || oControl.getSettings().preview.position === "bottom")) {
-				oRm.addClass("sapUiIntegrationDTPreviewMarginForAlignTopAndBottom");
 			}
 			oRm.writeClasses();
 			oRm.openEnd();
@@ -123,24 +120,6 @@ sap.ui.define([
 			this._oCardPlaceholder.destroy();
 		}
 		Control.prototype.destroy.apply(this, arguments);
-	};
-
-	CardPreview.prototype.onAfterRendering = function () {
-		var oPreview = this._getCardPreview(),
-		    sModes = this._getModes();
-		if (sModes.indexOf("Live") > -1 && oPreview.getDomRef().getElementsByClassName("sapVizFrame")) {
-			window.setTimeout(function() {
-				try {
-					var vizFrameId = oPreview.getDomRef().getElementsByClassName("sapVizFrame")[0].id;
-					var oVizFrame = Core.byId(vizFrameId);
-					if (oVizFrame.getVizProperties() && oVizFrame.getVizProperties().legendGroup.layout.position === "bottom" && oVizFrame.getVizProperties().legendGroup.layout.alignment === "center") {
-						oPreview.getDomRef().getElementsByClassName("v-m-legend")[0].transform.baseVal[0].matrix.e = 110;
-					}
-				} catch (error) {
-					//do nothing
-				}
-			}, 500);
-		}
 	};
 
 	/**

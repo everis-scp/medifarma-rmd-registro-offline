@@ -100,8 +100,7 @@ sap.ui.define([], function() {
 						aArgs = [fnWrappedHandler, 0].concat(arguments);
 						_timeout.apply(window, aArgs);
 					} else {
-						// eslint-disable-next-line no-new-func
-						fnHandler = typeof vHandler !== "function" ? new Function(vHandler) : vHandler; // legacy-relevant
+						fnHandler = typeof vHandler !== "function" ? new Function(vHandler) : vHandler; // eslint-disable-line no-new-func
 						fnHandler.apply(window, arguments);
 					}
 				};

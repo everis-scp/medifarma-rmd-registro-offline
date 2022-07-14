@@ -52,7 +52,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.BasePropertyEditor
 	 * @author SAP SE
 	 * @since 1.70
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.70
@@ -173,20 +173,7 @@ sap.ui.define([
 				/**
 				 * Fires when init is finished
 				 */
-				init: {},
-
-				/**
-				 * Fires when the error state of the editor changes
-				 */
-				validationErrorChange: {
-					parameters: {
-						/**
-						 * Whether there is an error in the editor
-						 * @since 1.96.0
-						 */
-						hasError: { type: "boolean" }
-					}
-				}
+				init: {}
 			}
 		},
 		/**
@@ -329,9 +316,6 @@ sap.ui.define([
 		var vCurrentValue = this.getValue();
 		var oConfig = this.getConfig() || {};
 		var vNextValue = vValue;
-		if (oConfig.type === "integer" && Number.isInteger(Number(vValue))) {
-			vNextValue = parseInt(vValue);
-		}
 
 		// If the editor is not visible, don't allow setting new values
 		// to avoid unwanted updates and side effects like validation failures
@@ -357,7 +341,6 @@ sap.ui.define([
 					value: vNextValue
 				});
 			}
-			this.setHasOwnError(!bResult);
 		}.bind(this));
 	};
 
@@ -635,7 +618,6 @@ sap.ui.define([
 							return oEditorWrapper !== oObservedWrapper;
 						});
 						this._checkReadyState();
-						this._checkForError();
 						break;
 					case 'parent':
 						// Observed elements might contain nested wrappers
@@ -712,8 +694,6 @@ sap.ui.define([
 			this._checkReadyState();
 		}.bind(this));
 
-		oWrapper.attachValidationErrorChange(this._checkForError.bind(this));
-
 		if (oWrapper.isA("sap.ui.integration.designtime.baseEditor.PropertyEditor")) {
 			oWrapper.attachPropertyEditorChange(function (oEvent) {
 				var oPropertyEditor = oEvent.getParameter("propertyEditor");
@@ -741,28 +721,6 @@ sap.ui.define([
 
 	BasePropertyEditor.prototype.isReady = function () {
 		return !!this._bIsReady;
-	};
-
-	BasePropertyEditor.prototype.setHasOwnError = function (bHasError) {
-		this._bHasOwnError = bHasError;
-		this._checkForError();
-	};
-
-	BasePropertyEditor.prototype._checkForError = function () {
-		var bHasError = this.hasError();
-		// If the error state switches, fire the event
-		if (bHasError !== this._bHasError) {
-			this._bHasError = bHasError;
-			this.fireValidationErrorChange({
-				hasError: bHasError
-			});
-		}
-	};
-
-	BasePropertyEditor.prototype.hasError = function () {
-		return !!this._bHasOwnError || this._aEditorWrappers.some(function(oWrapper) {
-			return oWrapper.hasError();
-		});
 	};
 
 	/**
@@ -871,9 +829,6 @@ sap.ui.define([
 		visible: {
 			defaultValue: true,
 			mergeStrategy: "mostRestrictiveWins"
-		},
-		typeLabel: {
-			defaultValue: "BASE_EDITOR.FALLBACK_TYPE"
 		}
 	};
 
@@ -881,7 +836,7 @@ sap.ui.define([
 		var oPreviousConfig = this.getConfig();
 
 		var oDefaultConfig = {};
-		var oConfigMetadata = PropertyEditorFactory.getByClassName(this.getMetadata().getName()).configMetadata;
+		var oConfigMetadata = PropertyEditorFactory.getType(this.getMetadata().getName()).configMetadata;
 		each(oConfigMetadata, function (sConfigKey, mConfigValue) {
 			oDefaultConfig[sConfigKey] = mConfigValue.defaultValue;
 		});

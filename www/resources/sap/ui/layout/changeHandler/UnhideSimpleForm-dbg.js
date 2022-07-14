@@ -13,7 +13,7 @@ sap.ui.define([
 	 * Change handler for hiding of a control.
 	 * @alias sap.ui.fl.changeHandler.HideControl
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @experimental Since 1.27.0
 	 */
 	var UnhideForm = { };
@@ -155,9 +155,9 @@ sap.ui.define([
 			});
 	};
 
-	UnhideForm.getChangeVisualizationInfo = function(oChange, oAppComponent) {
+	UnhideForm.getChangeVisualizationInfo = function(oChange) {
 		return {
-			affectedControls: [JsControlTreeModifier.bySelector(oChange.getDefinition().content.elementSelector, oAppComponent).getParent().getId()]
+			affectedControls: [oChange.getDefinition().content.elementSelector]
 		};
 	};
 

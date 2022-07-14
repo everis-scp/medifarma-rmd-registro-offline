@@ -17,7 +17,7 @@ sap.ui.define([
 	 * @class The SelectionDialog control is used to show <code>items</code>.
 	 * @extends sap.ui.core.XMLComposite
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @since 1.60.0
@@ -199,7 +199,7 @@ sap.ui.define([
 		if (oTable) {
 			oTable.getItems().forEach(function(oTableItem) {
 				var iIndex = oTable.indexOfItem(oTableItem);
-				var bIsBaseline = oTable.getBinding("items").getContexts(undefined, undefined, undefined, true)[iIndex].getObject().getIsBaseline();
+				var bIsBaseline = oTable.getBinding("items").getContexts()[iIndex].getObject().getIsBaseline();
 				if (oTableItem.getSelected() !== bIsBaseline) {
 					oTableItem.setSelected(bIsBaseline);
 					this._selectTableItem(oTableItem);

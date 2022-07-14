@@ -65,7 +65,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -1283,10 +1283,18 @@ sap.ui.define([
 		// update the new value
 		this.Color.a = this.oAlphaSlider.getValue();
 
-		this.oAlphaField.setValue(this.Color.a);
-		this.oAlphaField2.setValue(this.Color.a);
+		// Update Alpha Field if needed - it's visible only in HSL mode
+		if (this._bHSLMode) {
+			this.oAlphaField.setValue(this.Color.a);
+			this.oAlphaField2.setValue(this.Color.a);
+		}
 
-		this._updateSelColorBackground();
+		// process changes
+		if (!this.Color.formatHSL) {
+			this._processRGBChanges();
+		} else {
+			this._processChanges();
+		}
 		this._updateColorStringProperty(oData === "change", oData === "liveChange");
 	};
 
@@ -1592,7 +1600,6 @@ sap.ui.define([
 
 		this._updateGradientBoxBackground(this.Color.h);
 		this._updateCursorPosition();
-		this._updateAlphaBackground();
 		this._updateSelColorBackground();
 	};
 
@@ -1688,7 +1695,6 @@ sap.ui.define([
 
 		this._updateGradientBoxBackground(this.Color.h);
 		this._updateCursorPosition();
-		this._updateAlphaBackground();
 		this._updateSelColorBackground();
 		this._updateColorStringProperty(true, true);
 	};
@@ -2390,7 +2396,10 @@ sap.ui.define([
 		this._iCPBoxSize = this.oCPBox.getWidth();
 		this._updateCursorPosition();
 
-		this._updateAlphaBackground();
+		// update alpha slider background only in HSL mode
+		if (this._bHSLMode) {
+			this._updateAlphaBackground();
+		}
 		this.oSlider.iShiftGrip = Math.round(jQuery(this.oSlider.oGrip).outerWidth() / 2);
 		this.oAlphaSlider.iShiftGrip = Math.round(jQuery(this.oAlphaSlider.oGrip).outerWidth() / 2);
 

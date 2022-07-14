@@ -31,11 +31,10 @@ sap.ui.define([
 	 * @extends sap.ui.integration.util.DataProvider
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
 	 * @since 1.65
 	 * @alias sap.ui.integration.util.RequestDataProvider
 	 */
@@ -65,8 +64,6 @@ sap.ui.define([
 
 	/**
 	 * @override
-	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
 	 * @returns {Promise} A promise resolved when the data is available and rejected in case of an error.
 	 */
 	RequestDataProvider.prototype.getData = function () {
@@ -115,6 +112,7 @@ sap.ui.define([
 		}
 
 		var vData = oRequestConfig.parameters,
+			oCard = this.getCardInstance(),
 			sUrl = oRequestConfig.url,
 			sDataType = (this.getAllowCustomDataType() && oRequestConfig.dataType) || "json",
 			mHeaders = oRequestConfig.headers || {},
@@ -122,8 +120,8 @@ sap.ui.define([
 			oBatchSerialized,
 			oRequest;
 
-		if ( !sUrl.startsWith("/")) {
-			sUrl = this._getRuntimeUrl(oRequestConfig.url);
+		if (oCard && !sUrl.startsWith("/")) {
+			sUrl = oCard.getRuntimeUrl(oRequestConfig.url);
 		}
 
 		// if not 'application/x-www-form-urlencoded', data has to be serialized manually

@@ -10,16 +10,14 @@ sap.ui.define([
 	"sap/ui/integration/library",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/base/Log",
-	"sap/ui/model/Sorter"
+	"sap/base/Log"
 ], function (
 	BaseContent,
 	BindingResolver,
 	library,
 	Filter,
 	FilterOperator,
-	Log,
-	Sorter
+	Log
 ) {
 	"use strict";
 
@@ -35,7 +33,7 @@ sap.ui.define([
 	 * @extends sap.ui.integration.cards.BaseContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -103,6 +101,26 @@ sap.ui.define([
 	};
 
 	/**
+	 * Used to filter the content items that are to be hidden.
+	 *
+	 * @protected
+	 * @param {Object} mItemConfig The item template.
+	 * @param {Object} oBindingInfo The binding info on which to attach the filter.
+	 */
+	BaseListContent.prototype._filterHiddenNavigationItems = function (mItemConfig, oBindingInfo) {
+		if (!mItemConfig.actions) {
+			return;
+		}
+		var oAction = mItemConfig.actions[0];
+		if (!(oAction && oAction.service && oAction.type === "Navigation")) {
+			return;
+		}
+		var oFilter = new Filter("_card_item_hidden", FilterOperator.EQ, false);
+		this.awaitEvent("_filterNavItemsReady");
+		oBindingInfo.filters = [oFilter];
+	};
+
+	/**
 	 * Used to check which content items should be hidden based on the Navigation Service.
 	 *
 	 * @protected
@@ -117,14 +135,16 @@ sap.ui.define([
 			return;
 		}
 
-		var oInnerList = this.getInnerList(),
-			aItems = oInnerList.getItems(),
+		var oBindingInfo = this.getInnerList().getBinding("items"),
+			oModel = oBindingInfo.getModel(),
+			sPath = oBindingInfo.getPath(),
+			aItems = oModel.getProperty(sPath),
 			aPromises = [],
 			oAction = mItemConfig.actions[0],
-			sActionName,
-			iVisibleItems = 0;
+			sBasePath = sPath.trim().replace(/\/$/, ""),
+			sActionName;
 
-		if (!oAction || !oAction.service || oAction.type !== "Navigation") {
+		if (!(oAction && oAction.service && oAction.type === "Navigation")) {
 			return;
 		}
 
@@ -135,45 +155,39 @@ sap.ui.define([
 		}
 
 		// create new promises
-		aItems.forEach(function (oItem) {
+		aItems.forEach(function (oItem, iIndex) {
 			var mParameters = BindingResolver.resolveValue(
 				oAction.parameters,
 				this,
-				oItem.getBindingContext().getPath()
+				sBasePath + "/" + iIndex
 			);
 
-			aPromises.push(this._oServiceManager
-				.getService(sActionName)
-				.then(function (oNavigationService) {
-					if (!oNavigationService.hidden) {
-						return false;
-					}
+			if (oItem._card_item_hidden === undefined) {
+				oItem._card_item_hidden = false;
+			}
 
-					return oNavigationService.hidden({parameters: mParameters});
-				})
-				.then(function (bHidden) {
-					oItem.setVisible(!bHidden);
-					if (!bHidden) {
-						iVisibleItems++;
-					}
-				})
-				.catch(function (sMessage) {
-					Log.error(sMessage);
-				}));
+			aPromises.push(
+				this._oServiceManager
+					.getService(sActionName)
+					.then(function (oNavigationService) {
+						if (!oNavigationService.hidden) {
+							return false;
+						}
 
+						return oNavigationService.hidden({ parameters: mParameters });
+					})
+					.then(function (bHidden) {
+						oItem._card_item_hidden = !!bHidden;
+						oModel.checkUpdate(true);
+					})
+					.catch(function (sMessage) {
+						Log.error(sMessage);
+					})
+			);
 		}.bind(this));
 
-		this.awaitEvent("_filterNavItemsReady");
-
-		var pCurrent = this._oAwaitingPromise = Promise.all(aPromises)
-			.then(function () {
-				if (this._oAwaitingPromise === pCurrent) {
-					if (this.getModel("parameters")) {
-						this.getModel("parameters").setProperty("/visibleItems", iVisibleItems);
-					}
-					this.fireEvent("_filterNavItemsReady");
-				}
-			}.bind(this));
+		oModel.checkUpdate(true);
+		this._awaitPromises(aPromises);
 	};
 
 	/**
@@ -189,24 +203,6 @@ sap.ui.define([
 				this.fireEvent("_filterNavItemsReady");
 			}
 		}.bind(this));
-	};
-
-	/**
-	 * Define the sorting of a group.
-	 * @param {object} oGroup The group which will be sorted
-	 * @returns {sap.ui.model.Sorter}  Sorter for a list bindings.
-	 */
-	BaseListContent.prototype._getGroupSorter = function(oGroup) {
-
-		var bDescendingOrder = false;
-		if (oGroup.order.dir && oGroup.order.dir === "DESC") {
-			bDescendingOrder = true;
-		}
-		var oSorter = new Sorter(oGroup.order.path, bDescendingOrder, function (oContext) {
-			return BindingResolver.resolveValue(oGroup.title, oContext.getModel(), oContext.getPath());
-		});
-
-		return oSorter;
 	};
 
 	return BaseListContent;

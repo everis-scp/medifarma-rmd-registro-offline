@@ -22,7 +22,6 @@ sap.ui.define([
 	"sap/ui/events/KeyCodes",
 	"sap/base/Log",
 	"sap/ui/core/EnabledPropagator",
-	"sap/ui/core/theming/Parameters",
 	"sap/ui/thirdparty/jquery",
 	// jQuery Plugin "control"
 	"sap/ui/dom/jquery/control",
@@ -46,7 +45,6 @@ sap.ui.define([
 		KeyCodes,
 		Log,
 		EnabledPropagator,
-		Parameters,
 		jQuery,
 		scrollLeftRTL
 	) {
@@ -78,7 +76,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -260,10 +258,6 @@ sap.ui.define([
 			nonTouchScrolling : true
 		});
 
-		// The ratio between the font size of the token and the font size of the items used in the
-		// n-more popover.
-		this._fFontSizeRatio = 1.0;
-
 		if (Core.getConfiguration().getAccessibility()) {
 			var sAriaTokenizerContainToken = new InvisibleText({
 				text: oRb.getText("TOKENIZER_ARIA_NO_TOKENS")
@@ -432,35 +426,7 @@ sap.ui.define([
 		})
 			.attachBeforeOpen(function () {
 				var iWidestElement = this.getEditable() ? 120 : 32, // Paddings & Delete icons in editable mode && paddings in non-editable mode
-					oPopup = this._oPopup,
-					fnGetDensityMode = function () {
-						var oParent = this.getDomRef() && this.getDomRef().parentElement;
-						var sDensityMode = "Cozy";
-
-						if (!oParent) {
-							return sDensityMode;
-						}
-
-						if (oParent.closest(".sapUiSizeCompact") !== null || document.body.classList.contains("sapUiSizeCompact")) {
-							sDensityMode = "Compact";
-						}
-
-						return sDensityMode;
-					}.bind(this),
-					fnGetRatioPromise = new Promise(function (resolve) {
-						Parameters.get({
-							name: ["_sap_m_Tokenizer_FontSizeRatio" + fnGetDensityMode()],
-							callback: function (sFontSizeRatio) {
-								var fRatio = parseFloat(sFontSizeRatio);
-								if (isNaN(fRatio)) {
-									resolve(this._fFontSizeRatio);
-									return;
-								}
-								resolve(fRatio);
-							}.bind(this)
-						});
-					}.bind(this));
-
+					oPopup = this._oPopup;
 				if (oPopup.getContent && !oPopup.getContent().length) {
 					oPopup.addContent(this._getTokensList());
 				}
@@ -471,15 +437,7 @@ sap.ui.define([
 					.sort(function (a, b) { return a - b; }) // Just sort() returns odd results
 					.pop() || 0; // Get the longest element in PX
 
-				// The row below takes into consideration the ratio of the token's width to item's font size
-				// which in turn is used to adjust the longest element's width so that there is no truncation
-				// in the n-more popover.
-				// width = width + (width * <<ratio converted in difference>>);
-
-				fnGetRatioPromise.then(function (fRatio) {
-					iWidestElement += Math.ceil(iWidestElement * ( 1 - fRatio ));
-					oPopup.setContentWidth(iWidestElement + "px");
-				});
+				oPopup.setContentWidth(iWidestElement + "px");
 			}, this);
 
 		this.addDependent(this._oPopup);

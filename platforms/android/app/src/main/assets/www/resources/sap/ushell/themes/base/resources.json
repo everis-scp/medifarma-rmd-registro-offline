@@ -3,615 +3,561 @@
 	"resources": [
 		{
 			"name": ".theming",
-			"theme": "base"
-		},
-		{
-			"name": "AboutDialog.less",
-			"designtime": true,
+			"size": 64,
 			"theme": "base"
 		},
 		{
 			"name": "ActionMode.less",
+			"size": 2196,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "AddBookmarkButton.less",
+			"size": 786,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "AnchorItem.less",
+			"size": 1776,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "AnchorNavigationBar.less",
+			"size": 1958,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "AppearanceView.less",
+			"size": 4623,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ApplicationContainer.less",
+			"size": 922,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Catalog.less",
+			"size": 8759,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ContactSupport.less",
+			"size": 345,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "CustomGroupHeaderListItem.less",
+			"size": 203,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Dashboard.less",
+			"size": 1816,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "DynamicTile.less",
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "EndUserFeedback.less",
+			"size": 3219,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Factsheet.less",
+			"size": 4871,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "FloatingContainer.less",
+			"size": 1113,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "FlpSettings.less",
+			"size": 1564,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "GridContainer.less",
+			"size": 2056,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "GroupList.less",
+			"size": 1846,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "GroupListItem.less",
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "HideGroupsButton.less",
+			"size": 1510,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "IconFonts.less",
+			"size": 936,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ImageTile.less",
+			"size": 1185,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "LoadingDialog.less",
+			"size": 1017,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "MeArea.less",
+			"size": 1208,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "NavTree.less",
+			"size": 1582,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "NotificationSettings.less",
+			"size": 1354,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Notifications.less",
+			"size": 2879,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Page.less",
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "PageComposer.less",
+			"size": 1044,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "PictureTile.less",
+			"size": 2484,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
-			"name": "PictureViewe.less",
+			"name": "PictureViewer.less",
+			"size": 454,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "PlusTile.less",
+			"size": 969,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "QuickAccess.less",
+			"size": 453,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "RightFloatingContainerItem.less",
+			"size": 2090,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Search.less",
+			"size": 7321,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchBarChart.less",
+			"size": 815,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "SearchFLP.less",
+			"size": 139,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchFacet.less",
+			"size": 998,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchFacetDialog.less",
+			"size": 4558,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchFacetTabBar.less",
+			"size": 271,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchFieldGroup.less",
+			"size": 4852,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "SearchInputHelpDialog.less",
+			"size": 446,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchPieChart.less",
+			"size": 669,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchResultListItem.less",
+			"size": 27066,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchResultMap.less",
+			"size": 140,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SearchTileContainer.less",
+			"size": 3134,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Section.less",
+			"size": 1333,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ShellAppTitle.less",
+			"size": 6254,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ShellFloatingAction.less",
+			"size": 1497,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ShellFloatingActions.less",
+			"size": 256,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ShellHeader.less",
+			"size": 8031,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ShellLayout.less",
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "ShortcutsHelpContainer.less",
+			"size": 4674,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "SplitContainer.less",
+			"size": 1278,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "StaticTile.less",
+			"size": 224,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "TargetMappingConfiguration.less",
+			"size": 301,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Tile.less",
+			"size": 5209,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "TileBase.less",
+			"size": 4260,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "TileContainer.less",
+			"size": 10541,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "TilePlaceholder.less",
+			"size": 1434,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "TileState.less",
+			"size": 1161,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ToolAreaItem.less",
+			"size": 1977,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "ToolbarFiori.less",
+			"size": 156,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "UsageAnalyticsPopUp.less",
+			"size": 305,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "UsageAnalyticsSelector.less",
+			"size": 603,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "UserConsentDialog.less",
+			"size": 1036,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
-			"name": "UserPreferencesButton.css",
+			"name": "UserPreferencesButton.less",
+			"size": 819,
+			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "UserSettings.less",
+			"size": 3004,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "ViewPortContainer.less",
+			"size": 1311,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.css",
+			"size": 13295,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 234,
+			"designtime": true,
+			"theme": "base"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 107102,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "flower-standalone.less",
+			"size": 19181,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/BusinessSuiteInAppSymbols.eot",
+			"size": 70206,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/BusinessSuiteInAppSymbols.json",
+			"size": 10954,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/BusinessSuiteInAppSymbols.ttf",
+			"size": 161728,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/BusinessSuiteInAppSymbols.woff",
+			"size": 83280,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/BusinessSuiteInAppSymbols.woff2",
+			"size": 48360,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/SAP-icons.eot",
+			"size": 64804,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/SAP-icons.ttf",
+			"size": 68248,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/SAP-icons.woff",
+			"size": 34576,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/SAP-icons.woff2",
+			"size": 26076,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/SmileIconFont.ttf",
+			"size": 3132,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/sap-fiori-inapp-icons.eot",
+			"size": 22363,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/sap-fiori-inapp-icons.ttf",
+			"size": 26296,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/sap-launch-icons.eot",
+			"size": 231856,
 			"theme": "base"
 		},
 		{
 			"name": "fonts/sap-launch-icons.ttf",
+			"size": 217068,
 			"theme": "base"
 		},
 		{
-			"name": "img-RTL/Bar_horizontal.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/Bar_horizontal_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/List.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/List_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/Pie_chart.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/Pie_chart_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/flower_anim.gif",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/grid.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/launchicons/114_iPhone-Retina_Web_Clip.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/launchicons/144_iPad_Retina_Web_Clip.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/launchicons/57_iPhone_Desktop_Launch.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/launchicons/72_iPad_Desktop_Launch.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/launchpadDefaultIcon.jpg",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/sap_50x26_belize.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/sap_55x27.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/1024_x_748.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/1536_x_2008.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/2048_x_1496.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/320_x_460.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/640_x_1096.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/640_x_920.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/splashscreen/768_x_1004.png",
-			"theme": "base"
-		},
-		{
-			"name": "img-RTL/trashcan.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/Bar_horizontal.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/Bar_horizontal_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/List.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/List_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/Pie_chart.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/Pie_chart_hover.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/flower_anim.gif",
-			"theme": "base"
-		},
-		{
-			"name": "img/grid.png",
+			"name": "img/SAPLogo.svg",
+			"size": 1561,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchicons/114_iPhone-Retina_Web_Clip.png",
+			"size": 13405,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchicons/144_iPad_Retina_Web_Clip.png",
+			"size": 17918,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchicons/57_iPhone_Desktop_Launch.png",
+			"size": 5706,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchicons/72_iPad_Desktop_Launch.png",
+			"size": 7525,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchpadDefaultIcon.jpg",
+			"size": 17706,
 			"theme": "base"
 		},
 		{
 			"name": "img/launchpad_favicon.ico",
-			"theme": "base"
-		},
-		{
-			"name": "img/sap_50x26_belize.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/sap_55x27.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/1024_x_748.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/1536_x_2008.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/2048_x_1496.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/320_x_460.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/640_x_1096.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/640_x_920.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/splashscreen/768_x_1004.png",
-			"theme": "base"
-		},
-		{
-			"name": "img/trashcan.png",
-			"theme": "base"
-		},
-		{
-			"name": "library-RTL-dbg.css",
-			"isDebug": true,
+			"size": 11502,
 			"theme": "base"
 		},
 		{
 			"name": "library-RTL.css",
-			"theme": "base"
-		},
-		{
-			"name": "library-dbg.css",
-			"isDebug": true,
+			"size": 162556,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
+			"size": 5711,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
+			"size": 162486,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
+			"size": 189385,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library.source.less",
+			"size": 2194,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
+			"name": "library_skeleton-RTL.css",
+			"size": 162188,
+			"theme": "base"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 162118,
+			"theme": "base"
+		},
+		{
 			"name": "shared.less",
+			"size": 2120,
 			"designtime": true,
 			"theme": "base"
 		}

@@ -39,7 +39,7 @@ sap.ui.define([
 	 * @param {object} [mSettings] Initial settings for the new control
 	 * @class A field help used in the <code>FieldHelp</code> association of controls based on {@link sap.ui.mdc.field.FieldBase FieldBase} that shows a list of items.
 	 * @extends sap.ui.mdc.field.FieldHelpBase
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @ui5-restricted sap.fe
@@ -377,14 +377,14 @@ sap.ui.define([
 			var i = 0;
 			if (iStep >= 0) {
 				for (i = 0; i < aItems.length; i++) {
-					if (aItems[i].getLabel && _filterText.call(this, aItems[i].getLabel(), sFilterValue)) {
+					if (_filterText.call(this, aItems[i].getLabel(), sFilterValue)) {
 						iSelectedIndex = i;
 						break;
 					}
 				}
 			} else {
 				for (i = aItems.length - 1; i >= 0; i--) {
-					if (aItems[i].getLabel && _filterText.call(this, aItems[i].getLabel(), sFilterValue)) {
+					if (_filterText.call(this, aItems[i].getLabel(), sFilterValue)) {
 						iSelectedIndex = i;
 						break;
 					}

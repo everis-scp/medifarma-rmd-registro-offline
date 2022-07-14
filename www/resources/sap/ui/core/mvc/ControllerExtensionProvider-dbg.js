@@ -118,40 +118,42 @@ sap.ui.define(["sap/base/Log", "sap/ui/core/Component"], function(Log, Component
 
 		var aControllerNames = [];
 
+		if (!sap.ui.getCore().getConfiguration().getDisableCustomizing()) {
+			if (oComponent) {
 
-		// lookup config of "sap.ui.controllerExtensions" in Manifest
-		var mInstanceSpecificConfig = Component.getCustomizing(oComponent, {
-			type: "sap.ui.controllerExtensions",
-			name: sControllerName + "#" + sViewId
-		});
+				// Check if we have a delegate for this component.
+				oComponent = (oComponent.getExtensionComponent && oComponent.getExtensionComponent()) || oComponent;
 
-		// First check for instance-specific extension, if none exists look for base extension
-		var aControllerExtConfigs = [];
+				// lookup config of "sap.ui.controllerExtensions" in Manifest
+				var mInstanceSpecificConfig = oComponent._getManifestEntry("/sap.ui5/extends/extensions/sap.ui.controllerExtensions/" + sControllerName + "#" + sViewId, true);
 
-		if (mInstanceSpecificConfig) {
-			aControllerExtConfigs.push(mInstanceSpecificConfig);
-		} else {
-			var mDefaultConfig = Component.getCustomizing(oComponent, {
-				type: "sap.ui.controllerExtensions",
-				name: sControllerName
-			});
-			if (mDefaultConfig) {
-				aControllerExtConfigs.push(mDefaultConfig);
-			}
-		}
+				// First check for instance-specific extension, if none exists look for base extension
+				var aControllerExtConfigs = [];
 
-		for (var i = 0; i < aControllerExtConfigs.length; i++) {
-			var vControllerExtensions = aControllerExtConfigs[i];
-			if (vControllerExtensions) {
-				// Normalize the different legacy extension definitions, either:
-				//  - a string -> "my.ctrl.name"
-				//  - an object containing a controllerName:string property and/or a controllerNames:string[] property, e.g.
-				//    { controllerName: "my.ctrl.name0", controllerNames: ["my.ctrl.name1", "my.ctrl.name2"] }
-				var sExtControllerName = typeof vControllerExtensions === "string" ? vControllerExtensions : vControllerExtensions.controllerName;
-				aControllerNames = aControllerNames.concat(vControllerExtensions.controllerNames || []);
-				if (sExtControllerName) {
-					aControllerNames.unshift(sExtControllerName);
+				if (mInstanceSpecificConfig) {
+					aControllerExtConfigs.push(mInstanceSpecificConfig);
+				} else {
+					var mDefaultConfig = oComponent._getManifestEntry("/sap.ui5/extends/extensions/sap.ui.controllerExtensions/" + sControllerName, true);
+					if (mDefaultConfig) {
+						aControllerExtConfigs.push(mDefaultConfig);
+					}
 				}
+
+				for (var i = 0; i < aControllerExtConfigs.length; i++) {
+					var vControllerExtensions = aControllerExtConfigs[i];
+					if (vControllerExtensions) {
+						// Normalize the different legacy extension definitions, either:
+						//  - a string -> "my.ctrl.name"
+						//  - an object containing a controllerName:string property and/or a controllerNames:string[] property, e.g.
+						//    { controllerName: "my.ctrl.name0", controllerNames: ["my.ctrl.name1", "my.ctrl.name2"] }
+						var sExtControllerName = typeof vControllerExtensions === "string" ? vControllerExtensions : vControllerExtensions.controllerName;
+						aControllerNames = aControllerNames.concat(vControllerExtensions.controllerNames || []);
+						if (sExtControllerName) {
+							aControllerNames.unshift(sExtControllerName);
+						}
+					}
+				}
+
 			}
 		}
 
@@ -185,7 +187,7 @@ sap.ui.define(["sap/base/Log", "sap/ui/core/Component"], function(Log, Component
 					}, reject);
 				});
 			} else {
-				var ExtensionProviderClass = sap.ui.requireSync(sProviderName); // legacy-relevant: Sync path
+				var ExtensionProviderClass = sap.ui.requireSync(sProviderName);
 				oProvider = new ExtensionProviderClass();
 				mExtensionProvider[sProviderName] = oProvider;
 				return oProvider;

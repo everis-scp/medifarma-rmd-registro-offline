@@ -1,22 +1,26 @@
 <core:FragmentDefinition
-		xmlns="sap.m"
-		xmlns:core="sap.ui.core"
-		xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1">
-	<template:if
-			test="{= ${dataPoint>Visualization} &amp;&amp; ${dataPoint>Visualization/$EnumMember}.indexOf('com.sap.vocabularies.UI.v1.VisualizationType/Progress') >= 0}">
-		<template:then>
-			<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderProgressIndicator"
-						   type="XML"/>
-		</template:then>
-		<template:elseif
-				test="{= ${dataPoint>Visualization/$EnumMember} === 'com.sap.vocabularies.UI.v1.VisualizationType/Rating'}">
-			<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderRatingIndicator" type="XML"/>
-		</template:elseif>
-		<template:else>
-			<VBox displayInline="true">
-				<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderDataPointContent"
-							   type="XML"/>
-			</VBox>
-		</template:else>
-	</template:if>
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:internalMacro="sap.fe.macros.internal"
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:unittest="http://schemas.sap.com/sapui5/preprocessorextension/sap.fe.unittesting/1"
+	template:require="{
+		ID: 'sap/fe/core/helpers/StableIdHelper',
+		OP: 'sap/fe/templates/ObjectPage/AnnotationHelper',
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		MESSAGE: 'sap/base/strings/formatMessage',
+		FIELD: 'sap/fe/macros/field/FieldHelper',
+		COMMON: 'sap/fe/macros/CommonHelper',
+		UI: 'sap/fe/core/templating/UIFormatters'
+	}"
+>
+
+	<VBox
+		id="{= ID.generate(['fe', 'HeaderFacet', ${converterHeaderFacet>headerDataPointData/type} !== 'Content' ? ${converterHeaderFacet>headerDataPointData/type} : 'KeyFigure', { Facet: ${headerFacet>} }]) }"
+	>
+		<core:Fragment fragmentName="sap.fe.templates.ObjectPage.view.fragments.HeaderDataPointTitle" type="XML" />
+		<internalMacro:DataPoint metaPath="{dataPoint>}" contextPath="{entitySet>}">
+			<internalMacro:formatOptions defaultDataPointStyle="ObjectNumber" showLabels="true" iconSize="1.375rem" />
+		</internalMacro:DataPoint>
+	</VBox>
 </core:FragmentDefinition>

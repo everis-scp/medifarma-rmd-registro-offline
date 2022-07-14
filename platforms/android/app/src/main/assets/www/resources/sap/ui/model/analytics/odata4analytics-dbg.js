@@ -4,10 +4,9 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-// Disable some ESLint rules. camelcase (some "_" in names to indicate indexed variables (like in
-// math)), valid-jsdoc (not completed yet), no-warning-comments (some TODOs are left)
+// Disable some ESLint rules. camelcase (some "_" in names to indicate indexed variables (like in math)), valid-jsdoc (not completed yet), no-warning-comments (some TODOs are left)
 // All other warnings, errors should be resolved
-/*eslint-disable camelcase, valid-jsdoc, no-warning-comments, max-len */
+/*eslint-disable camelcase, valid-jsdoc, no-warning-comments */
 
 // Provides API for analytical extensions in OData service metadata
 sap.ui.define([
@@ -147,20 +146,18 @@ sap.ui.define([
 	/**
 	 * Create a representation of the analytical semantics of OData service metadata
 	 *
-	 * @param {object} oModelReference
-	 *   An instance of {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByModel} or
-	 *   {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceWithWorkaround} for locating
-	 *   the OData service. {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByURI} is
-	 *   deprecated.
-	 * @param {object} [mParameter]
-	 *   Additional parameters for controlling the model construction. Currently supported are:
-	 *   <li> sAnnotationJSONDoc - A JSON document providing extra annotations to the elements of
-	 *        the structure of the given service
-	 *   </li>
-	 *   <li> modelVersion (deprecated) - Parameter to define which ODataModel version should be
-	 *        used if you use {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByURI};
-	 *        supported values are: 1 (default), 2
-	 *   </li>
+	 * @param {object}
+	 *            oModelReference An instance of ReferenceByURI, ReferenceByModel or
+	 *            ReferenceWithWorkaround for locating the OData service.
+	 * @param {object}
+	 * 	          [mParameter] Additional parameters for controlling the model construction. Currently supported are:
+	 *            <li> sAnnotationJSONDoc - A JSON document providing extra annotations to the elements of the
+	 *                 structure of the given service
+	 *            </li>
+	 *            <li> modelVersion - Parameter to define which ODataModel version should be used, in you use
+	 *                 'odata4analytics.Model.ReferenceByURI': 1 (default), 2
+	 *                 see also: AnalyticalVersionInfo constants
+	 *            </li>
 	 *
 	 * @class Representation of an OData model with analytical annotations defined
 	 *        by OData4SAP.
@@ -180,8 +177,6 @@ sap.ui.define([
 	 *
 	 * @class Handle to an OData model by the URI pointing to it.
 	 * @name sap.ui.model.analytics.odata4analytics.Model.ReferenceByURI
-	 * @deprecated Since 1.94 use
-	 *   {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByModel} instead
 	 * @public
 	 */
 	odata4analytics.Model.ReferenceByURI = function(sURI) {
@@ -224,12 +219,12 @@ sap.ui.define([
 	 * exists, they are linked via annotation.</li>
 	 *
 	 *
-	 * @param {object} oModel
-	 *   Holds a reference to the OData model, obtained by
-	 *   {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByModel}, or by
-	 *   {@link sap.ui.model.analytics.odata4analytics.Model.ReferenceByURI} which is deprecated.
-	 * @param {string[]} aWorkaroundID
-	 *   All workarounds to be applied.
+	 * @param {object}
+	 *            oModel holding a reference to the OData model, obtained
+	 *            by odata4analytics.Model.ReferenceByModel or by
+	 *            sap.odata4analytics.Model.ReferenceByURI.
+	 * @param {string[]}
+	 *            aWorkaroundID listing all workarounds to be applied.
 	 *
 	 * @class Handle to an already instantiated SAPUI5 OData model.
 	 * @name sap.ui.model.analytics.odata4analytics.Model.ReferenceWithWorkaround
@@ -250,14 +245,12 @@ sap.ui.define([
 		 * @private
 		 */
 		_init : function(oModelReference, mParameter) {
-			var ODataModelClass,
-				that = this;
-
 			if (typeof mParameter == "string") {
 				throw "Deprecated second argument: Adjust your invocation by passing an object with a property sAnnotationJSONDoc as a second argument instead";
 			}
 			this._mParameter = mParameter;
 
+			var that = this;
 			/*
 			 * get access to OData model
 			 */
@@ -284,16 +277,14 @@ sap.ui.define([
 				checkForMetadata();
 			} else if (mParameter && mParameter.modelVersion === AnalyticalVersionInfo.V2) {
 				// Check if the user wants a V2 model
-				ODataModelClass = sap.ui.require("sap/ui/model/odata/v2/ODataModel") ||
-					sap.ui.requireSync("sap/ui/model/odata/v2/ODataModel");
-				this._oModel = new ODataModelClass(oModelReference.sServiceURI);
+				var V2ODataModel = sap.ui.requireSync("sap/ui/model/odata/v2/ODataModel");
+				this._oModel = new V2ODataModel(oModelReference.sServiceURI);
 				this._iVersion = AnalyticalVersionInfo.V2;
 				checkForMetadata();
 			} else {
 				//default is V1 Model
-				ODataModelClass = sap.ui.require("sap/ui/model/odata/ODataModel") ||
-					sap.ui.requireSync("sap/ui/model/odata/ODataModel");
-				this._oModel = new ODataModelClass(oModelReference.sServiceURI);
+				var ODataModel = sap.ui.requireSync("sap/ui/model/odata/ODataModel");
+				this._oModel = new ODataModel(oModelReference.sServiceURI);
 				this._iVersion = AnalyticalVersionInfo.V1;
 				checkForMetadata();
 			}

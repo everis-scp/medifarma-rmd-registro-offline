@@ -210,7 +210,7 @@ sap.ui.define([
 							}
 							fnCallback();
 						}
-						that.oRequestor.getModelInterface().reportStateMessages(that.sResourcePath,
+						that.oRequestor.getModelInterface().reportBoundMessages(that.sResourcePath,
 							[], [sEntityPath]);
 					}),
 				iIndex === undefined // single element or kept-alive not in list
@@ -485,7 +485,7 @@ sap.ui.define([
 
 		/*
 		 * Determines the implicit value if the value is missing in the cache. Reports an invalid
-		 * segment if there is no @Core.Permissions: 'None' annotation and no implicit value.
+		 * segment if there is no implicit value.
 		 *
 		 * @param {object} oValue The object that is expected to have the value
 		 * @param {string} sSegment The path segment that is missing
@@ -503,8 +503,6 @@ sap.ui.define([
 			return that.oRequestor.getModelInterface()
 				.fetchMetadata(that.sMetaPath + "/" + _Helper.getMetaPath(sPropertyPath))
 				.then(function (oProperty) {
-					var vPermissions;
-
 					if (!oProperty) {
 						return invalidSegment(sSegment);
 					}
@@ -516,11 +514,6 @@ sap.ui.define([
 							|| _Helper.buildPath(sServiceUrl + that.sResourcePath, sPropertyPath);
 					}
 					if (!bTransient) {
-						vPermissions = oValue[
-							_Helper.getAnnotationKey(oValue, ".Permissions", sSegment)];
-						if (vPermissions === 0 || vPermissions === "None") {
-							return undefined;
-						}
 						// If there is no entity with a key predicate, try it with the cache root
 						// object (in case of SimpleCache, the root object of CollectionCache is an
 						// array)
@@ -599,7 +592,7 @@ sap.ui.define([
 					vValue = vValue[vIndex];
 				}
 				// missing advertisement or annotation is not an error
-				return vValue === undefined && sSegment[0] !== "#" && !sSegment.includes("@")
+				return vValue === undefined && sSegment[0] !== "#" &&  sSegment[0] !== "@"
 					? missingValue(oParentValue, sSegment, i + 1)
 					: vValue;
 			});
@@ -1220,7 +1213,7 @@ sap.ui.define([
 				} else if (aReadResult.length === 0) {
 					that.removeElement(aElements, iIndex, sPredicate, sPath);
 					that.oRequestor.getModelInterface()
-						.reportStateMessages(that.sResourcePath, [], [sPath + sPredicate]);
+						.reportBoundMessages(that.sResourcePath, [], [sPath + sPredicate]);
 					fnOnRemove(false);
 				} else if (bRemoveFromCollection) {
 					that.removeElement(aElements, iIndex, sPredicate, sPath);
@@ -1305,7 +1298,7 @@ sap.ui.define([
 	 */
 	_Cache.prototype.removeMessages = function () {
 		if (this.sReportedMessagesPath) {
-			this.oRequestor.getModelInterface().reportStateMessages(this.sReportedMessagesPath, {});
+			this.oRequestor.getModelInterface().reportBoundMessages(this.sReportedMessagesPath, {});
 			this.sReportedMessagesPath = undefined;
 		}
 	};
@@ -1617,7 +1610,7 @@ sap.ui.define([
 	 *   Path of the unit or currency for the property, relative to the entity
 	 * @param {boolean} [bPatchWithoutSideEffects]
 	 *   Whether the PATCH response is ignored, except for a new ETag
-	 * @param {function} fnPatchSent
+	 * @param {function} [fnPatchSent]
 	 *   The function is called just before a back-end request is sent for the first time.
 	 *   If no back-end request is needed, the function is not called.
 	 * @returns {Promise}
@@ -1639,13 +1632,11 @@ sap.ui.define([
 		try {
 			oPromise = this.fetchValue(_GroupLock.$cached, sEntityPath);
 		} catch (oError) {
-			if (!oError.$cached || this.oPromise !== null) {
+			if (!oError.$cached) {
 				throw oError;
 			}
-			// data has not been read, fake it
-			// Note: we need a unique "entity" instance to avoid merging of unrelated PATCH requests
-			// and sharing of data across bindings - the instance is modified below!
-			oPromise = this.oPromise = SyncPromise.resolve({"@odata.etag" : "*"});
+			// Note: we need a unique "entity" instance to avoid merging of PATCH requests!
+			oPromise = SyncPromise.resolve({"@odata.etag" : "*"});
 		}
 
 		return oPromise.then(function (oEntity) {
@@ -1681,7 +1672,9 @@ sap.ui.define([
 				 */
 				function onSubmit() {
 					oRequestLock = that.oRequestor.lockGroup(sGroupId, that, true);
-					fnPatchSent();
+					if (fnPatchSent) {
+						fnPatchSent();
+					}
 				}
 
 				if (bPatchWithoutSideEffects) {
@@ -1814,7 +1807,7 @@ sap.ui.define([
 	 * Processes the response from the server. All arrays are annotated by their length, influenced
 	 * by the annotations "@odata.count" and "@odata.nextLink". Recursively calculates the key
 	 * predicates for all entities in the result. Collects and reports OData messages via
-	 * {@link sap.ui.model.odata.v4.lib._Requestor#reportStateMessages}.
+	 * {@link sap.ui.model.odata.v4.lib._Requestor#reportBoundMessages}.
 	 *
 	 * @param {*} oRoot An OData response, arrays or simple values are wrapped into an object as
 	 *   property "value"
@@ -1989,7 +1982,7 @@ sap.ui.define([
 		}
 		if (bHasMessages) {
 			this.sReportedMessagesPath = this.getOriginalResourcePath(oRoot);
-			this.oRequestor.getModelInterface().reportStateMessages(this.sReportedMessagesPath,
+			this.oRequestor.getModelInterface().reportBoundMessages(this.sReportedMessagesPath,
 				mPathToODataMessages, aCachePaths);
 		}
 	};
@@ -2303,7 +2296,7 @@ sap.ui.define([
 				oKeptElement = this.aElements.$byPredicate[sPredicate];
 				if (oKeptElement) {
 					if (oElement["@odata.etag"] === oKeptElement["@odata.etag"]) {
-						_Helper.merge(oElement, oKeptElement);
+						oElement = oKeptElement;
 					} else if (this.hasPendingChangesForPath(sPredicate)) {
 						throw new Error("Modified on client and on server: "
 							+ this.sResourcePath + sPredicate);
@@ -2884,8 +2877,8 @@ sap.ui.define([
 			if (this.bPost) {
 				throw new Error("Cannot fetch a value before the POST request");
 			}
+			this.bSentRequest = true;
 			this.oPromise = SyncPromise.all([
-				// Note: for _GroupLock.$cached, this may fail synchronously
 				this.oRequestor.request("GET", sResourcePath, oGroupLock, undefined, undefined,
 					fnDataRequested, undefined, this.sMetaPath),
 				this.fetchTypes()
@@ -2893,7 +2886,6 @@ sap.ui.define([
 				that.visitResponse(aResult[0], aResult[1]);
 				return aResult[0];
 			});
-			this.bSentRequest = true;
 		}
 		return this.oPromise.then(function (oResult) {
 			if (oResult && oResult["$ui5.deleted"]) {

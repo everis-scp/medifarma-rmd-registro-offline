@@ -1018,7 +1018,7 @@
 		},
 		{
 			"name": "ui/overlay.html",
-			"size": 657
+			"size": 680
 		},
 		{
 			"name": "ui/styles/ControlTree.css",
@@ -1026,7 +1026,7 @@
 		},
 		{
 			"name": "ui/styles/overlay.css",
-			"size": 1591
+			"size": 1620
 		},
 		{
 			"name": "ui/views/Main.view.xml",

@@ -6,7 +6,7 @@
     <template:if test="{= ${parts: [{path: 'facet>'}, {path: 'parameter>/settings'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelperMultipleViews.hasQuickVariantSelectionInObjectPageSection'} === true}">
         <template:with path="parameter>/settings/sections" var="sections">
             <template:with path="parameter>/" helper="sap.suite.ui.generic.template.js.StableIdHelper.preparePathForStableId" var="facetId">
-                <template:if test="{= ${facetId>}.buildFacetId(${facet>})}" />
+                <template:if test="{= ${facetId>}.buildStableId({type: 'ObjectPage', subType: 'Facet', sRecordType: ${facet>RecordType}, sAnnotationPath: ${facet>Target/AnnotationPath}, sAnnotationId: ${facet>ID/String}, bIsHeaderFacet: ${isHeaderFacet>value}})}"/>
                 <template:if test="{= ${parts: [{path: 'facet>'}, {path: 'parameter>/settings'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelperMultipleViews.useSegmentedButtonInOP'} === true}">
                 <template:then>
                     <SegmentedButton id="{:= ${parameter>/stableId}.getStableId({type: 'ObjectPageTable', subType: 'SegmentedButton', sFacet: ${facetId>id}})}" selectedKey="{path: 'facet>', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelperMultipleViews.getSelectedKeyBinding'}">

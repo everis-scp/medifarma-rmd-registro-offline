@@ -35,7 +35,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -284,16 +284,7 @@ sap.ui.define([
 	 */
 	BaseContent.prototype.onDataRequestComplete = function () {
 		this.fireEvent("_dataReady");
-	};
-
-	/**
-	 * @ui5-restricted
-	 */
-	BaseContent.prototype.refreshData = function () {
-		if (this._oDataProvider) {
-			this._oDataProvider.triggerDataUpdate();
-		}
-	};
+	 };
 
 	/**
 	 * @private

@@ -37,6 +37,9 @@ sap.ui.define([
 	) {
 	"use strict";
 
+	// lazy dependencies. Can't be declared as this would result in cyclic dependencies
+	var LocaleData;
+
 	/**
 	 * Creates a new Configuration object.
 	 *
@@ -96,7 +99,7 @@ sap.ui.define([
 			}
 
 			// Definition of supported settings
-			// Valid property types are: string, boolean, string[], code, object, function, function[].
+			// Valid property types are: string, boolean, string[], code, object, function.
 			// Objects as an enumeration list of valid values can also be provided (e.g. Configuration.AnimationMode).
 			var M_SETTINGS = {
 					"theme"                 : { type : "string",   defaultValue : "base" },
@@ -138,8 +141,6 @@ sap.ui.define([
 					"support"               : { type : "string[]", defaultValue : null },
 					"testRecorder"          : { type : "string[]", defaultValue : null },
 					"activeTerminologies"   : { type : "string[]", defaultValue: undefined},
-					"securityTokenHandlers"	: { type : "function[]", defaultValue: [],  noUrl: true },
-					"xx-placeholder"		: { type : "boolean",  defaultValue : true },
 					"xx-rootComponentNode"  : { type : "string",   defaultValue : "",        noUrl:true },
 					"xx-appCacheBusterMode" : { type : "string",   defaultValue : "sync" },
 					"xx-appCacheBusterHooks": { type : "object",   defaultValue : undefined, noUrl:true }, // e.g.: { handleURL: fn, onIndexLoad: fn, onIndexLoaded: fn }
@@ -185,48 +186,40 @@ sap.ui.define([
 			var config = this;
 			/*eslint-enable consistent-this */
 
-			function setValue(sName, vValue) {
-				if ( typeof vValue === "undefined" || vValue === null ) {
+			function setValue(sName, sValue) {
+				if ( typeof sValue === "undefined" || sValue === null ) {
 					return;
 				}
 				switch (M_SETTINGS[sName].type) {
 				case "boolean":
-					if ( typeof vValue === "string" ) {
+					if ( typeof sValue === "string" ) {
 						if (M_SETTINGS[sName].defaultValue) {
-							config[sName] = vValue.toLowerCase() != "false";
+							config[sName] = sValue.toLowerCase() != "false";
 						} else {
-							config[sName] = vValue.toLowerCase() === "true" || vValue.toLowerCase() === "x";
+							config[sName] = sValue.toLowerCase() === "true" || sValue.toLowerCase() === "x";
 						}
 					} else {
 						// boolean etc.
-						config[sName] = !!vValue;
+						config[sName] = !!sValue;
 					}
 					break;
 				case "string":
-					config[sName] = "" + vValue; // enforce string
+					config[sName] = "" + sValue; // enforce string
 					break;
 				case "code":
-					config[sName] = typeof vValue === "function" ? vValue : String(vValue);
+					config[sName] = typeof sValue === "function" ? sValue : String(sValue);
 					break;
 				case "function":
-					if ( typeof vValue !== "function" ) {
+					if ( typeof sValue !== "function" ) {
 						throw new Error("unsupported value");
 					}
-					config[sName] = vValue;
-					break;
-				case "function[]":
-					vValue.forEach(function(fnFunction) {
-						if ( typeof fnFunction !== "function" ) {
-							throw new Error("Not a function: " + fnFunction);
-						}
-					});
-					config[sName] = vValue.slice();
+					config[sName] = sValue;
 					break;
 				case "string[]":
-					if ( Array.isArray(vValue) ) {
-						config[sName] = vValue;
-					} else if ( typeof vValue === "string" ) {
-						config[sName] = vValue.split(/[ ,;]/).map(function(s) {
+					if ( Array.isArray(sValue) ) {
+						config[sName] = sValue;
+					} else if ( typeof sValue === "string" ) {
+						config[sName] = sValue.split(/[ ,;]/).map(function(s) {
 							return s.trim();
 						});
 					} else {
@@ -234,13 +227,13 @@ sap.ui.define([
 					}
 					break;
 				case "object":
-					if ( typeof vValue !== "object" ) {
+					if ( typeof sValue !== "object" ) {
 						throw new Error("unsupported value");
 					}
-					config[sName] = vValue;
+					config[sName] = sValue;
 					break;
 				case "Locale":
-					var oLocale = convertToLocaleOrNull(vValue);
+					var oLocale = convertToLocaleOrNull(sValue);
 					if ( oLocale || M_SETTINGS[sName].defaultValue == null ) {
 						config[sName] = oLocale;
 					} else {
@@ -251,8 +244,8 @@ sap.ui.define([
 					// When the type is none of the above types, check if an object as enum is provided to validate the value.
 					var vType = M_SETTINGS[sName].type;
 					if (typeof vType === "object") {
-						checkEnum(vType, vValue, sName);
-						config[sName] = vValue;
+						checkEnum(vType, sValue, sName);
+						config[sName] = sValue;
 					} else {
 						throw new Error("illegal state");
 					}
@@ -604,10 +597,6 @@ sap.ui.define([
 			return this.theme;
 		},
 
-		getPlaceholder : function() {
-			return this["xx-placeholder"];
-		},
-
 		/**
 		 * Allows setting the theme name
 		 * @param {string} sTheme the theme name
@@ -870,6 +859,11 @@ sap.ui.define([
 		getCalendarType :  function() {
 			var sName;
 
+			// lazy load of LocaleData to avoid cyclic dependencies
+			if ( !LocaleData ) {
+				LocaleData = sap.ui.requireSync("sap/ui/core/LocaleData");
+			}
+
 			if (this.calendarType) {
 				for (sName in CalendarType) {
 					if (sName.toLowerCase() === this.calendarType.toLowerCase()) {
@@ -901,7 +895,7 @@ sap.ui.define([
 					return CalendarType.Persian;
 			}
 
-			return this.getLocale().getPreferredCalendarType();
+			return LocaleData.getInstance(this.getLocale()).getPreferredCalendarType();
 		},
 
 		/**
@@ -1221,7 +1215,7 @@ sap.ui.define([
 		 *
 		 * @returns {string} name of the application
 		 * @public
-		 * @deprecated Since 1.15.1. Please use {@link module:sap/ui/core/ComponentSupport} instead. See also {@link topic:82a0fcecc3cb427c91469bc537ebdddf Declarative API for Initial Components}.
+		 * @deprecated Since 1.15.1. Please use the rootComponent configuration option {@link sap.ui.core.Configuration#getRootComponent}.
 		 */
 		getApplication : function() {
 			return this.application;
@@ -1232,7 +1226,7 @@ sap.ui.define([
 		 *
 		 * @returns {string} name of the root component
 		 * @public
-		 * @deprecated Since 1.95. Please use {@link module:sap/ui/core/ComponentSupport} instead. See also {@link topic:82a0fcecc3cb427c91469bc537ebdddf Declarative API for Initial Components}.
+		 * @experimental Since 1.15.1
 		 */
 		getRootComponent : function() {
 			return this.rootComponent;
@@ -1523,36 +1517,6 @@ sap.ui.define([
 		 */
 		getActiveTerminologies : function() {
 			return this["activeTerminologies"];
-		},
-
-		/**
-		 * Returns the security token handlers of an OData V4 model.
-		 *
-		 * @returns {function[]} the security token handlers (an empty array if there are none)
-		 * @public
-		 * @since 1.95.0
-		 * @see #setSecurityTokenHandlers
-		 */
-		getSecurityTokenHandlers : function () {
-			return this.securityTokenHandlers.slice();
-		},
-
-		/**
-		 * Sets the security token handlers for an OData V4 model. See chapter "Security Token
-		 * Handling" in
-		 * {@link topic:9613f1f2d88747cab21896f7216afdac Model Instantiation and Data Access}.
-		 *
-		 * @param {function[]} aSecurityTokenHandlers - The security token handlers
-		 * @public
-		 * @since 1.95.0
-		 * @see #getSecurityTokenHandlers
-		 */
-		setSecurityTokenHandlers : function (aSecurityTokenHandlers) {
-			aSecurityTokenHandlers.forEach(function (fnSecurityTokenHandler) {
-				check(typeof fnSecurityTokenHandler === "function",
-					"Not a function: " + fnSecurityTokenHandler);
-			});
-			this.securityTokenHandlers = aSecurityTokenHandlers.slice();
 		},
 
 		/**

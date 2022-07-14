@@ -38,7 +38,7 @@ sap.ui.define([
 	 * @extends sap.ui.integration.cards.BaseListContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @experimental
@@ -186,6 +186,7 @@ sap.ui.define([
 			template: this._oTimeLineItemTemplate
 		};
 
+		this._filterHiddenNavigationItems(mItem, oBindingInfo);
 		this._bindAggregationToControl("content", this._getTimeline(), oBindingInfo);
 
 		return this;

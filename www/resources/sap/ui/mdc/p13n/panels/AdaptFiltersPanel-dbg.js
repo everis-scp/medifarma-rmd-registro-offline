@@ -31,9 +31,10 @@ sap.ui.define([
 	 *
 	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
 	 * @param {object} [mSettings] initial settings for the new control
-	 * @class The AdaptFiltersPanel is meant to provide a container for different filter personalization views.
+	 * @class
 	 * @extends sap.ui.mdc.ui.Container
 	 * @author SAP SE
+	 * @constructor The AdaptFiltersPanel is meant to provide a container for different filter personalization views.
 	 * @private
 	 * @experimental
 	 * @since 1.85
@@ -165,7 +166,6 @@ sap.ui.define([
 	 * @param {object} mViewSettings the setting for the cutom view
 	 * @param {sap.m.SegmentedButtonItem} mViewSettings.item the custom button used in the view switch
 	 * @param {sap.ui.core.Control} mViewSettings.content the content displayed in the custom view
-     * @param {function} [mViewSettings.filterSelect] callback triggered by the combobox in the header area - executed with the selected key as paramter
 	 * @param {function} [mViewSettings.search] callback triggered by search - executed with the string as parameter
 	 * @param {function} [mViewSettings.selectionChange] callback triggered by selecting a view - executed with the key as parameter
 	 *
@@ -176,7 +176,6 @@ sap.ui.define([
 		var oContent = mViewSettings.content;
 		var fnOnSearch = mViewSettings.search;
 		var fnSelectionChange = mViewSettings.selectionChange;
-        var fnDropDownChange = mViewSettings.filterSelect;
 
 		if (!sKey) {
 			throw new Error("Please provide an item of type sap.m.SegmentedButtonItem with a key");
@@ -188,18 +187,13 @@ sap.ui.define([
 					fnSelectionChange(oEvt.getParameter("item").getKey());
 				}
 				//Fire search if custom view is selected
-				if (this._isCustomView()) {
-                    if (fnOnSearch instanceof Function) {
-                        fnOnSearch(this._getSearchField().getValue());
-                    }
-                    if (fnDropDownChange instanceof Function) {
-                        fnDropDownChange(this._getQuickFilter().getSelectedKey());
-                    }
+				if (this._isCustomView() && fnOnSearch) {
+					fnOnSearch(this._getSearchField().getValue());
 				}
 			}.bind(this));
 		}
 
-		if (fnOnSearch instanceof Function) {
+		if (fnOnSearch) {
 			this._getSearchField().attachLiveChange(function (oEvt) {
 				if (this._isCustomView()) {
 					//Fire search only while on the custom view
@@ -207,15 +201,6 @@ sap.ui.define([
 				}
 			}.bind(this));
 		}
-
-        if (fnDropDownChange instanceof Function) {
-            this._getQuickFilter().attachChange(function (oEvt){
-                if (this._isCustomView()) {
-					//Fire selection change only when on custom view
-					fnDropDownChange(this._getQuickFilter().getSelectedKey());
-				}
-            }.bind(this));
-        }
 
 		this.addView(new ContainerItem({
             key: sKey,

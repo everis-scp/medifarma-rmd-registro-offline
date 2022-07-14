@@ -24,7 +24,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.integerEditor.IntegerEditor
 	 * @author SAP SE
 	 * @since 1.76
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.76
@@ -50,15 +50,7 @@ sap.ui.define([
 		);
 	};
 
-	IntegerEditor.configMetadata = Object.assign(
-		{},
-		NumberEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.INTEGER"
-			}
-		}
-	);
+	IntegerEditor.configMetadata = Object.assign({}, NumberEditor.configMetadata);
 
 	IntegerEditor.prototype.validateNumber = function (vValue) {
 		return NumberEditor.prototype.validateNumber.call(this, vValue) && Number.isInteger(vValue);

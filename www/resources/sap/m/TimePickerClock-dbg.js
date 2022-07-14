@@ -26,7 +26,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @private
@@ -365,7 +365,7 @@ sap.ui.define([
 		 * @private
 		 */
 		TimePickerClock.prototype._getClockCoverContainerDomRef = function() {
-			return this.getDomRef("cover");
+			return document.getElementById(this.getId() + "-cover");
 		};
 
 		/**

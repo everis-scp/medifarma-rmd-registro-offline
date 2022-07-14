@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 //Provides an abstraction for list bindings
 sap.ui.define([
 	"sap/base/util/deepExtend",
@@ -73,54 +73,57 @@ sap.ui.define([
 	 * @see sap.ui.model.Binding.prototype.initialize
 	 */
 	ODataContextBinding.prototype.initialize = function() {
-		var oContext, bReloadNeeded, sResolvedPath,
+		var that = this,
+			sResolvedPath,
+			bCreatedRelative = this.isRelative() && this.oContext && this.oContext.bCreated,
 			bPreliminary = this.oContext && this.oContext.isPreliminary(),
-			bRelativeAndTransient = this.isRelative()
-				&& this.oContext && this.oContext.isTransient && this.oContext.isTransient(),
-			that = this;
+			bReloadNeeded;
 
 		// don't fire any requests if metadata is not loaded yet.
 		if (!this.oModel.oMetadata.isLoaded() || !this.bInitial) {
 			return;
 		}
+
 		this.bInitial = false;
+
 		// If context is preliminary and usePreliminary is not set, exit here
 		if (bPreliminary && !this.bUsePreliminaryContext) {
 			return;
 		}
+
 		// if path cannot be resolved or parent context is created, set element context to null
 		sResolvedPath = this.getResolvedPath();
-		if (!sResolvedPath || bRelativeAndTransient) {
+		if (!sResolvedPath || bCreatedRelative) {
 			this.oElementContext = null;
 			this._fireChange({ reason: ChangeReason.Context });
-
 			return;
 		}
+
 		// check whether a request is necessary and create binding context
 		bReloadNeeded = this.oModel._isReloadNeeded(sResolvedPath, this.mParameters);
 		if (bReloadNeeded) {
 			this.fireDataRequested();
 			this.bPendingRequest = true;
 		}
-		oContext = this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters,
-				function (oNewContext) {
+		var oContext = this.oModel.createBindingContext(this.sPath, this.oContext, this.mParameters, function(oContext) {
 			var oData,
-				bForceRefresh = oNewContext && oNewContext.isRefreshForced(),
-				bUpdated = oNewContext && oNewContext.isUpdated();
+				bUpdated = oContext && oContext.isUpdated(),
+				bForceRefresh = oContext && oContext.isRefreshForced();
 
-			if (that.bCreatePreliminaryContext && oNewContext && that.oElementContext) {
+			if (that.bCreatePreliminaryContext && oContext && that.oElementContext) {
 				that.oElementContext.setPreliminary(false);
-				that.oModel._updateContext(that.oElementContext, oNewContext.getPath());
+				that.oModel._updateContext(that.oElementContext, oContext.getPath());
 				that._fireChange({ reason: ChangeReason.Context }, false, true);
-			} else if (!oNewContext || Context.hasChanged(oNewContext, that.oElementContext)) {
-				that.oElementContext = oNewContext;
+			} else if (!oContext || Context.hasChanged(oContext, that.oElementContext)) {
+				that.oElementContext = oContext;
 				that._fireChange({ reason: ChangeReason.Context }, bForceRefresh, bUpdated);
 			}
+
 			if (bReloadNeeded) {
 				if (that.oElementContext) {
 					oData = that.oElementContext.getObject(that.mParameters);
 				}
-				// register data received call as callAfterUpdate
+				// register datareceived call as callAfterUpdate
 				that.oModel.callAfterUpdate(function() {
 					that.fireDataReceived({data: oData});
 				});
@@ -206,17 +209,16 @@ sap.ui.define([
 	 * @private
 	 */
 	ODataContextBinding.prototype._refresh = function(bForceUpdate, mChangedEntities) {
-		var oContext, sContextPath, oData, sKey, oStoredEntry,
-			bChangeDetected = false,
+		var that = this, oData, sKey, oStoredEntry, bChangeDetected = false,
 			mParameters = this.mParameters,
-			bRelativeAndTransient = this.isRelative()
-				&& this.oContext && this.oContext.isTransient && this.oContext.isTransient(),
+			bCreatedRelative = this.isRelative() && this.oContext && this.oContext.bCreated,
 			sResolvedPath = this.getResolvedPath(),
-			that = this;
+			sContextPath;
 
-		if (this.bInitial || bRelativeAndTransient) {
+		if (this.bInitial || bCreatedRelative) {
 			return;
 		}
+
 		if (mChangedEntities) {
 			//get entry from model. If entry exists get key for update bindings
 			oStoredEntry = this.oModel._getObject(this.sPath, this.oContext);
@@ -239,20 +241,19 @@ sap.ui.define([
 				mParameters = extend({},this.mParameters);
 				mParameters.groupId = this.sRefreshGroupId;
 			}
-			oContext = this.oModel.createBindingContext(this.sPath, this.oContext, mParameters,
-					function (oNewContext) {
-				if (that.bCreatePreliminaryContext && oNewContext && that.oElementContext) {
+			var oContext = this.oModel.createBindingContext(this.sPath, this.oContext, mParameters, function(oContext) {
+				if (that.bCreatePreliminaryContext && oContext && that.oElementContext) {
 					that.oElementContext.setPreliminary(false);
-					that.oModel._updateContext(that.oElementContext, oNewContext.getPath());
+					that.oModel._updateContext(that.oElementContext, oContext.getPath());
 					that._fireChange({ reason: ChangeReason.Context }, false, true);
-				} else if (Context.hasChanged(oNewContext, that.oElementContext) || bForceUpdate) {
-					that.oElementContext = oNewContext;
+				} else if (Context.hasChanged(oContext, that.oElementContext) || bForceUpdate) {
+					that.oElementContext = oContext;
 					that._fireChange({ reason: ChangeReason.Context }, bForceUpdate);
 				}
 				if (that.oElementContext) {
 					oData = that.oElementContext.getObject(that.mParameters);
 				}
-				//register data received call as callAfterUpdate
+				//register datareceived call as  callAfterUpdate
 				if (sResolvedPath) {
 					that.oModel.callAfterUpdate(function() {
 						that.fireDataReceived({data: oData});
@@ -280,42 +281,51 @@ sap.ui.define([
 	 * @private
 	 */
 	ODataContextBinding.prototype.setContext = function(oContext) {
-		var oBindingContext, sContextPath, oData, bReloadNeeded, sResolvedPath,
-			bForceUpdate = oContext && oContext.isRefreshForced(),
+		var that = this,
+			oBindingContext,
+			oData,
+			sResolvedPath,
+			bCreated = oContext && oContext.bCreated,
 			bPreliminary = oContext && oContext.isPreliminary(),
-			bTransient = oContext && oContext.isTransient && oContext.isTransient(),
+			bForceUpdate = oContext && oContext.isRefreshForced(),
 			bUpdated = oContext && oContext.isUpdated(),
-			that = this;
+			sContextPath, bReloadNeeded;
 
 		// If binding is initial or not a relative binding, nothing to do here
 		if (this.bInitial || !this.isRelative()) {
 			return;
 		}
+
 		// If context is preliminary and usePreliminary is not set, exit here
 		if (bPreliminary && !this.bUsePreliminaryContext) {
 			return;
 		}
+
 		if (bUpdated && this.bUsePreliminaryContext) {
 			this._fireChange({ reason: ChangeReason.Context });
-
 			return;
 		}
+
 		if (Context.hasChanged(this.oContext, oContext)) {
+
+
 			this.oContext = oContext;
+
 			sResolvedPath = this.getResolvedPath();
+
 			// If path doesn't resolve or parent context is created, reset current context
-			if (!sResolvedPath || bTransient) {
+			if (!sResolvedPath || bCreated) {
 				if (this.oElementContext !== null) {
 					this.oElementContext = null;
 					this._fireChange({ reason: ChangeReason.Context });
 				}
-
 				return;
 			}
+
 			// Create new binding context and fire change
 			oData = this.oModel._getObject(this.sPath, this.oContext);
-			bReloadNeeded =  bForceUpdate
-				|| this.oModel._isReloadNeeded(sResolvedPath, this.mParameters);
+			bReloadNeeded =  bForceUpdate || this.oModel._isReloadNeeded(sResolvedPath, this.mParameters);
+
 			if (sResolvedPath && bReloadNeeded) {
 				this.fireDataRequested();
 				this.bPendingRequest = true;
@@ -334,7 +344,7 @@ sap.ui.define([
 					if (that.oElementContext) {
 						oData = that.oElementContext.getObject(that.mParameters);
 					}
-					//register data received call as callAfterUpdate
+					//register datareceived call as  callAfterUpdate
 					that.oModel.callAfterUpdate(function() {
 						that.fireDataReceived({data: oData});
 					});
@@ -359,17 +369,14 @@ sap.ui.define([
 	};
 
 	ODataContextBinding.prototype._fireChange = function(mParameters, bForceUpdate, bUpdated) {
-		var bOldUpdated;
-
 		if (this.oElementContext) {
-			bOldUpdated = this.oElementContext.isUpdated();
 			this.oElementContext.setForceRefresh(bForceUpdate);
 			this.oElementContext.setUpdated(bUpdated);
 		}
 		ContextBinding.prototype._fireChange.call(this, mParameters);
 		if (this.oElementContext) {
 			this.oElementContext.setForceRefresh(false);
-			this.oElementContext.setUpdated(bOldUpdated);
+			this.oElementContext.setUpdated(false);
 		}
 	};
 

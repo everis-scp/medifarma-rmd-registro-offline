@@ -58,7 +58,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -176,15 +176,7 @@ sap.ui.define([
 				 * unless <code>useDefaultActionOnly</code> is set to <code>false</code> and another action
 				 * from the menu has been selected previously.
 				 */
-				defaultAction: {},
-
-				/**
-				 * Fired before menu opening when the <code>buttonMode</code> is set to <code>Split</code> and the user
-				 * presses the arrow button.
-				 *
-				 * @since 1.94.0
-				 */
-				beforeMenuOpen: {}
+				defaultAction: {}
 			},
 			defaultAggregation : "menu",
 			designtime: "sap/m/designtime/MenuButton.designtime",
@@ -253,10 +245,6 @@ sap.ui.define([
 		MenuButton.prototype.onAfterRendering = function() {
 			if (this._needsWidth() && sap.ui.getCore().isThemeApplied() && this._getTextBtnContentDomRef() && this._getInitialTextBtnWidth() > 0) {
 				this._getTextBtnContentDomRef().style.width = this._getInitialTextBtnWidth() + 'px';
-			}
-			if (this._activeButton) {
-				this._activeButton.$().attr("aria-expanded", "false");
-				this._activeButton = null;
 			}
 		};
 
@@ -399,8 +387,6 @@ sap.ui.define([
 					minus2_left: "-2 0"
 				};
 
-			this._isSplitButton() && this.fireBeforeMenuOpen();
-
 			if (!oMenu) {
 				return;
 			}
@@ -411,12 +397,11 @@ sap.ui.define([
 				return;
 			}
 
+
 			if (!oMenu.getTitle()) {
 				oMenu.setTitle(this.getText());
 			}
-
 			var aParam = [this, bWithKeyboard];
-
 			switch (this.getMenuPosition()) {
 				case Dock.BeginTop:
 					aParam.push(Dock.BeginBottom, Dock.BeginTop, oOffset.plus2_right);
@@ -502,7 +487,6 @@ sap.ui.define([
 			}
 
 			bOpeningMenuButton.$().removeAttr("aria-controls");
-			bOpeningMenuButton.$().attr("aria-expanded", "false");
 		};
 
 		MenuButton.prototype._menuItemSelected = function(oEvent) {
@@ -758,7 +742,6 @@ sap.ui.define([
 
 			if (oMenu) {
 				oOpeningMenuButton.$().attr("aria-controls", oMenu.getDomRefId());
-				oOpeningMenuButton.$().attr("aria-expanded", "true");
 			}
 		};
 

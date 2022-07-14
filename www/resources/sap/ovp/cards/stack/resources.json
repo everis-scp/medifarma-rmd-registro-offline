@@ -3,20 +3,25 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 1583,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 671
 		},
 		{
 			"name": "Stack-dbg.controller.js",
+			"size": 29188,
 			"isDebug": true
 		},
 		{
-			"name": "Stack.controller.js"
+			"name": "Stack.controller.js",
+			"size": 10621
 		},
 		{
-			"name": "Stack.fragment.xml"
+			"name": "Stack.fragment.xml",
+			"size": 829
 		}
 	]
 }

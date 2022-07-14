@@ -16,6 +16,18 @@
 				.diagnosticPropertiesGroupHeaderContent {
 					color: #2C4E6C !important;
 				}
+				#CopyDataTextArea {
+					display: none;
+					height: 0;
+					width: 0;
+					padding: 0;
+					color: transparent;
+					background: transparent;
+					border-color: transparent;
+					position: absolute;
+					bottom: 0;
+					left: 0;
+				}
 			</html:style>
 
 			<!-- Show countdown when application is still loading -->
@@ -120,8 +132,7 @@
 				style attributes. display:none will be changed to display:block at runtime and after copying data has
 				finished, display will be set again to none.
 			-->
-			<html:textarea id="CopyDataTextArea"
-						   style="display: none; height: 0; width: 0; padding: 0; color: transparent; background: transparent; border-color: transparent; position: absolute; bottom: 0; left: 0;">
+			<html:textarea id="CopyDataTextArea">
 			</html:textarea>
 			<!--
 				Placeholder as direct DOM insertion is not allowed in UI5. Needed by function fnOnCopyDataHTML when copying

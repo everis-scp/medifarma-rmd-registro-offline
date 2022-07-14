@@ -14,8 +14,7 @@ sap.ui.define(["sap/ui/core/InvisibleText", "sap/ui/Device", "sap/m/library"],
 
 		FCLRenderer.render = function (oRm, oControl) {
 
-			var sBackgroundDesign = oControl.getBackgroundDesign(),
-				oLandmarkInfo = oControl.getLandmarkInfo();
+			var sBackgroundDesign = oControl.getBackgroundDesign();
 
 			oRm.openStart("div", oControl);
 			oRm.class("sapFFCL");
@@ -26,19 +25,22 @@ sap.ui.define(["sap/ui/core/InvisibleText", "sap/ui/Device", "sap/m/library"],
 
 			oRm.openEnd();
 
-			FCLRenderer.renderBeginColumn(oRm, oControl, oLandmarkInfo);
-			FCLRenderer.renderMidColumn(oRm, oControl, oLandmarkInfo);
-			FCLRenderer.renderEndColumn(oRm, oControl, oLandmarkInfo);
+			FCLRenderer.renderBeginColumn(oRm, oControl);
+			FCLRenderer.renderMidColumn(oRm, oControl);
+			FCLRenderer.renderEndColumn(oRm, oControl);
 
 			oRm.close("div");
 		};
 
-		FCLRenderer.renderBeginColumn = function (oRm, oControl, oLandmarkInfo) {
+		FCLRenderer.renderBeginColumn = function (oRm, oControl) {
 			var oBeginColumnBackArrow = oControl.getAggregation("_beginColumnBackArrow");
 
 			// Begin column
 			oRm.openStart("div", oControl.getId() + "-beginColumn");
-			oRm.accessibilityState(oControl, oControl._formatLandmarkInfo(oLandmarkInfo, "FirstColumn"));
+			oRm.accessibilityState(oControl, {
+				role: "region",
+				labelledby: InvisibleText.getStaticId("sap.f", "FCL_BEGIN_COLUMN_REGION_TEXT")
+			});
 			oRm.class("sapFFCLColumn");
 			oRm.class("sapFFCLColumnBegin");
 			oRm.class("sapFFCLColumnActive");
@@ -53,15 +55,17 @@ sap.ui.define(["sap/ui/core/InvisibleText", "sap/ui/Device", "sap/m/library"],
 			FCLRenderer.renderArrow(oRm, oBeginColumnBackArrow);
 		};
 
-		FCLRenderer.renderMidColumn = function (oRm, oControl, oLandmarkInfo) {
+		FCLRenderer.renderMidColumn = function (oRm, oControl) {
 			var oMidColumnForwardArrow = oControl.getAggregation("_midColumnForwardArrow"),
 				oMidColumnBackArrow = oControl.getAggregation("_midColumnBackArrow");
-
 			// Arrow - expand begin
 			FCLRenderer.renderArrow(oRm, oMidColumnForwardArrow);
 			// Mid column
 			oRm.openStart("div", oControl.getId() + "-midColumn");
-			oRm.accessibilityState(oControl, oControl._formatLandmarkInfo(oLandmarkInfo, "MiddleColumn"));
+			oRm.accessibilityState(oControl, {
+				role: "region",
+				labelledby: InvisibleText.getStaticId("sap.f", "FCL_MID_COLUMN_REGION_TEXT")
+			});
 			oRm.class("sapFFCLColumn");
 			oRm.class("sapFFCLColumnMid");
 			oRm.openEnd();
@@ -74,14 +78,16 @@ sap.ui.define(["sap/ui/core/InvisibleText", "sap/ui/Device", "sap/m/library"],
 
 		};
 
-		FCLRenderer.renderEndColumn = function (oRm, oControl, oLandmarkInfo) {
+		FCLRenderer.renderEndColumn = function (oRm, oControl) {
 			var oEndColumnForwardArrow = oControl.getAggregation("_endColumnForwardArrow");
-
 			// Arrow - right
 			FCLRenderer.renderArrow(oRm, oEndColumnForwardArrow);
 			// End column
 			oRm.openStart("div", oControl.getId() + "-endColumn");
-			oRm.accessibilityState(oControl, oControl._formatLandmarkInfo(oLandmarkInfo, "LastColumn"));
+			oRm.accessibilityState(oControl, {
+				role: "region",
+				labelledby: InvisibleText.getStaticId("sap.f", "FCL_END_COLUMN_REGION_TEXT")
+			});
 			oRm.class("sapFFCLColumn");
 			oRm.class("sapFFCLColumnEnd");
 			oRm.openEnd();

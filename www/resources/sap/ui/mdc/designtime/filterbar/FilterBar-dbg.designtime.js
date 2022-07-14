@@ -12,30 +12,10 @@ sap.ui.define([
 		actions: {
 			settings: function () {
 				return {
-					name: "filterbar.ADAPT_TITLE",
 					handler: function (oControl, mPropertyBag) {
 						return Engine.getInstance().getRTASettingsActionHandler(oControl, mPropertyBag, "Item");
 					}
 				};
-			}
-		},
-		aggregations: {
-			layout: {
-				ignore: true
-			},
-			basicSearchField: {
-				ignore: true
-			},
-			filterItems: {
-				ignore: true
-			}
-		},
-		properties: {
-			showAdaptFiltersButton: {
-				ignore: false
-			},
-			p13nMode: {
-				ignore: false
 			}
 		}
 	};

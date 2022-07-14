@@ -88,7 +88,7 @@ sap.ui.define([
 	 * @implements sap.ui.core.IFormContent, sap.ui.core.ISemanticFormContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -457,7 +457,9 @@ sap.ui.define([
 	 */
 	CheckBox.prototype._getLabel = function() {
 		if (!this._oLabel) {
-			this._oLabel = new Label(this.getId() + "-label").addStyleClass("sapMCbLabel");
+			this._oLabel = new Label(this.getId() + "-label", {
+				labelFor: this.getId()
+			}).addStyleClass("sapMCbLabel");
 
 			this.setAggregation("_label", this._oLabel, true);
 		}

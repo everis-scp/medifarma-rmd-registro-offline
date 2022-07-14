@@ -6,7 +6,6 @@
 
 sap.ui.define([
 	'./ComboBoxTextField',
-	'./ComboBoxBaseRenderer',
 	'./SuggestionsPopover',
 	'sap/ui/base/ManagedObjectObserver',
 	'sap/ui/core/SeparatorItem',
@@ -26,7 +25,6 @@ sap.ui.define([
 ],
 	function(
 		ComboBoxTextField,
-		ComboBoxBaseRenderer,
 		SuggestionsPopover,
 		ManagedObjectObserver,
 		SeparatorItem,
@@ -64,7 +62,7 @@ sap.ui.define([
 		 * @abstract
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -142,8 +140,7 @@ sap.ui.define([
 					loadItems: {}
 				},
 				dnd: { draggable: false, droppable: true }
-			},
-			renderer: ComboBoxBaseRenderer
+			}
 		});
 
 		/**

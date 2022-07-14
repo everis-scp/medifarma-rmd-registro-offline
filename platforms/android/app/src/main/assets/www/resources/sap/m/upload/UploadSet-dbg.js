@@ -4,6 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
+// Ensure that sap.ui.unified is loaded before the module dependencies will be required.
+// Loading it synchronously is the only compatible option and doesn't harm when sap.ui.unified
+// already has been loaded asynchronously (e.g. via a dependency declared in the manifest)
+sap.ui.getCore().loadLibrary("sap.ui.unified");
+
 sap.ui.define([
 	"sap/ui/core/Control",
 	"sap/ui/core/Icon",
@@ -39,7 +44,7 @@ sap.ui.define([
 	 * and requests, unified behavior of instant and deferred uploads, as well as improved progress indication.
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @public
 	 * @since 1.63
@@ -333,8 +338,7 @@ sap.ui.define([
 					}
 				}
 			}
-		},
-		renderer: Renderer
+		}
 	});
 
 	var UploadState = MobileLibrary.UploadState;
@@ -490,23 +494,17 @@ sap.ui.define([
 	};
 
 	UploadSet.prototype.removeAggregation = function (sAggregationName, oObject, bSuppressInvalidate) {
-        var oListItem,oItems;
-        Control.prototype.removeAggregation.call(this, sAggregationName, oObject, bSuppressInvalidate);
-        if (sAggregationName === "items" || sAggregationName === "incompleteItems") {
-			if (typeof oObject === 'number') { // "oObject" is the index now
-				oItems = this.getItems();
-				oListItem = oItems[oObject];
-			} else if (typeof oObject === 'object') { // the object itself is given or has just been retrieved
-				oListItem = oObject._getListItem();
+		var oListItem;
+		Control.prototype.removeAggregation.call(this, sAggregationName, oObject, bSuppressInvalidate);
+		if (oObject && (sAggregationName === "items" || sAggregationName === "incompleteItems")) {
+			oListItem = oObject._getListItem();
+			var oItem = this.getList().removeAggregation("items", oListItem, bSuppressInvalidate);
+			if (oItem) {
+				oItem.destroy();
 			}
-            var oItem = this.getList().removeAggregation("items", oListItem, bSuppressInvalidate);
-            if (oItem && oObject) {
-                oObject.destroy();
-                oItem.destroy();
-            }
-            this._refreshInnerListStyle();
-        }
-    };
+			this._refreshInnerListStyle();
+		}
+	};
 
 	UploadSet.prototype.removeAllAggregation = function (sAggregationName, bSuppressInvalidate) {
 		if (sAggregationName === "items") {
@@ -687,10 +685,7 @@ sap.ui.define([
 				uploadStart: [this._onUploadStarted, this],
 				uploadProgress: [this._onUploadProgressed, this],
 				uploadComplete: [this._onUploadCompleted, this],
-				uploadAborted: [this._onUploadAborted, this],
-				typeMissmatch: [this._fireFileTypeMismatch, this],
-				fileSizeExceed: [this._fireFileSizeExceed, this],
-				filenameLengthExceed: [this._fireFilenameLengthExceed, this]
+				uploadAborted: [this._onUploadAborted, this]
 			});
 		}
 
@@ -733,7 +728,6 @@ sap.ui.define([
 	UploadSet.prototype._onUploadCompleted = function (oEvent) {
 		var oItem = oEvent.getParameter("item");
 		oItem.setProgress(100);
-		this.insertItem(oItem, 0);
 		oItem.setUploadState(UploadState.Complete);
 		this.fireUploadCompleted({item: oItem});
 	};
@@ -781,7 +775,7 @@ sap.ui.define([
 		}
 
 		if (oFile.name !== sNewFileName) {
-			sNewFullName = oFile.extension ? sNewFileName + "." + oFile.extension : sNewFileName;
+			sNewFullName = sNewFileName + "." + oFile.extension;
 			oItem.setFileName(sNewFullName);
 		}
 		oItem._setContainsError(false);
@@ -1104,8 +1098,9 @@ sap.ui.define([
 	};
 
 	UploadSet.prototype._checkRestrictions = function () {
-		// this will only check the restriction for the newly uploaded files
-		// or files for which the upload is pending
+		this.getItems().forEach(function (oItem) {
+			this._checkRestrictionsForItem(oItem);
+		}.bind(this));
 		this.getIncompleteItems().forEach(function (oItem) {
 			this._checkRestrictionsForItem(oItem);
 		}.bind(this));
@@ -1116,31 +1111,6 @@ sap.ui.define([
 		oItem._checkNameLengthRestriction(this.getMaxFileNameLength());
 		oItem._checkSizeRestriction(this.getMaxFileSize());
 		oItem._checkMediaTypeRestriction(this.getMediaTypes());
-	};
-
-	UploadSet.prototype._fireFileTypeMismatch = function (oItem) {
-		var aMediaTypes = this.getMediaTypes();
-		var aFileTypes = this.getFileTypes();
-
-		var sFileType = oItem.getParameter("fileType");
-		var sMediaType = oItem.getParameter("mimeType");
-
-		var bMediaRestricted = (!!aMediaTypes && (aMediaTypes.length > 0) && !!sMediaType && aMediaTypes.indexOf(sMediaType) === -1);
-		var bFileRestricted = (!!aFileTypes && (aFileTypes.length > 0) && !!sFileType && aFileTypes.indexOf(sFileType) === -1);
-
-		if (bMediaRestricted){
-			this.fireMediaTypeMismatch({item: oItem});
-		} else if (bFileRestricted){
-			this.fireFileTypeMismatch({item: oItem});
-		}
-	};
-
-	UploadSet.prototype._fireFileSizeExceed = function (oItem) {
-		this.fireFileSizeExceeded({item: oItem});
-	};
-
-	UploadSet.prototype._fireFilenameLengthExceed = function (oItem) {
-		this.fireFileNameLengthExceeded({item: oItem});
 	};
 
 	return UploadSet;

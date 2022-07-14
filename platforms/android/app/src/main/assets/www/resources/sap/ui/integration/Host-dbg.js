@@ -25,7 +25,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Element
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -114,34 +114,6 @@ sap.ui.define([
 					},
 
 					/**
-					 * Fired when some card configuration settings are changed as a result of user interaction.
-					 * For example - filter value is changed.
-					 * @experimental since 1.96
-					 */
-					cardConfigurationChange: {
-						parameters: {
-							/**
-							 * The card the changes are fired from.
-							 */
-							card: { type: "sap.ui.core.Control" },
-							/**
-							 * Changed configuration settings.
-							 *
-							 * Example:
-							 * <pre>
-							 *  {
-							 *  	"/sap.card/configuration/filters/shipper/value": "key3",
-							 *  	"/sap.card/configuration/filters/item/value": "key2"
-							 *  }
-							 * </pre>
-							 */
-							changes: {
-								type: "object"
-							}
-						}
-					},
-
-					/**
 					 * Fired when a message from channels like navigator.serviceWorker is received.
 					 * @experimental since 1.91
 					 */
@@ -153,10 +125,6 @@ sap.ui.define([
 				}
 			}
 		});
-
-		Host.prototype.init = function () {
-			this._handlePostMessageBound = this._handlePostMessage.bind(this);
-		};
 
 		/**
 		 * Resolves the destination and returns its URL.
@@ -284,22 +252,11 @@ sap.ui.define([
 		};
 
 		/**
-		 * Stops the usage of the experimental caching for all cards.
-		 * @private
-		 * @ui5-restricted
-		 * @experimental Since 1.91. The API might change.
-		 */
-		Host.prototype.stopUsingExperimentalCaching = function () {
-			this.bUseExperimentalCaching = false;
-			this.unsubscribeForMessages();
-		};
-
-		/**
 		 * Modify request headers before sending a data request.
 		 * Override if you need to change the default cache headers behavior.
 		 * @param {map} mHeaders The current map of headers.
 		 * @param {map} mSettings The map of request settings defined in the card manifest.
-		 * @param {sap.ui.integration.widgets.Card} [oCard] The card for which the request is made.
+		 * @param {sap.ui.integration.widgets.Card} oCard The card for which the request is made.
 		 * @returns {map} Map of http headers.
 		 * @private
 		 * @ui5-restricted
@@ -309,7 +266,7 @@ sap.ui.define([
 			var oCacheSettings = mSettings.request.cache,
 				aCacheControl = [];
 
-			if (oCacheSettings.enabled === false) {
+			if (oCacheSettings.noStore) {
 				// cache disabled
 				aCacheControl.push("max-age=0");
 				aCacheControl.push("no-store");
@@ -342,31 +299,11 @@ sap.ui.define([
 				return;
 			}
 
-			navigator.serviceWorker.addEventListener("message", this._handlePostMessageBound);
-		};
-
-		/**
-		 * Unsubscribes from navigator.serviceWorker messages.
-		 * @private
-		 * @ui5-restricted
-		 */
-		Host.prototype.unsubscribeForMessages = function () {
-			if (!navigator || !navigator.serviceWorker) {
-				return;
-			}
-
-			navigator.serviceWorker.removeEventListener("message", this._handlePostMessageBound);
-		};
-
-		/**
-		 * Handler for a post message event
-		 * @private
-		 * @param {*} oEvent The post message event.
-		 */
-		Host.prototype._handlePostMessage = function (oEvent) {
-			this.fireMessage({
-				data: oEvent.data
-			});
+			navigator.serviceWorker.addEventListener('message', function (oEvent) {
+				this.fireMessage({
+					data: oEvent.data
+				});
+			}.bind(this));
 		};
 
 		return Host;

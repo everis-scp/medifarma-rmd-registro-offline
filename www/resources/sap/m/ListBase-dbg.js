@@ -90,7 +90,7 @@ function(
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -1206,13 +1206,6 @@ function(
 		return this.getDomRef("listUl");
 	};
 
-	/*
-	 *  This hook method is called if a sticky header is activated and additional height needs to be added in the  calculation of the scrolling position.
-	 * @protected
-	 */
-	ListBase.prototype.getStickyFocusOffset = function() {
-		return 0;
-	};
 
 	ListBase.prototype.checkGrowingFromScratch = function() {};
 
@@ -1588,7 +1581,7 @@ function(
 
 		if (!this._mRangeSelection) {
 			this._mRangeSelection = {
-				index: this.indexOfItem(oItem),
+				index: aVisibleItems.indexOf(oItem),
 				selected: oItem.getSelected()
 			};
 		}
@@ -2594,8 +2587,7 @@ function(
 			iInfoTBarContainerRectHeight = 0,
 			iInfoTBarContainerRectBottom = 0,
 			iHeaderToolbarRectHeight = 0,
-			iHeaderToolbarRectBottom = 0,
-			iStickyFocusOffset = this.getStickyFocusOffset();
+			iHeaderToolbarRectBottom = 0;
 
 		if (this._iStickyValue & 4 /* ColumnHeaders */) {
 			var oTblHeaderDomRef = this.getDomRef("tblHeader").firstChild;
@@ -2624,9 +2616,10 @@ function(
 		}
 
 		var iItemTop = Math.round(oItemDomRef.getBoundingClientRect().top);
+
 		if (iTHRectBottom > iItemTop || iInfoTBarContainerRectBottom > iItemTop || iHeaderToolbarRectBottom > iItemTop) {
 			window.requestAnimationFrame(function () {
-				oScrollDelegate.scrollToElement(oItemDomRef, 0, [0, -iTHRectHeight - iInfoTBarContainerRectHeight - iHeaderToolbarRectHeight - iStickyFocusOffset]);
+				oScrollDelegate.scrollToElement(oItemDomRef, 0, [0, -iTHRectHeight - iInfoTBarContainerRectHeight - iHeaderToolbarRectHeight]);
 			});
 		}
 	};

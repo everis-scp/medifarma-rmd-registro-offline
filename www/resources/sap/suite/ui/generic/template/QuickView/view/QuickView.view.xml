@@ -25,12 +25,12 @@
 					<template:if test="{badge>ImageUrl}">
 						<template:then>
 							<FlexBox alignItems="Start" justifyContent="Center">
-								<fiori:Avatar 
+								<Avatar 
 									src="{path: 'badge>ImageUrl', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
 									class="sapUiSmallMarginEnd sapQuickViewBadgeImageBorder"
 									displaySize="L"
 									displayShape="Square">
-								</fiori:Avatar>
+								</Avatar>
 							</FlexBox>
 						</template:then>
 					</template:if>
@@ -54,12 +54,12 @@
 	<FlexBox visible="{=${badge>/badgeVisible}}" width="100%" alignItems="Start" justifyContent="Start">
 		<HBox alignItems="Left" justifyContent="Left" width="100%">
 			<FlexBox visible="{=${badge>/imgUrlDefined}}" alignItems="Start" justifyContent="Center">
-				<fiori:Avatar 
+				<Avatar 
 					src="{badge>/imgUrl}"
 					class="sapUiSmallMarginEnd sapQuickViewBadgeImageBorder"
 					displaySize="L"
 					displayShape="Square">
-				</fiori:Avatar>
+				</Avatar>
 			</FlexBox>
 			<FlexBox visible="{=${badge>/typeImgUrlDefined}}" alignItems="Start" justifyContent="Center" class="sapQuickViewBadgeIconPadding">
 				<c:Icon src="{badge>/typeImgUrl}" class="sapUiSmallMarginEnd sapQuickViewBadgeIcon"/>

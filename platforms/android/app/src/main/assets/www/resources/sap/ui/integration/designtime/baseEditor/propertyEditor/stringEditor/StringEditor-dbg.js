@@ -61,7 +61,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.stringEditor.StringEditor
 	 * @author SAP SE
 	 * @since 1.70
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.70
@@ -76,9 +76,6 @@ sap.ui.define([
 	});
 
 	StringEditor.configMetadata = Object.assign({}, BasePropertyEditor.configMetadata, {
-		typeLabel: {
-			defaultValue: "BASE_EDITOR.TYPES.STRING"
-		},
 		enabled: {
 			defaultValue: true,
 			mergeStrategy: "mostRestrictiveWins"

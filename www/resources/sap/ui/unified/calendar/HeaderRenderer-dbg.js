@@ -29,16 +29,11 @@ sap.ui.define(["sap/base/security/encodeXML"],
 		var sLanguage = sap.ui.getCore().getConfiguration().getLocale().getLanguage();
 		var sTooltip = oHead.getTooltip_AsString();
 		var sId = oHead.getId();
-		var oRB = sap.ui.getCore().getLibraryResourceBundle("sap.ui.unified");
-		var sLabelNext = oRB.getText("CALENDAR_BTN_NEXT");
-		var sLabelPrev = oRB.getText("CALENDAR_BTN_PREV");
-		var sLabelToday = oRB.getText("CALENDAR_BTN_TODAY");
+		var sLabelNext = sap.ui.getCore().getLibraryResourceBundle("sap.ui.unified").getText("CALENDAR_BTN_NEXT");
+		var sLabelPrev = sap.ui.getCore().getLibraryResourceBundle("sap.ui.unified").getText("CALENDAR_BTN_PREV");
 
 		oRm.openStart("div", oHead);
 		oRm.class("sapUiCalHead");
-		if (oHead.getVisibleCurrentDateButton()) {
-			oRm.class("sapUiCalHeaderWithTodayButton");
-		}
 
 		if (sTooltip) {
 			oRm.attr('title', sTooltip);
@@ -107,12 +102,6 @@ sap.ui.define(["sap/base/security/encodeXML"],
 			}
 			this.renderCalendarButtons(oRm, oHead, sId, iFirst, iLast, iBtn);
 		}
-		if (!oHead.getVisibleButton0() && !oHead.getVisibleButton1() && !oHead.getVisibleButton2() && !oHead._getVisibleButton3() && !oHead._getVisibleButton4()) {
-			oRm.openStart("div", sId + '-B' + "-Placeholder");
-			oRm.class("sapUiCalHeadBPlaceholder");
-			oRm.openEnd(); // span element
-			oRm.close("span");
-		}
 
 		oRm.openStart("button", sId + '-next');
 		oRm.attr("title", sLabelNext);
@@ -127,18 +116,6 @@ sap.ui.define(["sap/base/security/encodeXML"],
 		oRm.openEnd(); // button element
 		oRm.icon("sap-icon://slim-arrow-right", null, { title: null });
 		oRm.close("button");
-
-		if (oHead.getVisibleCurrentDateButton()) {
-			oRm.openStart("button", sId + '-today');
-			oRm.attr("title", sLabelToday);
-			oRm.accessibilityState(null, { label: sLabelToday});
-
-			oRm.class("sapUiCalHeadToday");
-			oRm.attr('tabindex', "-1");
-			oRm.openEnd(); // button element
-			oRm.icon("sap-icon://appointment", null, { title: null });
-			oRm.close("button");
-		}
 
 		oRm.close("div");
 

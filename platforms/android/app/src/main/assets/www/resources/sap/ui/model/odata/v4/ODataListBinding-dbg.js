@@ -68,24 +68,21 @@ sap.ui.define([
 	 * @author SAP SE
 	 * @class List binding for an OData V4 model.
 	 *   An event handler can only be attached to this binding for the following events:
-	 *   'AggregatedDataStateChange', 'change', 'createCompleted', 'createSent', 'dataReceived',
-	 *   'dataRequested', 'DataStateChange', 'patchCompleted', 'patchSent', and 'refresh'. For
-	 *   other events, an error is thrown.
+	 *   'AggregatedDataStateChange', 'change', 'dataReceived', 'dataRequested', 'DataStateChange'
+	 *   and 'refresh'. For other events, an error is thrown.
 	 * @extends sap.ui.model.ListBinding
 	 * @hideconstructor
 	 * @mixes sap.ui.model.odata.v4.ODataParentBinding
 	 * @public
 	 * @since 1.37.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getGroupId as #getGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getRootBinding as #getRootBinding
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#getUpdateGroupId as #getUpdateGroupId
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#hasPendingChanges as #hasPendingChanges
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#isInitial as #isInitial
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#refresh as #refresh
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#requestRefresh as #requestRefresh
 	 * @borrows sap.ui.model.odata.v4.ODataBinding#resetChanges as #resetChanges
-	 * @borrows sap.ui.model.odata.v4.ODataBinding#toString as #toString
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#attachPatchCompleted as
 	 *   #attachPatchCompleted
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#attachPatchSent as #attachPatchSent
@@ -93,6 +90,7 @@ sap.ui.define([
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#detachPatchCompleted as
 	 *   #detachPatchCompleted
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#detachPatchSent as #detachPatchSent
+	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#initialize as #initialize
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#resume as #resume
 	 * @borrows sap.ui.model.odata.v4.ODataParentBinding#suspend as #suspend
 	 */
@@ -1511,22 +1509,6 @@ sap.ui.define([
 	 * <code>false</code>. This property has to be set on each filter, it is not inherited from a
 	 * multi-filter.
 	 *
-	 * <h4>Application and Control Filters</h4>
-	 * Each list binding maintains two separate lists of filters, one for filters defined by the
-	 * control that owns the binding, and another list for filters that an application can define in
-	 * addition. When executing the filter operation, both sets of filters are combined.
-	 *
-	 * By using the <code>sFilterType</code> parameter of the <code>filter</code> method, the
-	 * caller can control which set of filters is modified.
-	 *
-	 * <h4>Auto-Grouping of Filters</h4>
-	 * Filters are first grouped according to their binding path. All filters belonging to the same
-	 * path are ORed, and after that the results of all paths are ANDed. Usually this means that all
-	 * filters applied to the same property are ORed, while filters on different properties are
-	 * ANDed.
-	 * Please use either the automatic grouping of filters (where applicable) or explicit
-	 * AND/OR filters, as a mixture of both is not supported.
-	 *
 	 * @param {sap.ui.model.Filter|sap.ui.model.Filter[]} [vFilters]
 	 *   The dynamic filters to be used; replaces the dynamic filters given in
 	 *   {@link sap.ui.model.odata.v4.ODataModel#bindList}.
@@ -2258,63 +2240,6 @@ sap.ui.define([
 	};
 
 	/**
-	 * Makes the given context a row context of this binding. Adds the entity data to the cache.
-	 * Makes the context kept-alive.
-	 *
-	 * @param {sap.ui.model.odata.v4.Context} oEntityContext
-	 *   A context pointing to an entity
-	 * @throws {Error}
-	 *   If the binding is not suspended, setKeepAlive is not possible, the resource paths do not
-	 *   match, the entity's key predicate is unknown, the context binding's $expand contains
-	 *   collections, or the context binding is still reading
-	 *
-	 * @private
-	 */
-	ODataListBinding.prototype.moveEntityHere = function (oEntityContext) {
-		var oEntity,
-			oEntityFetchValuePromise,
-			sEntityPath = oEntityContext.getPath(),
-			mEntityQueryOptions = oEntityContext.getBinding().getInheritableQueryOptions(),
-			sRelativePath = _Helper.getRelativePath(sEntityPath, this.oHeaderContext.getPath());
-
-		if (!sRelativePath || sRelativePath.includes("/")) {
-			throw new Error(this + ": " + sEntityPath + " is not an entity of the collection");
-		}
-		if (!this.getRootBinding().isSuspended()) {
-			throw new Error(this + ": must be suspended");
-		}
-		this.checkKeepAlive(oEntityContext);
-
-		// take the value from the context binding's cache
-		oEntityFetchValuePromise = oEntityContext.fetchValue(null, null, /*bCached*/true);
-		if (oEntityFetchValuePromise.isPending()) {
-			throw new Error("Cannot move the entity; the context binding has not finished loading: "
-				+ oEntityContext.getBinding());
-		}
-		oEntity = oEntityFetchValuePromise.getResult();
-
-		if (!_Helper.getPrivateAnnotation(oEntity, "predicate")) {
-			throw new Error("No key predicate known at " + sEntityPath);
-		}
-
-		// add the context binding's query options as late query options
-		if (!this.aggregateQueryOptions(mEntityQueryOptions, "", /*bImmutable*/true)) {
-			throw new Error(oEntityContext + ": could not move the entity. Probably a list binding"
-				+ " w/o $$ownRequest depends on it");
-		}
-
-		this.getRootBinding().resume();
-		oEntityContext.oBinding = this;
-		this.mPreviousContextsByPath[sEntityPath] = oEntityContext;
-		this.oCachePromise.then(function (oCache) {
-			oCache.addKeptElement(oEntity);
-			// setKeepAlive looks into the cache, so this had to wait
-			oEntityContext.setKeepAlive(true);
-			oEntityContext.checkUpdate();  // create listeners in this binding's cache
-		});
-	};
-
-	/**
 	 * @override
 	 * @see sap.ui.model.odata.v4.ODataBinding#refreshInternal
 	 */
@@ -2330,9 +2255,6 @@ sap.ui.define([
 		// calls refreshInternal on all given bindings and returns an array of promises
 		function refreshAll(aBindings) {
 			return aBindings.map(function (oBinding) {
-				if (oBinding.bIsBeingDestroyed) {
-					return;
-				}
 				// Call refreshInternal with bCheckUpdate = false because property bindings
 				// should not check for updates yet, otherwise they will cause a "Failed to
 				// drill down..." when the row is no longer part of the collection. They get
@@ -2367,7 +2289,7 @@ sap.ui.define([
 							throw oError;
 						}
 						return that.fetchResourcePath(that.oContext).then(function (sResourcePath) {
-							if (!that.bRelative || oCache.getResourcePath() === sResourcePath) {
+							if (!that.bRelative || oCache.$resourcePath === sResourcePath) {
 								that.oCache = oCache;
 								that.oCachePromise = SyncPromise.resolve(oCache);
 								that.iCreatedContexts = iCreatedContexts;
@@ -2642,7 +2564,7 @@ sap.ui.define([
 			return Promise.resolve(null);
 		}
 
-		sMetaPath = _Helper.getMetaPath(sResolvedPath);
+		sMetaPath = oMetaModel.getMetaPath(sResolvedPath);
 		return oMetaModel.requestObject(sMetaPath + "/").then(function (oEntityType) {
 			var aFilters,
 				mPredicates = {};
@@ -2677,7 +2599,8 @@ sap.ui.define([
 	 * @see sap.ui.model.odata.v4.ODataParentBinding#requestSideEffects
 	 */
 	ODataListBinding.prototype.requestSideEffects = function (sGroupId, aPaths, oContext) {
-		var aContexts,
+		var bAllContextsTransient,
+			aContexts,
 			bMissingPredicate,
 			oModel = this.oModel,
 			// Hash set of collection-valued navigation property meta paths (relative to the cache's
@@ -2758,8 +2681,13 @@ sap.ui.define([
 		if (bSingle) {
 			return this.refreshSingle(oContext, this.lockGroup(sGroupId), false);
 		}
-		if (this.iCurrentEnd === 0) {
-			return SyncPromise.resolve();
+		if (this.aContexts.length) {
+			bAllContextsTransient = this.aContexts.every(function (oContext) {
+				return oContext.isTransient();
+			});
+			if (bAllContextsTransient) {
+				return SyncPromise.resolve();
+			}
 		}
 		return this.refreshInternal("", sGroupId, false, true);
 	};
@@ -3025,14 +2953,6 @@ sap.ui.define([
 					if (this.bHasPathReductionToParent && this.oModel.bAutoExpandSelect
 							&& !this.mParameters.$$aggregation) {
 						this.sChangeReason = "AddVirtualContext"; // JIRA: CPOUI5ODATAV4-848
-					}
-					if (oContext.getBinding
-							&& oContext.getBinding().getRootBinding().isSuspended()) {
-						// when becoming suspended, remain silent until resume
-						this.oContext = oContext;
-						this.setResumeChangeReason(ChangeReason.Context);
-
-						return;
 					}
 				}
 				// call Binding#setContext because of data state etc.; fires "change"

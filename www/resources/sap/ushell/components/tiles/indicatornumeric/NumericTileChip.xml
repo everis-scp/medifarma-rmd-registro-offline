@@ -2,11 +2,8 @@
 <chip xmlns="http://schemas.sap.com/sapui2/services/Chip/1">
 	<implementation>
 		<sapui5>
-<!-- 			<componentName>tiles.indicatornumeric</componentName> --> 
 			<basePath>../../../../../</basePath>
-            <viewName>sap.ushell.components.tiles.indicatornumeric.NumericTile.view.js</viewName>
-<!--             <basePath>../../</basePath> -->
-<!--             <viewName>tiles.indicatornumeric.NumericTile.view.js</viewName> -->
+			<viewName>sap.ushell.components.tiles.indicatornumeric.NumericTile.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
@@ -22,7 +19,7 @@
 				<parameter name="cacheTimeStamp" />
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />

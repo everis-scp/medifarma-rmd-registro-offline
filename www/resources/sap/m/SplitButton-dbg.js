@@ -48,7 +48,7 @@ function(
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @private
@@ -256,11 +256,15 @@ function(
 				oEvent.preventDefault();
 			}
 
-			this._getTextButton().onkeydown(oEvent);
+			if (oEvent.which === KeyCodes.ENTER) {
+				this._getTextButton().firePress({/* no parameters */ });
+			}
 		};
 
 		SplitButton.prototype.onkeyup = function(oEvent) {
-			this._getTextButton().onkeyup(oEvent);
+			if (oEvent.which === KeyCodes.SPACE) {
+				this._getTextButton().firePress({/* no parameters */ });
+			}
 		};
 
 		SplitButton.prototype.onsapup = function(oEvent) {

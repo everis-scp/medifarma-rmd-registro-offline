@@ -1,5 +1,5 @@
 {
-  "sEntity" : "Library",
-  "sId" : "sap/ushell",
-  "sVersion" : "1.71.24"
+  "sEntity": "Library",
+  "sId": "sap/ushell",
+  "sVersion": "1.93.6"
 }

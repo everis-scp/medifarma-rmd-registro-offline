@@ -1,0 +1,71 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:control="sap.fe.core.controls.filterbar"
+	template:require="{
+		MODEL: 'sap/ui/model/odata/v4/AnnotationHelper',
+		HELPER: 'sap/fe/macros/visualfilters/InteractiveChartHelper',
+		CORE: 'sap/fe/core/AnnotationHelper'
+	}"
+>
+    <template:with path="metaPath>" helper="HELPER.getChart" var="chartAnnotation">
+        <control:VisualFilter
+			core:require="{VisualFilterRuntime: 'sap/fe/macros/visualfilters/VisualFilterRuntime'}"
+			height="11rem"
+			width="20.5rem"
+			class="sapUiSmallMarginBeginEnd sapUiTinyMarginTopBottom"
+		>
+            <VBox height="2rem" class="sapUiSmallMarginBottom">
+                <OverflowToolbar style="Clear">
+                    <template:if test="{= ${this>required} }">
+                         <Label text="" width="0.5rem" required="true" />
+                    </template:if>
+                    <Title
+						id="{= ID.generate([${this>id},'MeasureDimensionTitle']) }"
+						text="{parts:[{path:'chartAnnotation>'},{path:'contextPath>'},{path:'this>bCustomAggregate'},{path:'this>aggregateProperties'}],formatter:'HELPER.getMeasureDimensionTitle'}"
+						tooltip="{parts:[{path:'chartAnnotation>'},{path:'contextPath>'},{path:'this>id'},{path:'this>bCustomAggregate'},{path:'this>aggregateProperties'}],formatter:'HELPER.getToolTip'}"
+						titleStyle="H6"
+						class="sapUiTinyMarginEnd sapUiNoMarginBegin"
+					/>
+                   
+                    <template:if
+						test="{parts:[{path:'chartAnnotation>'},{path:'contextPath>'},{path:'this>bCustomAggregate'}, {path:'this>aggregateProperties'}],formatter:'HELPER.getUoMVisiblity'}"
+					>       
+                        <template:then>
+                            <Title
+								id="{= ID.generate([${this>id},'ScaleUoMTitle']) }"
+								visible="{= '{= !${internal>' + ${this>id} + '/showOverLayForVF}}'}"
+								text="{parts:[{path:'chartAnnotation>'},{path:'contextPath>'},{path:'this>id'},{path:'this>bCustomAggregate'}, {path:'this>aggregateProperties'}],formatter:'HELPER.getScaleUoMTitle'}"
+								titleStyle="H6"
+								width="4.15rem"
+							/>
+                        </template:then>
+                    </template:if>
+                </OverflowToolbar>
+            </VBox>
+            <VBox height="7.5rem">
+                 <template:if
+					test="{parts:[{path:'chartAnnotation>'},{path:'contextPath>'},{path:'this>bCustomAggregate'}, {path:'this>aggregateProperties'}],formatter:'HELPER.getHiddenMeasure'}"
+				>
+                    <template:then>
+                        <VBox class="sapUiOverlay sapUiResponsiveMargin">
+                            <Text text="{= HELPER.getI18nMeasureHidden(${chartAnnotation>Measures/0/}) }" />
+                        </VBox>
+                    </template:then>
+                    <template:elseif test="{= ${chartAnnotation>ChartType/$EnumMember} === 'com.sap.vocabularies.UI.v1.ChartType/Bar'}">
+                        <core:Fragment fragmentName="sap.fe.macros.visualfilters.fragments.InteractiveBarChart" type="XML" />
+                    </template:elseif>
+                    <template:elseif test="{= ${chartAnnotation>ChartType/$EnumMember} === 'com.sap.vocabularies.UI.v1.ChartType/Line' }">
+                        <core:Fragment fragmentName="sap.fe.macros.visualfilters.fragments.InteractiveLineChart" type="XML" />
+                    </template:elseif>
+                    <template:else>
+                        <VBox class="sapUiOverlay sapUiResponsiveMargin">
+                            <Text text="{this.i18n>M_VISUAL_FILTER_UNSUPPORTED_CHART_TYPE}" />
+                        </VBox>
+                    </template:else>
+                </template:if>
+            </VBox>
+        </control:VisualFilter>
+    </template:with>
+</core:FragmentDefinition>

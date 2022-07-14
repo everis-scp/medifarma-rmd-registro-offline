@@ -5,17 +5,20 @@
 			<VBox>
 				<Text id="deleteText" text="{delete>/text/text}"/>
 				<CheckBox id="deleteCheckBox"
-						  selected="{delete>/checkboxSelected}"
+						  selected="{delete>/unsavedChangesCheckboxSelected}"
 						  text="{delete>/text/unsavedChanges}"
-						  visible="{= ${delete>/unsavedChangesItemsCount} > 0 &amp;&amp; ${delete>/unsavedChangesItemsCount} !== ${delete>/itemsCount} &amp;&amp; (${delete>/itemsCount} - ${delete>/lockedItemsCount} !== ${delete>/unsavedChangesItemsCount}) ? true : false }"/>
-				<Text id="undeletableText"  visible="{= ${delete>/undeletableCount} > 0 ? true : false }" text="{delete>/text/undeletableText}" />
+						  visible="{delete>/unsavedChangesCheckboxVisible}"/>
+				<Text id="undeletableText"  visible="{= ${delete>/text/undeletableText} &amp;&amp; ${delete>/undeletableCount} > 0 ? true : false }" text="{delete>/text/undeletableText}" />
 			</VBox>
 		</content>
 		<beginButton>
-			<Button text="{i18n>DELETE}" press="onDelete" visible="{= ${delete>/lockedItemsCount} !== ${delete>/itemsCount} }" type="Emphasized"/>
+			<Button text="{i18n>DELETE}" press="onDelete"
+					visible="{= ((${delete>/lockedItemsCount} + ${delete>/undeletableCount}) !== ${delete>/itemsCount}) }"
+					type="Emphasized"/>
 		</beginButton>
 		<endButton>
-			<Button text="{= ${delete>/lockedItemsCount} !== ${delete>/itemsCount} ? ${i18n>CANCEL} : ${i18n>CLOSE} }" press="onCancel"/>
+			<Button text="{= ((${delete>/lockedItemsCount} + ${delete>/undeletableCount}) !== ${delete>/itemsCount}) ? ${i18n>CANCEL} : ${i18n>CLOSE} }"
+					press="onCancel"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

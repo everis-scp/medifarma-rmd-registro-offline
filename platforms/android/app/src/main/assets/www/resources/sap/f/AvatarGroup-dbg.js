@@ -97,7 +97,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -291,8 +291,6 @@ sap.ui.define([
 		oItem._setAvatarColor(AvatarColor["Accent" + this._iCurrentAvatarColorNumber]);
 		oItem._setGroupType(this.getGroupType());
 
-		this.addAggregation("items", oItem);
-
 		this._iAvatarsToShow = this.getItems().length;
 
 		this._iCurrentAvatarColorNumber++;
@@ -300,7 +298,7 @@ sap.ui.define([
 			this._iCurrentAvatarColorNumber = 1;
 		}
 
-		return this;
+		return 	this.addAggregation("items", oItem);
 	};
 
 	AvatarGroup.prototype.setAvatarDisplaySize = function (sValue) {

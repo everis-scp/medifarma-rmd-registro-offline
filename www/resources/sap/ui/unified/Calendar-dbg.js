@@ -70,7 +70,7 @@ sap.ui.define([
 	 * Basic Calendar.
 	 * This calendar is used for DatePickers
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -181,14 +181,6 @@ sap.ui.define([
 			 * @since 1.48
 			 */
 			showWeekNumbers : {type : "boolean", group : "Appearance", defaultValue : true},
-
-			/**
-			 * Determines whether there is a shortcut navigation to Today. When used in Month, Year or
-			 * Year-range picker view, the calendar navigates to Day picker view.
-			 *
-			 * @since 1.95
-			 */
-			showCurrentDateButton : {type : "boolean", group : "Behavior", defaultValue : false},
 
 			/**
 			 * Holds a reference to the currently shown picker. Possible values: month, monthPicker, yearPicker and yearRangePicker.
@@ -399,7 +391,6 @@ sap.ui.define([
 
 		oHeader.attachEvent("pressPrevious", this._handlePrevious, this);
 		oHeader.attachEvent("pressNext", this._handleNext, this);
-		oHeader.attachEvent("pressCurrentDate", this._handleCurrentDate, this);
 		oHeader.attachEvent("pressButton1", this._handleButton1, this);
 		oHeader.attachEvent("pressButton2", this._handleButton2, this);
 		oHeader.attachEvent("pressButton3", this._handleButton1, this);
@@ -708,9 +699,10 @@ sap.ui.define([
 	};
 
 	/**
-	 * Displays and sets the focused date of the calendar.
+	 * Sets the focused date of the calendar.
 	 *
-	 * @param {Object} oDate A JavaScript date object for focused date
+	 * @param {Object} oDate
+	 *         JavaScript date object for focused date.
 	 * @returns {this} <code>this</code> to allow method chaining
 	 * @public
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
@@ -718,7 +710,6 @@ sap.ui.define([
 	Calendar.prototype.focusDate = function(oDate) {
 
 		_displayDate.call(this, oDate, false);
-		this._addMonthFocusDelegate();
 
 		return this;
 
@@ -1023,18 +1014,6 @@ sap.ui.define([
 
 		return this;
 
-	};
-
-	/**
-	 * Sets the visibility of the Current date button in the calendar.
-	 *
-	 * @param {boolean} bShow whether the Today button will be displayed
-	 * @return {this} <code>this</code> for method chaining
-	 * @public
-	 */
-	Calendar.prototype.setShowCurrentDateButton = function(bShow){
-		this.getAggregation("header").setVisibleCurrentDateButton(bShow);
-		return this.setProperty("showCurrentDateButton", bShow);
 	};
 
 	/**
@@ -1710,16 +1689,6 @@ sap.ui.define([
 
 	};
 
-	/**
-	 * Handles navigation to today.
-	 *
-	 * @private
-	 */
-	Calendar.prototype._handleCurrentDate = function() {
-		this.setProperty("_currentPicker", CURRENT_PICKERS.MONTH);
-		this.focusDate(new Date());
-	};
-
 	Calendar.prototype._getYearString = function () {
 		var oYearPicker = this._getYearPicker(),
 			oYearPickerDomRef = oYearPicker.getDomRef(),
@@ -2186,8 +2155,9 @@ sap.ui.define([
 	Calendar.prototype._selectMonth = function () {
 		var oFocusedDate = new CalendarDate(this._getFocusedDate(), this.getPrimaryCalendarType()),
 			oMonthPicker = this._getMonthPicker(),
-			iFocusedMonth = oMonthPicker.getProperty("_focusedMonth"),
-			iMonth = (iFocusedMonth || iFocusedMonth === 0) ? iFocusedMonth : oMonthPicker.getMonth(),
+			iMonth = oMonthPicker._focusedMonth || oMonthPicker._focusedMonth === 0 ?
+				oMonthPicker._focusedMonth :
+				oMonthPicker.getMonth(),
 			oSecondDate = oMonthPicker._iYear ?
 				new CalendarDate(oMonthPicker._iYear, iMonth - 1, 1) :
 				new CalendarDate(this._getFocusedDate().getYear(), iMonth - 1, 1);

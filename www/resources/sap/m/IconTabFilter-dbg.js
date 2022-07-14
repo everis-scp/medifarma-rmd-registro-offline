@@ -94,7 +94,7 @@ sap.ui.define([
 	 * @implements sap.m.IconTab
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -419,14 +419,12 @@ sap.ui.define([
 		if (!this.getVisible()) {
 			return;
 		}
+
+		this._prepareDragEventDelegate();
+
 		var oIconTabHeader = this.getParent(),
-			oIconTabBar = oIconTabHeader.getParent();
-
-		if (oIconTabHeader.getEnableTabReordering()) {
-			this._prepareDragEventDelegate();
-		}
-
-		var bHasIconTabBar = oIconTabHeader._isInsideIconTabBar(),
+			oIconTabBar = oIconTabHeader.getParent(),
+			bHasIconTabBar = oIconTabHeader._isInsideIconTabBar(),
 			mAriaParams = { role: "tab" },
 			sId = this.getId(),
 			sCount = this.getCount(),
@@ -440,10 +438,6 @@ sap.ui.define([
 			bInLine = oIconTabHeader._bInLine || oIconTabHeader.isInlineMode(),
 			bShowAll = this.getShowAll(),
 			sTextDir = this.getTextDirection();
-
-		if (this._isOverflow()){
-			mAriaParams.role = "button";
-		}
 
 		if (bHasIconTabBar) {
 			mAriaParams.controls = oIconTabBar.getId() + "-content";
@@ -459,7 +453,7 @@ sap.ui.define([
 
 			var aId = [];
 
-			if (sCount !== "" && !bInLine) {
+			if (sCount !== "") {
 				aId.push(sId + "-count");
 			}
 			if (sText.length) {
@@ -519,9 +513,7 @@ sap.ui.define([
 				.attr("aria-disabled", true);
 		}
 
-		if (!this._isOverflow()) {
-			oRM.attr("aria-selected", false);
-		}
+		oRM.attr("aria-selected", false);
 
 		var sTooltip = this.getTooltip_AsString();
 		if (sTooltip) {

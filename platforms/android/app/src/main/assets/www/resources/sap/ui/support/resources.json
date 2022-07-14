@@ -83,7 +83,7 @@
 		{
 			"name": "library-h2-preload.js",
 			"module": "sap/ui/support/library-h2-preload.js",
-			"size": 15349,
+			"size": 15383,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -161,6 +161,7 @@
 				"sap/ui/model/SelectionModel.js",
 				"sap/ui/model/json/JSONModel.js",
 				"sap/ui/thirdparty/URI.js",
+				"sap/ui/thirdparty/handlebars.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ui/thirdparty/jszip.js",
 				"sap/ui/unified/FileUploader.js"
@@ -192,7 +193,8 @@
 				"sap/ui/support/supportRules/report/IssueRenderer.js",
 				"sap/ui/support/supportRules/report/ReportProvider.js",
 				"sap/ui/support/supportRules/report/StringHistoryFormatter.js",
-				"sap/ui/support/supportRules/report/resources/index.js",
+				"sap/ui/support/supportRules/report/resources/collapseExpand.js",
+				"sap/ui/support/supportRules/report/resources/filter.js",
 				"sap/ui/support/supportRules/ui/IFrameController.js",
 				"sap/ui/support/supportRules/ui/Overlay.js",
 				"sap/ui/support/supportRules/ui/controllers/Analysis.controller.js",
@@ -233,7 +235,7 @@
 		{
 			"name": "library-preload.js",
 			"module": "sap/ui/support/library-preload.js",
-			"size": 177590,
+			"size": 179399,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -312,6 +314,7 @@
 				"sap/ui/model/json/JSONModel.js",
 				"sap/ui/support/supportRules/util/EvalUtils.js",
 				"sap/ui/thirdparty/URI.js",
+				"sap/ui/thirdparty/handlebars.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/ui/thirdparty/jszip.js",
 				"sap/ui/unified/FileUploader.js"
@@ -345,7 +348,8 @@
 				"sap/ui/support/supportRules/report/IssueRenderer.js",
 				"sap/ui/support/supportRules/report/ReportProvider.js",
 				"sap/ui/support/supportRules/report/StringHistoryFormatter.js",
-				"sap/ui/support/supportRules/report/resources/index.js",
+				"sap/ui/support/supportRules/report/resources/collapseExpand.js",
+				"sap/ui/support/supportRules/report/resources/filter.js",
 				"sap/ui/support/supportRules/ui/IFrameController.js",
 				"sap/ui/support/supportRules/ui/Overlay.js",
 				"sap/ui/support/supportRules/ui/controllers/Analysis.controller.js",
@@ -379,7 +383,7 @@
 		},
 		{
 			"name": "library-preload.js.map",
-			"size": 156091,
+			"size": 157834,
 			"isDebug": true
 		},
 		{
@@ -416,7 +420,7 @@
 		},
 		{
 			"name": "resources.json",
-			"size": 30119
+			"size": 30545
 		},
 		{
 			"name": "supportRules/Analyzer-dbg.js",
@@ -537,7 +541,7 @@
 		{
 			"name": "supportRules/IssueManager-dbg.js",
 			"module": "sap/ui/support/supportRules/IssueManager.js",
-			"size": 14891,
+			"size": 15029,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -549,7 +553,7 @@
 		{
 			"name": "supportRules/IssueManager.js",
 			"module": "sap/ui/support/supportRules/IssueManager.js",
-			"size": 4911,
+			"size": 5013,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/base/Object.js",
@@ -626,7 +630,7 @@
 		{
 			"name": "supportRules/RuleSet-dbg.js",
 			"module": "sap/ui/support/supportRules/RuleSet.js",
-			"size": 10166,
+			"size": 10214,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -638,7 +642,7 @@
 		{
 			"name": "supportRules/RuleSet.js",
 			"module": "sap/ui/support/supportRules/RuleSet.js",
-			"size": 3958,
+			"size": 3957,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/support/library.js",
@@ -807,7 +811,7 @@
 		{
 			"name": "supportRules/report/IssueRenderer-dbg.js",
 			"module": "sap/ui/support/supportRules/report/IssueRenderer.js",
-			"size": 6140,
+			"size": 7827,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js"
@@ -816,7 +820,7 @@
 		{
 			"name": "supportRules/report/IssueRenderer.js",
 			"module": "sap/ui/support/supportRules/report/IssueRenderer.js",
-			"size": 3230,
+			"size": 4148,
 			"required": [
 				"jquery.sap.global.js"
 			]
@@ -824,22 +828,24 @@
 		{
 			"name": "supportRules/report/ReportProvider-dbg.js",
 			"module": "sap/ui/support/supportRules/report/ReportProvider.js",
-			"size": 15032,
+			"size": 16113,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/support/supportRules/report/Archiver.js",
-				"sap/ui/support/supportRules/report/IssueRenderer.js"
+				"sap/ui/support/supportRules/report/IssueRenderer.js",
+				"sap/ui/thirdparty/handlebars.js"
 			]
 		},
 		{
 			"name": "supportRules/report/ReportProvider.js",
 			"module": "sap/ui/support/supportRules/report/ReportProvider.js",
-			"size": 8145,
+			"size": 9158,
 			"required": [
 				"jquery.sap.global.js",
 				"sap/ui/support/supportRules/report/Archiver.js",
-				"sap/ui/support/supportRules/report/IssueRenderer.js"
+				"sap/ui/support/supportRules/report/IssueRenderer.js",
+				"sap/ui/thirdparty/handlebars.js"
 			]
 		},
 		{
@@ -855,40 +861,45 @@
 		},
 		{
 			"name": "supportRules/report/resources/ReportTemplate.html",
-			"size": 1782
+			"size": 4417
 		},
 		{
-			"name": "supportRules/report/resources/images/checked.svg",
-			"size": 1166
-		},
-		{
-			"name": "supportRules/report/resources/images/collapsed.svg",
-			"size": 740
-		},
-		{
-			"name": "supportRules/report/resources/images/expanded.svg",
-			"size": 820
-		},
-		{
-			"name": "supportRules/report/resources/images/unchecked.svg",
-			"size": 581
-		},
-		{
-			"name": "supportRules/report/resources/index-dbg.js",
-			"module": "sap/ui/support/supportRules/report/resources/index.js",
-			"size": 5411,
+			"name": "supportRules/report/resources/collapseExpand-dbg.js",
+			"module": "sap/ui/support/supportRules/report/resources/collapseExpand.js",
+			"size": 1950,
 			"format": "raw",
 			"isDebug": true
 		},
 		{
-			"name": "supportRules/report/resources/index.js",
-			"module": "sap/ui/support/supportRules/report/resources/index.js",
-			"size": 2984,
+			"name": "supportRules/report/resources/collapseExpand.css",
+			"size": 2209
+		},
+		{
+			"name": "supportRules/report/resources/collapseExpand.js",
+			"module": "sap/ui/support/supportRules/report/resources/collapseExpand.js",
+			"size": 1200,
+			"format": "raw"
+		},
+		{
+			"name": "supportRules/report/resources/filter-dbg.js",
+			"module": "sap/ui/support/supportRules/report/resources/filter.js",
+			"size": 3577,
+			"format": "raw",
+			"isDebug": true
+		},
+		{
+			"name": "supportRules/report/resources/filter.css",
+			"size": 273
+		},
+		{
+			"name": "supportRules/report/resources/filter.js",
+			"module": "sap/ui/support/supportRules/report/resources/filter.js",
+			"size": 1878,
 			"format": "raw"
 		},
 		{
 			"name": "supportRules/report/resources/styles.css",
-			"size": 2786
+			"size": 704
 		},
 		{
 			"name": "supportRules/ui/IFrameController-dbg.js",
@@ -939,7 +950,7 @@
 		{
 			"name": "supportRules/ui/controllers/Analysis-dbg.controller.js",
 			"module": "sap/ui/support/supportRules/ui/controllers/Analysis.controller.js",
-			"size": 34121,
+			"size": 34169,
 			"isDebug": true,
 			"required": [
 				"sap/base/util/deepExtend.js",
@@ -963,7 +974,7 @@
 		{
 			"name": "supportRules/ui/controllers/Analysis.controller.js",
 			"module": "sap/ui/support/supportRules/ui/controllers/Analysis.controller.js",
-			"size": 18550,
+			"size": 18549,
 			"required": [
 				"sap/base/util/deepExtend.js",
 				"sap/m/MessageToast.js",
@@ -1128,7 +1139,7 @@
 		{
 			"name": "supportRules/ui/external/ElementTree-dbg.js",
 			"module": "sap/ui/support/supportRules/ui/external/ElementTree.js",
-			"size": 19593,
+			"size": 19108,
 			"isDebug": true,
 			"required": [
 				"jquery.sap.global.js"
@@ -1137,7 +1148,7 @@
 		{
 			"name": "supportRules/ui/external/ElementTree.js",
 			"module": "sap/ui/support/supportRules/ui/external/ElementTree.js",
-			"size": 9099,
+			"size": 8868,
 			"required": [
 				"jquery.sap.global.js"
 			]
@@ -1207,7 +1218,7 @@
 		{
 			"name": "supportRules/ui/models/CustomListSelection-dbg.js",
 			"module": "sap/ui/support/supportRules/ui/models/CustomListSelection.js",
-			"size": 11488,
+			"size": 11470,
 			"isDebug": true,
 			"required": [
 				"sap/base/util/deepExtend.js",
@@ -1218,7 +1229,7 @@
 		{
 			"name": "supportRules/ui/models/CustomListSelection.js",
 			"module": "sap/ui/support/supportRules/ui/models/CustomListSelection.js",
-			"size": 6950,
+			"size": 6935,
 			"required": [
 				"sap/base/util/deepExtend.js",
 				"sap/ui/base/EventProvider.js",
@@ -1340,7 +1351,7 @@
 		},
 		{
 			"name": "supportRules/ui/overlay.html",
-			"size": 701
+			"size": 778
 		},
 		{
 			"name": "supportRules/ui/styles/ControlTree.css",
@@ -1348,7 +1359,7 @@
 		},
 		{
 			"name": "supportRules/ui/styles/overlay.css",
-			"size": 4019
+			"size": 3787
 		},
 		{
 			"name": "supportRules/ui/views/Analysis.view.xml",

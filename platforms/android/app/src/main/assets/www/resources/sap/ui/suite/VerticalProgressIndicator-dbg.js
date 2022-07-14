@@ -34,7 +34,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author Svetozar Buzdumovic
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -97,7 +97,7 @@ sap.ui.define([
 	  }
 
 	  // get the ProgressBar
-	  this.oBar = this.getDomRef('bar');
+	  this.oBar = window.document.getElementById(this.getId() + '-bar');
 
 	  // get the new Value and calculate Pixels
 	  VerticalPercent = iPercentage;
@@ -117,7 +117,7 @@ sap.ui.define([
 
 	  //set the ARIA property
 	  if (!this.oThis) {
-		this.oThis = this.$();
+		this.oThis = jQuery(document.getElementById(this.getId()));
 		}
 	  this.oThis.attr('aria-valuenow', iPercentage + '%');
 	  return this;

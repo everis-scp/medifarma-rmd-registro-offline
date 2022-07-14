@@ -22,22 +22,13 @@ sap.ui.define([
 	 * @MDC_PUBLIC_CANDIDATE
 	 */
 	var SearchContent = Object.assign({}, DefaultContent, {
-		getDisplayMultiValue: function() {
-			return [null];
-		},
-		getDisplayMultiLine: function() {
-			return [null];
-		},
 		getEdit: function() {
 			return ["sap/m/SearchField"];
 		},
-		getEditMultiValue: function() {
+		getEditMulti: function() {
 			return [null];
 		},
 		getEditMultiLine: function() {
-			return [null];
-		},
-		getEditForHelp: function() {
 			return [null];
 		},
 		getUseDefaultEnterHandler: function() {
@@ -67,20 +58,11 @@ sap.ui.define([
 
 			return [oControl];
 		},
-		createEditMultiValue: function() {
-			throw new Error("sap.ui.mdc.field.content.SearchContent - createEditMultiValue not defined!");
+		createEditMulti: function() {
+			throw new Error("sap.ui.mdc.field.content.SearchContent - createEditMulti not defined!");
 		},
 		createEditMultiLine: function() {
 			throw new Error("sap.ui.mdc.field.content.SearchContent - createEditMultiLine not defined!");
-		},
-		createDisplayMultiValue: function() {
-			throw new Error("sap.ui.mdc.field.content.SearchContent - createDisplayMultiValue not defined!");
-		},
-		createDisplayMultiLine: function() {
-			throw new Error("sap.ui.mdc.field.content.SearchContent - createDisplayMultiLine not defined!");
-		},
-		createEditForHelp: function() {
-			throw new Error("sap.ui.mdc.field.content.SearchContent - createEditForHelp not defined!");
 		}
 	});
 

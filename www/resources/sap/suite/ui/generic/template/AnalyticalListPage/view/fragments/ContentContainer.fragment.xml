@@ -15,12 +15,12 @@
 			</template:then>
 			<template:else>
 				<VBox class="sapSmartTemplatesAnalyticalListPageInheritHeight sapSmartTemplatesAnalyticalListPageChartContainer" visible="{= (${_templPriv>/alp/contentView} === 'chart' || ${_templPriv>/alp/contentView} === 'charttable') }">
-					<core:Fragment fragmentName="sap.suite.ui.generic.template.AnalyticalListPage.view.fragments.SmartChart" type="XML" />
+					<core:Fragment fragmentName="sap.suite.ui.generic.template.listTemplates.fragments.SmartChart" type="XML" />
 				</VBox>
 			</template:else>
 		</template:if>
 		<VBox class="sapSmartTemplatesAnalyticalListPageInheritHeight" visible="{= (${_templPriv>/alp/contentView} === 'table' || ${_templPriv>/alp/contentView} === 'charttable') }">
-			<core:Fragment fragmentName="sap.suite.ui.generic.template.AnalyticalListPage.view.fragments.DetailSmartTable" type="XML" />
+			<core:Fragment fragmentName="sap.suite.ui.generic.template.listTemplates.fragments.DetailSmartTable" type="XML" />
 		</VBox>
 		<template:if test="{= (${parameter>/manifest/sap.ui5/extends/extensions/sap.ui.viewExtensions/sap.suite.ui.generic.template.AnalyticalListPage.view.AnalyticalListPage/AnalyticalListPageContentViewExtension} !== undefined) }">
 			<template:then>

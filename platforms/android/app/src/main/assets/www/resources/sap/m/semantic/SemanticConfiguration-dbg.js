@@ -36,7 +36,7 @@ sap.ui.define([
 	 * Constructor for an sap.m.semantic.SemanticConfiguration.
 	 *
 	 * @class Defines the visual properties and positioning for each supported semantic type
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @private
 	 * @since 1.30.0
 	 * @alias sap.m.semantic.SemanticConfiguration
@@ -385,8 +385,7 @@ sap.ui.define([
 				return {
 					icon: IconPool.getIconURI("group-2"),
 					type: "IconOnly",
-					autoAdjustWidth: true,
-					tooltip: oBundle.getText("SEMANTIC_CONTROL_GROUP")
+					autoAdjustWidth: true
 				};
 			},
 			getEventDelegates: function(oContext) {
@@ -472,6 +471,8 @@ sap.ui.define([
 		oTypeConfigs["sap.m.semantic.MessagesIndicator"] = {
 			position: SemanticConfiguration.prototype._PositionInPage.footerLeft,
 			getSettings: function() {
+				var sTooltipId = InvisibleText.getStaticId("sap.m", "SEMANTIC_CONTROL_MESSAGES_INDICATOR");
+
 				return {
 					icon: IconPool.getIconURI("message-popup"),
 					text: {
@@ -481,6 +482,7 @@ sap.ui.define([
 						}
 					},
 					tooltip: oBundle.getText("SEMANTIC_CONTROL_MESSAGES_INDICATOR"),
+					ariaLabelledBy: sTooltipId,
 					type: ButtonType.Emphasized,
 					visible: {
 						path: "message>/",

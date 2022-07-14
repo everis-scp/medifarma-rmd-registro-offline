@@ -42,7 +42,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.iconEditor.IconEditor
 	 * @author SAP SE
 	 * @since 1.70
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.70
@@ -56,15 +56,7 @@ sap.ui.define([
 		renderer: BasePropertyEditor.getMetadata().getRenderer().render
 	});
 
-	IconEditor.configMetadata = Object.assign(
-		{},
-		BasePropertyEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.SIMPLEICON"
-			}
-		}
-	);
+	IconEditor.configMetadata = Object.assign({}, BasePropertyEditor.configMetadata);
 
 	IconEditor.prototype.onFragmentReady = function () {
 		var oInput = this.getContent();

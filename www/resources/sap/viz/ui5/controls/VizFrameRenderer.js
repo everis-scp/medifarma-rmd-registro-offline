@@ -1,6 +1,6 @@
 /*!
  * SAPUI5
 
-(c) Copyright 2009-2019 SAP SE. All rights reserved
+(c) Copyright 2009-2021 SAP SE. All rights reserved
  */
-sap.ui.define(function(){"use strict";var V={};V.render=function(r,c){r.write("<DIV");r.writeControlData(c);r.addClass("sapVizFrame");r.writeClasses();r.addStyle("width",c.getWidth());r.addStyle("height",c.getHeight());r.writeStyles();r.write(">");r.write("</DIV>");};return V;},true);
+sap.ui.define(function(){"use strict";var V={apiVersion:2};V.render=function(r,c){r.openStart("div",c).class("sapVizFrame").style("width",c.getWidth()).style("height",c.getHeight()).openEnd().close("div");};return V;},true);

@@ -6,7 +6,7 @@
 		"type": "component",
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
-			"version": "1.71.23"
+			"version": "1.93.4"
 		},
 		"title": "{{TITLE}}",
 		"description": "{{DESCRIPTION}}",
@@ -16,6 +16,7 @@
 			]
 		},
 		"ach": "CA-UI5-ST",
+		"embeddedBy": "../",
 		"offline": false,
 		"resources": "resources.json"
 	},
@@ -74,13 +75,44 @@
 				},
 				"sap.ui.layout": {
 					"minVersion": "1.30.1"
-				}
+				},
+				"sap.fe.placeholder":{
+			  		"minVersion":"1.86.0"
+			  	}
 			}
 		},
 		"commands": {
 			"Save": {
 				"name": "Save",
 				"shortcut": "Ctrl+S"
+			},
+			"Edit": {
+				"name": "Edit",
+				"shortcut": "Ctrl+E"
+			},
+			"Delete": {
+				"name": "Delete",
+				"shortcut": "Ctrl+Delete"
+			},
+			"Share": {
+				"name": "Share",
+				"shortcut": "Shift+Ctrl+S"
+			},
+			"TableEntryAdd": {
+				"name": "TableEntryAdd",
+				"shortcut": "Ctrl+Enter"
+			},
+			"TableEntryDelete": {
+				"name": "TableEntryDelete",
+				"shortcut": "Ctrl+D"
+			},
+			"NavigateForward": {
+				"name": "NavigateForward",
+				"shortcut": "Ctrl+F9"
+			},
+			"NavigateBackward" : {
+				"name": "NavigateBackward",
+				"shortcut": "Shift+Ctrl+F9"
 			}
 		},
 		"models": {

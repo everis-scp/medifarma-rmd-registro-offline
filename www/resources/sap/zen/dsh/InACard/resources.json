@@ -1,0 +1,31 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": "Component-dbg.js",
+			"size": 5372,
+			"isDebug": true
+		},
+		{
+			"name": "Component.js",
+			"size": 2434
+		},
+		{
+			"name": "controller/InACard-dbg.controller.js",
+			"size": 3427,
+			"isDebug": true
+		},
+		{
+			"name": "controller/InACard.controller.js",
+			"size": 1822
+		},
+		{
+			"name": "fragment/InACard.fragment.xml",
+			"size": 2081
+		},
+		{
+			"name": "manifest.json",
+			"size": 1657
+		}
+	]
+}

@@ -3,17 +3,15 @@
 	"sap.app": {
 		"id": "sap.fe.templates.ObjectPage",
 		"type": "component",
-		"i18n": "../../messagebundle.properties",
 		"applicationVersion": {
-			"version": "1.71.1"
+			"version": "1.93.3"
 		},
-		"title": "{{TITLE_OP}}",
+		"title": "Object Page",
 		"tags": {
-			"keywords": [
-				"{{TITLE_OP}}"
-			]
+			"keywords": ["Object Page"]
 		},
-		"ach": "CA-UI5-ST",
+		"ach": "CA-UI5-FE",
+		"embeddedBy": "../",
 		"offline": false,
 		"resources": "resources.json"
 	},
@@ -24,13 +22,7 @@
 			"tablet": true,
 			"phone": true
 		},
-		"supportedThemes": [
-			"sap_hcb",
-			"sap_bluecrystal",
-			"sap_belize",
-			"sap_belize_plus",
-		  	"sap_belize_hcw"
-		]
+		"supportedThemes": ["sap_fiori_3", "sap_hcb", "sap_bluecrystal", "sap_belize", "sap_belize_plus", "sap_belize_hcw"]
 	},
 	"sap.ui5": {
 		"config": {
@@ -39,51 +31,87 @@
 				"hierarchy": true
 			}
 		},
+		"commands": {
+			"Cancel": {
+				"name": "Cancel",
+				"shortcut": "Escape"
+			},
+			"Create": {
+				"name": "Create",
+				"shortcut": "Ctrl+Enter"
+			},
+			"DeleteEntry": {
+				"name": "DeleteEntry",
+				"shortcut": "Ctrl+D"
+			},
+			"DeleteObject": {
+				"name": "DeleteObject",
+				"shortcut": "Ctrl+Delete"
+			},
+			"Edit": {
+				"name": "Edit",
+				"shortcut": "Ctrl+E"
+			},
+			"SwitchToActiveObject": {
+				"name": "SwitchToActiveObject",
+				"shortcut": "Ctrl+Shift+A"
+			},
+			"SwitchToDraftObject": {
+				"name": "SwitchToDraftObject",
+				"shortcut": "Ctrl+Shift+D"
+			},
+			"NextTab": {
+				"name": "NextTab",
+				"shortcut": "Ctrl+F9"
+			},
+			"PreviousTab": {
+				"name": "PreviousTab",
+				"shortcut": "Ctrl+Shift+F9"
+			},
+			"Save": {
+				"name": "Save",
+				"shortcut": "Ctrl+S"
+			},
+			"TableSettings": {
+				"name": "TableSettings",
+				"shortcut": "Ctrl+,"
+			},
+			"Share": {
+				"name": "Share",
+				"shortcut": "Shift+Ctrl+S"
+			}
+		},
 		"services": {
-			"ShellUIService": {
-				"factoryName": "sap.ushell.ui5service.ShellUIService"
-			},
-			"namedBindingModel": {
-				"factoryName": "sap.fe.services.NamedBindingModelService",
-				"startup": "waitFor"
-			},
-			"templatedView": {
-				"factoryName": "sap.fe.services.TemplatedViewService",
+			"templatedViewService": {
+				"factoryName": "sap.fe.core.services.TemplatedViewService",
 				"startup": "waitFor",
 				"settings": {
+					"converterType": "ObjectPage",
 					"viewName": "sap.fe.templates.ObjectPage.ObjectPage"
 				}
+			},
+			"asyncComponentService": {
+				"factoryName": "sap.fe.core.services.AsyncComponentService",
+				"startup": "waitFor"
 			}
 		},
 		"handleValidation": true,
 		"dependencies": {
-			"minUI5Version": "1.56.0",
+			"minUI5Version": "1.93.3",
 			"libs": {
-				"sap.f": {
-					"minVersion": "1.56.0"
-				},
+				"sap.f": {},
 				"sap.fe.macros": {
-					"minVersion": "1.68.0",
 					"lazy": true
 				},
-				"sap.m": {
-					"minVersion": "1.56.0"
-				},
+				"sap.m": {},
 				"sap.suite.ui.microchart": {
-					"minVersion": "1.56.0"
+					"lazy": true
 				},
-				"sap.ui.core": {
-					"minVersion": "1.56.0"
-				},
-				"sap.ui.layout": {
-					"minVersion": "1.56.0"
-				},
-				"sap.ui.mdc": {
-					"minVersion": "1.56.0"
-				},
-				"sap.uxap": {
-					"minVersion": "1.56.0"
-				}
+				"sap.ui.core": {},
+				"sap.ui.layout": {},
+				"sap.ui.mdc": {},
+				"sap.uxap": {},
+				"sap.ui.fl": {}
 			}
 		},
 		"contentDensities": {

@@ -240,6 +240,43 @@
 			}]
 		}
 	},
+	"Bar": {
+		"default": {
+			"type": "bar",
+			"properties":{
+				"semanticColor": true,
+				"semanticPattern": true
+			},
+			"dimensions": {
+				"min": 1,
+				"defaultRole": "Category"
+			},
+			"measures": {
+				"min": 1,
+				"defaultRole": "Axis1"
+			},
+			"resize":{
+				"dataStep": 10
+			},
+			"feeds": [{
+				"uid": "valueAxis",
+				"min": 1,
+				"type": "measure",
+				"vizProperties":[{"path":"valueAxis.layout.maxWidth", "value" : 0.4}]
+			}, {
+				"uid": "categoryAxis",
+				"min": 1,
+				"type": "dimension",
+				"role": "Category",
+				"vizProperties":[{"path":"categoryAxis.layout.width", "value" : 0.33}]
+			},{
+				"uid": "color",
+				"min": 1,
+				"type": "dimension",
+				"role": "Series"
+			}]
+		}
+	},
 	"ColumnStacked": {
 		"default": {
 			"type": "stacked_column",

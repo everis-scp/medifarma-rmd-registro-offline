@@ -89,7 +89,7 @@ sap.ui.define([
 	 * @mixes sap.ui.core.ContextMenuSupport
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -379,8 +379,6 @@ sap.ui.define([
 			this._oBadgeData = null;
 		}
 
-		this._bFocused = null;
-
 		this.$().off("mouseenter", this._onmouseenter);
 	};
 
@@ -428,10 +426,6 @@ sap.ui.define([
 			this._activeButton();
 			// now, this._bActive may be false if the button was disabled
 			this._bRenderActive = this._bActive;
-		}
-
-		if (this._bFocused) {
-			this._toggleLiveChangeAnnouncement("polite");
 		}
 
 		this.$().on("mouseenter", this._onmouseenter);
@@ -637,42 +631,15 @@ sap.ui.define([
 	};
 
 	/**
-	 * Add aria-live attributes.
-	 *
-	 * @private
-	 */
-	Button.prototype.onfocusin = function() {
-		this._bFocused = true;
-		this._toggleLiveChangeAnnouncement("polite");
-	};
-
-	/**
 	 * Ensure that the active button state is removed by focus loss.
-	 * Disable aria-live attributes.
 	 *
 	 * @private
 	 */
 	Button.prototype.onfocusout = function() {
 		this._buttonPressed = false;
-		this._bFocused = false;
 		this._sTouchStartTargetId = '';
 		// set inactive button state
 		this._inactiveButton();
-		this._toggleLiveChangeAnnouncement("off");
-	};
-
-	/**
-	 * Enables or disables dynamic text or icon change announcmenets
-	 *
-	 * @param {*} sValue aria-live attribute value
-	 * @private
-	 */
-	Button.prototype._toggleLiveChangeAnnouncement = function(sValue) {
-		if (this._getText()) {
-			this.$("BDI-content").attr("aria-live", sValue);
-		} else if (this._getAppliedIcon()) {
-			this.$("tooltip").attr("aria-live", sValue);
-		}
 	};
 
 	/**

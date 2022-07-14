@@ -85,7 +85,7 @@
 		{
 			"name": "VerticalProgressIndicator-dbg.js",
 			"module": "sap/ui/suite/VerticalProgressIndicator.js",
-			"size": 4358,
+			"size": 4427,
 			"isDebug": true,
 			"required": [
 				"sap/ui/core/Control.js",
@@ -103,7 +103,7 @@
 		{
 			"name": "VerticalProgressIndicator.js",
 			"module": "sap/ui/suite/VerticalProgressIndicator.js",
-			"size": 1273,
+			"size": 1335,
 			"required": [
 				"sap/ui/core/Control.js",
 				"sap/ui/core/EnabledPropagator.js",
@@ -164,7 +164,7 @@
 		{
 			"name": "library-preload.js",
 			"module": "sap/ui/suite/library-preload.js",
-			"size": 9886,
+			"size": 9948,
 			"merged": true,
 			"required": [
 				"sap/ui/core/Control.js",
@@ -186,7 +186,7 @@
 		},
 		{
 			"name": "library-preload.js.map",
-			"size": 10040,
+			"size": 10062,
 			"isDebug": true
 		},
 		{

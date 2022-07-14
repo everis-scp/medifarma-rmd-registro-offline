@@ -4,6 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
+// Ensure that sap.ui.unified is loaded before the module dependencies will be required.
+// Loading it synchronously is the only compatible option and doesn't harm when sap.ui.unified
+// already has been loaded asynchronously (e.g. via a dependency declared in the manifest)
+sap.ui.getCore().loadLibrary("sap.ui.unified");
+
 sap.ui.define([
 	"./library",
 	"sap/m/library",
@@ -88,7 +93,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -124,7 +129,7 @@ sap.ui.define([
 				if (bInstantUpload === false) {
 					this.bInstantUpload = bInstantUpload;
 					this._oFormatDecimal = FileSizeFormat.getInstance({
-						binaryFilesize: false,
+						binaryFilesize: true,
 						maxFractionDigits: 1,
 						maxIntegerDigits: 4
 					});
@@ -2858,7 +2863,7 @@ sap.ui.define([
 					oItem._percentUploaded = iPercentUploaded;
 					// add ARIA attribute for screen reader support
 
-					$busyIndicator = oItem.$("ia_indicator");
+					$busyIndicator = jQuery(document.getElementById(oItem.getId() + "-ia_indicator"));
 					if (iPercentUploaded === 100) {
 						$busyIndicator.attr("aria-label", sPercentUploaded);
 					} else {

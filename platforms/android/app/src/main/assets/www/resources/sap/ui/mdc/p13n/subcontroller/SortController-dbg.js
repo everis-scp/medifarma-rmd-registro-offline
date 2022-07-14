@@ -5,8 +5,8 @@
  */
 
 sap.ui.define([
-	'./BaseController', 'sap/ui/mdc/p13n/P13nBuilder', 'sap/ui/mdc/p13n/panels/SortPanel', 'sap/m/p13n/SortPanel'
-], function (BaseController, P13nBuilder, SortPanelOld, SortPanel) {
+	'./BaseController', 'sap/ui/mdc/p13n/P13nBuilder', 'sap/ui/mdc/p13n/panels/SortPanel', 'sap/ui/mdc/p13n/panels/SortQueryPanel'
+], function (BaseController, P13nBuilder, SortPanel, SortQueryPanel) {
 	"use strict";
 
     var SortController = BaseController.extend("sap.ui.mdc.p13n.subcontroller.SortController");
@@ -38,31 +38,33 @@ sap.ui.define([
 
         //TODO: remove this condition once 'ChartNew' migration has been merged
         if (oAdaptationControl.isA("sap.ui.mdc.Chart") && !oAdaptationControl._bNewP13n) {
-            oSortPanel = new SortPanelOld();
-            var oAdaptationModel = this._getP13nModel(oPropertyHelper);
-            oSortPanel.setP13nModel(oAdaptationModel);
-        } else {
             oSortPanel = new SortPanel();
-            var oAdaptationData = this.mixInfoAndState(oPropertyHelper);
-            oSortPanel.setP13nData(oAdaptationData.items);
-            this._oPanel = oSortPanel;
+        } else {
+            oSortPanel = new SortQueryPanel();
         }
+
+        this._oPanel = oSortPanel;
+        var oAdaptationModel = this._getP13nModel(oPropertyHelper);
+        oSortPanel.setP13nModel(oAdaptationModel);
 
         return Promise.resolve(oSortPanel);
     };
 
+    SortController.prototype.update = function(){
+        BaseController.prototype.update.apply(this, arguments);
+        this._oPanel.setP13nModel(this._oAdaptationModel);
+    };
+
     SortController.prototype.model2State = function() {
         var aItems = [];
-        if (this._oPanel) {
-            this._oPanel.getP13nData(true).forEach(function(oItem){
-                if (oItem.sorted){
-                    aItems.push({
-                        name: oItem.name
-                    });
-                }
-            });
-            return aItems;
-        }
+        this._oAdaptationModel.getProperty("/items").forEach(function(oItem){
+            if (oItem.sorted){
+                aItems.push({
+                    name: oItem.name
+                });
+            }
+        });
+        return aItems;
     };
 
     SortController.prototype.getChangeOperations = function() {

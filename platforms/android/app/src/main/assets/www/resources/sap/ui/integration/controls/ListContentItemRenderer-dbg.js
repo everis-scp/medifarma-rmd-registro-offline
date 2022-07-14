@@ -5,13 +5,11 @@
  */
 
 sap.ui.define([
-	"sap/ui/integration/library",
 	"sap/ui/core/Renderer",
 	"sap/ui/core/Core",
 	"sap/ui/Device",
 	"sap/m/StandardListItemRenderer"
-], function(library,
-			Renderer,
+], function(Renderer,
 			Core,
 			Device,
 			StandardListItemRenderer) {
@@ -23,8 +21,6 @@ sap.ui.define([
 	 */
 	var ListContentItemRenderer = Renderer.extend(StandardListItemRenderer);
 	ListContentItemRenderer.apiVersion = 2;
-
-	var AttributesLayoutType = library.AttributesLayoutType;
 
 	/**
 	 * @override
@@ -40,14 +36,6 @@ sap.ui.define([
 
 		if (oLI.getMicrochart()) {
 			rm.class("sapUiIntLCIWithChart");
-		}
-
-		if (oLI.getActionsStrip()) {
-			rm.class("sapUiIntLCIWithActionsStrip");
-		}
-
-		if (oLI.getAttributes().length) {
-			rm.class("sapUiIntLCIWithAttributes");
 		}
 	};
 
@@ -67,8 +55,7 @@ sap.ui.define([
 			rm.renderControl(oLI._getAvatar());
 		}
 
-		rm.openStart("div")
-			.class("sapMSLIDiv");
+		rm.openStart("div").class("sapMSLIDiv");
 
 		// if bShouldRenderInfoWithoutTitle=true then adapt the style class to have flex-direction: row
 		if ((!sDescription && bAdaptTitleSize && sInfo) || bShouldRenderInfoWithoutTitle) {
@@ -149,59 +136,9 @@ sap.ui.define([
 		this.renderLIContentWrapper(rm, oLI);
 		this.renderContentLatter(rm, oLI);
 
-		this.renderItemAttributes(rm, oLI);
-
 		this.renderFooter(rm, oLI);
 
 		this.closeItemTag(rm, oLI);
-	};
-
-	ListContentItemRenderer.renderItemAttributes = function(rm, oLI) {
-		var aAttrs = oLI.getAttributes(),
-			sLayoutType = oLI.getAttributesLayoutType(),
-			iLength = aAttrs.length,
-			i;
-
-		if (!iLength) {
-			return;
-		}
-
-		rm.openStart("div")
-			.class("sapUiIntLCIAttrs")
-			.openEnd();
-
-		for (i = 0; i < iLength; i++) {
-			rm.openStart("div")
-				.class("sapUiIntLCIAttrRow")
-				.openEnd();
-
-			rm.openStart("span")
-				.class("sapUiIntLCIAttrCell")
-				.openEnd();
-
-			rm.renderControl(aAttrs[i]);
-
-			rm.close("span");
-
-			if (sLayoutType === AttributesLayoutType.TwoColumns) {
-				i++;
-
-				if (aAttrs[i]) {
-					rm.openStart("span")
-						.class("sapUiIntLCIAttrCell")
-						.class("sapUiIntLCIAttrSecondCell")
-						.openEnd();
-
-					rm.renderControl(aAttrs[i]);
-
-					rm.close("span");
-				}
-			}
-
-			rm.close("div");
-		}
-
-		rm.close("div");
 	};
 
 	ListContentItemRenderer.renderFooter = function(rm, oLI) {

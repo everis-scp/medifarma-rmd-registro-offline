@@ -14,16 +14,29 @@
                                    liveMode="{ui>/enableLiveFilter}"
                                    enableBasicSearch="{ui>/showBasicSearch}"
                                    considerAnalyticalParameters="{ui>/considerAnalyticalParameters}"
+                                   search="cmd:Search"
                                    useDateRangeType="{ui>/useDateRangeType}">
         <template:if test="{meta>}">
             <smartFilterBar:controlConfiguration>
-                <template:with path='meta>com.sap.vocabularies.UI.v1.SelectionFields'
+                <template:with path='ui>allControlConfiguration'
                                var='selectionField'>
                     <template:repeat list="{selectionField>}">
-                        <smartFilterBar:ControlConfiguration
+                         <template:if test="{parts: [{path: 'selectionField>PropertyPath'}, {path: 'ui>datePropertiesSettings'}], formatter: 'sap.ovp.cards.AnnotationHelper.isDateRangeType'}">
+                            <template:then>
+                                <!-- if SelField has custom date range implementation or selected values -->
+                                <smartFilterBar:ControlConfiguration
+                                    key="{= (${selectionField>PropertyPath}).replace('/', '.').trim() }"
+                                    groupId="{path: 'selectionField>bNotPartOfSelectionField', formatter: 'sap.ovp.cards.AnnotationHelper.getGroupID'}"
+                                    conditionType="{parts: [{path: 'selectionField>PropertyPath'}, {path: 'ui>datePropertiesSettings'}], formatter: 'sap.ovp.cards.AnnotationHelper.getConditionTypeForDateProperties'}"
+                                />
+                            </template:then>
+                            <template:else>
+                                <smartFilterBar:ControlConfiguration
                                 key="{= (${selectionField>PropertyPath}).replace('/', '.').trim() }"
                                 groupId="_BASIC"
                                 />
+                            </template:else>
+                        </template:if>
                     </template:repeat>
                 </template:with>
                 <!-- Extension provided in manifest will be automatically hooked into matching extension point -->

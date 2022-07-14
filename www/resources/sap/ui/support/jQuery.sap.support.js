@@ -32,7 +32,7 @@ sap.ui.define(["sap/ui/support/supportRules/Main",
 		 * @deprecated Since version 1.60.0. Please use sap/ui/support/RuleAnalyzer instead.
 		 * @alias jQuery.sap.support
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @public
 		 */
 		jQuery.sap.support = {

@@ -1,1 +1,0 @@
-sap.ui.define(function(){"use strict";const e=()=>new Promise(e=>{if(document.body){e()}else{document.addEventListener("DOMContentLoaded",()=>{e()})}});return e});

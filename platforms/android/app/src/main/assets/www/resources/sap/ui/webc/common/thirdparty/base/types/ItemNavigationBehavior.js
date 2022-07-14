@@ -1,1 +1,0 @@
-sap.ui.define(function(){"use strict";const c={Static:"Static",Cyclic:"Cyclic"};return c});

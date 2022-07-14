@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.viz",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.23"
+      "version": "1.93.4"
     },
     "title": "Chart controls based on the SAP BI CVOM charting library",
     "description": "Chart controls based on the SAP BI CVOM charting library",
@@ -16,17 +16,17 @@
       {
         "name": "canvg",
         "packagedWithMySelf": true,
-        "version": "0.0.0"
+        "version": "1.2"
       },
       {
         "name": "RaphaelJS",
         "packagedWithMySelf": true,
-        "version": "0.0.0"
+        "version": "2.1.0"
       },
       {
-        "name": "rgbcolor_static",
+        "name": "rgb-color",
         "packagedWithMySelf": true,
-        "version": "0.0.0"
+        "version": "2006-02-23"
       }
     ]
   },
@@ -41,23 +41,26 @@
       "sap_bluecrystal",
       "sap_fiori_3",
       "sap_fiori_3_dark",
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
       "sap_hcb",
+      "sap_horizon",
       "sap_platinum"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         },
         "sap.m": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         },
         "sap.ui.layout": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         }
       }

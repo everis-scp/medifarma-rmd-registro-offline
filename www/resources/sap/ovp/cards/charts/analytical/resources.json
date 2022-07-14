@@ -3,20 +3,25 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 1545,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 786
 		},
 		{
 			"name": "analyticalChart-dbg.controller.js",
+			"size": 18194,
 			"isDebug": true
 		},
 		{
-			"name": "analyticalChart.controller.js"
+			"name": "analyticalChart.controller.js",
+			"size": 6803
 		},
 		{
-			"name": "analyticalChart.fragment.xml"
+			"name": "analyticalChart.fragment.xml",
+			"size": 6850
 		}
 	]
 }

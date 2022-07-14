@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.rules.ui",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.9"
+      "version": "1.93.1"
     },
     "title": "UI5 library: sap.rules.ui",
     "description": "UI5 library: sap.rules.ui",
@@ -25,18 +25,19 @@
       "sap_fiori_3_dark",
       "sap_fiori_3_hcb",
       "sap_fiori_3_hcw",
-      "sap_hcb"
+      "sap_hcb",
+      "sap_horizon"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.20"
+          "minVersion": "1.93.2"
         },
         "sap.m": {
-          "minVersion": "1.71.20"
+          "minVersion": "1.93.2"
         }
       }
     },

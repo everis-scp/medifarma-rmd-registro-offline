@@ -17,7 +17,6 @@
     "dataSources": {
       "mainService": {
         "uri": "/ghostapp-c9f1f0bd-ff78-4660-9a1f-295814f00fe0/",
-        "type": "OData",
         "settings": {
           "localUri": "localService/metadata.xml"
         }
@@ -32,7 +31,7 @@
   },
   "sap.fiori": {
     "_version": "1.1.0",
-    "registrationIds": ["F1595"],
+    "registrationIds": ["F0000"],
     "archeType": "analytical"
   },
   "sap.ui": {
@@ -90,9 +89,11 @@
       "": {
         "dataSource": "mainService",
         "preload": true,
+        "type": "sap.ushell.plugins.ghostapp.FakeModel",
         "settings": {
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
+          "tokenHandling": false,
           "refreshAfterChange": false
         }
       }
@@ -108,6 +109,9 @@
   },
   "sap.ui.generic.app": {
     "_version": "1.1.0",
+    "settings": {
+      "ghostapp": true
+    },
     "pages": [{
       "entitySet": "MaterialMultiStockByDates",
       "component": {

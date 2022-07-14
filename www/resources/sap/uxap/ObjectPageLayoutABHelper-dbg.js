@@ -16,9 +16,8 @@ sap.ui.define([
 	"sap/m/MenuButton",
 	"sap/m/Menu",
 	"sap/m/MenuItem",
-	"sap/ui/core/IconPool",
-	"sap/ui/core/InvisibleText"
-], function (jQuery, BaseObject, Core, CustomData, Configuration, ManagedObjectObserver, AnchorBar, Button, MenuButton, Menu, MenuItem, IconPool, InvisibleText) {
+	"sap/ui/core/IconPool"
+], function (jQuery, BaseObject, Core, CustomData, Configuration, ManagedObjectObserver, AnchorBar, Button, MenuButton, Menu, MenuItem, IconPool) {
 	"use strict";
 
 	var ABHelper = BaseObject.extend("sap.uxap._helpers.AB", {
@@ -146,8 +145,7 @@ sap.ui.define([
 			sButtonTitle,
 			sButtonIcon,
 			oMenuItem,
-			oCustomButton,
-			sSplitButtonDescInvsibleTextId = InvisibleText.getStaticId("sap.m", "SPLIT_BUTTON_DESCRIPTION");
+			oCustomButton;
 
 		//tablet & desktop mechanism
 		if (oAnchorBar && this.getObjectPageLayout().getShowAnchorBar()) {
@@ -182,13 +180,6 @@ sap.ui.define([
 								mAriaProps.role = "option";
 								mAriaProps.setsize = oContent.length;
 								mAriaProps.posinset = iIndex + 1;
-
-								mAriaProps.labelledby = mAriaProps.labelledby
-									.split(" ")
-									.filter(function (sId) {
-										return sId !== sSplitButtonDescInvsibleTextId;
-									})
-									.join(" ");
 							}
 						};
 

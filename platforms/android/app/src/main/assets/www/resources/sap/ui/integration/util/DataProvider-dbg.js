@@ -3,8 +3,8 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.define(["sap/ui/base/ManagedObject"],
-	function (ManagedObject) {
+sap.ui.define(["sap/ui/base/ManagedObject", "sap/ui/core/Core"],
+	function (ManagedObject, Core) {
 	"use strict";
 
 	/**
@@ -24,11 +24,10 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
 	 * @since 1.65
 	 * @alias sap.ui.integration.util.DataProvider
 	 * @ui5-metamodel This control/element will also be described in the UI5 (legacy) designtime metamodel
@@ -42,13 +41,15 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 				 */
 				settingsJson: {
 					type: "string"
-				},
-
+				}
+			},
+			associations : {
 				/**
-				 * The base url where resources for card or editor are located.
+				 * The card.
 				 */
-				baseRuntimeUrl: {
-					type : "string"
+				card: {
+					type : "sap.ui.integration.widgets.Card",
+					multiple: false
 				}
 			},
 			events: {
@@ -124,20 +125,6 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 	};
 
 	/**
-	 * @private
-	 * @param {string} sUrl
-	 */
-	DataProvider.prototype._getRuntimeUrl = function(sUrl) {
-		if (sUrl.startsWith("http://") ||
-			sUrl.startsWith("https://") ||
-			sUrl.startsWith("//")) {
-			return sUrl;
-		}
-		var sSanitizedUrl = sUrl && sUrl.trim().replace(/^\//, "");
-		return this.getBaseRuntimeUrl() + sSanitizedUrl;
-	};
-
-	/**
 	 * Sets the data settings for the <code>DataProvider</code>
 	 *
 	 * @param {Object} oSettings The data settings.
@@ -158,8 +145,6 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 	/**
 	 * Triggers a data update which results in either "dataChanged" event or an "error" event.
 	 *
-	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
 	 * @returns {Promise} A promise resolved when the update has finished.
 	 */
 	DataProvider.prototype.triggerDataUpdate = function () {
@@ -178,6 +163,10 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 		}
 
 		return pDataUpdate;
+	};
+
+	DataProvider.prototype.getCardInstance = function () {
+		return Core.byId(this.getCard());
 	};
 
 	DataProvider.prototype._triggerDataUpdate = function () {
@@ -199,9 +188,6 @@ sap.ui.define(["sap/ui/base/ManagedObject"],
 	};
 
 	/**
-	 * Triggers a data update and returns the result data.
-	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
 	 * @returns {Promise} A promise resolved when the data is available and rejected in case of an error.
 	 */
 	DataProvider.prototype.getData = function () {

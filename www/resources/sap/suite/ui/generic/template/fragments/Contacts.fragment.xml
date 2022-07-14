@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
-						 xmlns="sap.m" xmlns:build="sap.build" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:f="sap.f">
+						 xmlns="sap.m" xmlns:build="sap.build" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout">
 	<template:with path="facet>Target" var="target">
 		<template:with path="target>"
 					   helper="sap.ui.model.odata.AnnotationHelper.resolvePath" var="contact">
@@ -17,8 +17,9 @@
 							<HBox>
 								<template:if test="{contact>photo}">
 									<template:then>
-										<f:Avatar
+										<Avatar
 											src="{path: 'contact>photo', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
+											tooltip="{path: 'contact>fn', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
 											displaySize="S"
 											displayShape="Square"
 											class="sapUiSmallMarginTopBottom"/>

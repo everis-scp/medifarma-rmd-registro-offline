@@ -48,7 +48,7 @@ sap.ui.define([
 	 * @implements sap.f.cards.IHeader
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -222,6 +222,8 @@ sap.ui.define([
 		oAvatar.setInitials(this.getIconInitials());
 		oAvatar.setTooltip(this.getIconAlt());
 		oAvatar.setBackgroundColor(this.getIconBackgroundColor());
+
+		this._setAccessibilityAttributes();
 	};
 
 	/**
@@ -230,38 +232,15 @@ sap.ui.define([
 	 * @private
 	 * @returns {string} IDs of controls
 	 */
-	Header.prototype._getAriaLabelledBy = function () {
-		var sCardTypeId = "",
-			sTitleId = "",
-			sSubtitleId = "",
-			sStatusTextId = "",
-			sAvatarId = "",
-			sIds;
-
-		if (this.getParent() && this.getParent()._ariaText) {
-			sCardTypeId = this.getParent()._ariaText.getId();
-		}
-
-		if (this.getTitle()) {
-			sTitleId = this._getTitle().getId();
-		}
-
-		if (this.getSubtitle()) {
-			sSubtitleId = this._getSubtitle().getId();
-		}
-
-		if (this.getStatusText()) {
-			sStatusTextId = this.getId() + "-status";
-		}
-
-		if (this.getIconSrc() || this.getIconInitials()) {
-			sAvatarId = this.getId() + "-ariaAvatarText";
-		}
-
-		sIds = sCardTypeId + " " + sTitleId + " " + sSubtitleId + " " + sStatusTextId + " " + sAvatarId;
+	Header.prototype._getHeaderAccessibility = function () {
+		var sTitleId = this.getTitle() ? this._getTitle().getId() : "",
+			sSubtitleId = this.getSubtitle() ? this._getSubtitle().getId() : "",
+			sStatusTextId = this.getStatusText() ? this.getId() + "-status" : "",
+			sAvatarId = this.getIconSrc() || this.getIconInitials() ? this.getId() + "-ariaAvatarText " : "",
+			sIds = sTitleId + " " + sSubtitleId + " " + sStatusTextId + " " + sAvatarId;
 
 		// remove whitespace from both sides
-		// and merge consecutive spaces into one
+		// and merge the consecutive whitespaces into one
 		return sIds.replace(/ {2,}/g, ' ').trim();
 	};
 
@@ -282,6 +261,23 @@ sap.ui.define([
 	 */
 	Header.prototype.onsapselect = function () {
 		this.firePress();
+	};
+
+	/**
+	 * Sets accessibility to the header to the header.
+	 *
+	 * @private
+	 */
+	Header.prototype._setAccessibilityAttributes = function () {
+		if (this.hasListeners("press")) {
+			this._sAriaRole = "button";
+			this._sAriaHeadingLevel = undefined;
+			this._sAriaRoleDescritoion = this._oRb.getText("ARIA_ROLEDESCRIPTION_INTERACTIVE_CARD_HEADER");
+		} else {
+			this._sAriaRole = "heading";
+			this._sAriaHeadingLevel = "3";
+			this._sAriaRoleDescritoion = this._oRb.getText("ARIA_ROLEDESCRIPTION_CARD_HEADER");
+		}
 	};
 
 	Header.prototype.isLoading = function () {

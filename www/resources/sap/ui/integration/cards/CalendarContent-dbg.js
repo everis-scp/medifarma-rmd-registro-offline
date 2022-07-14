@@ -64,7 +64,7 @@ sap.ui.define([
 		 * @extends sap.ui.integration.cards.BaseContent
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @private
@@ -663,7 +663,7 @@ sap.ui.define([
 		CalendarContent.prototype._handleStartDateChange = function (oFocusedDate) {
 			var oCardActions = this.getActions(),
 				oCalFocusedDate = CalendarDate.fromLocalJSDate(oFocusedDate),
-				oCalFirstRenderedDate = CalendarUtils._getFirstDateOfWeek(CalendarUtils._getFirstDateOfMonth(oCalFocusedDate)),
+				oCalFirstRenderedDate = CalendarUtils._getFirstDateOfWeek(oCalFocusedDate),
 				oCalLastDateInMonth = new CalendarDate(oFocusedDate.getFullYear(), oFocusedDate.getMonth() + 1, 1),
 				oCalLastRenderedDate;
 

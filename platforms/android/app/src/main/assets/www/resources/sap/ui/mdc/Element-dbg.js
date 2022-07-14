@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 sap.ui.define([
-	"sap/ui/core/Element", "sap/ui/mdc/mixin/DelegateMixin", "sap/ui/mdc/mixin/AdaptationMixin"
+	"sap/ui/core/Element",  "sap/ui/mdc/mixin/DelegateMixin", "sap/ui/mdc/mixin/AdaptationMixin"
 ], function(CoreElement, DelegateMixin, AdaptationMixin) {
 	"use strict";
 
@@ -20,7 +20,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Element
 	 * @abstract
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.mdc.Element
 	 *
 	 * @borrows sap.ui.mdc.mixin.DelegateMixin.awaitControlDelegate as awaitControlDelegate
@@ -37,10 +37,9 @@ sap.ui.define([
  	 * @borrows sap.ui.mdc.mixin.AdaptationMixin.getInbuiltFilter as getInbuiltFilter
 	 *
 	 * @private
+	 * @experimental
 	 * @since 1.74
-	 * @experimental As of version 1.74
-	 * @ui5-restricted sap.ui.mdc
-	 */
+	*/
 	var Element = CoreElement.extend("sap.ui.mdc.Element", /** @lends sap.ui.mdc.Element.prototype */ {
 		metadata: {
 			library: "sap.ui.mdc",

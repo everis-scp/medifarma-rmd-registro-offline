@@ -4,51 +4,8 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 sap.ui.define([
-	'sap/ui/mdc/p13n/subcontroller/FilterController',
-	'sap/ui/core/library',
-	'sap/ui/mdc/p13n/FlexUtil',
-	'sap/ui/Device',
-	'sap/ui/mdc/Control',
-	'sap/base/Log',
-	'sap/base/util/merge',
-	'sap/ui/model/base/ManagedObjectModel',
-	'sap/ui/base/ManagedObjectObserver',
-	'sap/ui/mdc/condition/ConditionModel',
-	'sap/ui/mdc/condition/Condition',
-	'sap/ui/mdc/util/IdentifierUtil',
-	'sap/ui/mdc/condition/ConditionConverter',
-	"sap/ui/mdc/p13n/StateUtil",
-	"sap/ui/mdc/condition/FilterConverter",
-	"sap/ui/mdc/util/FilterUtil",
-	"sap/ui/mdc/filterbar/PropertyHelper",
-	"sap/ui/fl/apply/api/ControlVariantApplyAPI",
-	"sap/m/library",
-	"sap/m/Button",
-	'sap/m/MessageBox',
-	"sap/ui/core/ShortcutHintsMixin"],
-	function(
-		FilterController,
-		coreLibrary,
-		FlexUtil,
-		Device,
-		Control,
-		Log,
-		merge,
-		ManagedObjectModel,
-		ManagedObjectObserver,
-		ConditionModel,
-		Condition,
-		IdentifierUtil,
-		ConditionConverter,
-		StateUtil,
-		FilterConverter,
-		FilterUtil,
-		PropertyHelper,
-		ControlVariantApplyAPI,
-		mLibrary,
-		Button,
-		MessageBox,
-		ShortcutHintsMixin) {
+	'sap/ui/mdc/p13n/subcontroller/FilterController', 'sap/ui/core/library', 'sap/ui/mdc/p13n/FlexUtil', 'sap/ui/Device', 'sap/ui/mdc/Control', 'sap/base/util/merge', 'sap/base/util/deepEqual', 'sap/ui/model/base/ManagedObjectModel', 'sap/ui/base/ManagedObjectObserver', 'sap/base/Log', 'sap/ui/mdc/condition/ConditionModel', 'sap/ui/mdc/condition/Condition', 'sap/ui/mdc/util/IdentifierUtil', 'sap/ui/mdc/condition/ConditionConverter', 'sap/m/MessageBox', "sap/ui/fl/write/api/ControlPersonalizationWriteAPI", "sap/ui/mdc/p13n/StateUtil", "sap/ui/mdc/condition/FilterConverter", "sap/ui/fl/apply/api/ControlVariantApplyAPI", "sap/ui/mdc/util/FilterUtil", "sap/m/Button", "sap/m/library", "sap/ui/core/ShortcutHintsMixin"
+], function(FilterController, coreLibrary, FlexUtil, Device, Control, merge, deepEqual, ManagedObjectModel, ManagedObjectObserver, Log, ConditionModel, Condition, IdentifierUtil, ConditionConverter, MessageBox, ControlPersonalizationWriteAPI, StateUtil, FilterConverter, ControlVariantApplyAPI, FilterUtil, Button, mLibrary, ShortcutHintsMixin) {
 	"use strict";
 
 	var ValueState = coreLibrary.ValueState;
@@ -60,7 +17,7 @@ sap.ui.define([
 	 * @class The <code>FilterBarBase</code> control is used as a faceless base class for common functionality of any MDC FilterBar derivation.
 	 * @extends sap.ui.mdc.Control
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @ui5-restricted sap.ui.mdc
@@ -72,7 +29,6 @@ sap.ui.define([
 	{
 		metadata: {
 			library: "sap.ui.mdc",
-			designtime: "sap/ui/mdc/designtime/filterbar/FilterBarBase.designtime",
 			defaultAggregation: "filterItems",
 			interfaces : [
 				"sap.ui.mdc.IFilter",
@@ -277,6 +233,8 @@ sap.ui.define([
 		this._createInnerLayout();
 
 		this._bPersistValues = false;
+
+		this._aProperties = null;
 
 		this._fResolveInitialFiltersApplied = undefined;
 		this._oInitialFiltersAppliedPromise = new Promise(function(resolve) {
@@ -616,7 +574,7 @@ sap.ui.define([
 
 				if (this._bPersistValues && this._isPersistenceSupported()) {
 					var mOrigConditions = {};
-					mOrigConditions[sFieldPath] = this._stringifyConditions(sFieldPath, merge([], oEvent.getParameter("value")));
+					mOrigConditions[sFieldPath] = this._stringifyConditions(sFieldPath, oEvent.getParameter("value"));
 					this._cleanupConditions(mOrigConditions[sFieldPath]);
 
 					var oChangePromise = this.getEngine().createChanges({
@@ -714,6 +672,7 @@ sap.ui.define([
 		return oResultCondition;
 	};
 
+
 	FilterBarBase.prototype._stringifyConditions = function(sFieldPath, aConditions) {
 		var oProperty = this._getPropertyByName(sFieldPath);
 		var aResultConditions = aConditions;
@@ -761,7 +720,6 @@ sap.ui.define([
 	FilterBarBase.prototype.onReset = function(oEvent) {
 		this._getConditionModel().oConditionModel.removeAllConditions();
 	};
-
 	FilterBarBase.prototype.onSearch = function(oEvent) {
 		if (!this._bSearchPressed) {
 			this._bSearchPressed = true;
@@ -784,7 +742,7 @@ sap.ui.define([
 			this._bSearchTriggered = true;
 			return Promise.resolve();
 		}
-		return this.validate().then(function(){
+		return this.valid().then(function(){
 			this.fireSearch();
 		}.bind(this));
 	};
@@ -799,24 +757,24 @@ sap.ui.define([
 	 * @returns {Promise} Returns a Promise which resolves after the validation of erroneous fields has been propagated.
 	 *
 	 */
-	FilterBarBase.prototype.validate = function() {
+	FilterBarBase.prototype.valid = function() {
 
 		return this.initialized().then(function() {
-			if (!this._oValidationPromise) {
+			if (!this._oSearchPromise) {
 
-				this._oValidationPromise = new Promise(function(resolve, reject) {
+				this._oSearchPromise = new Promise(function(resolve, reject) {
 					this._fResolvedSearchPromise = resolve;
 					this._fRejectedSearchPromise = reject;
 				}.bind(this));
 
 				var fDelayedFunction = function() {
 					this._validate();
-					this._oValidationPromise = null;
+					this._oSearchPromise = null;
 				};
 				setTimeout(fDelayedFunction.bind(this), 0);
 			}
 
-			return this._oValidationPromise;
+			return this._oSearchPromise;
 
 		}.bind(this));
 	};
@@ -901,9 +859,7 @@ sap.ui.define([
 				} else {
 					this.triggerSearch();
 				}
-			}.bind(this)).catch(function(oEx) {
-				Log.error(oEx);
-			});
+			}.bind(this));
 		}
 	};
 
@@ -1029,8 +985,8 @@ sap.ui.define([
 		if (vRetErrorState === ErrorState.NoError) {
 			if (this._isChangeApplying()) {
 				this._oFlexPromise.then(function() {
-				 this._fResolvedSearchPromise();
-				 fnCleanup();
+					this._fResolvedSearchPromise();
+					fnCleanup();
 				}.bind(this));
 			} else {
 				this._fResolvedSearchPromise();
@@ -1062,9 +1018,8 @@ sap.ui.define([
 
 	/**
 	 * Assigns conditions to the inner condition model.
-	 * <br><b>Note:</b>This method is only called for filling the in parameters for value help scenarios.
-	 * @private
-	 * @ui5-restricted sap.ui.mdc
+	 * This method is only called for filling the in parameters for value help scenarios.
+	 * @protected
 	 * @param {map} mConditions A map containing the conditions
 	 */
 	FilterBarBase.prototype.setInternalConditions = function(mConditions) {
@@ -1075,9 +1030,9 @@ sap.ui.define([
 	};
 
 	/**
-	 * Returns the conditions of the inner condition model.
-	 * @private
-	 * @ui5-restricted sap.ui.mdc
+	 * Returns the conditions of the inner condition model.<br>
+	 * <b>Note:</b>This method must only be used for value help scenarios.
+	 * @protected
 	 * @returns {map} A map containing the conditions
 	 */
 	FilterBarBase.prototype.getInternalConditions = function() {
@@ -1107,10 +1062,10 @@ sap.ui.define([
 	FilterBarBase.prototype._getModelConditions = function(oModel, bDoNotExternalize, bKeepAllValues) {
 		var mConditions = {};
 		if (oModel) {
-			var aAllConditions = merge({}, oModel.getAllConditions());
+			var aAllConditions = oModel.getAllConditions();
 			for (var sFieldPath in aAllConditions) {
 				if (aAllConditions[sFieldPath] && (bKeepAllValues || aAllConditions[sFieldPath].length > 0)) {
-					mConditions[sFieldPath] = aAllConditions[sFieldPath];
+					mConditions[sFieldPath] = merge([], aAllConditions[sFieldPath]);
 					if (!bDoNotExternalize) {
 						this._cleanupConditions(mConditions[sFieldPath]);
 						var aFieldConditions = this._stringifyConditions(sFieldPath, mConditions[sFieldPath]);
@@ -1390,6 +1345,7 @@ sap.ui.define([
 		return oFilterField;
 	};
 
+
 	FilterBarBase.prototype._retrieveMetadata = function() {
 
 		if (this._oMetadataAppliedPromise) {
@@ -1405,16 +1361,26 @@ sap.ui.define([
 		this.initControlDelegate().then(function() {
 			if (!this._bIsBeingDestroyed) {
 
+				this._aProperties = [];
+
 				var fnResolveMetadata = function() {
 					this._fResolveMetadataApplied();
 					this._fResolveMetadataApplied = null;
 				}.bind(this);
 
 				if (this.bDelegateInitialized && this.getControlDelegate().fetchProperties) {
-					this.initPropertyHelper(PropertyHelper).then(function(oPropertyHelper) {
-						//this._oPropertyHelper = oPropertyHelper;
+					try {
+						this.getControlDelegate().fetchProperties(this).then(function(aProperties) {
+							this._aProperties = aProperties;
+							fnResolveMetadata();
+						}.bind(this), function(sMsg) {
+							Log.error(sMsg);
+							fnResolveMetadata();
+						});
+					} catch (ex) {
+						Log.error("Exception during fetchProperties occured: " + ex.message);
 						fnResolveMetadata();
-					});
+					}
 				} else {
 					Log.error("Provided delegate '" + this.getDelegate().path + "' not valid.");
 					fnResolveMetadata();
@@ -1445,12 +1411,7 @@ sap.ui.define([
 
 
 	FilterBarBase.prototype.getPropertyInfoSet = function() {
-		try {
-			var oPropertyHelper = this.getPropertyHelper();
-			return oPropertyHelper ? oPropertyHelper.getProperties() : [];
-		} catch (ex) {
-			return [];
-		}
+		return this._aProperties || [];
 	};
 
 	FilterBarBase.prototype._getNonHiddenPropertyInfoSet = function() {
@@ -1514,7 +1475,7 @@ sap.ui.define([
 
 	FilterBarBase.prototype._cleanUpFilterFieldInErrorState = function(oFilterField) {
 
-		if (oFilterField && (oFilterField.getValueState() !== ValueState.None)) {
+		if (oFilterField.getRequired() && (oFilterField.getValueState() !== ValueState.None)) {
 			oFilterField.setValueState(ValueState.None);
 		}
 
@@ -1665,9 +1626,7 @@ sap.ui.define([
 
 	FilterBarBase.prototype._changesApplied = function() {
 
-		if (!this._isChangeApplying()) {
-			this._bIgnoreChanges = false;
-		}
+		this._bIgnoreChanges = false;
 
 		this._reportModelChange(this._bExecuteOnSelect, this._bDoNotTriggerFiltersChangeEventBasedOnVariantSwitch);
 		this._bExecuteOnSelect = undefined;
@@ -1749,6 +1708,7 @@ sap.ui.define([
 		this._bPersistValues = null;
 
 		this._oDelegate = null;
+		this._aProperties = null;
 
 		this._oFlexPromise = null;
 
@@ -1757,7 +1717,7 @@ sap.ui.define([
 
 		this._oInitialFiltersAppliedPromise = null;
 
-		this._oValidationPromise = null;
+		this._oSearchPromise = null;
 
 		this._aBindings = null;
 

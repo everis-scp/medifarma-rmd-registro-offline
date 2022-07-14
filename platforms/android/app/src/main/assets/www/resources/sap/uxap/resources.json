@@ -16,7 +16,7 @@
 		{
 			"name": "AnchorBar-dbg.js",
 			"module": "sap/uxap/AnchorBar.js",
-			"size": 31888,
+			"size": 31906,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
@@ -48,7 +48,7 @@
 		{
 			"name": "AnchorBar.js",
 			"module": "sap/uxap/AnchorBar.js",
-			"size": 14363,
+			"size": 14366,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/Button.js",
@@ -74,7 +74,7 @@
 		{
 			"name": "AnchorBarRenderer-dbg.js",
 			"module": "sap/uxap/AnchorBarRenderer.js",
-			"size": 2563,
+			"size": 2695,
 			"isDebug": true,
 			"required": [
 				"sap/m/BarInPageEnabler.js",
@@ -86,7 +86,7 @@
 		{
 			"name": "AnchorBarRenderer.js",
 			"module": "sap/uxap/AnchorBarRenderer.js",
-			"size": 1623,
+			"size": 1708,
 			"required": [
 				"sap/m/BarInPageEnabler.js",
 				"sap/m/ToolbarRenderer.js",
@@ -706,7 +706,7 @@
 		{
 			"name": "ObjectPageLayout-dbg.js",
 			"module": "sap/uxap/ObjectPageLayout.js",
-			"size": 185122,
+			"size": 184795,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
@@ -749,7 +749,7 @@
 		{
 			"name": "ObjectPageLayout.js",
 			"module": "sap/uxap/ObjectPageLayout.js",
-			"size": 75046,
+			"size": 74789,
 			"required": [
 				"sap/base/Log.js",
 				"sap/base/assert.js",
@@ -786,7 +786,7 @@
 		{
 			"name": "ObjectPageLayoutABHelper-dbg.js",
 			"module": "sap/uxap/ObjectPageLayoutABHelper.js",
-			"size": 12015,
+			"size": 11670,
 			"isDebug": true,
 			"required": [
 				"sap/m/Button.js",
@@ -799,7 +799,6 @@
 				"sap/ui/core/Core.js",
 				"sap/ui/core/CustomData.js",
 				"sap/ui/core/IconPool.js",
-				"sap/ui/core/InvisibleText.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/uxap/AnchorBar.js"
 			]
@@ -807,7 +806,7 @@
 		{
 			"name": "ObjectPageLayoutABHelper.js",
 			"module": "sap/uxap/ObjectPageLayoutABHelper.js",
-			"size": 5245,
+			"size": 5081,
 			"required": [
 				"sap/m/Button.js",
 				"sap/m/Menu.js",
@@ -819,7 +818,6 @@
 				"sap/ui/core/Core.js",
 				"sap/ui/core/CustomData.js",
 				"sap/ui/core/IconPool.js",
-				"sap/ui/core/InvisibleText.js",
 				"sap/ui/thirdparty/jquery.js",
 				"sap/uxap/AnchorBar.js"
 			]
@@ -872,7 +870,7 @@
 		{
 			"name": "ObjectPageSection-dbg.js",
 			"module": "sap/uxap/ObjectPageSection.js",
-			"size": 11369,
+			"size": 11394,
 			"isDebug": true,
 			"required": [
 				"sap/m/Button.js",
@@ -893,7 +891,7 @@
 		{
 			"name": "ObjectPageSection.js",
 			"module": "sap/uxap/ObjectPageSection.js",
-			"size": 6451,
+			"size": 6474,
 			"required": [
 				"sap/m/Button.js",
 				"sap/m/library.js",
@@ -955,7 +953,7 @@
 		{
 			"name": "ObjectPageSubSection-dbg.js",
 			"module": "sap/uxap/ObjectPageSubSection.js",
-			"size": 37215,
+			"size": 37212,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
@@ -987,7 +985,7 @@
 		{
 			"name": "ObjectPageSubSection.js",
 			"module": "sap/uxap/ObjectPageSubSection.js",
-			"size": 16134,
+			"size": 16128,
 			"required": [
 				"sap/base/Log.js",
 				"sap/m/Button.js",
@@ -1101,7 +1099,7 @@
 		{
 			"name": "changeHandler/RenameObjectPageSection-dbg.js",
 			"module": "sap/uxap/changeHandler/RenameObjectPageSection.js",
-			"size": 4022,
+			"size": 3828,
 			"isDebug": true,
 			"required": [
 				"sap/base/Log.js",
@@ -1112,7 +1110,7 @@
 		{
 			"name": "changeHandler/RenameObjectPageSection.js",
 			"module": "sap/uxap/changeHandler/RenameObjectPageSection.js",
-			"size": 1889,
+			"size": 1862,
 			"required": [
 				"sap/base/Log.js",
 				"sap/ui/fl/Utils.js",
@@ -1500,7 +1498,7 @@
 		{
 			"name": "library-h2-preload.js",
 			"module": "sap/uxap/library-h2-preload.js",
-			"size": 15479,
+			"size": 15448,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1662,7 +1660,7 @@
 		{
 			"name": "library-preload.js",
 			"module": "sap/uxap/library-preload.js",
-			"size": 223251,
+			"size": 222908,
 			"merged": true,
 			"required": [
 				"jquery.sap.global.js",
@@ -1805,7 +1803,7 @@
 		},
 		{
 			"name": "library-preload.js.map",
-			"size": 205925,
+			"size": 205665,
 			"isDebug": true
 		},
 		{
@@ -2166,7 +2164,7 @@
 		{
 			"name": "messagebundle_tr.properties",
 			"module": "sap/uxap/messagebundle_tr.properties",
-			"size": 2101,
+			"size": 2092,
 			"locale": "tr",
 			"raw": "messagebundle.properties"
 		},
@@ -2200,7 +2198,7 @@
 		},
 		{
 			"name": "resources.json",
-			"size": 33482
+			"size": 33450
 		},
 		{
 			"name": "rules/ObjectPageLayout.support.js",
@@ -2242,7 +2240,7 @@
 		},
 		{
 			"name": "themes/base/ObjectPageHeaderContent.less",
-			"size": 9350,
+			"size": 9615,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -2283,7 +2281,7 @@
 		},
 		{
 			"name": "themes/base/library-RTL.css",
-			"size": 50401,
+			"size": 51255,
 			"theme": "base"
 		},
 		{
@@ -2293,12 +2291,12 @@
 		},
 		{
 			"name": "themes/base/library.css",
-			"size": 50396,
+			"size": 51250,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library.less",
-			"size": 50781,
+			"size": 51046,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -2310,12 +2308,12 @@
 		},
 		{
 			"name": "themes/base/library_skeleton-RTL.css",
-			"size": 50860,
+			"size": 51714,
 			"theme": "base"
 		},
 		{
 			"name": "themes/base/library_skeleton.css",
-			"size": 50855,
+			"size": 51709,
 			"theme": "base"
 		},
 		{
@@ -2390,7 +2388,7 @@
 		},
 		{
 			"name": "themes/sap_hcb/library-RTL.css",
-			"size": 57687,
+			"size": 58541,
 			"theme": "sap_hcb"
 		},
 		{
@@ -2400,7 +2398,7 @@
 		},
 		{
 			"name": "themes/sap_hcb/library.css",
-			"size": 57676,
+			"size": 58530,
 			"theme": "sap_hcb"
 		},
 		{
@@ -2417,12 +2415,12 @@
 		},
 		{
 			"name": "themes/sap_hcb/library_skeleton-RTL.css",
-			"size": 59429,
+			"size": 60283,
 			"theme": "sap_hcb"
 		},
 		{
 			"name": "themes/sap_hcb/library_skeleton.css",
-			"size": 59418,
+			"size": 60272,
 			"theme": "sap_hcb"
 		}
 	]

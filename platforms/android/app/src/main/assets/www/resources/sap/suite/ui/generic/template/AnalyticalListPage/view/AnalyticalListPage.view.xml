@@ -1,7 +1,10 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1" xmlns="sap.m" xmlns:f="sap.f"
 	xmlns:core="sap.ui.core" xmlns:semantic="sap.m.semantic" xmlns:ushell="sap.ushell.ui" xmlns:build="sap.build"
 	xmlns:st="sap.suite.ui.generic.template"
-	template:require="sap.suite.ui.generic.template.AnalyticalListPage.util.AnnotationHelper sap.suite.ui.generic.template.AnalyticalListPage.util.FilterUtil sap.suite.ui.generic.template.js.StableIdHelper"
+	template:require="{ AH: 'sap/suite/ui/generic/template/js/AnnotationHelper',
+						AHALP: 'sap/suite/ui/generic/template/AnalyticalListPage/util/AnnotationHelper',
+						AHFilterUtil: 'sap/suite/ui/generic/template/AnalyticalListPage/util/FilterUtil',
+						AHStableId: 'sap/suite/ui/generic/template/js/StableIdHelper'}"
 	xmlns:l="sap.ui.layout" xmlns:smartVariantManagement="sap.ui.comp.smartvariants">
 	<!--
 		@classdesc
@@ -20,8 +23,15 @@
 	<template:alias name=".ALPHelper" value="sap.suite.ui.generic.template.AnalyticalListPage.util.AnnotationHelper">
 		<template:with path="parameter>/" helper=".ALPHelper.createWorkingContext" var="workingContext">
 			<template:with path="entitySet>dummy" var="tabItem">
+				<template:with path="parameter>/variables" helper="AH.getNewVariable" var="tableSettings">
+				<template:if test="{:= ${tableSettings>}.set(${parameter>/templateSpecific/tableSettings})}"/>
+			
 			<!-- TODO simplify the showFooter determination by just passing "parameter>" and evaluate everything inside -->
-			<f:DynamicPage class="sapSmartTemplatesAnalyticalListPageDynamicPage" fitContent="true" id="template::Page" headerExpanded="{= ${device>/system/phone} ? 'false' : '{_templPriv>/listReport/isHeaderExpanded}' }" showFooter="{= ${parts: [{path: 'workingContext>lineItem'},{path: 'workingContext>chart/Actions'},{path: 'parameter>/entitySet'}, {path: 'parameter>/manifest/sap.ui5/extends/extensions/sap.ui.controllerExtensions'}], formatter: '.ALPHelper.hasDeterminingActionsForALP'} }">
+			<f:DynamicPage 
+					class="sapSmartTemplatesAnalyticalListPageDynamicPage" id="template::Page" headerExpanded="{= ${device>/system/phone} ? 'false' : '{_templPriv>/listReport/isHeaderExpanded}' }" showFooter="{= ${parts: [{path: 'workingContext>lineItem'},{path: 'workingContext>chart/Actions'},{path: 'parameter>/entitySet'}, {path: 'parameter>/manifest/sap.ui5/extends/extensions/sap.ui.controllerExtensions'}], formatter: '.ALPHelper.hasDeterminingActionsForALP'} }">
+				<f:dependents>
+					<core:Fragment fragmentName="sap.suite.ui.generic.template.AnalyticalListPage.view.fragments.HeaderCommands" type="XML"/>
+				</f:dependents>
 				<f:title>
 					<f:DynamicPageTitle areaShrinkRatio="{= ${parts: [{path: 'workingContext>lineItem'},{path: 'workingContext>chart/Actions'},{path: 'parameter>/entitySet'}, {path: 'parameter>/manifest/sap.ui5/extends/extensions/sap.ui.controllerExtensions'}], formatter: '.ALPHelper.getAreaShrinkRatio'} }" class="sapSmartTemplatesAnalyticalListPageDynamicPageTitle sapSmartTemplatesAnalyticalListPageDynamicPageTitleMargin">
 						<f:heading>
@@ -29,7 +39,8 @@
 								<l:HorizontalLayout class="sapSmartTemplatesAnalyticalListPageAlignVariantTitle sapUIContentPadding">
 									<smartVariantManagement:SmartVariantManagement id="template::PageVariant"
 										persistencyKey="{= (${parameter>/settings/smartVariantManagement} || ${parameter>/settings/smartVariantManagement} === undefined) ? 'searchAnalyticalListPageVariant' : '_ST_SmartVariantManagement'}"
-										showShare="true" showExecuteOnSelection="{= ${parameter>/settings/showGoButtonOnFilterBar} }"/>
+										showShare="true" showExecuteOnSelection="{= ${parameter>/settings/showGoButtonOnFilterBar} }"
+										displayTextForExecuteOnSelectionForStandardVariant="{= (${parameter>/settings/dataLoadSettings/loadDataOnAppLaunch} === 'ifAnyFilterExist' || ${parameter>/settings/dataLoadSettings/loadDataOnAppLaunch} === undefined) ? '{i18n>ST_LIST_DISPLAY_TEXT_FOR_EXECUTE_ON_SELECTION}' : undefined}" />
 								</l:HorizontalLayout>
 							</l:VerticalLayout>
 						</f:heading>
@@ -51,7 +62,7 @@
 						</f:content>
 						<f:actions class="sapSmartTemplatesAnalyticalListPageVisualFilterToolbar">
 								<ToolbarSpacer/>
-								<core:Fragment fragmentName="sap.suite.ui.generic.template.AnalyticalListPage.view.fragments.ActionsFragment" type="XML"/>
+								<core:Fragment fragmentName="sap.suite.ui.generic.template.listTemplates.fragments.ActionsFragment" type="XML"/>
 								<template:if test="{= !${parameter>/settings/hideVisualFilter} === true}">
 									<template:then>
 									<SegmentedButton
@@ -69,18 +80,17 @@
 									</SegmentedButton>
 								</template:then>
 								</template:if>
-								<template:if test="{= ${parameter>/isFiori3Enabled} === true}">
-									<OverflowToolbarButton id="template::Share"
+								<OverflowToolbarButton id="template::Share"
 									icon="sap-icon://action" type="Transparent" tooltip="{i18n>SHARE}"
-									visible="{= ${parameter>/manifest/sap.ui.generic.app/settings/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
-									press="._templateEventHandlers.onShareListReportActionButtonPress"
+									visible="{:= ${appSettings>/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
+									press="cmd:Share"
+									ariaHasPopup="Dialog"
 									text="{i18n>SHARE}">
-										<layoutData>
-											<OverflowToolbarLayoutData closeOverflowOnInteraction="false"
+									<layoutData>
+										<OverflowToolbarLayoutData closeOverflowOnInteraction="false"
 											priority = "{= ${device>/system/phone} ? 'AlwaysOverflow' : 'High'}"/>
-										</layoutData>
-									</OverflowToolbarButton>
-								</template:if>
+									</layoutData>
+								</OverflowToolbarButton>
 						</f:actions>
 						<f:snappedContent>
 							<Text id="template::FilterText" class="sapSmartTemplatesAnalyticalListPageSnappedContentText"></Text>
@@ -88,7 +98,9 @@
 					</f:DynamicPageTitle>
 				</f:title>
 				<f:header>
-					<f:DynamicPageHeader pinnable="false" class="sapSmartTemplatesAnalyticalListPageHeaderContainerBorder">
+					<f:DynamicPageHeader
+						pinnable="{= ${tableSettings>value/type} === 'ResponsiveTable'}"
+						class="sapSmartTemplatesAnalyticalListPageHeaderContainerBorder">
 						<f:content>
 							<core:Fragment fragmentName="sap.suite.ui.generic.template.AnalyticalListPage.view.fragments.FilterContainer" type="XML"/>
 						</f:content>
@@ -146,6 +158,7 @@
 					</OverflowToolbar>
 				</f:footer>
 			</f:DynamicPage>
+			</template:with>
 		</template:with>
 	</template:with>
 	</template:alias>

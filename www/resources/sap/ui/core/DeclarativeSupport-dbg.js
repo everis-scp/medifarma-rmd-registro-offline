@@ -40,7 +40,7 @@ sap.ui.define([
 	 * @class Static class for enabling declarative UI support.
 	 *
 	 * @author Peter Muessig, Tino Butz
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.7.0
 	 * @public
 	 * @alias sap.ui.core.DeclarativeSupport
@@ -187,8 +187,7 @@ sap.ui.define([
 
 		var sType = $element.attr("data-sap-ui-type");
 		if (sType) {
-			// make sure fnClass.getMatadata() is available
-			var fnClass = sap.ui.requireSync(sType.replace(/\./g, "/")); // legacy-relevant
+			var fnClass = sap.ui.requireSync(sType.replace(/\./g, "/")); // make sure fnClass.getMatadata() is available
 			fnClass = fnClass || ObjectPath.get(sType);
 			assert(typeof fnClass !== "undefined", "Class not found: " + sType);
 

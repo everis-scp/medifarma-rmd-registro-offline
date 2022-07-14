@@ -17,7 +17,7 @@ sap.ui.define(["sap/ui/integration/thirdparty/adaptivecards"], function (Adaptiv
 	 * <code>ui5-select</code>, or container with <code>ui5-radiobutton</code>, or <code>ui5-checkbox</code> web components.
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @since 1.74

@@ -1,0 +1,9 @@
+{
+"version":3,
+"file":"sap/fe/placeholder/library-preload.js",
+"sourceroot":".",
+"sources":["controller/Placeholder-dbg.controller.js","library-dbg.js","manifest.json","view/PlaceholderALP.fragment.html","view/PlaceholderALP.view.xml","view/PlaceholderLR.fragment.html","view/PlaceholderLR.view.xml","view/PlaceholderOP.fragment.html","view/PlaceholderOP.view.xml","view/PlaceholderOVP.fragment.html","view/PlaceholderOVP.view.xml"],
+"names":["Controller","LoaderExtensions","Log","oOptions","sKeyName","oTarget","oPlaceholderContainer","sContent"],
+"mappings":";;;;;;AAKA,gBAAa,wDACZ,8BAA+B,iCAAkC,gBACjE,SAASA,CAAU,CAAEC,CAAgB,CAAEC,CAAG,CAAE,CAC3C,aAEA,OAAOF,CAAU,oDAAqD,CACrE,cAAe,UAAW,CACzB,OAAO,KACR,EACA,qBAAsB,SAASG,CAAQ,CAAE,CACxC,aAAc,CAAEA,CAAQ,CACzB,EACA,WAAY,SAASC,CAAQ,CAAE,CAC9B,OAAO,cAAcA,CAAQ,EAC9B,EACA,kBAAmB,SAASC,CAAO,CAAE,CACpC,EAAG,wBAAyB,CAC3B,qBAAsB,CAAE,GACzB,CACA,EAAG,+BAA+BA,CAAO,IAAK,GAAI,GAAI,CACrD,qBAAsB,CAAEA,CAAO,IAC/B,OAAO,MACR,CAAE,IAAK,CACN,OAAO,KACR,CACD,EACA,uBAAwB,UAAW,CAClC,EAAG,wBAAyB,CAC3B,qBAAsB,CAAE,GACzB,CACA,EAAG,sBAAuB,EAAG,oDAAqD,GAAI,GAAI,CACzF,kDACD,CACD,EACA,OAAQ,UAAW,CAClB,IAAIC,CAAsB,CAAE,gCAC5B,EAAG,CAACA,CAAqB,CAAE,CAC1BL,CAAgB,cAAcK,CAAqB,qBAAsB,CACxE,MAAO,KACP,SAAU,MACX,EACC,eAAeC,CAAQ,CAAE,CACxB,EAAG,EAAED,CAAqB,oBAAqB,CAC9CA,CAAqB,YAAYC,CAAQ,EAC1C,CACD,EACA,iBAAkB,CACjBL,CAAG,2CAA4C,CAAEI,CAAqB,sBACvE,GACF,CACD,CACD,GACD,EACA,IACD;AC3CA,gBAAa,8BACZ,CACC,mBACA,qBACD,EACA,UAAW,CACV,aAIA,8BACC,KAAM,qBACN,aAAc,gBACd,MAAO,GACP,WAAY,GACZ,SAAU,GACV,SAAU,GACV,QAAS,SACT,aAAc,MACd,WAAY,EACb,GAEA,OAAO,mBACR,CACD;;;;;;;;;;;;;",
+"x_com_sap_openui5_sections":[52,1263,1263,1590,1651,2331,2389,25766,25819,26267,26324,46034,46086,46533,46590,62818,62870,63317,63375,79133,79186,79634]
+}

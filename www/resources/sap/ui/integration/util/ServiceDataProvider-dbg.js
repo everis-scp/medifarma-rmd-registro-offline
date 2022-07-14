@@ -17,7 +17,7 @@ sap.ui.define(["sap/ui/integration/util/DataProvider"], function (DataProvider) 
 	 * @extends sap.ui.integration.util.DataProvider
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private

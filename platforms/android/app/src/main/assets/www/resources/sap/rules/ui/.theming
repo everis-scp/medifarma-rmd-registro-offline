@@ -1,5 +1,5 @@
 {
-  "sEntity" : "Library",
-  "sId" : "sap/rules/ui",
-  "sVersion" : "1.71.9"
+  "sEntity": "Library",
+  "sId": "sap/rules/ui",
+  "sVersion": "1.93.1"
 }

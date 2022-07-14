@@ -46,7 +46,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -140,6 +140,7 @@ sap.ui.define([
 					tooltip: mConfig.tooltip || mConfig.text,
 					type: mConfig.buttonType,
 					ariaHasPopup: mConfig.ariaHasPopup,
+					enabled: mConfig.enabled,
 					visible: mConfig.visible
 				});
 			} else {
@@ -148,6 +149,7 @@ sap.ui.define([
 					tooltip: mConfig.tooltip,
 					type: mConfig.buttonType,
 					ariaHasPopup: mConfig.ariaHasPopup,
+					enabled: mConfig.enabled,
 					visible: mConfig.visible
 				});
 			}

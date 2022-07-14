@@ -1,0 +1,5 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ *      (c) Copyright 2009-2021 SAP SE. All rights reserved
+ */
+sap.ui.define(["sap/fe/core/helpers/BindingExpression"],function(B){"use strict";var _={};var o=B.or;var n=B.not;var e=B.equal;var b=B.bindingExpression;var a=B.and;var U={IsCreateMode:b("createMode","ui"),IsCreateModeSticky:b("createModeSticky","ui"),IsEditable:b("/isEditable","ui"),IsTransientBinding:e(b("@$ui5.context.isTransient"),true),IsTotal:e(b("@$ui5.node.isTotal"),true),IsExpanded:e(b("@$ui5.node.isExpanded"),true),NodeLevel:b("@$ui5.node.level")};_.UI=U;var E={HasDraft:b("HasDraftEntity"),HasActive:b("HasActiveEntity"),IsActive:b("IsActiveEntity")};var D={IsNewObject:a(n(E.HasActive),n(E.IsActive)),HasNoDraftForCurrentUser:o(n(E.HasDraft),a(E.HasDraft,n(b("DraftAdministrativeData/DraftIsProcessedByMe"))))};_.Draft=D;var s=function(p,c,v){if(p.indexOf("/")===0){var d=p.split("/").filter(Boolean),f=d.pop(),g=d.join("/"),h=c.getSingleton(g);if(h){p="/"+h.name+"/"+f;}}else{var l=v.concat();l.push(p);p=l.join("/");}return p;};_.singletonPathVisitor=s;return _;},false);

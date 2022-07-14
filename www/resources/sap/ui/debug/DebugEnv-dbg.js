@@ -16,7 +16,7 @@ sap.ui.define('sap/ui/debug/DebugEnv', ['sap/ui/base/Interface', './ControlTree'
 	 * @class Central Class for the Debug Environment
 	 *
 	 * @author Martin Schaus, Frank Weigel
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @private
 	 * @alias sap.ui.debug.DebugEnv
 	 */
@@ -88,6 +88,7 @@ sap.ui.define('sap/ui/debug/DebugEnv', ['sap/ui/base/Interface', './ControlTree'
 			div.style.backgroundImage = "url(" + sap.ui.global.resourceRoot + "testsuite/images/full.png)";
 			div.style.zIndex = 5;
 			div.style.opacity = '0.2';
+			div.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(opacity=20)';
 			jQuery(div).on("click",function(evt) {
 				alert("click!");
 			});
@@ -102,8 +103,8 @@ sap.ui.define('sap/ui/debug/DebugEnv', ['sap/ui/base/Interface', './ControlTree'
 		}
 		*/
 
-		var oControlTreeRoot = (this.oControlTreeWindow.document || this.oControlTreeWindow).querySelector("#sap-ui-ControlTreeRoot"),
-			oPropertyWindowRoot = (this.oPropertyListWindow.document || this.oPropertyListWindow).querySelector("#sap-ui-PropertyWindowRoot");
+		var oControlTreeRoot = this.oControlTreeWindow.querySelector("#sap-ui-ControlTreeRoot"),
+			oPropertyWindowRoot = this.oPropertyListWindow.querySelector("#sap-ui-PropertyWindowRoot");
 
 		if ( !oControlTreeRoot ) {
 			oControlTreeRoot = this.oControlTreeWindow.document.createElement("DIV");

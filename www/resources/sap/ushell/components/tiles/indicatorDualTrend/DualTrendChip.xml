@@ -3,7 +3,7 @@
 	<implementation>
 		<sapui5>
 			<basePath>../../</basePath>
-            <viewName>tiles/indicatorDualTrend.DualTrend.view.js</viewName>
+			<viewName>tiles/indicatorDualTrend.DualTrend.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
@@ -21,7 +21,7 @@
 				<parameter name="col">2</parameter>
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />

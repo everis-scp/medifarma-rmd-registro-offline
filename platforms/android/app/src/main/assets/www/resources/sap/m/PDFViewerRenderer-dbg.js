@@ -46,19 +46,11 @@ sap.ui.define(['sap/ui/Device', "sap/base/Log", "sap/base/security/URLListValida
 				return bIsEnabled;
 			}
 
-			if (typeof navigator.pdfViewerEnabled !== "undefined") {
-				if (navigator.pdfViewerEnabled || /HeadlessChrome/.test(window.navigator.userAgent)) {
-					return bIsEnabled;
-				} else {
-					bIsEnabled = false;
-				}
-			} else {
-				var aMimeTypes = navigator.mimeTypes;
-				bIsEnabled = aAllowedMimeTypes.some(function (sAllowedMimeType) {
-					var oMimeTypeItem = aMimeTypes.namedItem(sAllowedMimeType);
-					return oMimeTypeItem !== null;
-				});
-			}
+			var aMimeTypes = navigator.mimeTypes;
+			bIsEnabled = aAllowedMimeTypes.some(function (sAllowedMimeType) {
+				var oMimeTypeItem = aMimeTypes.namedItem(sAllowedMimeType);
+				return oMimeTypeItem !== null;
+			});
 
 			return bIsEnabled;
 		};
@@ -84,7 +76,7 @@ sap.ui.define(['sap/ui/Device', "sap/base/Log", "sap/base/security/URLListValida
 				oRm.renderControl(oControl._objectsRegister.getOverflowToolbarControl());
 			}
 
-			if (oControl._isEmbeddedModeAllowed() && this._isPdfPluginEnabled()) {
+			if (oControl._isEmbeddedModeAllowed()) {
 				this.renderPdfContent(oRm, oControl);
 			}
 
@@ -98,7 +90,7 @@ sap.ui.define(['sap/ui/Device', "sap/base/Log", "sap/base/security/URLListValida
 
 		PDFViewerRenderer.renderPdfContent = function (oRm, oControl) {
 
-			if (oControl._shouldRenderPdfContent() && !(/HeadlessChrome/.test(window.navigator.userAgent))) {
+			if (oControl._shouldRenderPdfContent()) {
 				oRm.openStart("iframe", oControl.getId() + "-iframe");
 
 				var sParametrizedSource = oControl.getSource();

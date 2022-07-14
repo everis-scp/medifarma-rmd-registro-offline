@@ -13,7 +13,7 @@ sap.ui.define([
 	"sap/base/util/ObjectPath",
 	"sap/ui/util/XMLHelper",
 	"sap/base/util/merge",
-	"sap/ui/core/Fragment"
+	"sap/ui/core/Fragment" // also needed to have sap.ui.xmlfragment
 ], function (
 	BindingParser,
 	BaseTreeModifier,
@@ -56,9 +56,9 @@ sap.ui.define([
 		 */
 		getVisible: function (oControl) {
 			if (oControl.getVisible) {
-				return Promise.resolve(oControl.getVisible());
+				return oControl.getVisible();
 			} else {
-				return Promise.reject(new Error("Provided control instance has no getVisible method"));
+				throw new Error("Provided control instance has no getVisible method");
 			}
 		},
 
@@ -89,15 +89,9 @@ sap.ui.define([
 		 */
 		getStashed: function (oControl) {
 			if (oControl.isStashed) {
-				if (oControl.isStashed()) {
-					return Promise.resolve(true);
-				}
-				return this.getVisible(oControl)
-					.then(function (bIsVisible) {
-						return !bIsVisible;
-					});
+				return oControl.isStashed() ? oControl.isStashed() : !this.getVisible(oControl);
 			}
-			return Promise.reject(new Error("Provided control instance has no isStashed method"));
+			throw new Error("Provided control instance has no isStashed method");
 		},
 
 		/**
@@ -151,12 +145,10 @@ sap.ui.define([
 		 */
 		getProperty: function (oControl, sPropertyName) {
 			var oMetadata = oControl.getMetadata().getPropertyLikeSetting(sPropertyName);
-			var oProperty;
 			if (oMetadata) {
 				var sPropertyGetter = oMetadata._sGetter;
-				oProperty = oControl[sPropertyGetter]();
+				return oControl[sPropertyGetter]();
 			}
-			return Promise.resolve(oProperty);
 		},
 
 		/**
@@ -173,7 +165,7 @@ sap.ui.define([
 			this.unbindProperty(oControl, sPropertyName);
 			var mSettings = {};
 			mSettings[sPropertyName] = oPropertyBinding;
-			return oControl.applySettings(mSettings);
+			oControl.applySettings(mSettings);
 		},
 
 		/**
@@ -187,52 +179,53 @@ sap.ui.define([
 		 * @inheritDoc
 		 */
 		createAndAddCustomData: function(oControl, sCustomDataKey, sValue, oAppComponent) {
-			return this.createControl("sap.ui.core.CustomData", oAppComponent)
-				.then(function (oCustomData) {
-					this.setProperty(oCustomData, "key", sCustomDataKey);
-					this.setProperty(oCustomData, "value", sValue);
-					return this.insertAggregation(oControl, "customData", oCustomData, 0);
-				}.bind(this));
+			var oCustomData = this.createControl("sap.ui.core.CustomData", oAppComponent);
+			this.setProperty(oCustomData, "key", sCustomDataKey);
+			this.setProperty(oCustomData, "value", sValue);
+			this.insertAggregation(oControl, "customData", oCustomData, 0);
 		},
 
 		/**
 		 * @inheritDoc
 		 */
-		createControl: function (sClassName, oAppComponent, oView, oSelector, mSettings) {
-			sClassName = sClassName.replace(/\./g,"/");
+		createControl: function (sClassName, oAppComponent, oView, oSelector, mSettings, bAsync) {
+			var sErrorMessage;
 			if (this.bySelector(oSelector, oAppComponent)) {
-				var sErrorMessage = "Can't create a control with duplicated ID " + (oSelector.id || oSelector);
-				return Promise.reject(sErrorMessage);
+				sErrorMessage = "Can't create a control with duplicated ID " + (oSelector.id || oSelector);
+				if (bAsync) {
+					return Promise.reject(sErrorMessage);
+				}
+				throw new Error(sErrorMessage);
 			}
 
-			var oPromise;
-			var oClassObject = sap.ui.require(sClassName);
-			if (oClassObject) {
-				oPromise = Promise.resolve(oClassObject);
-			} else {
-				oPromise = new Promise(function(fnResolve, fnReject) {
-					sap.ui.require([sClassName],
-						function(oClassObject) { fnResolve(oClassObject); },
+			if (bAsync) {
+				return new Promise(function(fnResolve, fnReject) {
+					sap.ui.require([sClassName.replace(/\./g,"/")],
+						function(ClassObject) {
+							var sId = this.getControlIdBySelector(oSelector, oAppComponent);
+							fnResolve(new ClassObject(sId, mSettings));
+						}.bind(this),
 						function() {
-							fnReject(new Error("Required control '" + sClassName
-								+ "' couldn't be created asynchronously"));
+							fnReject(new Error("Required control '" + sClassName + "' couldn't be created asynchronously"));
 						}
 					);
-				});
+				}.bind(this));
 			}
 
-			return oPromise
-				.then(function(ClassObject) {
-					var sId = this.getControlIdBySelector(oSelector, oAppComponent);
-					return new ClassObject(sId, mSettings);
-				}.bind(this));
+			// in the synchronous case, object should already be preloaded
+			var ClassObject = ObjectPath.get(sClassName);
+			if (!ClassObject) {
+				throw new Error("Can't create a control because the matching class object has not yet been loaded. Please preload the '" + sClassName + "' module");
+			}
+			var sId = this.getControlIdBySelector(oSelector, oAppComponent);
+			return new ClassObject(sId, mSettings);
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		applySettings: function(oControl, mSettings) {
-			return Promise.resolve(oControl.applySettings(mSettings));
+			oControl.applySettings(mSettings);
 		},
 
 		/**
@@ -260,7 +253,7 @@ sap.ui.define([
 		 * @inheritDoc
 		 */
 		getControlMetadata: function (oControl) {
-			return Promise.resolve(oControl && oControl.getMetadata());
+			return oControl && oControl.getMetadata();
 		},
 
 		/**
@@ -290,20 +283,17 @@ sap.ui.define([
 		 * @inheritDoc
 		 */
 		getAllAggregations: function (oParent) {
-			return Promise.resolve(oParent.getMetadata().getAllAggregations());
+			return oParent.getMetadata().getAllAggregations();
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		getAggregation: function (oParent, sName) {
-			return this.findAggregation(oParent, sName)
-				.then(function (oAggregation) {
-					if (oAggregation) {
-						return oParent[oAggregation._sGetter]();
-					}
-					return undefined;
-				});
+			var oAggregation = this.findAggregation(oParent, sName);
+			if (oAggregation) {
+				return oParent[oAggregation._sGetter]();
+			}
 		},
 
 		/**
@@ -312,19 +302,19 @@ sap.ui.define([
 		insertAggregation: function (oParent, sName, oObject, iIndex) {
 			//special handling without invalidation for customData
 			if ( sName === "customData"){
-				return oParent.insertAggregation(sName, oObject, iIndex, /*bSuppressInvalidate=*/true);
-			}
-			return this.findAggregation(oParent, sName)
-				.then(function (oAggregation) {
-					if (oAggregation) {
-						if (oAggregation.multiple) {
-							var iInsertIndex = iIndex || 0;
-							oParent[oAggregation._sInsertMutator](oObject, iInsertIndex);
-						} else {
-							oParent[oAggregation._sMutator](oObject);
-						}
+				oParent.insertAggregation(sName, oObject, iIndex, /*bSuppressInvalidate=*/true);
+			} else {
+				var oAggregation = this.findAggregation(oParent, sName);
+				if (oAggregation) {
+					if (oAggregation.multiple) {
+						var iInsertIndex = iIndex || 0;
+						oParent[oAggregation._sInsertMutator](oObject, iInsertIndex);
+					} else {
+						oParent[oAggregation._sMutator](oObject);
 					}
-				});
+				}
+			}
+
 		},
 
 		/**
@@ -334,14 +324,12 @@ sap.ui.define([
 			//special handling without invalidation for customData
 			if ( sName === "customData"){
 				oControl.removeAggregation(sName, oObject, /*bSuppressInvalidate=*/true);
-				return Promise.resolve();
+			} else {
+				var oAggregation = this.findAggregation(oControl, sName);
+				if (oAggregation) {
+					oControl[oAggregation._sRemoveMutator](oObject);
+				}
 			}
-			return this.findAggregation(oControl, sName)
-				.then(function (oAggregation) {
-					if (oAggregation) {
-						oControl[oAggregation._sRemoveMutator](oObject);
-					}
-				});
 		},
 
 		/**
@@ -351,14 +339,12 @@ sap.ui.define([
 			//special handling without invalidation for customData
 			if ( sName === "customData"){
 				oControl.removeAllAggregation(sName, /*bSuppressInvalidate=*/true);
-				return Promise.resolve();
+			} else {
+				var oAggregation = this.findAggregation(oControl, sName);
+				if (oAggregation) {
+					oControl[oAggregation._sRemoveAllMutator]();
+				}
 			}
-			return this.findAggregation(oControl, sName)
-				.then(function (oAggregation) {
-					if (oAggregation) {
-						oControl[oAggregation._sRemoveAllMutator]();
-					}
-				});
 		},
 
 		/**
@@ -366,76 +352,67 @@ sap.ui.define([
 		 */
 		getBindingTemplate: function (oControl, sAggregationName) {
 			var oBinding = oControl.getBindingInfo(sAggregationName);
-			return Promise.resolve(oBinding && oBinding.template);
+			return oBinding && oBinding.template;
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		updateAggregation: function (oControl, sAggregationName) {
-			return this.findAggregation(oControl, sAggregationName)
-				.then(function (oAggregation) {
-					if (oAggregation && oControl.getBinding(sAggregationName)) {
-						oControl[oAggregation._sDestructor]();
-						oControl.updateAggregation(sAggregationName);
-					}
-				});
+			var oAggregation = this.findAggregation(oControl, sAggregationName);
+			if (oAggregation && oControl.getBinding(sAggregationName)) {
+				oControl[oAggregation._sDestructor]();
+				oControl.updateAggregation(sAggregationName);
+			}
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		findIndexInParentAggregation: function(oControl) {
-			var oParent = this.getParent(oControl);
+			var oParent = this.getParent(oControl),
+				aControlsInAggregation;
 
 			if (!oParent) {
-				return Promise.resolve(-1);
+				return -1;
 			}
 
-			return this.getParentAggregationName(oControl)
-				.then(function (sParentAggregationName) {
-					// we need all controls in the aggregation
-					return this.getAggregation(oParent, sParentAggregationName);
-				}.bind(this))
-				.then(function (aControlsInAggregation) {
-					// if aControls is an array:
-					if (Array.isArray(aControlsInAggregation)) {
-						// then the aggregtion is multiple and we can find the index of
-						// oControl in the array
-						return aControlsInAggregation.indexOf(oControl);
-					} else {
-						// if aControlsInAggregation is not an array, then the aggregation is
-						// of type 0..1 and aControlsInAggregation is the oControl provided
-						// to the function initially, so its index is 0
-						return 0;
-					}
-				});
+			// we need all controls in the aggregation
+			aControlsInAggregation = this.getAggregation(oParent, this.getParentAggregationName(oControl));
+
+			// if aControls is an array:
+			if (Array.isArray(aControlsInAggregation)) {
+				// then the aggregtion is multiple and we can find the index of
+				// oControl in the array
+				return aControlsInAggregation.indexOf(oControl);
+			} else {
+				// if aControlsInAggregation is not an array, then the aggregation is
+				// of type 0..1 and aControlsInAggregation is the oControl provided
+				// to the function initially, so its index is 0
+				return 0;
+			}
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		getParentAggregationName: function (oControl) {
-			return Promise.resolve(oControl.sParentAggregationName);
+			return oControl.sParentAggregationName;
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		findAggregation: function(oControl, sAggregationName) {
-			return new Promise(function (resolve, reject) {
-				if (oControl) {
-					if (oControl.getMetadata) {
-						var oMetadata = oControl.getMetadata();
-						var oAggregations = oMetadata.getAllAggregations();
-						if (oAggregations) {
-							resolve(oAggregations[sAggregationName]);
-							return;
-						}
+			if (oControl) {
+				if (oControl.getMetadata) {
+					var oMetadata = oControl.getMetadata();
+					var oAggregations = oMetadata.getAllAggregations();
+					if (oAggregations) {
+						return oAggregations[sAggregationName];
 					}
 				}
-				resolve();
-			});
+			}
 		},
 
 		/**
@@ -444,14 +421,12 @@ sap.ui.define([
 		validateType: function(oControl, oAggregationMetadata, oParent, sFragment) {
 			var sTypeOrInterface = oAggregationMetadata.type;
 
-			return this.getAggregation(oParent, oAggregationMetadata.name)
-				.then(function (oAggregation) {
-					// if aggregation is not multiple and already has element inside, then it is not valid for element
-					if (oAggregationMetadata.multiple === false && oAggregation && oAggregation.length > 0) {
-						return false;
-					}
-					return oControl.isA(sTypeOrInterface);
-				});
+			// if aggregation is not multiple and already has element inside, then it is not valid for element
+			if (oAggregationMetadata.multiple === false && this.getAggregation(oParent, oAggregationMetadata.name) &&
+					this.getAggregation(oParent, oAggregationMetadata.name).length > 0) {
+				return false;
+			}
+			return oControl.isA(sTypeOrInterface);
 		},
 
 		/**
@@ -459,20 +434,20 @@ sap.ui.define([
 		 */
 		instantiateFragment: function(sFragment, sNamespace, oView) {
 			var oFragment = XMLHelper.parse(sFragment);
+			oFragment = this._checkAndPrefixIdsInFragment(oFragment, sNamespace);
 
-			return this._checkAndPrefixIdsInFragment(oFragment, sNamespace)
-				.then(function (oFragment) {
-					return Fragment.load({
-						definition: oFragment,
-						sId: oView && oView.getId(),
-						controller: oView.getController()
-					});
-				}).then(function(vNewControls) {
-					if (vNewControls && !Array.isArray(vNewControls)) {
-						vNewControls = [vNewControls];
-					}
-					return vNewControls || [];
-				});
+			var aNewControls;
+			var sId = oView && oView.getId();
+			var oController = oView.getController();
+			aNewControls = sap.ui.xmlfragment({
+				fragmentContent: oFragment,
+				sId:sId
+			}, oController);
+
+			if (!Array.isArray(aNewControls)) {
+				aNewControls = [aNewControls];
+			}
+			return aNewControls;
 		},
 
 		/**
@@ -509,35 +484,35 @@ sap.ui.define([
 		 * @inheritDoc
 		 */
 		attachEvent: function (oObject, sEventName, sFunctionPath, vData) {
-			return new Promise(function (fnResolve, fnReject) {
-				var fnCallback = ObjectPath.get(sFunctionPath);
-				if (typeof fnCallback !== "function") {
-					fnReject(new Error("Can't attach event because the event handler function is not found or not a function."));
-				}
-				fnResolve(oObject.attachEvent(sEventName, vData, fnCallback));
-			});
+			var fnCallback = ObjectPath.get(sFunctionPath);
+
+			if (typeof fnCallback !== "function") {
+				throw new Error("Can't attach event because the event handler function is not found or not a function.");
+			}
+
+			oObject.attachEvent(sEventName, vData, fnCallback);
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		detachEvent: function (oObject, sEventName, sFunctionPath) {
-			return new Promise(function (fnResolve, fnReject) {
-				var fnCallback = ObjectPath.get(sFunctionPath);
-				if (typeof fnCallback !== "function") {
-					fnReject(new Error("Can't attach event because the event handler function is not found or not a function."));
-				}
-				// EventProvider.detachEvent doesn't accept vData parameter, therefore it might lead
-				// to a situation when an incorrect event listener is detached.
-				fnResolve(oObject.detachEvent(sEventName, fnCallback));
-			});
+			var fnCallback = ObjectPath.get(sFunctionPath);
+
+			if (typeof fnCallback !== "function") {
+				throw new Error("Can't attach event because the event handler function is not found or not a function.");
+			}
+
+			// EventProvider.detachEvent doesn't accept vData parameter, therefore it might lead
+			// to a situation when an incorrect event listener is detached.
+			oObject.detachEvent(sEventName, fnCallback);
 		},
 
 		/**
 		 * @inheritDoc
 		 */
 		bindAggregation: function (oControl, sAggregationName, oBindingInfo) {
-			return Promise.resolve(oControl.bindAggregation(sAggregationName, oBindingInfo));
+			oControl.bindAggregation(sAggregationName, oBindingInfo);
 		},
 
 		/**
@@ -545,7 +520,7 @@ sap.ui.define([
 		 */
 		unbindAggregation: function (oControl, sAggregationName) {
 			// bSuppressReset is not supported
-			return Promise.resolve(oControl.unbindAggregation(sAggregationName));
+			oControl.unbindAggregation(sAggregationName);
 		},
 
 		/**
@@ -553,23 +528,21 @@ sap.ui.define([
 		 */
 		getExtensionPointInfo: function(sExtensionPointName, oView) {
 			var oViewNode = (oView._xContent) ? oView._xContent : oView;
-			return XmlTreeModifier.getExtensionPointInfo(sExtensionPointName, oViewNode)
-				.then(function (oExtensionPointInfo) {
-					if (oExtensionPointInfo) {
-						// decrease the index by 1 to get the index of the extension point itself for js-case
-						oExtensionPointInfo.index--;
-						oExtensionPointInfo.parent = oExtensionPointInfo.parent && this._byId(oView.createId(oExtensionPointInfo.parent.getAttribute("id")));
-						oExtensionPointInfo.defaultContent = oExtensionPointInfo.defaultContent
-							.map(function (oNode) {
-								var sId = oView.createId(oNode.getAttribute("id"));
-								return this._byId(sId);
-							}.bind(this))
-							.filter(function (oControl) {
-								return !!oControl;
-							});
-					}
-					return oExtensionPointInfo;
-				}.bind(this));
+			var oExtensionPointInfo = XmlTreeModifier.getExtensionPointInfo(sExtensionPointName, oViewNode);
+			if (oExtensionPointInfo) {
+				// decrease the index by 1 to get the index of the extension point itself for js-case
+				oExtensionPointInfo.index--;
+				oExtensionPointInfo.parent = oExtensionPointInfo.parent && this._byId(oView.createId(oExtensionPointInfo.parent.getAttribute("id")));
+				oExtensionPointInfo.defaultContent = oExtensionPointInfo.defaultContent
+					.map(function (oNode) {
+						var sId = oView.createId(oNode.getAttribute("id"));
+						return this._byId(sId);
+					}.bind(this))
+					.filter(function (oControl) {
+						return !!oControl;
+					});
+			}
+			return oExtensionPointInfo;
 		}
 	};
 

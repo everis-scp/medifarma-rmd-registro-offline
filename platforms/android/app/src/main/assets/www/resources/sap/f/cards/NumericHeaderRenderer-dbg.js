@@ -20,14 +20,12 @@ sap.ui.define([], function () {
 	 */
 	NumericHeaderRenderer.render = function (oRm, oNumericHeader) {
 		var bLoading = oNumericHeader.isLoading(),
-			oError = oNumericHeader.getAggregation("_error"),
+			oToolbar = oNumericHeader.getToolbar(),
 			sTabIndex = oNumericHeader._isInsideGridContainer() ? "-1" : "0";
 
 		oRm.openStart("div", oNumericHeader)
 			.class("sapFCardHeader")
-			.class("sapFCardNumericHeader")
-			.class("sapFCardNumericHeaderSideIndicatorsAlign" + oNumericHeader.getSideIndicatorsAlignment())
-			.attr("tabindex", sTabIndex);
+			.class("sapFCardNumericHeader");
 
 		if (bLoading) {
 			oRm.class("sapFCardHeaderLoading");
@@ -37,16 +35,13 @@ sap.ui.define([], function () {
 			oRm.class("sapFCardClickable");
 		}
 
-		if (oError) {
-			oRm.class("sapFCardHeaderError");
-		}
-
+		oRm.attr("tabindex", sTabIndex);
 		//Accessibility state
 		oRm.accessibilityState(oNumericHeader, {
-			role: oNumericHeader.getAriaRole(),
-			labelledby: { value: oNumericHeader._getAriaLabelledBy(), append: true },
-			roledescription: { value: oNumericHeader.getAriaRoleDescription(), append: true },
-			level: { value: oNumericHeader.getAriaHeadingLevel() }
+			role: oNumericHeader._sAriaRole,
+			labelledby: { value: oNumericHeader._getHeaderAccessibility(), append: true },
+			roledescription: { value: oNumericHeader._sAriaRoleDescritoion, append: true },
+			level: { value: oNumericHeader._sAriaHeadingLevel }
 		});
 		oRm.openEnd();
 
@@ -54,31 +49,11 @@ sap.ui.define([], function () {
 			.class("sapFCardHeaderContent")
 			.openEnd();
 
-		if (oError) {
-			oRm.renderControl(oError);
-		} else {
-			NumericHeaderRenderer.renderHeaderText(oRm, oNumericHeader);
-			NumericHeaderRenderer.renderIndicators(oRm, oNumericHeader);
-			NumericHeaderRenderer.renderDetails(oRm, oNumericHeader);
-		}
+		NumericHeaderRenderer.renderHeaderText(oRm, oNumericHeader);
+		NumericHeaderRenderer.renderIndicators(oRm, oNumericHeader);
+		NumericHeaderRenderer.renderDetails(oRm, oNumericHeader);
 
 		oRm.close("div");
-
-		if (!oError) {
-			NumericHeaderRenderer.renderToolbar(oRm, oNumericHeader);
-		}
-
-		oRm.close("div");
-	};
-
-	/**
-	 * Render toolbar.
-	 *
-	 * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer
-	 * @param {sap.f.cards.NumericHeader} oNumericHeader An object representation of the control that should be rendered
-	 */
-	NumericHeaderRenderer.renderToolbar = function (oRm, oNumericHeader) {
-		var oToolbar = oNumericHeader.getToolbar();
 
 		if (oToolbar) {
 			oRm.openStart("div")
@@ -89,6 +64,8 @@ sap.ui.define([], function () {
 
 			oRm.close("div");
 		}
+
+		oRm.close("div");
 	};
 
 	/**
@@ -99,6 +76,8 @@ sap.ui.define([], function () {
 	 */
 	NumericHeaderRenderer.renderHeaderText = function(oRm, oNumericHeader) {
 		var oTitle = oNumericHeader.getAggregation("_title"),
+			oSubtitle = oNumericHeader.getAggregation("_subtitle"),
+			oUnitOfMeasurement = oNumericHeader.getAggregation("_unitOfMeasurement"),
 			sStatus = oNumericHeader.getStatusText(),
 			oBindingInfos = oNumericHeader.mBindingInfos;
 
@@ -134,33 +113,11 @@ sap.ui.define([], function () {
 
 		oRm.close("div");
 
-		NumericHeaderRenderer.renderSubtitle(oRm, oNumericHeader);
-
-		oRm.close("div");
-	};
-
-	/**
-	 * Render subtitle and unit of measurement.
-	 *
-	 * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer
-	 * @param {sap.f.cards.NumericHeader} oNumericHeader An object representation of the control that should be rendered
-	 */
-	NumericHeaderRenderer.renderSubtitle = function(oRm, oNumericHeader) {
-		var oBindingInfos = oNumericHeader.mBindingInfos,
-			oSubtitle = oNumericHeader.getAggregation("_subtitle"),
-			oUnitOfMeasurement = oNumericHeader.getAggregation("_unitOfMeasurement"),
-			bHasSubtitle = oSubtitle && oSubtitle.getText() || oBindingInfos && oBindingInfos.subtitle,
-			bHasUnitOfMeasurement = oUnitOfMeasurement && oUnitOfMeasurement.getText() || oBindingInfos && oBindingInfos.unitOfMeasurement;
-
-		if (bHasSubtitle || bHasUnitOfMeasurement) {
+		if (((oSubtitle && oSubtitle.getText()) || ( oBindingInfos && oBindingInfos.subtitle))
+			|| ((oUnitOfMeasurement && oUnitOfMeasurement.getText()) || ( oBindingInfos && oBindingInfos.unitOfMeasurement))) {
 			oRm.openStart("div")
-				.class("sapFCardSubtitle");
-
-			if (bHasSubtitle && oUnitOfMeasurement) {
-				oRm.class("sapFCardSubtitleAndUnit");
-			}
-
-			oRm.openEnd();
+				.class("sapFCardSubtitle")
+				.openEnd();
 
 			if (oSubtitle) {
 				if (oBindingInfos.subtitle) {
@@ -178,6 +135,8 @@ sap.ui.define([], function () {
 			}
 			oRm.close("div");
 		}
+
+		oRm.close("div");
 	};
 
 	/**

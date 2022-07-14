@@ -1,0 +1,9 @@
+{
+"version":3,
+"file":"sap/ushell/plugins/ghostapp/Component-preload.js",
+"sourceroot":".",
+"sources":["Component-dbg.js","FakeModel-dbg.js","manifest.json"],
+"names":["AppComponent","ODataModel","FakeModel","sServiceUrl","mParameters"],
+"mappings":";;AAEA,gBAAa,yCAAC,CACV,iCACJ,EAAG,QAAS,CAACA,CAAY,CAAE,CACvB,aAEA,OAAOA,CAAY,gDAAiD,CAChE,SAAU,CACN,SAAU,OACV,QAAS,YACb,CACJ,GACJ;ACXA,gBAAa,yCAAC,CACV,kCACJ,EAAG,QAAS,CACRC,CACJ,CAAE,CACE,aAEA,IAAIC,CAAU,CAAED,CAAU,gDAAiD,CACvE,YAAa,QAAS,CAACE,CAAW,CAAEC,CAAW,CAAE,CAC7CH,CAAU,YAAa,WAEvB,oCAAqC,2BACzC,EAGA,kBAAmB,QAAS,EAAG,CAC3BA,CAAU,wCAAyC,WACnD,8BAA+B,CAAE,YACrC,CACJ,GAEAC,CAAS,sBAAuB,CAAE,QAAS,EAAG,CAC1C,MAAO,mCACX,EACA,OAAOA,CAAS,CACpB;;;;;",
+"x_com_sap_openui5_sections":[63,347,347,856,926,3092]
+}

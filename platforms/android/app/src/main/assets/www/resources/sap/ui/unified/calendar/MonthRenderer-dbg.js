@@ -384,7 +384,14 @@ sap.ui.define(['sap/ui/unified/calendar/CalendarUtils', 'sap/ui/unified/calendar
 		var aDayTypes = oMonth._getDateTypes(oDay);
 		var bEnabled = oMonth._checkDateEnabled(oDay);
 		var i = 0;
-		var bShouldBeMarkedAsSpecialDate = oMonth._isSpecialDateMarkerEnabled(oDay);
+		var oMonthDate;
+		if (oMonth.getDate()) { // Month instance case
+			oMonthDate = oMonth.getDate();
+		} else if (oMonth.isA("sap.ui.unified.calendar.OneMonthDatesRow") && oMonth.getStartDate && oMonth.getStartDate()) { // OneMonthDatesRow instance case
+			oMonthDate = oMonth.getStartDate();
+		}
+		var bInsideCurrentMonth = oMonthDate ? CalendarUtils._isSameMonthAndYear(oDay, CalendarDate.fromLocalJSDate(oMonthDate)) : true; // DatesRow instance case
+
 		// Days before 0001.01.01 should be disabled.
 		if (bBeforeFirstYear) {
 			bEnabled = false;
@@ -429,7 +436,7 @@ sap.ui.define(['sap/ui/unified/calendar/CalendarUtils', 'sap/ui/unified/calendar
 			mAccProps["describedby"] = mAccProps["describedby"] + " " + oHelper.sId + "-End";
 		}
 
-		if (bShouldBeMarkedAsSpecialDate) {
+		if (bInsideCurrentMonth) {
 			aDayTypes.forEach(function(oDayType) {
 				if (oDayType.type !== CalendarDayType.None) {
 					if (oDayType.type === CalendarDayType.NonWorking) {
@@ -502,7 +509,7 @@ sap.ui.define(['sap/ui/unified/calendar/CalendarUtils', 'sap/ui/unified/calendar
 		oRm.accessibilityState(null, mAccProps);
 		oRm.openEnd(); // div element
 
-		if (aDayTypes[0] && bShouldBeMarkedAsSpecialDate){ //if there's a special date inside current month, render it
+		if (aDayTypes[0] && bInsideCurrentMonth){ //if there's a special date inside current month, render it
 			oRm.openStart("div");
 			oRm.class("sapUiCalSpecialDate");
 			if (aDayTypes[0].color) { // if there's a custom color, render it

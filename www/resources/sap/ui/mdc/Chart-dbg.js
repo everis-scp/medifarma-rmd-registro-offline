@@ -25,9 +25,7 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/ui/mdc/p13n/subcontroller/ChartItemController",
 	"sap/ui/mdc/p13n/subcontroller/SortController",
-	"sap/ui/events/KeyCodes",
-	"sap/ui/mdc/actiontoolbar/ActionToolbarAction",
-	'sap/ui/mdc/p13n/panels/ChartItemPanelNew'
+	'sap/ui/events/KeyCodes'
 ],
 	function (
 		Core,
@@ -50,9 +48,7 @@ sap.ui.define([
 		Text,
 		ChartItemController,
 		SortController,
-		KeyCodes,
-		ActionToolbarAction,
-		ChartItemPanel
+		KeyCodes
 	) {
 		"use strict";
 
@@ -61,9 +57,11 @@ sap.ui.define([
 			DrillStackHandler,
 			ChartTypeButton,
 			MeasureItemClass,
-			VizTooltip;
+			VizTooltip,
+			FILTER_INTERFACE = "sap.ui.mdc.IFilter";
 
 		/**
+		 /**
 		 * Constructor for a new Chart.
 		 *
 		 * @param {string} [sId] id for the new control, generated automatically if no id is given
@@ -71,7 +69,7 @@ sap.ui.define([
 		 * @class The Chart control creates a chart based on metadata and the configuration specified.
 		 * @extends sap.ui.mdc.Control
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @constructor
 		 * @experimental As of version 1.61
 		 * @private
@@ -194,7 +192,7 @@ sap.ui.define([
 					 */
 					_colorings: {
 						type: "object",
-						visibility: "hidden",
+						visibility: "_hidden",
 						byValue: true
 					},
 
@@ -269,29 +267,25 @@ sap.ui.define([
 						type: "sap.ui.core.Control",
 						multiple: true,
 						forwarding: {
-							getter: "_getToolbar",
+							idSuffix: "--toolbar",
 							aggregation: "actions"
 						}
 					},
 					_chart: {
 						type: "sap.chart.Chart",
-						multiple: false,
-						visibility: "hidden"
+						multiple: false
 					},
 					_toolbar: {
 						type: "sap.ui.mdc.ActionToolbar",
-						multiple: false,
-						visibility: "hidden"
+						multiple: false
 					},
 					_breadcrumbs: {
 						type: "sap.m.Breadcrumbs",
-						multiple: false,
-						visibility: "hidden"
+						multiple: false
 					},
 					_noDataStruct: {
 						type: "sap.m.VBox",
-						multiple: false,
-						visibility: "hidden"
+						multiple: false
 					},
 					selectionDetailsActions: {
 						type: "sap.ui.mdc.chart.SelectionDetailsActions",
@@ -306,14 +300,11 @@ sap.ui.define([
 					* @since 1.78
 				 	*/
 					filter: {
-						type: "sap.ui.mdc.IFilter",
+						type: FILTER_INTERFACE,
 						multiple: false
 					}
 				},
 				events: {
-					/**
-					 * This event is fired when a SelectionDetailsAction is pressed.
-					 */
 					selectionDetailsActionPressed: {
 						parameters: {
 
@@ -342,9 +333,6 @@ sap.ui.define([
 							}
 						}
 					},
-					/**
-					 * This event is fired when the selection in the inner chart changes.
-					 */
                     dataPointsSelected:{
 					    parameters: {
                             /**
@@ -362,7 +350,6 @@ sap.ui.define([
 		var _onSelectionMode = function(vValue) {
 
 			if (!this.oChartPromise) {
-				this._bNeedSelectionModeSet = true;
 				return;
 			}
 
@@ -455,10 +442,7 @@ sap.ui.define([
 			// target control that has not been created.
 			if (mSettings) {
 				aActions = mSettings.actions;
-			}
-
-			if (!this._oToolbarHandler) {
-				this._oToolbarHandler = new ToolbarHandler();
+				delete mSettings.actions;
 			}
 
 			var oManagedObj = Control.prototype.applySettings.apply(this, arguments);
@@ -493,20 +477,12 @@ sap.ui.define([
 				this._mStoredActions = aActions;
 
 				//Toolbar needs settings to be applied before creation to read properties like header/title
-				this._oToolbarHandler.createToolbar(this, aActions, true);
+				ToolbarHandler.createToolbar(this, aActions, true);
 				this._createTempNoData();
 			}
 
 			return oManagedObj;
 
-		};
-
-		Chart.prototype._getToolbar = function(){
-			if (!this.getAggregation("_toolbar")){
-				this._oToolbarHandler.createToolbar(this);
-			}
-
-			return this.getAggregation("_toolbar");
 		};
 
 		/**
@@ -585,14 +561,10 @@ sap.ui.define([
 
 			.then(function createDrillBreadcrumbs(oInnerChart) {
 
-				if (!this._oToolbarHandler) {
-					this._oToolbarHandler = new ToolbarHandler();
-				}
-
 				if (this.getAutoBindOnInit()){
-					this._oToolbarHandler.createToolbar(this, aActions);
+					ToolbarHandler.createToolbar(this, aActions);
 				} else {
-					this._oToolbarHandler.updateToolbar(this);
+					ToolbarHandler.updateToolbar(this);
 				}
 
 				this._createDrillBreadcrumbs();
@@ -611,7 +583,7 @@ sap.ui.define([
 
 			}.bind(this));
 
-			if (!mSettings || mSettings.selectionMode === undefined || this._bNeedSelectionModeSet) {
+			if (!mSettings || mSettings.selectionMode === undefined) {
 				_onSelectionMode.apply(this);
 			}
 
@@ -626,10 +598,9 @@ sap.ui.define([
 		/**
 		 * Calls the Delegates to bind the aggregation onto the inner chart
 		 *
-		 * @param {string} sName Name of a public aggregation to bind
-		 * @param {sap.ui.base.ManagedObject.AggregationBindingInfo} oBindingInfo binding info for the aggregation
-		 * @param {string} [sSearchText] search text (optional)
-		 * @returns {this} Returns <code>this</code> to allow method chaining
+		 * @param {string} sName name of the aggregation
+		 * @param oBindingInfo binding info for the aggregation
+		 * @param sSearchText search text (optional)
 		 *
 		 * @experimental
 		 * @private
@@ -656,7 +627,7 @@ sap.ui.define([
 		};
 
 		Chart.prototype._onDataLoadComplete = function(mEventParams) {
-			if ((mEventParams.mParameters.reason === "change" || mEventParams.mParameters.reason === "filter" ) && !mEventParams.mParameters.detailedReason) {
+			if (mEventParams.mParameters.reason === "change" && !mEventParams.mParameters.detailedReason) {
 				this.setBusy(false);
 			}
 		};
@@ -947,11 +918,6 @@ sap.ui.define([
 
 			this.oChartPromise = null;
 			this._oSelectionHandlerPromise = null;
-
-			if (this._oToolbarHandler) {
-				this._oToolbarHandler.destroy();
-				this._oToolbarHandler = null;
-			}
 
 			var oChart = this.getAggregation("_chart");
 
@@ -1778,55 +1744,6 @@ sap.ui.define([
 			}
 		};
 
-		/**
-		 * This function is used by P13n to determine which chart type supports which layout options.
-		 * There might be chart tyoes which do not support certain layout options (i.e. "Axis3").
-		 * Layout config is defined as followed:
-		 * {
-		 *  key: string //identifier for the chart type
-		 *  allowedLayoutOptions : [] //array containing allowed layout options as string
-		 * }
-		 *
-		 * @returns {array}
-		 */
-		Chart.prototype.getChartTypeLayoutConfig = function() {
-
-			if (this._aChartTypeLayout) {
-				return this._aChartTypeLayout;
-			}
-
-			var MDCRb = sap.ui.getCore().getLibraryResourceBundle("sap.ui.mdc");
-
-			var aStandardSetup = [
-				{kind: "Dimension", availableRoles:[{key: MDCLib.ChartItemRoleType.category, text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_CATEGORY')}, {key: MDCLib.ChartItemRoleType.series, text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_SERIES')}]},
-				{kind: "Measure", availableRoles: [{key: MDCLib.ChartItemRoleType.axis1, text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_AXIS1')}]}
-			];
-
-
-			this._aChartTypeLayout = [
-				{key: "column", allowedLayoutOptions: [MDCLib.ChartItemRoleType.axis1, MDCLib.ChartItemRoleType.category, MDCLib.ChartItemRoleType.series], templateConfig: aStandardSetup},
-				{key: "bar", allowedLayoutOptions:  [MDCLib.ChartItemRoleType.axis1, MDCLib.ChartItemRoleType.category, MDCLib.ChartItemRoleType.series], templateConfig: aStandardSetup},
-				{key: "dual_column", allowedLayoutOptions:  [MDCLib.ChartItemRoleType.axis1, MDCLib.ChartItemRoleType.axis2, MDCLib.ChartItemRoleType.category, MDCLib.ChartItemRoleType.series], templateConfig: aStandardSetup}
-			];
-			return this._aChartTypeLayout;
-		};
-
-		Chart.prototype.getAdaptationUI = function() {
-
-			var oLayoutConfig = this.getChartTypeLayoutConfig().find(function(it){return it.key === this.getChartType();}.bind(this));
-
-			var oArguments = {panelConfig: oLayoutConfig};
-
-			return Promise.resolve(new ChartItemPanel(oArguments));
-		};
-
-		Chart.prototype.getAllowedRolesForKinds = function() {
-			return [
-				{kind: "Measure", allowedRoles: this._getLayoutOptionsForType("aggregatable")},
-				{kind: "Dimension", allowedRoles: this._getLayoutOptionsForType("groupable")}
-			];
-		};
-
 		Chart.prototype.onkeydown = function(oEvent) {
 			if (oEvent.isMarked()) {
 				return;
@@ -1845,51 +1762,6 @@ sap.ui.define([
 				}
 			}
 		};
-
-		Chart.prototype.addAction = function(oControl) {
-			if (oControl.getMetadata().getName() !== "sap.ui.mdc.actiontoolbar.ActionToolbarAction") {
-				oControl = new ActionToolbarAction(oControl.getId() + "-action", {
-					action: oControl
-				});
-			}
-
-			return Control.prototype.addAggregation.apply(this, ["actions", oControl]);
-		};
-    /**
-     * This returns the layout options for a specific type of Item (measure/dimension,groupable/aggregatable)
-     * It is used by p13n to determine which layout options to show in the p13n panel
-     * @param {string} sType the type for which the layout options are requested
-     */
-	 Chart.prototype._getLayoutOptionsForType = function(sType){
-        var MDCRb = sap.ui.getCore().getLibraryResourceBundle("sap.ui.mdc");
-		var oAvailableRoles = {
-		    groupable: [
-				{
-					key: MDCLib.ChartItemRoleType.category,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_CATEGORY')
-				}, {
-					key: MDCLib.ChartItemRoleType.category2,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_CATEGORY2')
-				}, {
-					key: MDCLib.ChartItemRoleType.series,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_SERIES')
-				}
-			],
-			aggregatable: [
-				{
-					key: MDCLib.ChartItemRoleType.axis1,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_AXIS1')
-				}, {
-					key: MDCLib.ChartItemRoleType.axis2,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_AXIS2')
-				}, {
-					key: MDCLib.ChartItemRoleType.axis3,
-					text: MDCRb.getText('chart.PERSONALIZATION_DIALOG_CHARTROLE_AXIS3')
-				}
-			]
-		};
-		return oAvailableRoles[sType];
-    };
 
 		return Chart;
 	}, true);

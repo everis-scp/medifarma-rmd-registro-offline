@@ -35,7 +35,7 @@ sap.ui.define([
 	 * @extends sap.f.NumericHeader
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -63,8 +63,7 @@ sap.ui.define([
 
 			extend(mSettings, {
 				unitOfMeasurement: mConfiguration.unitOfMeasurement,
-				details: mConfiguration.details,
-				sideIndicatorsAlignment: mConfiguration.sideIndicatorsAlignment
+				details: mConfiguration.details
 			});
 
 			if (mConfiguration.mainIndicator) {
@@ -250,12 +249,6 @@ sap.ui.define([
 
 		if (this._bIsEmpty && this.getVisible() !== bToolbarVisible) {
 			this.setVisible(bToolbarVisible);
-		}
-	};
-
-	NumericHeader.prototype.refreshData = function () {
-		if (this._oDataProvider) {
-			this._oDataProvider.triggerDataUpdate();
 		}
 	};
 

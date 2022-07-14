@@ -5,13 +5,9 @@
  */
 
 sap.ui.define([
-	"../util/PropertyHelper",
-	"sap/ui/core/Core",
-	"sap/m/table/Util"
+	"../util/PropertyHelper"
 ], function(
-	PropertyHelperBase,
-	Core,
-	TableUtil
+	PropertyHelperBase
 ) {
 	"use strict";
 
@@ -37,7 +33,7 @@ sap.ui.define([
 	 * @extends sap.ui.mdc.util.PropertyHelper
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental
@@ -47,7 +43,7 @@ sap.ui.define([
 	 */
 	var PropertyHelper = PropertyHelperBase.extend("sap.ui.mdc.table.PropertyHelper", {
 		constructor: function(aProperties, mExtensions, oParent, mExtensionAttributeMetadata) {
-			var aAllowedAttributes = ["filterable", "sortable", "groupable", "key", "unit", "text", "exportSettings", "propertyInfos", "visualSettings"];
+			var aAllowedAttributes = ["filterable", "sortable", "groupable", "key", "unit", "text", "exportSettings", "propertyInfos"];
 			PropertyHelperBase.call(this, aProperties, mExtensions, oParent, aAllowedAttributes, mExtensionAttributeMetadata);
 		}
 	});
@@ -71,7 +67,7 @@ sap.ui.define([
 	PropertyHelper.prototype.prepareProperty = function(oProperty) {
 		PropertyHelperBase.prototype.prepareProperty.apply(this, arguments);
 		oProperty.isAggregatable = function() {
-			return false;
+			 return false;
 		};
 	};
 
@@ -208,105 +204,6 @@ sap.ui.define([
 
 		return oExportObj;
 	}
-
-	/**
-	 * Sets the width of the provided column based on the <code>visualSettings</code> of the relevant <code>PropertyInfo</code>.
-	 *
-	 * @param {sap.ui.mdc.table.Column} oMDCColumn The MDCColumn instance for which to set the width
-	 * @public
-	 * @since 1.95
-	 */
-	PropertyHelper.prototype.setColumnWidth = function(oMDCColumn) {
-		var sPropertyName = oMDCColumn.getDataProperty();
-		var oProperty = this.getProperty(sPropertyName);
-		if (!oProperty) {
-			return;
-		}
-
-		var mPropertyInfoVisualSettings = oProperty.getVisualSettings(sPropertyName);
-		if (mPropertyInfoVisualSettings && mPropertyInfoVisualSettings.widthCalculation === null) {
-			return;
-		}
-
-		var fWidth = this._calcColumnWidth(oProperty) + 1; // add 1rem extra for padding and border
-		oMDCColumn._updateColumnWidth(fWidth + "rem");
-	};
-
-	/**
-	 * Calculates the column width based on the provided <code>PropertyInfo</code>
-	 *
-	 * @param {object} oProperty The properties of PropertyInfo of MDCColumn instance for which to set the width for
-	 * @param {object} [mWidthCalculation] The configuration object for the width calculation
-	 * @param {int} [mWidthCalculation.minWidth=2] The minimum content width in rem
-	 * @param {int} [mWidthCalculation.maxWidth=19] The maximum content width in rem
-	 * @param {int} [mWidthCalculation.defaultWidth=8] The default column content width when type check fails
-	 * @param {boolean} [mWidthCalculation.includeLabel=true] Whether the label should be taken into account
-	 * @param {float} [mWidthCalculation.gap=0] The additional content width in rem
-	 * @param {boolean} [mWidthCalculation.verticalArrangement=false] Whether the referenced properties are arranged vertically
-	 * @param {string|array[]} [mWidthCalculation.excludeProperties=[]] A list of invisible referenced property names
-	 * @return {float} [fWidth] Calculated width
-	 * @since 1.95
-	 * @private
-	 */
-	PropertyHelper.prototype._calcColumnWidth = function (oProperty, mWidthCalculation) {
-		var fWidth = 0;
-		var fLabelWidth = 0;
-		var mPropertyInfoWidthCalculation = oProperty.getVisualSettings() ? oProperty.getVisualSettings().widthCalculation : {};
-
-		mWidthCalculation = Object.assign({
-			minWidth: 2,
-			maxWidth: 19,
-			defaultWidth: 8,
-			gap: 0,
-			includeLabel: true,
-			excludeProperties: [],
-			verticalArrangement: false
-		}, mPropertyInfoWidthCalculation, mWidthCalculation || {});
-
-		var iMinWidth = Math.max(1, mWidthCalculation.minWidth);
-		var iMaxWidth = Math.max(iMinWidth, mWidthCalculation.maxWidth);
-
-		if (oProperty.isComplex()) {
-			var aRelevantReferencedProperties = oProperty.getReferencedProperties().filter(function(oProp) {
-				return ![].concat(mWidthCalculation.excludeProperties).includes(oProp.getName());
-			});
-
-			aRelevantReferencedProperties.forEach(function(oReferencedProperty) {
-				var fReferencedPropertyWidth = this._calcColumnWidth(oReferencedProperty, {
-					includeLabel: false
-				});
-
-				if (mWidthCalculation.verticalArrangement || aRelevantReferencedProperties.length == 1) {
-					fWidth = Math.max(fReferencedPropertyWidth, fWidth);
-				} else {
-					fWidth = fWidth + fReferencedPropertyWidth + 0.5; // add 0.5rem for some extra spacing in h-alignment
-				}
-			}, this);
-		} else {
-			var oTypeConfig = oProperty.getTypeConfig();
-			var oType = oTypeConfig.typeInstance;
-
-			if (oType) {
-				fWidth = TableUtil.calcTypeWidth(oType, mWidthCalculation);
-			}
-			if (oProperty.getUnitProperty()) {
-				fWidth += 2.5;
-			}
-		}
-
-		fWidth += mWidthCalculation.gap;
-
-		if (mWidthCalculation.includeLabel) {
-			var sLabel = oProperty.getLabel() || "";
-			fLabelWidth = TableUtil.calcHeaderWidth(sLabel, fWidth, iMaxWidth, iMinWidth);
-		}
-
-		fWidth = Math.max(iMinWidth, fWidth, fLabelWidth);
-		fWidth = Math.min(fWidth, iMaxWidth);
-		fWidth = Math.round(fWidth * 100) / 100;
-
-		return fWidth;
-	};
 
 	return PropertyHelper;
 });

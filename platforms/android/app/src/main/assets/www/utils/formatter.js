@@ -817,6 +817,8 @@ sap.ui.define([
 			if(QMNUM === "" || !QMNUM){
 				if(tipo === "Afectado"){
 					output = QMNUM;
+				}else if(tipo === "Sin Equipo"){
+					output = QMNUM;
 				}else{
 					output = "pendiente (Sincronizar)";
 				}

@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 // Provides client-based DataBinding implementation
 sap.ui.define([
 	"sap/ui/thirdparty/jquery",
@@ -29,7 +29,7 @@ sap.ui.define([
 	 * @extends sap.ui.model.Model
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @param {string} [oData] URL where to load the data from
 	 * @public
@@ -149,11 +149,11 @@ sap.ui.define([
 	};
 
 	/**
-	 * Does nothing.
+	 * @see sap.ui.model.Model.prototype.destroyBindingContext
 	 *
-	 * @param {sap.ui.model.Context} oContext The context to destroy
 	 */
 	ClientModel.prototype.destroyBindingContext = function(oContext) {
+		// TODO: what todo here?
 	};
 
 	/**

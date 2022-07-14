@@ -4,6 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
+// Ensure that sap.ui.unified is loaded before the module dependencies will be required.
+// Loading it synchronously is the only compatible option and doesn't harm when sap.ui.unified
+// already has been loaded asynchronously (e.g. via a dependency declared in the manifest)
+sap.ui.getCore().loadLibrary("sap.ui.unified");
+
 sap.ui.define([
 	'sap/ui/base/EventProvider',
 	'sap/ui/core/date/UniversalDate',
@@ -90,7 +95,6 @@ sap.ui.define([
 					oCalEnd.setUTCDate(oCalEnd.getUTCDate() + this.getStep() - 1);
 					break;
 				case Periods.OneMonth:
-				case "OneMonth":
 					oCalEnd.setUTCMonth(oCalEnd.getUTCMonth() + 1);
 					oCalEnd.setUTCDate(oCalEnd.getUTCDate() - 1);
 					break;
@@ -138,7 +142,6 @@ sap.ui.define([
 
 					break;
 				case Periods.OneMonth:
-				case "OneMonth":
 					oNewCalCurrent.setUTCMonth(oNewCalCurrent.getUTCMonth() + 1, 1);
 					this.setCurrent(CalendarUtils._createLocalDate(oNewCalCurrent, true));
 
@@ -181,7 +184,6 @@ sap.ui.define([
 
 					break;
 				case Periods.OneMonth:
-				case "OneMonth":
 					oNewCalCurrent.setUTCMonth(oNewCalCurrent.getUTCMonth() - 1, 1);
 					this.setCurrent(CalendarUtils._createLocalDate(oNewCalCurrent, true));
 
@@ -204,7 +206,6 @@ sap.ui.define([
 
 			switch (this.getUnit()) {
 				case Periods.OneMonth:
-				case "OneMonth":
 					if (CalendarUtils.monthsDiffer(this.getStart(), oToDate)) {
 						var oFirstMonthCalDate = CalendarUtils.getFirstDateOfMonth(oNewUTCCurrent);
 

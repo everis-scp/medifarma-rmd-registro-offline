@@ -7,20 +7,16 @@
 			<f:heading persistencyKey="{= ${path: 'parameter>/settings/routeConfig/', formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getPersistencyKeyForDynamicPageTitle'} }">
 				<template:if test="{= ${parameter>/settings/subTitleIfVariantMgmtHidden} }">
 					<template:then>
-						<Title class="{= ${parameter>/isFiori3Enabled} ? 'sapUiTinyMarginTop' : ''}" text="{=${path: 'parameter>/settings/subTitleIfVariantMgmtHidden'}}"></Title>
+						<Title class="sapUiTinyMarginTop" text="{=${path: 'parameter>/settings/subTitleIfVariantMgmtHidden'}}"></Title>
 					</template:then>
 
 					<template:else>
-						<Title class="{= ${parameter>/isFiori3Enabled} ? 'sapUiTinyMarginTop' : ''}" text="{=${path: 'parameter>/manifest/sap.app/title'}}"></Title>
+						<Title class="sapUiTinyMarginTop" text="{=${path: 'parameter>/manifest/sap.app/title'}}"></Title>
 					</template:else>
 				</template:if>
 			</f:heading>
 			<f:actions>
 				<ToolbarSpacer/>
-				<!-- hide toggle filter button if worklist -->
-				<template:if test="{= ${tableType>value} !== 'ResponsiveTable'}">
-					<Button id="template::ToggleFilters" text="{= ${_templPriv>/listReport/isHeaderExpanded} ? ${i18n>HIDE_FILTERS} : ${i18n>SHOW_FILTERS} }" type="Transparent" press="._templateEventHandlers.onToggleFiltersPressed"/>
-				</template:if>
 				<!-- global breakout actions-->
 				<template:repeat list="{parameter>/manifest/sap.ui5/extends/extensions/sap.ui.controllerExtensions/sap.suite.ui.generic.template.ListReport.view.ListReport/sap.ui.generic.app}" var="tmpEntitySet">
 					<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.GlobalActions" type="XML"/>
@@ -28,8 +24,8 @@
 				<OverflowToolbarButton id="template::Share"
 						icon="sap-icon://action"
 						type="Transparent"
-						press="._templateEventHandlers.onShareListReportActionButtonPress"
-						visible="{= ${parameter>/manifest/sap.ui.generic.app/settings/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
+						press="cmd:Share"
+						visible="{:= ${appSettings>/flexibleColumnLayout} ? '{= ${_templPrivGlobal>/generic/FCL/highestViewLevel} === 0}' : 'true' }"
 						tooltip="{i18n>SHARE}"
 						text="{i18n>SHARE}">
 				</OverflowToolbarButton>

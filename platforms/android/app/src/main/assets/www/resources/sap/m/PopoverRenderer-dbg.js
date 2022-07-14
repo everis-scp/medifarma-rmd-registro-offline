@@ -6,10 +6,9 @@
 sap.ui.define([
 	'sap/ui/Device',
 	'sap/m/library',
-	"sap/ui/dom/getScrollbarSize",
-	"sap/ui/core/IconPool"
+	"sap/ui/dom/getScrollbarSize"
 ],
-	function(Device, library, getScrollbarSize, IconPool) {
+	function(Device, library, getScrollbarSize) {
 		"use strict";
 
 		// shortcut for sap.m.PlacementType

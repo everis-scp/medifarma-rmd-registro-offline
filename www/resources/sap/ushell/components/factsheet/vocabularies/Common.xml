@@ -8,9 +8,6 @@
       <Annotation Term="Core.Description">
         <String>Common terms for all SAP vocabularies</String>
       </Annotation>
-      <Annotation Term="Core.Description" Qualifier="Published">
-        <String>Copyright (c) 2009-2017 SAP SE, All Rights Reserved</String>
-      </Annotation>
 
       <!-- Section: General semantics -->
       <Term Name="Label" Type="Edm.String">
@@ -81,7 +78,7 @@
       <!-- Section: Calendar points in time -->
       <Term Name="IsCalendarYear" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a year number as string following the logical pattern (-?)YYYY(Y*) consisting of an optional 
+          <String>Property encodes a year number as string following the logical pattern (-?)YYYY(Y*) consisting of an optional
           minus sign for years B.C. followed by at least four digits. The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})
           </String>
         </Annotation>
@@ -90,7 +87,7 @@
       </Term>
       <Term Name="IsCalendarQuarter" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar quarter number as string following the logical pattern Q consisting of a single digit. 
+          <String>Property encodes a calendar quarter number as string following the logical pattern Q consisting of a single digit.
           The string matches the regex pattern [1-4]
           </String>
         </Annotation>
@@ -99,7 +96,7 @@
       </Term>
       <Term Name="IsCalendarMonth" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar month number as string following the logical pattern MM consisting of two digits. 
+          <String>Property encodes a calendar month number as string following the logical pattern MM consisting of two digits.
           The string matches the regex pattern 0[1-9]|1[0-2]
           </String>
         </Annotation>
@@ -108,8 +105,8 @@
       </Term>
       <Term Name="IsCalendarWeek" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar week number as string following the logical pattern WW consisting of two digits. 
-          The string matches the regex pattern 0[1-9]|[1-4][0-9]|5[2-3] 
+          <String>Property encodes a calendar week number as string following the logical pattern WW consisting of two digits.
+          The string matches the regex pattern 0[1-9]|[1-4][0-9]|5[2-3]
           </String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
@@ -117,7 +114,7 @@
       </Term>
       <Term Name="IsDayOfCalendarMonth" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Day number relative to a calendar month. Valid values are between 1 and 31.  
+          <String>Day number relative to a calendar month. Valid values are between 1 and 31.
           </String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.SByte" />
@@ -125,7 +122,7 @@
       </Term>
       <Term Name="IsDayOfCalendarYear" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Day number relative to a calendar year. Valid values are between 1 and 366.  
+          <String>Day number relative to a calendar year. Valid values are between 1 and 366.
           </String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.Int16" />
@@ -133,7 +130,7 @@
       </Term>
       <Term Name="IsCalendarYearQuarter" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar year and quarter as string following the logical pattern (-?)YYYY(Y*)Q consisting 
+          <String>Property encodes a calendar year and quarter as string following the logical pattern (-?)YYYY(Y*)Q consisting
           of an optional minus sign for years B.C. followed by at least five digits, where the last digit represents the quarter.
           The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})[1-4]
           </String>
@@ -143,7 +140,7 @@
       </Term>
       <Term Name="IsCalendarYearMonth" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar year and month as string following the logical pattern (-?)YYYY(Y*)MM consisting 
+          <String>Property encodes a calendar year and month as string following the logical pattern (-?)YYYY(Y*)MM consisting
           of an optional minus sign for years B.C. followed by at least six digits, where the last two digits represent the months January to December.
           The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})(0[1-9]|1[0-2])
           </String>
@@ -153,9 +150,9 @@
       </Term>
       <Term Name="IsCalendarYearWeek" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar year and week as string following the logical pattern (-?)YYYY(Y*)WW consisting 
+          <String>Property encodes a calendar year and week as string following the logical pattern (-?)YYYY(Y*)WW consisting
           of an optional minus sign for years B.C. followed by at least six digits, where the last two digits represent week number in the year.
-          The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})(0[1-9]|[1-4][0-9]|5[2-3]) 
+          The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})(0[1-9]|[1-4][0-9]|5[2-3])
           </String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
@@ -163,13 +160,13 @@
       </Term>
       <Term Name="IsCalendarDate" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a calendar date: year, month and day as string following the logical pattern (-?)YYYY(Y*)MMDD consisting 
-          of an optional minus sign for years B.C. followed by at least eight digits, where the last four digits represent 
+          <String>Property encodes a calendar date: year, month and day as string following the logical pattern (-?)YYYY(Y*)MMDD consisting
+          of an optional minus sign for years B.C. followed by at least eight digits, where the last four digits represent
           the months January to December (MM) and the day of the month (DD).
           The string matches the regex pattern -?([1-9][0-9]{3,}|0[0-9]{3})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])
           The regex pattern does not reflect the additional constraint for "Day-of-month Values":
-          The day value must be no more than 30 if month is one of 04, 06, 09, or 11, no more than 28 if month is 02 and year is not divisible by 4, 
-          or is divisible by 100 but not by 400, and no more than 29 if month is 02 and year is divisible by 400, or by 4 but not by 100.          
+          The day value must be no more than 30 if month is one of 04, 06, 09, or 11, no more than 28 if month is 02 and year is not divisible by 4,
+          or is divisible by 100 but not by 400, and no more than 29 if month is 02 and year is divisible by 400, or by 4 but not by 100.
           </String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
@@ -180,7 +177,7 @@
       <!-- Section: Fiscal points in time -->
       <Term Name="IsFiscalYear" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a fiscal year number as string following the logical pattern YYYY(Y*) consisting of at least four digits. 
+          <String>Property encodes a fiscal year number as string following the logical pattern YYYY(Y*) consisting of at least four digits.
           The string matches the regex pattern [1-9][0-9]{3,}
           </String>
         </Annotation>
@@ -189,7 +186,7 @@
       </Term>
       <Term Name="IsFiscalPeriod" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a fiscal period as string following the logical pattern PPP consisting of three digits. 
+          <String>Property encodes a fiscal period as string following the logical pattern PPP consisting of three digits.
           The string matches the regex pattern [0-9]{3}
           </String>
         </Annotation>
@@ -198,7 +195,7 @@
       </Term>
       <Term Name="IsFiscalYearPeriod" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Property encodes a fiscal year and period as string following the logical pattern YYYY(Y*)PPP consisting 
+          <String>Property encodes a fiscal year and period as string following the logical pattern YYYY(Y*)PPP consisting
           of at least seven digits, where the last three digits represent the fiscal period in the year.
           The string matches the regex pattern ([1-9][0-9]{3,})([0-9]{3})
           </String>

@@ -3,13 +3,16 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 2153,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 1083
 		},
 		{
-			"name": "noData.fragment.xml"
+			"name": "noData.fragment.xml",
+			"size": 487
 		}
 	]
 }

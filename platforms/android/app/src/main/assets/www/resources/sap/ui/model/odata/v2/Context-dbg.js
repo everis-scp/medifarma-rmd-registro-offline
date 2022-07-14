@@ -19,18 +19,6 @@ sap.ui.define([
 	 *   An absolute path without trailing slash, for example "/Products(1)/ToSupplier"
 	 * @param {string} [sDeepPath=sPath]
 	 *   The absolute deep path including all intermediate paths of the binding hierarchy
-	 * @param {sap.ui.base.SyncPromise} [oCreatePromise]
-	 *   A sync promise that is given when this context has been created by
-	 *   {@link sap.ui.model.odata.v2.ODataModel#createEntry}.
-	 *
-	 *   When the entity represented by this context has been successfully persisted in the back
-	 *   end, the given promise resolves.
-	 *
-	 *   When the entity is deleted before it has been persisted in the back end via
-	 *   {@link sap.ui.model.odata.v2.ODataModel#resetChanges} with the
-	 *   <code>bDeleteCreatedEntities</code> parameter set to <code>true</code>, the given promise
-	 *   rejects with an object <code>oError</code> containing the error information, where
-	 *   <code>oError.aborted === true</code>.
 	 * @alias sap.ui.model.odata.v2.Context
 	 * @author SAP SE
 	 * @class Implementation of an OData V2 model's context.
@@ -43,7 +31,6 @@ sap.ui.define([
 	 *   <ul>
 	 *     <li>an OData binding</li>
 	 *     <li>a view element</li>
-	 *     <li>{@link sap.ui.model.odata.v2.ODataModel#callFunction}</li>
 	 *     <li>{@link sap.ui.model.odata.v2.ODataModel#createBindingContext}</li>
 	 *     <li>{@link sap.ui.model.odata.v2.ODataModel#createEntry}</li>
 	 *   </ul>
@@ -52,15 +39,13 @@ sap.ui.define([
 	 * @hideconstructor
 	 * @public
 	 * @since 1.93.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 	var Context = BaseContext.extend("sap.ui.model.odata.v2.Context", {
-			constructor : function (oModel, sPath, sDeepPath, oCreatePromise) {
+			constructor : function (oModel, sPath, sDeepPath) {
 				BaseContext.call(this, oModel, sPath);
-				// Promise returned by #created for a context of a newly created entity which
-				// resolves when the entity is persisted or rejects if the creation is aborted; set
-				// it lazily to avoid "Uncaught (in promise)" errors
-				this.oCreatePromise = undefined;
+				// whether a new entity was created by ODataModel#createEntry and not yet persisted
+				this.bCreated = false;
 				// the absolute path including all intermediate paths of the binding hierarchy;
 				// used to compute the full target of messages
 				this.sDeepPath = sDeepPath || sPath;
@@ -69,51 +54,12 @@ sap.ui.define([
 				// whether this context's path may be used to create the request URL for dependent
 				// bindings even if no data has been loaded for the context's entity
 				this.bPreliminary = false;
-				// SyncPromise for a context created via
-				// sap.ui.model.odata.v2.ODataModel#createEntry; used internally to detect
-				// synchronously whether the promise is already fulfilled
-				this.oSyncCreatePromise = oCreatePromise;
 				// whether the context is updated, e.g. path changed from a preliminary path to the
 				// canonical one
 				this.bUpdated = false;
 			}
 		});
 
-	/**
-	 * Returns a promise on the creation state of this context if it has been created via
-	 * {@link sap.ui.model.odata.v2.ODataModel#createEntry}; otherwise returns
-	 * <code>undefined</code>.
-	 *
-	 * As long as the promise is not yet resolved or rejected, the entity represented by this
-	 * context is transient.
-	 *
-	 * Once the promise is resolved, the entity for this context is stored in the back end and
-	 * {@link #getPath} returns a path including the key predicate of the new entity.
-	 *
-	 * @returns {Promise}
-	 *   A promise for a context which has been created via
-	 *   {@link sap.ui.model.odata.v2.ODataModel#createEntry}, otherwise <code>undefined</code>.
-	 *
-	 *   When the entity represented by this context has been persisted in the back end, the promise
-	 *   resolves without data.
-	 *
-	 *   When the entity is deleted before it has been persisted in the back end via
-	 *   {@link sap.ui.model.odata.v2.ODataModel#resetChanges} with the
-	 *   <code>bDeleteCreatedEntities</code> parameter set to <code>true</code>, the promise rejects
-	 *   with an object <code>oError</code> containing the error information, where
-	 *   <code>oError.aborted === true</code>.
-	 *
-	 * @public
-	 * @since 1.96.0
-	 */
-	Context.prototype.created = function () {
-		if (this.oSyncCreatePromise && !this.oCreatePromise) {
-			// ensure to return a promise that is resolved w/o data
-			this.oCreatePromise = Promise.resolve(this.oSyncCreatePromise).then(function () {});
-		}
-
-		return this.oCreatePromise;
-	};
 
 	/**
 	 * Gets the absolute deep path including all intermediate paths of the binding hierarchy. This
@@ -122,7 +68,7 @@ sap.ui.define([
 	 * @return {string} The deep path
 	 * @private
 	 */
-	Context.prototype.getDeepPath = function () {
+	 Context.prototype.getDeepPath = function () {
 		return this.sDeepPath;
 	};
 
@@ -135,7 +81,7 @@ sap.ui.define([
 	 * @see sap.ui.model.odata.v2.Context#isUpdated
 	 * @see sap.ui.model.odata.v2.Context#isRefreshForced
 	 */
-	Context.prototype.hasChanged = function () {
+	 Context.prototype.hasChanged = function() {
 		return this.bUpdated || this.bForceRefresh;
 	};
 
@@ -148,7 +94,7 @@ sap.ui.define([
 	 * @private
 	 * @ui5-restricted sap.suite.ui.generic
 	 */
-	Context.prototype.isPreliminary = function () {
+	 Context.prototype.isPreliminary = function () {
 		return this.bPreliminary;
 	};
 
@@ -159,26 +105,8 @@ sap.ui.define([
 	 * @return {boolean} Whether dependent bindings need to be refreshed
 	 * @private
 	 */
-	Context.prototype.isRefreshForced = function () {
+	 Context.prototype.isRefreshForced = function () {
 		return this.bForceRefresh;
-	};
-
-	/**
-	 * For a context created using {@link sap.ui.model.odata.v2.ODataModel#createEntry}, the method
-	 * returns <code>true</code> if the context is transient or <code>false</code> if the context is
-	 * not transient. A transient context represents an entity created on the client which has not
-	 * been persisted in the back end.
-	 *
-	 * @returns {boolean}
-	 *   Whether this context is transient if it has been created using
-	 *   {@link sap.ui.model.odata.v2.ODataModel#createEntry}; returns <code>undefined</code> if the
-	 *   context has not been created using {@link sap.ui.model.odata.v2.ODataModel#createEntry}
-	 *
-	 * @public
-	 * @since 1.94.0
-	 */
-	Context.prototype.isTransient = function () {
-		return this.oSyncCreatePromise && this.oSyncCreatePromise.isPending();
 	};
 
 	/**
@@ -188,7 +116,7 @@ sap.ui.define([
 	 * @return {boolean} Whether the context is updated
 	 * @private
 	 */
-	Context.prototype.isUpdated = function () {
+	 Context.prototype.isUpdated = function () {
 		return this.bUpdated;
 	};
 

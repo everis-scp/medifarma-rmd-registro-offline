@@ -40,7 +40,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.cardEditor.propertyEditor.iconEditor.IconEditor
 	 * @author SAP SE
 	 * @since 1.81
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.81
@@ -53,16 +53,6 @@ sap.ui.define([
 		xmlFragment: "sap.ui.integration.designtime.cardEditor.propertyEditor.iconEditor.IconEditor",
 		renderer: BasePropertyEditor.getMetadata().getRenderer().render
 	});
-
-	IconEditor.configMetadata = Object.assign(
-		{},
-		BasePropertyEditor.configMetadata,
-		{
-			typeLabel: {
-				defaultValue: "BASE_EDITOR.TYPES.ICON"
-			}
-		}
-	);
 
 	// Editor Configuration for Editor for type "icon"
 	var oIconConfig = {

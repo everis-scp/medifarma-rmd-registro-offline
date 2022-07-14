@@ -489,7 +489,7 @@ sap.ui.define([
 	AnchorBar.prototype._applyHierarchicalSelectMode = function () {
 
 		if (this._sHierarchicalSelectMode === AnchorBarRenderer._AnchorBarHierarchicalSelectMode.Icon) {
-			this.$().find(".sapUxAPAnchorBarScrollContainer").show();
+			this._bHideScrollContainer = false;
 
 			this._oSelect.setWidth("auto");
 			this._oSelect.setAutoAdjustWidth(true);
@@ -497,7 +497,7 @@ sap.ui.define([
 			this._computeBarSectionsInfo();
 
 		} else {
-			this.$().find(".sapUxAPAnchorBarScrollContainer").hide();
+			this._bHideScrollContainer = true;
 
 			this._oSelect.setWidth("100%");
 			this._oSelect.setAutoAdjustWidth(false);
@@ -505,6 +505,8 @@ sap.ui.define([
 		}
 
 		this.$().toggleClass("sapUxAPAnchorBarOverflow", this._sHierarchicalSelectMode === AnchorBarRenderer._AnchorBarHierarchicalSelectMode.Icon);
+
+		this.invalidate();
 	};
 
 	AnchorBar.prototype._adjustSize = function (oEvent) {
@@ -622,7 +624,7 @@ sap.ui.define([
 
 					if (this._iCurrentScrollTimeout) {
 						clearTimeout(this._iCurrentScrollTimeout);
-						this.$("scroll").parent().stop(true, false);
+						jQuery(document.getElementById(this.getId() + "-scroll")).parent().stop(true, false);
 					}
 
 					this._iCurrentScrollTimeout = setTimeout(function () {

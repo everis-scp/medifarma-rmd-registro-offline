@@ -34,7 +34,7 @@ sap.ui.define([
 	 * Other usages are not supported.
 	 *
 	 * @extends sap.ui.unified.calendar.DatesRow
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -70,8 +70,6 @@ sap.ui.define([
 			//clear or set to first of the month
 			oSelectedDates[0].setProperty('startDate', oStartDate);
 		}
-
-		this.iMode < 2 ? this._bAlwaysShowSpecialDates = false : this._bAlwaysShowSpecialDates = true;
 
 		return this;
 	};

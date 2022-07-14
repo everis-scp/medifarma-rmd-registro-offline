@@ -29,9 +29,7 @@
         "1.17.0",
         "1.18.0",
         "1.19.0",
-        "1.20.0",
-        "1.21.0",
-        "1.22.0"
+        "1.20.0"
       ]
     },
     "designtime": {
@@ -56,15 +54,9 @@
         },
         "filters": {
           "description": "Map of filters",
+          "type": "object",
           "additionalProperties": {
-            "oneOf": [
-              {
-                "$ref": "#/definitions/Configuration.FilterType.Select"
-              },
-              {
-                "$ref": "#/definitions/Configuration.FilterType.DateRange"
-              }
-            ]
+            "$ref": "#/definitions/Configuration.Filter"
           }
         },
         "destinations": {
@@ -134,7 +126,7 @@
       "type": "string"
     },
     "footer": {
-      "description": "Represent card footer attributes",
+      "descirption": "Represent card footer attributes",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -146,14 +138,6 @@
           }
         }
       }
-    },
-    "requiredHeight": {
-      "description": "Represents card minimum required height",
-      "type": "string"
-    },
-    "requiredWidth": {
-      "description": "Represents card minimum required width",
-      "type": "string"
     }
   },
   "allOf": [
@@ -300,22 +284,6 @@
           }
         }
       }
-    },
-    {
-      "if": {
-        "properties": {
-          "type": {
-            "const": "WebPage"
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "content": {
-            "$ref": "#/definitions/ContentType.WebPage"
-          }
-        }
-      }
     }
   ],
   "definitions": {
@@ -409,22 +377,6 @@
         "mainIndicator": {
           "$ref": "#/definitions/HeaderType.Numeric.MainIndicator"
         },
-        "sideIndicatorsAlignment": {
-          "description": "The alignment of the side indicators",
-          "type": "string",
-          "oneOf": [
-            {
-              "enum": [
-                "Begin",
-                "End"
-              ],
-              "default": "Begin"
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
-        },
         "details": {
           "description": "Represents additional information about the numeric header",
           "type": "string"
@@ -504,19 +456,6 @@
         "unit": {
           "description": "Represents unit of measurement of the side indicator",
           "type": "string"
-        },
-        "state": {
-          "description": "The state color of the side indicator",
-          "type": "string",
-          "oneOf": [
-            {
-              "description": "The state color of the side indicator",
-              "$ref": "#/definitions/Enums.ValueColor"
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
         }
       }
     },
@@ -551,9 +490,6 @@
               "$ref": "#/definitions/simpleBinding"
             }
           ]
-        },
-        "group": {
-          "$ref": "#/definitions/group"
         }
       }
     },
@@ -585,8 +521,24 @@
           ]
         },
         "info": {
-            "description": "Defines an additional information text",
-            "$ref": "#/definitions/ContentType.List.Item.ValueStateItem"
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "The value of the field"
+            },
+            "state": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/state"
+                },
+                {
+                  "$ref": "#/definitions/simpleBinding"
+                }
+              ]
+            }
+          }
         },
         "highlight": {
           "type": "string",
@@ -602,28 +554,6 @@
         },
         "icon": {
           "$ref": "#/definitions/icon"
-        },
-        "attributesLayoutType": {
-            "description": "Defines the layout type of the attributes",
-            "oneOf": [
-                {
-                    "enum": [
-                        "OneColumn",
-                        "TwoColumns"
-                    ],
-                    "default": "TwoColumns"
-                },
-                {
-                    "$ref": "#/definitions/simpleBinding"
-                }
-            ]
-        },
-        "attributes": {
-            "description": "Defines the attributes",
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/ContentType.List.Item.ValueStateItem"
-            }
         },
         "actions": {
           "description": "Defines actions that can be applied on the item",
@@ -644,28 +574,6 @@
         }
       }
     },
-    "ContentType.List.Item.ValueStateItem": {
-        "description": "Represents value and state information for an object",
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-            "value": {
-                "type": "string",
-                "description": "The value of the field"
-            },
-            "state": {
-                "description": "The state of the field",
-                "oneOf": [
-                    {
-                        "$ref": "#/definitions/state"
-                    },
-                    {
-                        "$ref": "#/definitions/simpleBinding"
-                    }
-                ]
-            }
-        }
-    },
     "ContentType.Analytical": {
       "description": "Represents analytical content attributes",
       "type": "object",
@@ -675,22 +583,16 @@
           "$ref": "#/definitions/data"
         },
         "chartType": {
-          "description": "The type of the chart",
+          "description": "Describes the type of the chart",
           "type": "string",
           "oneOf": [
             {
-             "type": "string"
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
-        },
-        "chartProperties": {
-          "description": "[Experimental] Chart configuration",
-          "oneOf": [
-            {
-              "type": "object"
+              "enum": [
+                "Line",
+                "StackedColumn",
+                "StackedBar",
+                "Donut"
+              ]
             },
             {
               "$ref": "#/definitions/simpleBinding"
@@ -704,7 +606,7 @@
           "$ref": "#/definitions/ContentType.Analytical.Legend"
         },
         "plotArea": {
-          "description": "[Deprecated] Describes the plotArea properties",
+          "description": "Describes the plotArea properties",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -720,7 +622,7 @@
           }
         },
         "title": {
-          "description": "[Deprecated] Represents title attributes",
+          "description": "Represents title attributes",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -759,30 +661,23 @@
           }
         },
         "measureAxis": {
-          "description": "[Deprecated] Represents the value set for measure axis",
+          "description": "Represents the value set for measure axis",
           "type": "string"
         },
         "dimensionAxis": {
-          "description": "[Deprecated] Represents the value set for dimension axis",
+          "description": "Represents the value set for dimension axis",
           "type": "string"
         },
         "dimensions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ContentType.Analytical.MeasureAndDimension"
+            "$ref": "#/definitions/field"
           }
         },
         "measures": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ContentType.Analytical.MeasureAndDimension"
-          }
-        },
-        "feeds": {
-          "description": "Feeds for the chart.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContentType.Analytical.Field"
+            "$ref": "#/definitions/field"
           }
         },
         "actions": {
@@ -811,7 +706,7 @@
           "additionalProperties": false,
           "description": "Configuration for a popover, which will open while pressing chart points",
           "properties": {
-            "active": {
+            "connected": {
               "description": "Whether the popover is connected to the chart. If it's not it won't open",
               "oneOf": [
                 {
@@ -854,7 +749,7 @@
       }
     },
     "ContentType.Analytical.Legend": {
-      "description": "[Deprecated] Represents chart legend attributes",
+      "description": "Represents chart legend attributes",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -895,56 +790,6 @@
               "$ref": "#/definitions/simpleBinding"
             }
           ]
-        }
-      }
-    },
-    "ContentType.Analytical.Field": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "description": "The type of the feed",
-          "oneOf": [
-            {
-              "enum": [
-                "Measure",
-                "Dimension"
-              ]
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
-        },
-        "uid": {
-          "description": "The uid of the feed",
-          "type": "string"
-        },
-        "values": {
-          "description": "The names of the measures or dimensions that are used for this feed",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "ContentType.Analytical.MeasureAndDimension": {
-      "description": "Measure/dimension for the dataset",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "description": "The name of the measure/dimension",
-          "type": "string"
-        },
-        "label": {
-          "description": "[Deprecated] Label for the measure/dimension",
-          "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "description": "Binding path to the data"
         }
       }
     },
@@ -1194,9 +1039,6 @@
               "$ref": "#/definitions/simpleBinding"
             }
           ]
-        },
-        "group": {
-          "$ref": "#/definitions/group"
         }
       }
     },
@@ -1913,10 +1755,6 @@
           "additionalProperties": {
             "$ref": "#/definitions/batchRequest"
           }
-        },
-        "cache": {
-          "description": "Cache control settings",
-          "$ref" :"#/definitions/cache"
         }
       }
     },
@@ -1952,33 +1790,6 @@
         "body": {
           "description": "Represents the request body",
           "additionalProperties": true
-        }
-      }
-    },
-    "cache": {
-      "description": "Cache control settings",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "maxAge": {
-          "description": "The maximum age for which the cache is considered fresh.",
-          "type": "number",
-          "default": 0
-        },
-        "staleWhileRevalidate": {
-          "description": "Should we show stale cache while revalidating.",
-          "type": "boolean",
-          "default": false
-        },
-        "noStore": {
-          "description": "[Deprecated] Set to true to disable caching for this card.",
-          "type": "boolean",
-          "default": false
-        },
-        "enabled": {
-          "description": "Set to false to disable caching for this card.",
-          "type": "boolean",
-          "default": false
         }
       }
     },
@@ -2198,24 +2009,17 @@
         }
       }
     },
-    "Configuration.FilterType.Select": {
-      "description": "[Experimental] Select filter",
+    "Configuration.Filter": {
+      "description": "[Experimental] Represents a filter definition",
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "type": {
-          "description": "The type of the filter",
-          "oneOf": [
-            {
-              "const": "Select"
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
-        },
         "value": {
           "description": "The value of the filter"
+        },
+        "type": {
+          "description": "The type of the value for the filter",
+          "$ref": "#/definitions/Configuration.BasicDataType"
         },
         "data": {
           "$ref": "#/definitions/data"
@@ -2265,93 +2069,6 @@
         "key": {
           "description": "The unique key of the filter option. Mapped to the filter's value",
           "type": "string"
-        }
-      }
-    },
-    "Configuration.FilterType.DateRange": {
-      "description": "Date range filter",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "description": "The type of the filter",
-          "oneOf": [
-            {
-              "const": "DateRange"
-            },
-            {
-              "$ref": "#/definitions/simpleBinding"
-            }
-          ]
-        },
-        "data": {
-          "$ref": "#/definitions/data"
-        },
-        "label": {
-          "description": "Label for the filter for user-friendly visualization in the design-time editor",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description of the filter for user-friendly visualization in the design-time editor",
-          "type": "string"
-        },
-        "value": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "operator": {
-              "description": "The date range operator",
-              "type": "string"
-            },
-            "values": {
-              "type": "array"
-            }
-          }
-        },
-        "options": {
-          "description": "Options that will appear in the dropdown",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "date",
-              "today",
-              "yesterday",
-              "tomorrow",
-              "dateRange",
-              "from",
-              "to",
-              "yearToDate",
-              "lastDays",
-              "lastWeeks",
-              "lastMonths",
-              "lastQuarters",
-              "lastYears",
-              "nextDays",
-              "nextWeeks",
-              "nextMonths",
-              "nextQuarters",
-              "nextYears",
-              "todayFromTo",
-              "thisWeek",
-              "lastWeek",
-              "nextWeek",
-              "specificMonth",
-              "thisMonth",
-              "lastMonth",
-              "nextMonth",
-              "thisQuarter",
-              "lastQuarter",
-              "nextQuarter",
-              "quarter1",
-              "quarter2",
-              "quarter3",
-              "quarter4",
-              "thisYear",
-              "lastYear",
-              "nextYear"
-            ]
-          }
         }
       }
     },
@@ -2725,6 +2442,17 @@
             }
           ]
         },
+        "enabled": {
+          "description": "Determines whether the item is enabled",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/simpleBinding"
+            }
+          ]
+        },
         "visible": {
           "description": "Determines whether the item is visible",
           "oneOf": [
@@ -2735,40 +2463,6 @@
               "$ref": "#/definitions/simpleBinding"
             }
           ]
-        }
-      }
-    },
-    "group": {
-      "description": "Represents group of items",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "title": {
-          "description": "The title of the group",
-          "type": "string"
-        },
-        "order": {
-          "description": "The order by which the group will be sorted",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "path": {
-              "description": "Defines the path to the structure holding the data about the group order",
-              "type": "string"
-            },
-            "dir": {
-              "description": "The direction in which the group items will be ordered",
-              "oneOf": [
-                {
-                  "enum": [
-                    "ASC",
-                    "DESC"
-                  ],
-                  "default": "ASC"
-                }
-              ]
-            }
-          }
         }
       }
     }

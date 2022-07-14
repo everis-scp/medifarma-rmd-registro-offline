@@ -79,9 +79,6 @@ function(
 		// shortcut for sap.ui.core.ValueState
 		var ValueState = coreLibrary.ValueState;
 
-		// shortcut for sap.ui.core.TitleLevel
-		var TitleLevel = coreLibrary.TitleLevel;
-
 		// shortcut for sap.m.TitleAlignment
 		var TitleAlignment = library.TitleAlignment;
 
@@ -175,7 +172,7 @@ function(
 		*
 		* @implements sap.ui.core.PopupInterface
 		* @author SAP SE
-		* @version 1.96.9
+		* @version 1.93.4
 		*
 		* @constructor
 		* @public
@@ -225,7 +222,7 @@ function(
 					 * Determines whether the Dialog will be displayed on full screen on a phone.
 					 * @since 1.11.2
 					 * @deprecated Since version 1.13.1.
-					 * Please use the new stretch property instead. This enables a stretched Dialog even on tablet and desktop. If you want to achieve the same effect as <code>stretchOnPhone</code>, please set the stretch with <code>Device.system.phone</code>, then the Dialog is only stretched when it runs on a phone.
+					 * Please use the new stretch property instead. This enables a stretched Dialog even on tablet and desktop. If you want to achieve the same effect as <code>stretchOnPhone</code>, please set the stretch with jQuery.device.is.phone, then the Dialog is only stretched when it runs on a phone.
 					 */
 					stretchOnPhone: {type: "boolean", group: "Appearance", defaultValue: false, deprecated: true},
 
@@ -516,7 +513,7 @@ function(
 		};
 
 		Dialog.prototype.onBeforeRendering = function () {
-			var oHeader = this._getAnyHeader();
+			var oHeader = this.getCustomHeader() || this._header;
 
 			if (!Dialog._bPaddingByDefault && this.hasStyleClass("sapUiPopupWithPadding")) {
 				Log.warning("Usage of CSS class 'sapUiPopupWithPadding' is deprecated. Use 'sapUiContentPadding' instead", null, "sap.m.Dialog");
@@ -553,11 +550,6 @@ function(
 			// title alignment
 			if (oHeader && oHeader.setTitleAlignment) {
 				oHeader.setProperty("titleAlignment", this.getTitleAlignment(), true);
-			}
-
-			if (oHeader && this._getTitles(oHeader).length === 0) {
-				oHeader._setRootAccessibilityRole("heading");
-				oHeader._setRootAriaLevel("2");
 			}
 		};
 
@@ -932,11 +924,7 @@ function(
 			}
 
 			var $this = this._$dialog,
-				oBoundingClientRect = this.getDomRef().getBoundingClientRect(),
-				mOffset = {
-					left: oBoundingClientRect.x,
-					top: oBoundingClientRect.y
-				},
+				mOffset = $this.offset(),
 				oAreaDimensions = this._getAreaDimensions(),
 				iDialogWidth = $this.width(),
 				iDialogHeight = $this.height(),
@@ -944,6 +932,7 @@ function(
 				bResize = oEvent.shiftKey,
 				mStyles,
 				iMaxHeight;
+
 
 			this._bDisableRepositioning = true;
 			$this.addClass('sapDialogDisableTransition');
@@ -1297,6 +1286,8 @@ function(
 				this._header = new Bar(this.getId() + "-header", {
 					titleAlignment: this.getTitleAlignment()
 				});
+				this._header._setRootAccessibilityRole("heading");
+				this._header._setRootAriaLevel("2");
 
 				this.setAggregation("_header", this._header);
 			}
@@ -1313,7 +1304,7 @@ function(
 			} else {
 				this._headerTitle = new Title(this.getId() + "-title", {
 					text: sTitle,
-					level: TitleLevel.H2
+					level: "H2"
 				}).addStyleClass("sapMDialogTitle");
 
 				this._header.addContentMiddle(this._headerTitle);
@@ -1486,6 +1477,26 @@ function(
 
 		/**
 		 *
+		 * @param {string} sPos
+		 * @returns {string}
+		 * @private
+		 */
+		Dialog.prototype._composeAggreNameInHeader = function (sPos) {
+			var sHeaderAggregationName;
+
+			if (sPos === "Begin") {
+				sHeaderAggregationName = "contentLeft";
+			} else if (sPos === "End") {
+				sHeaderAggregationName = "contentRight";
+			} else {
+				sHeaderAggregationName = "content" + sPos;
+			}
+
+			return sHeaderAggregationName;
+		};
+
+		/**
+		 *
 		 * @returns {boolean}
 		 * @private
 		 */
@@ -1499,6 +1510,60 @@ function(
 		};
 
 		/**
+		 *
+		 * @param {Object} oButton
+		 * @param {string} sPos
+		 * @param {boolean} bSkipFlag
+		 * @returns {Dialog}
+		 * @private
+		 */
+		Dialog.prototype._setButton = function (oButton, sPos, bSkipFlag) {
+			return this;
+		};
+
+		/**
+		 *
+		 * @param {string} sPos
+		 * @private
+		 */
+		Dialog.prototype._getButton = function (sPos) {
+			var sAggregationName = sPos.toLowerCase() + "Button",
+				sButtonName = "_o" + this._firstLetterUpperCase(sPos) + "Button";
+
+			if (Device.system.phone) {
+				return this.getAggregation(sAggregationName, null, /*avoid infinite loop*/true);
+			} else {
+				return this[sButtonName];
+			}
+		};
+
+		/**
+		 *
+		 * @param {string} sPos
+		 * @private
+		 */
+		Dialog.prototype._getButtonFromHeader = function (sPos) {
+			if (this._header) {
+				var sHeaderAggregationName = this._composeAggreNameInHeader(this._firstLetterUpperCase(sPos)),
+					aContent = this._header.getAggregation(sHeaderAggregationName);
+				return aContent && aContent[0];
+			} else {
+				return null;
+			}
+		};
+
+		/**
+		 *
+		 * @param {string} sValue
+		 * @returns {string}
+		 * @private
+		 */
+		Dialog.prototype._firstLetterUpperCase = function (sValue) {
+			return sValue.charAt(0).toUpperCase() + sValue.slice(1);
+		};
+
+
+		/**
 		 * Returns the custom header instance when the <code>customHeader</code> aggregation is set. Otherwise, it returns the internal managed
 		 * header instance. This method can be called within composite controls which use <code>sap.m.Dialog</code> inside.
 		 *
@@ -1508,7 +1573,8 @@ function(
 			var oCustomHeader = this.getCustomHeader();
 
 			if (oCustomHeader) {
-				return oCustomHeader;
+				oCustomHeader._setRootAriaLevel("2");
+				return oCustomHeader._setRootAccessibilityRole("heading");
 			} else {
 				var bShowHeader = this.getShowHeader();
 				// if showHeader is set to false and not for standard dialog in iOS in theme sap_mvi, no header.
@@ -1788,7 +1854,9 @@ function(
 
 			var oSubHeader = this.getSubHeader();
 			if (oSubHeader) {
-				var aSubtitles = this._getTitles(oSubHeader);
+				var aSubtitles = oSubHeader.findAggregatedObjects(true, function(oObject) {
+					return oObject.isA("sap.m.Title");
+				});
 
 				// if there are titles in the subheader, add all of them to labels, else use the full subheader
 				if (aSubtitles.length) {
@@ -1799,7 +1867,9 @@ function(
 			}
 
 			if (oHeader) {
-				var aTitles = this._getTitles(oHeader);
+				var aTitles = oHeader.findAggregatedObjects(true, function(oObject) {
+					return oObject.isA("sap.m.Title");
+				});
 
 				// if there are titles in the header, add all of them to labels, else use the full header
 				if (aTitles.length) {
@@ -1931,17 +2001,20 @@ function(
 				};
 
 				var oAreaDimensions = this._getAreaDimensions();
-				var oBoundingClientRect = this.getDomRef().getBoundingClientRect();
-
 				var initial = {
-					x: e.clientX,
-					y: e.clientY,
+					x: e.pageX,
+					y: e.pageY,
 					width: that._$dialog.width(),
 					height: that._$dialog.height(),
 					outerHeight : that._$dialog.outerHeight(),
+					offset: {
+						//use e.originalEvent.layerX/Y for Firefox
+						x: e.offsetX ? e.offsetX : e.originalEvent.layerX,
+						y: e.offsetY ? e.offsetY : e.originalEvent.layerY
+					},
 					position: {
-						x: oBoundingClientRect.x,
-						y: oBoundingClientRect.y
+						x: that._$dialog.offset().left,
+						y: that._$dialog.offset().top
 					}
 				};
 				var mouseMoveHandler;
@@ -1967,9 +2040,22 @@ function(
 					}
 				}
 
-				if (isHeaderClicked(e.target) && this.getDraggable() || bResize) {
+				if ((isHeaderClicked(e.target) && this.getDraggable()) || bResize) {
 					that._bDisableRepositioning = true;
+
 					that._$dialog.addClass('sapDialogDisableTransition');
+
+					that._oManuallySetPosition = {
+						x: initial.position.x,
+						y: initial.position.y
+					};
+
+					//set the new position of the dialog on mouse down when the transform is disabled by the class
+					that._$dialog.css({
+						left: Math.min(Math.max(oAreaDimensions.left, that._oManuallySetPosition.x), oAreaDimensions.right - initial.width),
+						top: Math.min(Math.max(oAreaDimensions.top, that._oManuallySetPosition.y), oAreaDimensions.bottom - initial.height),
+						width: initial.width
+					});
 				}
 
 				if (isHeaderClicked(e.target) && this.getDraggable()) {
@@ -1986,8 +2072,8 @@ function(
 							that._bDisableRepositioning = true;
 
 							that._oManuallySetPosition = {
-								x: Math.max(oAreaDimensions.left, Math.min(event.clientX - e.clientX + initial.position.x, oAreaDimensions.right - initial.width)), // deltaX + initial dialog position
-								y: Math.max(oAreaDimensions.top, Math.min(event.clientY - e.clientY + initial.position.y, oAreaDimensions.bottom - initial.outerHeight)) // deltaY + initial dialog position
+								x: Math.max(oAreaDimensions.left, Math.min(event.pageX - e.pageX + initial.position.x, oAreaDimensions.right - initial.width)), // deltaX + initial dialog position
+								y: Math.max(oAreaDimensions.top, Math.min(event.pageY - e.pageY + initial.position.y, oAreaDimensions.bottom - initial.outerHeight)) // deltaY + initial dialog position
 							};
 
 							//move the dialog
@@ -1998,6 +2084,8 @@ function(
 							});
 						});
 					};
+
+					$w.on("mousemove", mouseMoveHandler);
 				} else if (bResize) {
 					that._$dialog.addClass('sapMDialogResizing');
 
@@ -2014,22 +2102,22 @@ function(
 							// BCP: 1680048166 remove inline set height and width so that the content resizes together with the mouse pointer
 							that.$('cont').height('').width('');
 
-							if (event.clientY + handleOffsetY > oAreaDimensions.bottom) {
-								event.clientY = oAreaDimensions.bottom - handleOffsetY;
+							if (event.pageY + handleOffsetY > oAreaDimensions.bottom) {
+								event.pageY = oAreaDimensions.bottom - handleOffsetY;
 							}
 
-							if (event.clientX + handleOffsetX > oAreaDimensions.right) {
-								event.clientX = oAreaDimensions.right - handleOffsetX;
+							if (event.pageX + handleOffsetX > oAreaDimensions.right) {
+								event.pageX = oAreaDimensions.right - handleOffsetX;
 							}
 
 							that._oManuallySetSize = {
-								width: initial.width + event.clientX - initial.x,
-								height: initial.height + event.clientY - initial.y
+								width: initial.width + event.pageX - initial.x,
+								height: initial.height + event.pageY - initial.y
 							};
 
 							if (that._bRTL) {
-								styles.left = Math.min(Math.max(event.clientX, 0), maxLeftOffset);
-								that._oManuallySetSize.width = initial.width + initial.x - Math.max(event.clientX, 0);
+								styles.left = Math.min(Math.max(event.pageX, 0), maxLeftOffset);
+								that._oManuallySetSize.width = initial.width + initial.x - Math.max(event.pageX, 0);
 							}
 
 							styles.width = that._oManuallySetSize.width;
@@ -2038,11 +2126,12 @@ function(
 							that._$dialog.css(styles);
 						});
 					};
+
+					$w.on("mousemove", mouseMoveHandler);
 				} else {
 					return;
 				}
 
-				$w.on("mousemove", mouseMoveHandler);
 				$w.on("mouseup", mouseUpHandler);
 
 				e.stopPropagation();
@@ -2055,12 +2144,6 @@ function(
 		 */
 		Dialog.prototype._applyContextualSettings = function () {
 			Control.prototype._applyContextualSettings.call(this);
-		};
-
-		Dialog.prototype._getTitles = function (oContainer) {
-			return oContainer.findAggregatedObjects(true, function(oObject) {
-				return oObject.isA("sap.m.Title");
-			});
 		};
 
 		return Dialog;

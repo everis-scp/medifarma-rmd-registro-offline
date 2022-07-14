@@ -8,13 +8,7 @@
 		},
 		{
 			"name": "Calendar.less",
-			"size": 24169,
-			"designtime": true,
-			"theme": "base"
-		},
-		{
-			"name": "CalendarDateInterval.less",
-			"size": 580,
+			"size": 23115,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -50,7 +44,7 @@
 		},
 		{
 			"name": "FileUploader.less",
-			"size": 5451,
+			"size": 5422,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -149,7 +143,7 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 109249,
+			"size": 107290,
 			"theme": "base"
 		},
 		{
@@ -159,29 +153,29 @@
 		},
 		{
 			"name": "library.css",
-			"size": 109162,
+			"size": 107203,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
-			"size": 126665,
+			"size": 124922,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library.source.less",
-			"size": 674,
+			"size": 637,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 115957,
+			"size": 114001,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 115870,
+			"size": 113914,
 			"theme": "base"
 		}
 	]

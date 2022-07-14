@@ -20,7 +20,7 @@
                         <template:then>
                             <VBox>
                                 <core:Fragment
-                                        fragmentName="sap.ovp.cards.generic.LineItemDetails"
+                                        fragmentName="sap.ovp.cards.v4.generic.LineItemDetails"
                                         type="XML"/>
                                 <Link
                                         class="sapOvpBarListDataField sapOvpOverflowEllipsisDataField sapOvpBarListTitle"

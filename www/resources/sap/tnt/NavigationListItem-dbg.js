@@ -5,11 +5,11 @@
  */
 
 // Provides control sap.tnt.NavigationListItem.
-sap.ui.define(["sap/ui/thirdparty/jquery", "./library", 'sap/ui/core/Core', "sap/ui/core/Item", 'sap/ui/core/Icon',
+sap.ui.define(["./library", 'sap/ui/core/Core', "sap/ui/core/Item", 'sap/ui/core/Icon',
 		'./NavigationList', 'sap/ui/core/InvisibleText', 'sap/ui/core/Renderer', 'sap/ui/core/IconPool', "sap/ui/events/KeyCodes", "sap/ui/core/library",
 		// jQuery Plugin "addAriaLabelledBy"
 		"sap/ui/util/openWindow", "sap/ui/util/defaultLinkTypes", "sap/ui/dom/jquery/Aria"],
-	function(jQuery, library, Core, Item, Icon,
+	function(library, Core, Item, Icon,
 			 NavigationList, InvisibleText, Renderer, IconPool, KeyCodes, coreLibrary, openWindow, defaultLinkTypes) {
 		"use strict";
 
@@ -32,7 +32,7 @@ sap.ui.define(["sap/ui/thirdparty/jquery", "./library", 'sap/ui/core/Core', "sap
 		 * @extends sap.ui.core.Item
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -436,7 +436,7 @@ sap.ui.define(["sap/ui/thirdparty/jquery", "./library", 'sap/ui/core/Core', "sap
 		NavigationListItem.prototype.ontap = function (event) {
 
 			var navList = this.getNavigationList(),
-				$icon = jQuery(event.target).closest(".sapUiIcon"),
+				source = Core.byId(event.target.id),
 				level = this.getLevel(),
 				parent,
 				list;
@@ -466,7 +466,7 @@ sap.ui.define(["sap/ui/thirdparty/jquery", "./library", 'sap/ui/core/Core', "sap
 			// first navigation level
 			if (navList.getExpanded() || !this.getItems().length) {
 
-				if (!$icon.length || !$icon.hasClass('sapTntNavLIExpandIcon')) {
+				if (!source || source.getMetadata().getName() !== 'sap.ui.core.Icon' || !source.$().hasClass('sapTntNavLIExpandIcon')) {
 					this._selectItem(event);
 					return;
 				}
@@ -949,7 +949,7 @@ sap.ui.define(["sap/ui/thirdparty/jquery", "./library", 'sap/ui/core/Core', "sap
 				itemPosition = bundle.getText("LIST_ITEM_POSITION", [mPosition.index, mPosition.size]),
 				selected = navList._selectedItem === this ? bundle.getText("LIST_ITEM_SELECTED") : '',
 				itemText = navList.getExpanded() ? this.getText() : "",
-				text = accType + " " + selected + " " + itemText + " " + itemPosition;
+				text = accType + " " + itemPosition + " " + selected + " " + itemText;
 
 			invisibleText.setText(text);
 

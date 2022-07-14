@@ -48,7 +48,7 @@ function(
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -274,7 +274,7 @@ function(
 			this.$("switch").addClass(CSS_CLASS + "Pressed");
 
 			// necessary for fixing handle movement when the switch is shorter (no label) in some themes | BCP: 2170252080
-			this._iNoLabelFix = parseInt(getComputedStyle(this.getDomRef("switch")).outlineOffset);
+			this._iNoLabelFix = parseInt(window.getComputedStyle(this.getDomRef("switch")).outlineOffset);
 		};
 
 		/**

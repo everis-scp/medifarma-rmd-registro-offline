@@ -8,7 +8,7 @@
 		},
 		{
 			"name": "InfoLabel.less",
-			"size": 1484,
+			"size": 2158,
 			"designtime": true,
 			"theme": "sap_fiori_3_dark"
 		},
@@ -38,56 +38,62 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 4308,
+			"size": 6895,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "css_variables.less",
-			"size": 98787,
+			"size": 101785,
 			"designtime": true,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 98415,
+			"size": 101413,
+			"designtime": true,
+			"theme": "sap_fiori_3_dark"
+		},
+		{
+			"name": "global.less",
+			"size": 1385,
 			"designtime": true,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 35077,
+			"size": 36342,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 1799,
+			"size": 2758,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library.css",
-			"size": 35071,
+			"size": 36336,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library.less",
-			"size": 21315,
+			"size": 23426,
 			"designtime": true,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library.source.less",
-			"size": 471,
+			"size": 494,
 			"designtime": true,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 38244,
+			"size": 38233,
 			"theme": "sap_fiori_3_dark"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 38238,
+			"size": 38227,
 			"theme": "sap_fiori_3_dark"
 		}
 	]

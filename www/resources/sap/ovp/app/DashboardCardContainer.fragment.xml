@@ -9,7 +9,7 @@
                         dragAndDropEnabled="{path:'ui>', formatter:'.isDragAndDropEnabled'}">
         <ovp:content>
             <template:repeat list="{ui>/cards}" var="card">
-                <core:ComponentContainer id="{card>id}" sap.ui.fl:flexibility="sap/ovp/flexibility/DashboardLayout.flexibility"/>
+                <core:ComponentContainer id="{card>id}"/>
             </template:repeat>
         </ovp:content>
         <ovp:customData>

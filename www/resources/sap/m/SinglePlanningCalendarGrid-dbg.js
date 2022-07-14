@@ -4,6 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
+// Ensure that sap.ui.unified is loaded before the module dependencies will be required.
+// Loading it synchronously is the only compatible option and doesn't harm when sap.ui.unified
+// already has been loaded asynchronously (e.g. via a dependency declared in the manifest)
+sap.ui.getCore().loadLibrary("sap.ui.unified");
+
 // Provides control sap.m.SinglePlanningCalendarGrid.
 sap.ui.define([
 		'./SinglePlanningCalendarUtilities',
@@ -96,7 +101,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @private
@@ -946,7 +951,7 @@ sap.ui.define([
 		 * @private
 		 */
 		SinglePlanningCalendarGrid.prototype._appFocusHandler = function(oEvent, iDirection) {
-			var oTarget = sap.ui.getCore().byId(oEvent.target.id) || this._findSrcControl(oEvent);
+			var oTarget = sap.ui.getCore().byId(oEvent.target.id);
 
 			if (oTarget && oTarget.isA("sap.ui.unified.CalendarAppointment")) {
 				this.fireAppointmentSelect({
@@ -1205,18 +1210,13 @@ sap.ui.define([
 		};
 
 		SinglePlanningCalendarGrid.prototype._findSrcControl = function (oEvent) {
+			if (!oEvent.target.parentElement || !oEvent.target.parentElement.classList.contains("sapUiCalendarRowApps")) {
+				return oEvent.srcControl;
+			}
+
 			// data-sap-ui-related - This is a relation to appointment object.
 			// This is the connection between the DOM Element and the Object representing an appointment.
-			var $targetElement = oEvent.target,
-				$targetsParentElement = $targetElement.parentElement,
-				sAppointmentId;
-			if (!$targetsParentElement) {
-				return oEvent.srcControl;
-			} else if ($targetsParentElement.classList.contains("sapUiCalendarRowApps")) {
-				sAppointmentId = $targetsParentElement.getAttribute("data-sap-ui-related");
-			} else {
-				sAppointmentId = $targetElement.getAttribute("data-sap-ui-related");
-			}
+			var sAppointmentId = oEvent.target.parentElement.getAttribute("data-sap-ui-related");
 
 			// finding the appointment
 			return this.getAppointments().find(function (oAppointment) {
@@ -1304,9 +1304,7 @@ sap.ui.define([
 			if (!this.getEndHour()) {
 				iEndHour = LAST_HOUR_OF_DAY;
 			}
-			if (iStartHour > iEndHour) {
-				 return iStartHour <= iHour || iHour < iEndHour;
-			}
+
 			return iStartHour <= iHour && iHour < iEndHour;
 		};
 

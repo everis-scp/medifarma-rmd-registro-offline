@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 sap.ui.define(['./DataState', "sap/base/util/deepEqual", "sap/base/util/each"], function(DataState, deepEqual, each) {
 	"use strict";
 
@@ -14,7 +14,7 @@ sap.ui.define(['./DataState', "sap/base/util/deepEqual", "sap/base/util/each"], 
 	 * @extends sap.ui.model.DataState
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.ui.model.CompositeDataState

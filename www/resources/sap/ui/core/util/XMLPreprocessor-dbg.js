@@ -13,14 +13,13 @@ sap.ui.define([
 	"sap/ui/base/BindingParser",
 	"sap/ui/base/ManagedObject",
 	"sap/ui/base/SyncPromise",
-	"sap/ui/core/Component",
 	"sap/ui/core/XMLTemplateProcessor",
 	"sap/ui/model/BindingMode",
 	"sap/ui/model/CompositeBinding",
 	"sap/ui/model/Context",
 	"sap/ui/performance/Measurement"
 ], function (Log, deepExtend, JSTokenizer, ObjectPath, BindingParser, ManagedObject, SyncPromise,
-		Component, XMLTemplateProcessor, BindingMode, CompositeBinding, Context, Measurement) {
+		XMLTemplateProcessor, BindingMode, CompositeBinding, Context, Measurement) {
 	"use strict";
 
 	var sNAMESPACE = "http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1",
@@ -1443,20 +1442,22 @@ sap.ui.define([
 					return oSyncPromiseResolvedTrue;
 				}
 				return oPromise.then(function (sName) {
-					var oViewExtension;
+					var CustomizingConfiguration
+							= sap.ui.require("sap/ui/core/CustomizingConfiguration"),
+						oViewExtension;
 
 					if (sName !== sValue) {
 						// debug trace for dynamic names only
 						debug(oElement, "name =", sName);
 					}
-					oViewExtension = Component.getCustomizing(oViewInfo.componentId, {
-						extensionName : sName,
-						name : sCurrentName,
-						type : "sap.ui.viewExtensions"
-					});
-					if (oViewExtension && oViewExtension.className === "sap.ui.core.Fragment"
-							&& oViewExtension.type === "XML") {
-						return insertFragment(oViewExtension.fragmentName, oElement, oWithControl);
+					if (CustomizingConfiguration) {
+						oViewExtension = CustomizingConfiguration.getViewExtension(sCurrentName,
+							sName, oViewInfo.componentId);
+						if (oViewExtension && oViewExtension.className === "sap.ui.core.Fragment"
+								&& oViewExtension.type === "XML") {
+							return insertFragment(oViewExtension.fragmentName, oElement,
+								oWithControl);
+						}
 					}
 
 					return true;

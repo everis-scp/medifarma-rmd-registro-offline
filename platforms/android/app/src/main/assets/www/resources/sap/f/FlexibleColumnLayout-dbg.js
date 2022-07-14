@@ -8,7 +8,6 @@
 sap.ui.define([
 	"sap/ui/thirdparty/jquery",
 	"./library",
-	"sap/ui/core/library",
 	"sap/ui/Device",
 	"sap/ui/core/ResizeHandler",
 	"sap/ui/core/Control",
@@ -22,12 +21,10 @@ sap.ui.define([
 	"sap/base/Log",
 	"sap/base/assert",
 	"sap/base/util/isEmptyObject",
-	"sap/base/util/merge",
-	"sap/ui/core/InvisibleMessage"
+	"sap/base/util/merge"
 ], function(
 	jQuery,
 	library,
-	coreLibrary,
 	Device,
 	ResizeHandler,
 	Control,
@@ -41,8 +38,7 @@ sap.ui.define([
 	Log,
 	assert,
 	isEmptyObject,
-	merge,
-	InvisibleMessage
+	merge
 ) {
 	"use strict";
 
@@ -50,8 +46,6 @@ sap.ui.define([
 	// shortcut for sap.f.LayoutType
 	var LT = library.LayoutType;
 
-	// shortcut for sap.ui.core.InvisibleMessageMode
-	var InvisibleMessageMode = coreLibrary.InvisibleMessageMode;
 
 	/**
 	 * Constructor for a new <code>sap.f.FlexibleColumnLayout</code>.
@@ -98,7 +92,7 @@ sap.ui.define([
 	 *
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -183,13 +177,6 @@ sap.ui.define([
 				 * These aggregated controls will receive navigation events like {@link sap.m.NavContainerChild#event:BeforeShow BeforeShow}, they are documented in the pseudo interface {@link sap.m.NavContainerChild sap.m.NavContainerChild}.
 				 */
 				endColumnPages: {type: "sap.ui.core.Control", multiple: true, forwarding: {getter: "_getEndColumn", aggregation: "pages"}},
-				/**
-				 * Accessible landmark settings to be applied on the containers of the <code>sap.f.FlexibleColumnLayout</code> control.
-				 *
-				 * If not set, no landmarks will be written.
-				 * @since 1.95
-				 */
-				landmarkInfo : {type : "sap.f.FlexibleColumnLayoutAccessibleLandmarkInfo", multiple : false},
 
 				_beginColumnNav: {type : "sap.m.NavContainer", multiple : false, visibility : "hidden"},
 				_midColumnNav: {type : "sap.m.NavContainer", multiple : false, visibility : "hidden"},
@@ -651,12 +638,6 @@ sap.ui.define([
 		}
 	});
 
-	FlexibleColumnLayout.DEFAULT_COLUMN_LABELS = {
-		"FirstColumn" : "FCL_BEGIN_COLUMN_REGION_TEXT",
-		"MiddleColumn" : "FCL_MID_COLUMN_REGION_TEXT",
-		"LastColumn" : "FCL_END_COLUMN_REGION_TEXT"
-	};
-
 	FlexibleColumnLayout.COLUMN_RESIZING_ANIMATION_DURATION = 560; // ms
 	FlexibleColumnLayout.PINNED_COLUMN_CLASS_NAME = "sapFFCLPinnedColumn";
 	FlexibleColumnLayout.COLUMN_ORDER = ["begin", "mid", "end"]; // natural order of the columns in FCL
@@ -693,15 +674,6 @@ sap.ui.define([
 			end: 0
 		};
 
-		this._oInvisibleMessage = null;
-	};
-
-	FlexibleColumnLayout.prototype._announceMessage = function (sResourceBundleKey) {
-		var sText = FlexibleColumnLayout._getResourceBundle().getText(sResourceBundleKey);
-
-		if (this._oInvisibleMessage) {
-			this._oInvisibleMessage.announce(sText, InvisibleMessageMode.Polite);
-		}
 	};
 
 	/**
@@ -751,26 +723,6 @@ sap.ui.define([
 		oNavContainer.addEventDelegate(this["_" + sColumn + 'ColumnFocusOutDelegate'], this);
 
 		return oNavContainer;
-	};
-
-	/**
-	 * Formats <code>FlexibleColumnLayoutAccessibleLandmarkInfo</code> role and label of the provided <code>FlexibleColumnLayout</code> column.
-	 *
-	 * @param {sap.f.FlexibleColumnLayoutAccessibleLandmarkInfo} oLandmarkInfo FlexibleColumnLayout LandmarkInfo
-	 * @param {string} sColumnName column of the layout
-	 * @returns {sap.f.FlexibleColumnLayoutAccessibleLandmarkInfo} The formatted landmark info
-	 * @private
-	 */
-	 FlexibleColumnLayout.prototype._formatLandmarkInfo = function (oLandmarkInfo, sColumnName) {
-		var sLabel = null;
-		if (oLandmarkInfo) {
-			sLabel = oLandmarkInfo["get" + sColumnName + "Label"]();
-		}
-
-		return {
-			role: "region",
-			label: sLabel || FlexibleColumnLayout._getResourceBundle().getText(FlexibleColumnLayout.DEFAULT_COLUMN_LABELS[sColumnName])
-		};
 	};
 
 	/**
@@ -887,10 +839,6 @@ sap.ui.define([
 	};
 
 	FlexibleColumnLayout.prototype.onBeforeRendering = function () {
-		if (!this._oInvisibleMessage) {
-			this._oInvisibleMessage = InvisibleMessage.getInstance();
-		}
-
 		this._deregisterResizeHandler();
 		this._oAnimationEndListener.cancelAll();
 	};
@@ -1039,10 +987,7 @@ sap.ui.define([
 			icon: "sap-icon://slim-arrow-left",
 			tooltip: FlexibleColumnLayout._getResourceBundle().getText("FCL_BEGIN_COLUMN_BACK_ARROW"),
 			type: "Transparent",
-			press: function () {
-				this._onArrowClick("left");
-				this._announceMessage("FCL_MIDDLE_COLUMN_EXPANDED_MESSAGE");
-			}.bind(this)
+			press: this._onArrowClick.bind(this, "left")
 		}).addStyleClass("sapFFCLNavigationButton").addStyleClass("sapFFCLNavigationButtonRight");
 		this.setAggregation("_beginColumnBackArrow", oBeginColumnBackArrow, true);
 
@@ -1050,10 +995,7 @@ sap.ui.define([
 			icon: "sap-icon://slim-arrow-right",
 			tooltip: FlexibleColumnLayout._getResourceBundle().getText("FCL_MID_COLUMN_FORWARD_ARROW"),
 			type: "Transparent",
-			press: function () {
-				this._onArrowClick("right");
-				this._announceMessage("FCL_FIRST_COLUMN_EXPANDED_MESSAGE");
-			}.bind(this)
+			press: this._onArrowClick.bind(this, "right")
 		}).addStyleClass("sapFFCLNavigationButton").addStyleClass("sapFFCLNavigationButtonLeft");
 		this.setAggregation("_midColumnForwardArrow", oMidColumnForwardArrow, true);
 
@@ -1061,10 +1003,7 @@ sap.ui.define([
 			icon: "sap-icon://slim-arrow-left",
 			tooltip: FlexibleColumnLayout._getResourceBundle().getText("FCL_MID_COLUMN_BACK_ARROW"),
 			type: "Transparent",
-			press: function () {
-				this._onArrowClick("left");
-				this._announceMessage("FCL_LAST_COLUMN_EXPANDED_MESSAGE");
-			}.bind(this)
+			press: this._onArrowClick.bind(this, "left")
 		}).addStyleClass("sapFFCLNavigationButton").addStyleClass("sapFFCLNavigationButtonRight");
 		this.setAggregation("_midColumnBackArrow", oMidColumnBackArrow, true);
 
@@ -1072,10 +1011,7 @@ sap.ui.define([
 			icon: "sap-icon://slim-arrow-right",
 			tooltip: FlexibleColumnLayout._getResourceBundle().getText("FCL_END_COLUMN_FORWARD_ARROW"),
 			type: "Transparent",
-			press: function () {
-				this._onArrowClick("right");
-				this._announceMessage("FCL_MIDDLE_COLUMN_EXPANDED_MESSAGE");
-			}.bind(this)
+			press: this._onArrowClick.bind(this, "right")
 		}).addStyleClass("sapFFCLNavigationButton").addStyleClass("sapFFCLNavigationButtonLeft");
 		this.setAggregation("_endColumnForwardArrow", oEndColumnForwardArrow, true);
 	};
@@ -2285,22 +2221,19 @@ sap.ui.define([
 	 *
 	 * @param {object} mSettings Object containing the aggregation name
 	 * @param {string} mSettings.aggregation The aggregation name to decide on which column/container the placeholder should be shown
-	 * @private
-	 * @ui5-restricted SAPUI5 Distribution libraries only
+	 * @public
 	 * @since 1.91
 	 */
 	FlexibleColumnLayout.prototype.showPlaceholder = function(mSettings) {
-		if (!sap.ui.getCore().getConfiguration().getPlaceholder()) {
-			return;
-		}
-
-		switch (mSettings && mSettings.aggregation) {
+		switch (mSettings.aggregation) {
 			case "beginColumnPages":
-				return this.getAggregation("_beginColumnNav").showPlaceholder(mSettings);
+				this.getAggregation("_beginColumnNav").showPlaceholder(mSettings);
+				break;
 			case "midColumnPages":
-				return this.getAggregation("_midColumnNav").showPlaceholder(mSettings);
+				this.getAggregation("_midColumnNav").showPlaceholder(mSettings);
+				break;
 			default:
-				return this.getAggregation("_endColumnNav").showPlaceholder(mSettings);
+				this.getAggregation("_endColumnNav").showPlaceholder(mSettings);
 		}
 	};
 
@@ -2309,8 +2242,7 @@ sap.ui.define([
 	 *
 	 * @param {object} mSettings Object containing the aggregation name
 	 * @param {string} mSettings.aggregation The aggregation name to decide on which column/container the placeholder should be hidden
-	 * @private
-	 * @ui5-restricted SAP internal apps
+	 * @public
 	 * @since 1.91
 	 */
 	FlexibleColumnLayout.prototype.hidePlaceholder = function(mSettings) {
@@ -2351,7 +2283,7 @@ sap.ui.define([
 				oContainer = this.getAggregation("_endColumnNav");
 		}
 
-		return !oObject || (oContainer.getCurrentPage() !== oObject);
+		return oContainer.getCurrentPage() !== oObject;
 	};
 
 	/**

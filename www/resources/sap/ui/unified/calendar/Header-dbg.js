@@ -27,7 +27,7 @@ sap.ui.define([
 	 *
 	 * <b>Note:</b> This is used inside the calendar. Not for standalone usage
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -118,13 +118,7 @@ sap.ui.define([
 			/**
 			 * Enables the Next button
 			 */
-			enabledNext : {type : "boolean", group : "Behavior", defaultValue : true},
-
-			/**
-			 * If set, the Current date button will be displayed.
-			 * @since 1.95.0
-			 */
-			visibleCurrentDateButton : {type : "boolean", group : "Appearance", defaultValue : false}
+			enabledNext : {type : "boolean", group : "Behavior", defaultValue : true}
 
 		},
 		events : {
@@ -138,11 +132,6 @@ sap.ui.define([
 			 * Next button pressed
 			 */
 			pressNext : {},
-
-			/**
-			 * Current date button pressed
-			 */
-			pressCurrentDate : {},
 
 			/**
 			 * First button pressed (normally day)
@@ -345,8 +334,6 @@ sap.ui.define([
 			this.firePressPrevious();
 		} else if (containsOrEquals(this.getDomRef("next"), oEvent.target) && this.getEnabledNext()){
 			this.firePressNext();
-		} else if (containsOrEquals(this.getDomRef("today"), oEvent.target) && this.getVisibleCurrentDateButton()){
-			this.firePressCurrentDate();
 		} else if (containsOrEquals(this.getDomRef("B0"), oEvent.target)){
 			this.firePressButton0();
 		} else if (containsOrEquals(this.getDomRef("B1"), oEvent.target)){

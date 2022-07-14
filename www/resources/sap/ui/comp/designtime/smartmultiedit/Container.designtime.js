@@ -1,7 +1,7 @@
 /*
  * ! SAPUI5
 
-		(c) Copyright 2009-2019 SAP SE. All rights reserved
+		(c) Copyright 2009-2021 SAP SE. All rights reserved
 	
  */
-sap.ui.define(["sap/ui/comp/designtime/smartform/Group.designtime","sap/base/util/merge"],function(G,m){"use strict";var a=m({},G);a.aggregations.formElements.actions.addODataProperty.changeType="addMultiEditField";return{aggregations:{layout:{ignore:false,propagateMetadata:function(i){if(i.getMetadata().getName()==="sap.ui.comp.smartform.Group"){return a;}}}}};},false);
+sap.ui.define(["sap/ui/comp/designtime/smartform/Group.designtime","sap/base/util/merge"],function(G,m){"use strict";var a=m({},G);a.aggregations.formElements.actions.add.delegate.changeType="addMultiEditField";return{aggregations:{layout:{ignore:false,propagateMetadata:function(i){if(i.getMetadata().getName()==="sap.ui.comp.smartform.Group"){return a;}}}}};});

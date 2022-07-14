@@ -77,7 +77,7 @@ sap.ui.define([
 	 * @extends sap.ui.integration.cards.BaseListContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -189,16 +189,10 @@ sap.ui.define([
 			disabledPropertyValue: ListType.Inactive
 		});
 
-		var oGroup = this.getConfiguration().group;
-
-		if (oGroup) {
-			this._oSorter = this._getGroupSorter(oGroup);
-		}
-
 		var oBindingInfo = {
-			template: this._oItemTemplate,
-			sorter: this._oSorter
+			template: this._oItemTemplate
 		};
+		this._filterHiddenNavigationItems(oRow, oBindingInfo);
 		this._bindAggregationToControl("items", oTable, oBindingInfo);
 	};
 

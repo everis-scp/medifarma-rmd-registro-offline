@@ -301,6 +301,8 @@ sap.ui.define([
 				// Merge an empty parameter set to initialize the internal object
 				mergeParameters({}, "");
 
+				sTheme = sap.ui.getCore().getConfiguration().getTheme();
+
 				forEachStyleSheet(function (sId) {
 					if (bAsync) {
 						if (ThemeCheck.checkStyle(sId)) {
@@ -519,8 +521,6 @@ sap.ui.define([
 		/**
 		 * <p>
 		 * Returns the current value for one or more theming parameters, depending on the given arguments.
-		 * The synchronous usage of this API has been deprecated and only the asynchronous usage should still be used
-		 * (see the 4th bullet point and the code examples below).
 		 * </p>
 		 *
 		 * <p>
@@ -531,9 +531,9 @@ sap.ui.define([
 		 * <p>
 		 * The following API variants are available (see also the below examples):
 		 * <ul>
-		 * <li> <b>(deprecated since 1.92)</b> If no parameter is given a key-value map containing all parameters is returned</li>
-		 * <li> <b>(deprecated since 1.94)</b> If a <code>string</code> is given as first parameter the value is returned as a <code>string</code></li>
-		 * <li> <b>(deprecated since 1.94)</b> If an <code>array</code> is given as first parameter a key-value map containing all parameters from the <code>array</code> is returned</li>
+		 * <li> <b>(deprecated since 1.92)<b> If no parameter is given a key-value map containing all parameters is returned</li>
+		 * <li>If a <code>string</code> is given as first parameter the value is returned as a <code>string</code></li>
+		 * <li>If an <code>array</code> is given as first parameter a key-value map containing all parameters from the <code>array</code> is returned</li>
 		 * <li>If an <code>object</code> is given as first parameter the result is returned immediately in case all parameters are loaded and available or within the callback in case not all CSS files are already loaded.
 		 * This is the <b>only asynchronous</b> API variant. This variant is the preferred way to retrieve theming parameters.
 		 * The structure of the return value is the same as listed above depending on the type of the name property within the <code>object</code>.</li>
@@ -608,9 +608,6 @@ sap.ui.define([
 					"Consider using the API only when required, e.g. onBeforeRendering.");
 			}
 
-			if (!sTheme) {
-				sTheme = sap.ui.getCore().getConfiguration().getTheme();
-			}
 			// Parameters.get() without arguments returns
 			// copy of complete default parameter set
 			if (arguments.length === 0) {
@@ -656,7 +653,7 @@ sap.ui.define([
 
 				Log.warning(
 					"Legacy variant usage of sap.ui.core.theming.Parameters.get API detected for parameter(s): '" + aNames.join(", ") +
-					"'. This could lead to bad performance and additional synchronous XHRs, as parameters might not be available yet. Use asynchronous variant instead.",
+					"'. This could lead to bad performance and sync XHR as parameters might not be available, yet. Use asynchronous variant instead.",
 					"LegacyParametersGet",
 					"sap.ui.support",
 					function() { return { type: "LegacyParametersGet" }; }
@@ -692,7 +689,6 @@ sap.ui.define([
 			if (bAsync && fnAsyncCallback && Object.keys(vResult).length !== aNames.length) {
 				if (!sap.ui.getCore().isThemeApplied()) {
 					resolveWithParameter = function () {
-						sap.ui.getCore().detachThemeChanged(resolveWithParameter);
 						var vParams = this.get({ // Don't pass callback again
 							name: vName.name,
 							scopeElement: vName.scopeElement
@@ -704,6 +700,7 @@ sap.ui.define([
 
 						fnAsyncCallback(vParams);
 						aCallbackRegistry.splice(aCallbackRegistry.findIndex(findRegisteredCallback), 1);
+						sap.ui.getCore().detachThemeChanged(resolveWithParameter);
 					}.bind(this);
 
 					// Check if identical callback is already registered and reregister with current parameters
@@ -763,8 +760,6 @@ sap.ui.define([
 			// hidden parameter {boolean} bOnlyWhenNecessary
 			var bOnlyWhenNecessary = arguments[0] === true;
 			if ( !bOnlyWhenNecessary || sap.ui.getCore().getConfiguration().getTheme() !== sTheme ) {
-				sTheme = sap.ui.getCore().getConfiguration().getTheme();
-				aParametersToLoad = [];
 				mParameters = null;
 				ThemeHelper.reset();
 			}

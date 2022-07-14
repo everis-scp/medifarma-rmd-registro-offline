@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @extends sap.ui.model.SimpleType
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @since 1.62.0
 	 * @private
@@ -73,7 +73,6 @@ sap.ui.define([
 			oFormatOptions = _createFormatOptionsForConditionType(oFormatOptions);
 //			var oConstraints = merge({}, this.oConstraints);
 			this._oConditionType = new ConditionType(oFormatOptions, this.oConstraints);
-			this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle("sap.ui.mdc");
 		}
 
 	});
@@ -161,8 +160,8 @@ sap.ui.define([
 		}
 
 		return SyncPromise.all(aSyncPromises).then(function(aFormattedValues) {
-			return _concatenateFormattedValues.call(this, aFormattedValues, vValue);
-		}.bind(this)).unwrap();
+			return _concatenateFormattedValues(aFormattedValues, vValue);
+		}).unwrap();
 
 	};
 
@@ -170,7 +169,7 @@ sap.ui.define([
 
 		for (var i = 0; i < aFormattedValues.length; i++) {
 			if (vValue) {
-				vValue = vValue + this._oResourceBundle.getText("field.SEPARATOR") +  aFormattedValues[i];
+				vValue = vValue + "; " +  aFormattedValues[i];
 			} else {
 				vValue =  aFormattedValues[i];
 			}

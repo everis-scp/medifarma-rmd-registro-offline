@@ -31,7 +31,7 @@ sap.ui.define(['./ListItemBase', './library', './ActionListItemRenderer'],
 	 * @extends sap.m.ListItemBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public

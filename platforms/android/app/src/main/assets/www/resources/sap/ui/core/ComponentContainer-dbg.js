@@ -9,6 +9,7 @@ sap.ui.define([
 	'sap/ui/base/ManagedObject',
 	'./Control',
 	'./Component',
+	'./Core',
 	'./library',
 	"./ComponentContainerRenderer",
 	"sap/base/Log"
@@ -17,6 +18,7 @@ sap.ui.define([
 		ManagedObject,
 		Control,
 		Component,
+		Core,
 		library,
 		ComponentContainerRenderer,
 		Log
@@ -59,7 +61,7 @@ sap.ui.define([
 	 * See also {@link module:sap/ui/core/ComponentSupport}.
 	 *
 	 * @extends sap.ui.core.Control
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.ui.core.ComponentContainer
@@ -218,7 +220,7 @@ sap.ui.define([
 	 */
 	function setContainerComponent(oComponentContainer, vComponent, bSuppressInvalidate, bDestroyOldComponent) {
 		// find the reference to the current component and to the old component
-		var oComponent = typeof vComponent === "string" ? Component.get(vComponent) : vComponent;
+		var oComponent = typeof vComponent === "string" ? Core.getComponent(vComponent) : vComponent;
 		var oOldComponent = oComponentContainer.getComponentInstance();
 		// if there is no difference between the old and the new component just skip this setter
 		if (oOldComponent !== oComponent) {
@@ -250,7 +252,7 @@ sap.ui.define([
 	 */
 	ComponentContainer.prototype.getComponentInstance = function () {
 		var sComponentId = this.getComponent();
-		return sComponentId && Component.get(sComponentId);
+		return sComponentId && Core.getComponent(sComponentId);
 	};
 
 	// Delegate registered by the ComponentContainer#showPlaceholder function
@@ -268,45 +270,27 @@ sap.ui.define([
 	 *
 	 * @param {object} mSettings Object containing the placeholder object
 	 * @param {sap.ui.core.Placeholder} mSettings.placeholder The placeholder instance
-	 * @return {Promise} Promise that resolves with the placeholder
-	 *
-	 * @private
-	 * @ui5-restricted SAPUI5 Distribution libraries only
+	 * @public
 	 * @since 1.91
 	 */
 	ComponentContainer.prototype.showPlaceholder = function(mSettings) {
-		var pLoaded;
-
-		if (!sap.ui.getCore().getConfiguration().getPlaceholder()) {
-			return;
-		}
-
 		if (this._placeholder) {
 			this.hidePlaceholder();
 		}
 
-		if (mSettings.placeholder) {
+		if (this.getDomRef() && mSettings.placeholder) {
 			this._placeholder = mSettings.placeholder;
-			pLoaded = this._placeholder._load();
-		} else {
-			pLoaded = Promise.resolve();
-		}
-
-		if (this.getDomRef() && this._placeholder) {
 			this._placeholder.show(this);
 		}
 
 		// Add an event delegate to reinsert the placeholder after it's removed after a rerendering
 		this.addEventDelegate(oPlaceholderDelegate, this);
-
-		return pLoaded;
 	};
 
 	/**
 	 * Hides the placeholder that is shown on the component container.
 	 *
-	 * @private
-	 * @ui5-restricted SAP internal apps
+	 * @public
 	 * @since 1.91
 	 */
 	ComponentContainer.prototype.hidePlaceholder = function() {

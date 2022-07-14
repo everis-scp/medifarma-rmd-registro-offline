@@ -1,38 +1,11 @@
 //@ui5-bundle sap/ushell/plugins/rta/Component-h2-preload.js
+// Copyright (c) 2009-2020 SAP SE, All Rights Reserved
+sap.ui.predefine('sap/ushell/plugins/rta/Component',["sap/ushell/plugins/BaseRTAPlugin","sap/ushell/appRuntime/ui5/plugins/baseRta/CheckConditions","sap/ushell/appRuntime/ui5/plugins/baseRta/Renderer"],function(B,C,R){"use strict";var a=B.extend("sap.ushell.plugins.rta.Component",{sType:"rta",metadata:{manifest:"json",library:"sap.ushell"},init:function(){var c={sComponentName:"sap.ushell.plugins.rta",layer:"CUSTOMER",developerMode:false,id:"RTA_Plugin_ActionButton",text:"RTA_BUTTON_TEXT",icon:"sap-icon://wrench",visible:true,checkRestartRTA:true};B.prototype.init.call(this,c);var b=this.mConfig.visible&&C.checkUI5App();R.createActionButton(this,this._onAdapt.bind(this),b);}});return a;},true);
 sap.ui.require.preload({
-	"sap/ushell/plugins/rta/Component.js":function(){// ${copyright}
-sap.ui.define(["sap/ushell/plugins/BaseRTAPlugin"], function (BaseRTAPlugin) {
-	"use strict";
-
-	/*global sap */
-
-	var RTAPlugin = BaseRTAPlugin.extend("sap.ushell.plugins.rta.Component", {
-		sType: "rta",
-		metadata: {
-			manifest: "json"
-		},
-
-		init: function () {
-			var oConfig = {
-				sComponentName: "sap.ushell.plugins.rta",
-				layer: "CUSTOMER",
-				developerMode: false,
-				id: "RTA_Plugin_ActionButton",
-				text: "RTA_BUTTON_TEXT",
-				icon: "sap-icon://wrench",
-				visible: true
-			};
-			BaseRTAPlugin.prototype.init.call(this, oConfig);
-		}
-
-	});
-	return RTAPlugin;
-
-}, true /* bExport */);
-},
-	"sap/ushell/plugins/rta/manifest.json":'{\n\t"_version": "1.1.0",\n\n\t"sap.app": {\n\t\t"_version": "1.1.0",\n\t\t"i18n": "i18n/i18n.properties",\n\t\t"id": "sap.ushell.plugins.rta",\n\t\t"title": "{{APP_TITLE}}",\n\t\t"type": "component",\n\t\t"applicationVersion": {\n\t\t\t"version": "1.0.0"\n\t\t},\n\t\t"ach": "CA-UI5-FL-RTA"\n\t},\n\n\t"sap.ui": {\n\t\t"_version": "1.1.0",\n\n\t\t"technology": "UI5",\n\t\t"supportedThemes": [\n\t\t\t"sap_hcb",\n\t\t\t"sap_bluecrystal"\n\t\t],\n\t\t"deviceTypes": {\n\t\t\t"desktop": true,\n\t\t\t"tablet": false,\n\t\t\t"phone": false\n\t\t}\n\t},\n\n\t"sap.ui5": {\n\t\t"_version": "1.1.0",\n\t\t"contentDensities": {\n\t\t\t"compact": true,\n\t\t\t"cozy": false\n\t\t},\n\t\t"dependencies": {\n\t\t\t"minUI5Version": "1.30.1",\n\t\t\t"libs": {\n\t\t\t\t"sap.ui.core": {\n\t\t\t\t\t"minVersion": "1.30.1"\n\t\t\t\t},\n\t\t\t\t"sap.m": {\n\t\t\t\t\t"minVersion": "1.30.1"\n\t\t\t\t},\n\t\t\t\t"sap.ui.dt": {\n\t\t\t\t\t"minVersion": "1.30.1",\n\t\t\t\t\t"lazy": true\n\t\t\t\t},\n\t\t\t\t"sap.ui.rta": {\n\t\t\t\t\t"minVersion": "1.30.1",\n\t\t\t\t\t"lazy": true\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t"models": {\n\t\t\t"i18n": {\n\t\t\t\t"type": "sap.ui.model.resource.ResourceModel",\n\t\t\t\t"uri": "i18n/i18n.properties"\n\t\t\t}\n\t\t}\n\t},\n\t"sap.flp": {\n\t\t"type": "plugin"\n\t}\n}'
+	"sap/ushell/plugins/rta/manifest.json":'{"_version":"1.21.0","sap.app":{"_version":"1.1.0","i18n":{"bundleUrl":"i18n/i18n.properties","supportedLocales":["","ar","bg","ca","cs","da","de","el","en","en_US_sappsd","en_US_saptrc","es","et","fi","fr","hi","hr","hu","it","iw","ja","kk","ko","lt","lv","ms","nl","no","pl","pt","ro","ru","sh","sk","sl","sv","th","tr","uk","vi","zh_CN","zh_TW"],"fallbackLocale":"en"},"id":"sap.ushell.plugins.rta","title":"{{APP_TITLE}}","type":"component","applicationVersion":{"version":"1.0.0"},"ach":"CA-UI5-FL-RTA","resources":"resources.json"},"sap.ui":{"_version":"1.1.0","technology":"UI5","supportedThemes":["sap_hcb","sap_bluecrystal"],"deviceTypes":{"desktop":true,"tablet":false,"phone":false}},"sap.ui5":{"_version":"1.1.0","contentDensities":{"compact":true,"cozy":false},"dependencies":{"minUI5Version":"1.30.1","libs":{"sap.ui.core":{"minVersion":"1.30.1"},"sap.m":{"minVersion":"1.30.1"},"sap.ui.dt":{"minVersion":"1.30.1","lazy":true},"sap.ui.rta":{"minVersion":"1.30.1","lazy":true}}},"models":{"i18n":{"type":"sap.ui.model.resource.ResourceModel","uri":"i18n/i18n.properties","settings":{"supportedLocales":["","ar","bg","ca","cs","da","de","el","en","en_US_sappsd","en_US_saptrc","es","et","fi","fr","hi","hr","hu","it","iw","ja","kk","ko","lt","lv","ms","nl","no","pl","pt","ro","ru","sh","sk","sl","sv","th","tr","uk","vi","zh_CN","zh_TW"],"fallbackLocale":"en"}}}},"sap.flp":{"type":"plugin"}}'
 },"sap/ushell/plugins/rta/Component-h2-preload"
 );
 sap.ui.loader.config({depCacheUI5:{
-"sap/ushell/plugins/rta/Component.js":["sap/ushell/plugins/BaseRTAPlugin.js"]
+"sap/ushell/plugins/rta/Component.js":["sap/ushell/appRuntime/ui5/plugins/baseRta/CheckConditions.js","sap/ushell/appRuntime/ui5/plugins/baseRta/Renderer.js","sap/ushell/plugins/BaseRTAPlugin.js"]
 }});
+//# sourceMappingURL=Component-h2-preload.js.map

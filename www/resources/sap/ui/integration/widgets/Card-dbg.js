@@ -33,7 +33,7 @@ sap.ui.define([
 	"sap/ui/integration/util/ContentFactory",
 	"sap/ui/integration/util/BindingResolver",
 	"sap/ui/integration/formatters/IconFormatter",
-	"sap/ui/integration/cards/filters/FilterBarFactory",
+	"sap/ui/integration/util/FilterBarFactory",
 	"sap/ui/integration/util/CardActions",
 	"sap/ui/integration/util/CardObserver"
 ], function (
@@ -71,6 +71,7 @@ sap.ui.define([
 	CardObserver
 ) {
 	"use strict";
+	/* global Map */
 
 	var MANIFEST_PATHS = {
 		TYPE: "/sap.card/type",
@@ -158,7 +159,7 @@ sap.ui.define([
 	 * @extends sap.f.CardBase
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @public
 	 * @constructor
 	 * @see {@link topic:5b46b03f024542ba802d99d67bc1a3f4 Cards}
@@ -348,30 +349,6 @@ sap.ui.define([
 				},
 
 				/**
-				 * Fired when some configuration settings are changed as a result of user interaction.
-				 * For example - filter value is changed.
-				 * @experimental since 1.96
-				 */
-				configurationChange: {
-					parameters: {
-						/**
-						 * Changed configuration settings.
-						 *
-						 * Example:
-						 * <pre>
-						 *  {
-						 *  	"/sap.card/configuration/filters/shipper/value": "key3",
-						 *  	"/sap.card/configuration/filters/item/value": "key2",
-						 *  }
-						 * </pre>
-						 */
-						changes: {
-							type: "object"
-						}
-					}
-				},
-
-				/**
 				 * Fired when the manifest is loaded.
 				 * @experimental since 1.72
 				 */
@@ -410,6 +387,7 @@ sap.ui.define([
 		this.setModel(new JSONModel(), "parameters");
 		this.setModel(new JSONModel(), "filters");
 		this.setModel(new ContextModel(), "context");
+		this._busyStates = new Map();
 		this._oContentFactory = new ContentFactory(this);
 		this._oCardObserver = new CardObserver(this);
 		this._bFirstRendering = true;
@@ -424,7 +402,7 @@ sap.ui.define([
 		 * @experimental since 1.79
 		 * @public
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 * @borrows sap.ui.integration.widgets.Card#getDomRef as getDomRef
 		 * @borrows sap.ui.integration.widgets.Card#setVisible as setVisible
 		 * @borrows sap.ui.integration.widgets.Card#getParameters as getParameters
@@ -433,7 +411,6 @@ sap.ui.define([
 		 * @borrows sap.ui.integration.widgets.Card#resolveDestination as resolveDestination
 		 * @borrows sap.ui.integration.widgets.Card#request as request
 		 * @borrows sap.ui.integration.widgets.Card#refresh as refresh
-		 * @borrows sap.ui.integration.widgets.Card#refreshData as refreshData
 		 * @borrows sap.ui.integration.widgets.Card#showMessage as showMessage
 		 * @borrows sap.ui.integration.widgets.Card#getBaseUrl as getBaseUrl
 		 * @borrows sap.ui.integration.widgets.Card#getRuntimeUrl as getRuntimeUrl
@@ -458,7 +435,6 @@ sap.ui.define([
 			"resolveDestination",
 			"request",
 			"refresh",
-			"refreshData",
 			"showMessage",
 			"getBaseUrl",
 			"getRuntimeUrl",
@@ -623,8 +599,6 @@ sap.ui.define([
 
 		if (oHostInstance && oHostInstance.bUseExperimentalCaching) {
 			this.addStyleClass("sapFCardExperimentalCaching");
-		} else {
-			this.removeStyleClass("sapFCardExperimentalCaching");
 		}
 
 		return this;
@@ -769,9 +743,7 @@ sap.ui.define([
 		var oResourceModel = this.getModel("i18n");
 
 		if (oResourceModel) {
-			if (oResourceModel.getResourceBundle().oUrlInfo.url !== oResourceBundle.oUrlInfo.url) {
-				oResourceModel.enhance(oResourceBundle);
-			}
+			oResourceModel.enhance(oResourceBundle);
 			return;
 		}
 
@@ -880,36 +852,6 @@ sap.ui.define([
 	};
 
 	/**
-	 * Refreshes the card data by triggering all data requests.
-	 *
-	 * @public
-	 * @since 1.95
-	 */
-	Card.prototype.refreshData = function () {
-		var oHeader = this.getCardHeader(),
-			oContent = this.getCardContent(),
-			oFilterBar = this.getAggregation("_filterBar");
-
-		if (this._oDataProvider) {
-			this._oDataProvider.triggerDataUpdate();
-		}
-
-		if (oHeader) {
-			oHeader.refreshData();
-		}
-
-		if (oContent) {
-			oContent.refreshData();
-		}
-
-		if (oFilterBar) {
-			oFilterBar.getItems().forEach(function (oFilter) {
-				oFilter.refreshData();
-			});
-		}
-	};
-
-	/**
 	 * Refreshes the card actions menu.
 	 *
 	 * @private
@@ -946,6 +888,7 @@ sap.ui.define([
 		this.destroyManifest();
 		this._oCardObserver.destroy();
 		this._oCardObserver = null;
+		this._busyStates = null;
 		this._oContentFactory = null;
 		this._bFirstRendering = null;
 
@@ -989,17 +932,14 @@ sap.ui.define([
 			this._oIconFormatter = null;
 		}
 
-		if (this._oActionsToolbar) {
-			this._oActionsToolbar.destroy();
-			this._oActionsToolbar = null;
-		}
-
 		this.destroyAggregation("_header");
 		this.destroyAggregation("_filterBar");
 		this.destroyAggregation("_content");
 		this.destroyAggregation("_footer");
 
 		this._aReadyPromises = null;
+
+		this._busyStates.clear();
 
 		this.getModel("filters").setData({});
 		this.getModel("parameters").setData({});
@@ -1132,7 +1072,6 @@ sap.ui.define([
 
 	/**
 	 * Resolves the destination and returns its URL.
-	 * @public
 	 * @param {string} sKey The destination's key used in the configuration.
 	 * @returns {Promise} A promise which resolves with the URL of the destination.
 	 */
@@ -1270,6 +1209,24 @@ sap.ui.define([
 
 		if (oExtension) {
 			oExtension.onCardReady();
+		}
+
+		this._fillFiltersModel();
+	};
+
+	/**
+	 * Fills the filters model with its initial values.
+	 *
+	 * @private
+	 */
+	Card.prototype._fillFiltersModel = function () {
+		var oModel = this.getModel("filters"),
+			mFiltersConfig = this._oCardManifest.get(MANIFEST_PATHS.FILTERS);
+
+		for (var sKey in mFiltersConfig) {
+			oModel.setProperty("/" + sKey, {
+				"value": mFiltersConfig[sKey].value
+			});
 		}
 	};
 
@@ -1459,10 +1416,6 @@ sap.ui.define([
 			return;
 		}
 
-		oHeader.attachEvent("_error", function (oEvent) {
-			this._handleError(oEvent.getParameter("message"));
-		}.bind(this));
-
 		this.setAggregation("_header", oHeader);
 
 		if (oHeader.isReady()) {
@@ -1569,9 +1522,11 @@ sap.ui.define([
 
 	Card.prototype.createFilterBar = function () {
 		var mFiltersConfig = this._oCardManifest.get(MANIFEST_PATHS.FILTERS),
+			oFilterModel = this.getModel("filters"),
+			oFilters = oFilterModel.getProperty("/"),
 			oFactory = new FilterBarFactory(this);
 
-		return oFactory.create(mFiltersConfig, this.getModel("filters"));
+		return oFactory.create(mFiltersConfig, oFilters);
 	};
 
 	Card.prototype.createFooter = function () {
@@ -1667,7 +1622,44 @@ sap.ui.define([
 		this.setAggregation("_content", oTemporaryContent);
 	};
 
-	Card.prototype._preserveMinHeightInContent = function (oError) {
+	/**
+	 * Handler for error states
+	 *
+	 * @param {string} sLogMessage Message that will be logged.
+	 * @param {string} [sDisplayMessage] Message that will be displayed in the card's content. If not provided, a default message is displayed.
+	 * @private
+	 */
+	Card.prototype._handleError = function (sLogMessage, sDisplayMessage) {
+		this._loadDefaultTranslations();
+		Log.error(sLogMessage, null, "sap.ui.integration.widgets.Card");
+
+		this.fireEvent("_error", { message: sLogMessage });
+
+		var sDefaultDisplayMessage = this._oIntegrationRb.getText("CARD_DATA_LOAD_ERROR"),
+			sErrorMessage = sDisplayMessage || sDefaultDisplayMessage,
+			oPreviousContent = this.getAggregation("_content");
+
+		var oError = new HBox({
+			justifyContent: "Center",
+			alignItems: "Center",
+			items: [
+				new Icon({ src: "sap-icon://message-error", size: "1rem" }).addStyleClass("sapUiTinyMargin"),
+				new Text({ text: sErrorMessage })
+			]
+		}).addStyleClass("sapFCardErrorContent");
+
+		// only destroy previous content of type BaseContent
+		if (oPreviousContent && !oPreviousContent.hasStyleClass("sapFCardErrorContent")) {
+			oPreviousContent.destroy();
+
+			if (oPreviousContent === this._oTemporaryContent) {
+				this._oTemporaryContent = null;
+			}
+
+			this.fireEvent("_contentReady"); // content won't show up so mark it as ready
+		}
+
+		//keep the min height
 		oError.addEventDelegate({
 			onAfterRendering: function () {
 				if (!this._oCardManifest) {
@@ -1690,71 +1682,8 @@ sap.ui.define([
 				}
 			}
 		}, this);
-	};
 
-	/**
-	 * Destroys the previous content, unless the content is the error message.
-	 *
-	 * @param {sap.ui.core.Control} oContent content aggregation
-	 * @private
-	 */
-	Card.prototype._destroyPreviousContent = function (oContent) {
-		// only destroy previous content and avoid setting an error message again
-		if (oContent && !oContent.hasStyleClass("sapFCardErrorContent")) {
-			oContent.destroy();
-
-			if (oContent === this._oTemporaryContent) {
-				this._oTemporaryContent = null;
-			}
-		}
-	};
-
-	/**
-	 * Creates a control representation of an error.
-	 *
-	 * @param {string} sErrorMessage Error message
-	 * @private
-	 * @returns {sap.ui.core.Control} control instance
-	 */
-	Card.prototype._createError = function (sErrorMessage) {
-		return new HBox({
-			justifyContent: "Center",
-			alignItems: "Center",
-			items: [
-				new Icon({ src: "sap-icon://message-error", size: "1rem" }).addStyleClass("sapUiTinyMargin"),
-				new Text({ text: sErrorMessage })
-			]
-		}).addStyleClass("sapFCardErrorContent");
-	};
-
-	/**
-	 * Handler for error states.
-	 * If the content is not provided in the manifest, the error message will be displayed in the header.
-	 * If a message is not provided, a default message will be displayed.
-	 *
-	 * @param {string} sLogMessage Message that will be logged.
-	 * @param {string} [sDisplayMessage] Message that will be displayed as an error in the card.
-	 * @private
-	 */
-	Card.prototype._handleError = function (sLogMessage, sDisplayMessage) {
-		this._loadDefaultTranslations();
-		Log.error(sLogMessage, null, "sap.ui.integration.widgets.Card");
-
-		this.fireEvent("_error", { message: sLogMessage });
-
-		var sErrorMessage = sDisplayMessage || this._oIntegrationRb.getText("CARD_DATA_LOAD_ERROR"),
-			oError = this._createError(sErrorMessage),
-			oContentSection = this._oCardManifest.get(MANIFEST_PATHS.CONTENT);
-
-		if (oContentSection) {
-			this._destroyPreviousContent(this.getCardContent());
-			this._preserveMinHeightInContent(oError);
-			this.setAggregation("_content", oError);
-			this.fireEvent("_contentReady"); // content won't show up so mark it as ready
-		} else {
-			this.getCardHeader().setAggregation("_error", oError);
-		}
-
+		this.setAggregation("_content", oError);
 	};
 
 	Card.prototype._getTemporaryContent = function (sCardType, oContentManifest) {
@@ -2125,9 +2054,6 @@ sap.ui.define([
 			this._aCustomModels = [];
 		}
 
-		// remove any old models before registering the new ones
-		this._deregisterCustomModels();
-
 		aDataSections.forEach(function (oDataSettings) {
 			var sModelName = oDataSettings && oDataSettings.name;
 
@@ -2135,12 +2061,12 @@ sap.ui.define([
 				return;
 			}
 
-			if (RESERVED_MODEL_NAMES.indexOf(sModelName) > -1) {
+			if (RESERVED_MODEL_NAMES.indexOf(sModelName) > 0) {
 				Log.error("The model name (data section name) '" + sModelName + "' is reserved for cards. Can not be used for creating a custom model.");
 				return;
 			}
 
-			if (this._aCustomModels.indexOf(sModelName) > -1) {
+			if (this._aCustomModels.indexOf(sModelName) > 0) {
 				Log.error("The model name (data section name) '" + sModelName + "' is already used.");
 				return;
 			}
@@ -2165,25 +2091,6 @@ sap.ui.define([
 		}.bind(this));
 
 		this._aCustomModels = [];
-	};
-
-	Card.prototype._fireConfigurationChange = function (mChanges) {
-		var oHostInstance = this.getHostInstance();
-
-		if (!this._bReady) {
-			return;
-		}
-
-		this.fireConfigurationChange({
-			changes: mChanges
-		});
-
-		if (oHostInstance) {
-			oHostInstance.fireCardConfigurationChange({
-				card: this,
-				changes: mChanges
-			});
-		}
 	};
 
 	return Card;

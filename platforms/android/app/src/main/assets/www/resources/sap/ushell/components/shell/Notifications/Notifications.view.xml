@@ -19,7 +19,8 @@
                 text="{i18n>notificationsSortByDate}">
                 <List
                     id="sapUshellNotificationsListDate"
-                    class="sapUshellNotificationsList sapContrast sapContrastPlus sapUshellPopoverList"
+                    class="sapUshellNotificationsList sapContrastPlus sapUshellPopoverList"
+                    showSeparators="Inner"
                     mode="None"
                     noDataText="{i18n>noNotificationsMsg}"
                     growing="true"
@@ -42,7 +43,7 @@
                 text="{i18n>notificationsSortByPriority}">
                 <List
                     id="sapUshellNotificationsListPriority"
-                    class="sapUshellNotificationsList sapContrast sapContrastPlus sapUshellPopoverList"
+                    class="sapUshellNotificationsList sapContrastPlus sapUshellPopoverList"
                     mode="None"
                     noDataText="{i18n>noNotificationsMsg}"
                     growing="true"

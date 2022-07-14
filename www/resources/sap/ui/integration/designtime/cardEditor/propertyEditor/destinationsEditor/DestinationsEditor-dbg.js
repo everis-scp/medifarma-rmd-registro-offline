@@ -41,7 +41,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.cardEditor.propertyEditor.destinationsEditor.DestinationsEditor
 	 * @author SAP SE
 	 * @since 1.77
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.77

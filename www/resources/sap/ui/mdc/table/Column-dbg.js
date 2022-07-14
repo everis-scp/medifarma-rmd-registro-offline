@@ -5,8 +5,8 @@
  */
 
 sap.ui.define([
-	"sap/ui/core/Element", "sap/m/Label", "sap/ui/core/Core"
-], function(Element, Label, Core) {
+	"sap/ui/core/Element", "sap/m/Label", "sap/ui/core/Core", "sap/base/Log"
+], function(Element, Label, Core, Log) {
 	"use strict";
 
 	/**
@@ -19,6 +19,7 @@ sap.ui.define([
 	 *        The control is experimental and the API/behaviour is not finalised and hence this should not be used for productive usage.
 	 * @extends sap.ui.core.Element
 	 * @author SAP SE
+	 * @constructor The API/behaviour is not finalised and hence this control should not be used for productive usage.
 	 * @private
 	 * @experimental
 	 * @since 1.58
@@ -65,7 +66,6 @@ sap.ui.define([
 				/*
 				 * Only used during creation of table for initial/1st rendering, 0 based index
 				 */
-				// TODO: Delete!
 				initialIndex: {
 					type: "int",
 					defaultValue: -1
@@ -140,7 +140,7 @@ sap.ui.define([
 	Column.prototype.setHeader = function(sHeader) {
 		this.setProperty("header", sHeader, true);
 		this._updateColumnHeaderControl();
-		var oLabelElement = this.getDomRef();
+		var oLabelElement = document.getElementById(this.getId());
 		if (oLabelElement) {
 			oLabelElement.textContent = this.getHeader();
 		}
@@ -155,41 +155,16 @@ sap.ui.define([
 	};
 
 	/**
-	 * Updates the width of the column based on the auto column width calculation.
-	 * @private
-	 */
-	Column.prototype._updateColumnWidth = function(sWidth) {
-		var oInnerColumn = Core.byId(this.getId() + "-innerColumn");
-		if (!oInnerColumn || !this.getWidth()) {
-			this.setProperty("width", sWidth);
-		}
-
-		// set the inner column width only if there is no user(flex) changes has been applied
-		if (oInnerColumn && !oInnerColumn.getWidth()) {
-			oInnerColumn.setWidth(sWidth);
-		}
-	};
-
-	/**
-	 * Updates the column header control based on the current column property settings.
+	 * Updates the column header control based on the current column property seetings.
 	 * @private
 	 */
 	Column.prototype._updateColumnHeaderControl = function() {
 		if (this._oColumnHeaderLabel) {
 			this._oColumnHeaderLabel.setWidth(this.getHeaderVisible() ? null : "0px");
-			this._oColumnHeaderLabel.setWrapping(this._bMobileTable && !this._bResizable && this.getHeaderVisible());
+			this._oColumnHeaderLabel.setWrapping(this._bMobileTable && this.getHeaderVisible());
 			this._oColumnHeaderLabel.setText(this.getHeader());
 			this._oColumnHeaderLabel.setTextAlign(this.getHAlign());
 		}
-	};
-
-	/**
-	 * Updates the resizable state of the column.
-	 * @private
-	 */
-	Column.prototype.updateColumnResizing = function(bEnabled) {
-		this._bResizable = !!bEnabled;
-		this._updateColumnHeaderControl();
 	};
 
 	Column.prototype.setParent = function(oParent) {
@@ -217,11 +192,10 @@ sap.ui.define([
 	 * Creates and returns the column header control.
 	 * If <code>headerVisible=false</code> then, <code>width=0px</code> is applied to the sap.m.Label control for accessibility purpose.
 	 * @param {boolean} bMobileTable - indicates the type of the table
-	 * @param {boolean} bResizing - indicates whether the column is resizable
 	 * @returns {object} column header control
 	 * @private
 	 */
-	Column.prototype.getColumnHeaderControl = function(bMobileTable, bResizing) {
+	Column.prototype.getColumnHeaderControl = function(bMobileTable) {
 		if (this._oColumnHeaderLabel) {
 			this._oColumnHeaderLabel.destroy();
 		}
@@ -231,13 +205,13 @@ sap.ui.define([
 		});
 		this._bMobileTable = bMobileTable;
 
-		this.updateColumnResizing(bResizing);
+		this._updateColumnHeaderControl();
 
 		return this._oColumnHeaderLabel;
 	};
 
 	Column.prototype._removeAriaStaticDom = function() {
-		var oDomElement = this.getDomRef();
+		var oDomElement = document.getElementById(this.getId());
 
 		if (oDomElement) {
 			oDomElement.parentNode.removeChild(oDomElement);

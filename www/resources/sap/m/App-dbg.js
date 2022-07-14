@@ -50,7 +50,7 @@ sap.ui.define([
 	 * @extends sap.m.NavContainer
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -198,10 +198,6 @@ sap.ui.define([
 	};
 
 	App.prototype._adjustParentsHeight = function () {
-		if (!this.getDomRef()) {
-			return;
-		}
-
 		var ref = this.getDomRef().parentNode;
 		// set all parent elements to 100% height this *should* be done by the application in CSS, but people tend to forget it...
 		while (ref && ref !== document.documentElement) {

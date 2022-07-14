@@ -32,7 +32,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Element
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @public
 		 * @since 1.92
@@ -126,41 +126,6 @@ sap.ui.define([
 		};
 
 		/**
-		 * Validates all input controls in the value help UI related to the current option.
-		 * If one of the input controls contains invalid value, then validation will return <code>false</code>.
-		 * If all input controls contain valid value, then the validation will return <code>true</code>.
-		 *
-		 * @public
-		 * @param {sap.m.DynamicDateRange} oControl The control instance
-		 * @returns {boolean} value help UI validity indicator
-		 */
-		DynamicDateOption.prototype.validateValueHelpUI = function(oControl) {
-			var aParams = this.getValueHelpUITypes();
-
-			for (var i = 0; i < aParams.length; i++) {
-				var oInputControl = oControl.aControlsByParameters[this.getKey()][i];
-
-				switch (aParams[i].getType()) {
-					case "int":
-						if (oInputControl._isLessThanMin(oInputControl.getValue()) ||
-							oInputControl._isMoreThanMax(oInputControl.getValue())) {
-							return false;
-						}
-						break;
-					case "month":
-					case "date":
-					case "daterange":
-						if (!oInputControl.getSelectedDates() || oInputControl.getSelectedDates().length == 0) {
-							return false;
-						}
-						break;
-				}
-			}
-
-			return true;
-		};
-
-		/**
 		 * Gets the value help controls' output values and
 		 * converts them to a DynamicDateRange value.
 		 *
@@ -169,7 +134,7 @@ sap.ui.define([
 		 * @public
 		 */
 		DynamicDateOption.prototype.getValueHelpOutput = function(oControl) {
-			var aParams = this.getValueHelpUITypes(),
+			var aParams = this.getValueHelpUITypes(oControl),
 				aResult = {},
 				vOutput;
 
@@ -231,8 +196,7 @@ sap.ui.define([
 		 * @public
 		 */
 		DynamicDateOption.prototype.getGroupHeader = function() {
-			var iGroup = (this.getGroup() > -1 && this.getGroup() < 7) ? this.getGroup() : 0;
-			return sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("DDR_OPTIONS_GROUP_" + iGroup);
+			return sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("DDR_OPTIONS_GROUP_0");
 		};
 
 		/**
@@ -312,9 +276,7 @@ sap.ui.define([
 			}
 
 			if (fnControlsUpdated instanceof Function) {
-				oControl.attachChange(function() {
-					fnControlsUpdated(this);
-				}, this);
+				oControl.attachChange(fnControlsUpdated);
 			}
 
 			return oControl;
@@ -332,9 +294,7 @@ sap.ui.define([
 			}
 
 			if (fnControlsUpdated instanceof Function) {
-				oControl.attachSelect(function() {
-					fnControlsUpdated(this);
-				}, this);
+				oControl.attachSelect(fnControlsUpdated);
 			}
 
 			return oControl;
@@ -355,9 +315,7 @@ sap.ui.define([
 			}
 
 			if (fnControlsUpdated instanceof Function) {
-				oControl.attachSelect(function() {
-					fnControlsUpdated(this);
-				}, this);
+				oControl.attachSelect(fnControlsUpdated);
 			}
 
 			return oControl;
@@ -365,18 +323,19 @@ sap.ui.define([
 
 		DynamicDateOption.prototype._createMonthControl = function(oValue, iIndex, fnControlsUpdated) {
 			var oControl = new MonthPicker(),
-				oDate = new Date(),
-				iMonth = (oValue && this.getKey() === oValue.operator) ? oValue.values[iIndex] : oDate.getMonth();
+				oDate;
 
-			oControl.setMonth(iMonth);
-			oControl.addSelectedDate(new DateRange({
-				startDate: oDate
-			}));
+			if (oValue && this.getKey() === oValue.operator) {
+				oDate = new Date();
+				oDate.setMonth(oValue.values[iIndex]);
+
+				oControl.addSelectedDate(new DateRange({
+					startDate: oDate
+				}));
+			}
 
 			if (fnControlsUpdated instanceof Function) {
-				oControl.attachSelect(function() {
-					fnControlsUpdated(this);
-				}, this);
+				oControl.attachSelect(fnControlsUpdated);
 			}
 
 			return oControl;

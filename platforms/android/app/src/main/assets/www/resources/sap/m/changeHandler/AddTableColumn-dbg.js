@@ -44,7 +44,7 @@ sap.ui.define([
 	 *
 	 * @author SAP SE
 	 *
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @experimental Since 1.51.0 This class is experimental and provides only limited functionality.
 	 * Also the API might be changed in future.
@@ -97,8 +97,10 @@ sap.ui.define([
 							.then(oModifier.insertAggregation.bind(oModifier, oTemplate, CELLS_AGGREGATION_NAME, oSmartField, iIndex, oView))
 							.then(oModifier.updateAggregation.bind(oModifier, oTable, ITEMS_AGGREGATION_NAME)) //only needed in JS case
 							.then(function() {
-								// getSelector() helps to decide whether idIsLocal is true/false
-								oRevertData.newCellSelector = oModifier.getSelector(oSmartField, oAppComponent);
+								oRevertData.newCellSelector = {
+									id: mFieldSelector.id + '--field',
+									idIsLocal: true
+								};
 								oChange.setRevertData(oRevertData);
 							});
 					}

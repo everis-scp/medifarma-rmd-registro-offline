@@ -49,7 +49,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -258,7 +258,7 @@ sap.ui.define([
 
 				this._kbdBuffer = "";
 				this._typeCooldownId = null;
-				aInputs && aInputs[this._activeInput] && aInputs[this._activeInput].getDomRef("inner").select();
+				aInputs && aInputs[this._activeInput] && document.getElementById(aInputs[this._activeInput].getId() + "-inner").select();
 			}.bind(this), TYPE_COOLDOWN_DELAY);
 		};
 
@@ -665,7 +665,7 @@ sap.ui.define([
 				aInputs = this.getAggregation("_inputs");
 				this._activeInput = this._inputIndexes[sSuffix];
 				aInputs[this._activeInput].addStyleClass("sapMFocus");
-				aInputs[this._activeInput].getDomRef("inner").select();
+				document.getElementById(aInputs[this._activeInput].getId() + "-inner").select();
 			}.bind(this);
 
 			oInput.onfocusout = function(oEvent) {

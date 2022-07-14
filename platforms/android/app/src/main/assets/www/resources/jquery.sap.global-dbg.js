@@ -368,7 +368,7 @@ sap.ui.define([
 	/**
 	 * Root Namespace for the jQuery plug-in provided by SAP SE.
 	 *
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @namespace
 	 * @public
 	 * @static
@@ -1881,7 +1881,7 @@ sap.ui.define([
 				vModuleName = ui5ToRJS(vModuleName);
 			}
 
-			sap.ui.requireSync(vModuleName); // legacy-relevant: deprecated jquery.sap.require
+			sap.ui.requireSync(vModuleName);
 
 		};
 
@@ -2153,9 +2153,6 @@ sap.ui.define([
 	 *
 	 * This is a synchronous replacement for <code>jQuery.globalEval</code> which in some
 	 * browsers (e.g. FireFox) behaves asynchronously.
-	 *
-	 * <b>Note:</b>
-	 * To avoid potential violations of your content security policy (CSP), this API should not be used.
 	 *
 	 * @type void
 	 * @public

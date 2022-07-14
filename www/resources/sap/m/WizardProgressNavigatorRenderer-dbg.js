@@ -5,10 +5,9 @@
  */
 
 sap.ui.define([
-	"sap/ui/core/InvisibleText",
-	"sap/ui/core/IconPool"
+	"sap/ui/core/InvisibleText"
 ], function (
-	InvisibleText, IconPool
+	InvisibleText
 ) {
 	"use strict";
 

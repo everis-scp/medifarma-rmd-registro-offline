@@ -8156,15 +8156,7 @@ jQuery.extend( {
 
 		if ( attrNames && elem.nodeType === 1 ) {
 			while ( ( name = attrNames[ i++ ] ) ) {
-				// ##### BEGIN: MODIFIED BY SAP
-				// Avoid CSP violation in Safari 14ff (https://bugs.webkit.org/show_bug.cgi?id=227349)
-				// elem.removeAttribute( name );
-				if ( name === "style" ) {
-					elem.style = "";
-				} else {
-					elem.removeAttribute( name );
-				}
-				// ##### END: MODIFIED BY SAP
+				elem.removeAttribute( name );
 			}
 		}
 	}

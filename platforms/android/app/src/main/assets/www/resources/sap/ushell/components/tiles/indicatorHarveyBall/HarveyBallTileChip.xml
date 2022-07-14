@@ -2,10 +2,8 @@
 <chip xmlns="http://schemas.sap.com/sapui2/services/Chip/1">
 	<implementation>
 		<sapui5>
-			<!-- <basePath>../../</basePath>
-			<componentName>tiles.indicatornumeric</componentName> -->
 			<basePath>../../</basePath>
-            <viewName>tiles/indicatorHarveyBall.HarveyBallTile.view.js</viewName>
+			<viewName>tiles/indicatorHarveyBall.HarveyBallTile.view.js</viewName>
 		</sapui5>
 	</implementation>
 	<appearance>
@@ -21,7 +19,7 @@
 				<parameter name="cacheTimeStamp" />
 			</parameters>
 		</consume>
-		<consume id='writeConfiguration'>
+		<consume id="writeConfiguration">
 			<parameters>
 				<parameter name="tileConfiguation" />
 				<parameter name="cacheTimeStamp" />

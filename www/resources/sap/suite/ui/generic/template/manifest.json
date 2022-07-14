@@ -1,5 +1,5 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.suite.ui.generic.template",
     "type": "library",
@@ -13,7 +13,7 @@
       "app/blankAnalyticalListPage"
     ],
     "applicationVersion": {
-      "version": "1.71.23"
+      "version": "1.93.4"
     },
     "title": "Library with generic Suite UI templates.",
     "description": "Library with generic Suite UI templates.",
@@ -31,53 +31,58 @@
       "sap_bluecrystal",
       "sap_fiori_3",
       "sap_fiori_3_dark",
-      "sap_hcb"
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
+      "sap_hcb",
+      "sap_horizon"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         },
         "sap.ui.table": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         },
         "sap.ui.comp": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         },
         "sap.uxap": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         },
         "sap.ui.layout": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         },
         "sap.suite.ui.microchart": {
-          "minVersion": "1.71.23",
-          "lazy": true
+          "minVersion": "1.93.4"
         },
         "sap.viz": {
-          "minVersion": "1.71.23",
+          "minVersion": "1.93.4",
           "lazy": true
         },
         "sap.ui.fl": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         },
         "sap.ui.generic.app": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.0"
         },
         "sap.ushell": {
-          "minVersion": "1.71.24"
+          "minVersion": "1.93.6"
         },
         "sap.m": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
         },
         "sap.f": {
-          "minVersion": "1.71.23"
+          "minVersion": "1.93.4"
+        },
+        "sap.fe.placeholder": {
+          "minVersion": "1.93.3"
         }
       }
     },

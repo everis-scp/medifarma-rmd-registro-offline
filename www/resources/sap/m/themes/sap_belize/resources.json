@@ -80,7 +80,7 @@
 		},
 		{
 			"name": "Dialog.less",
-			"size": 1578,
+			"size": 1146,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
@@ -140,19 +140,13 @@
 		},
 		{
 			"name": "ListItemBase.less",
-			"size": 598,
-			"designtime": true,
-			"theme": "sap_belize"
-		},
-		{
-			"name": "MessageBox.less",
-			"size": 338,
+			"size": 560,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "MessagePage.less",
-			"size": 302,
+			"size": 282,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
@@ -182,7 +176,7 @@
 		},
 		{
 			"name": "NewsContent.less",
-			"size": 725,
+			"size": 703,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
@@ -218,7 +212,7 @@
 		},
 		{
 			"name": "ObjectStatus.less",
-			"size": 841,
+			"size": 880,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
@@ -458,7 +452,7 @@
 		},
 		{
 			"name": "ViewSettingsDialog.less",
-			"size": 1590,
+			"size": 1150,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
@@ -482,56 +476,56 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 62401,
+			"size": 62163,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "css_variables.less",
-			"size": 158738,
+			"size": 158351,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 158378,
+			"size": 157991,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 1081627,
+			"size": 1058320,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 28278,
+			"size": 28168,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library.css",
-			"size": 1081585,
+			"size": 1058287,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library.less",
-			"size": 92908,
+			"size": 91597,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library.source.less",
-			"size": 2722,
+			"size": 2695,
 			"designtime": true,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 1145668,
+			"size": 1121509,
 			"theme": "sap_belize"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 1145626,
+			"size": 1121476,
 			"theme": "sap_belize"
 		},
 		{

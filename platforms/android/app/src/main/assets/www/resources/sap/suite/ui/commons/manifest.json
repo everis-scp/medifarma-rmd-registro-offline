@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.suite.ui.commons",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.8"
+      "version": "1.93.3"
     },
     "title": "SAP UI library: sap.suite.ui.commons",
     "description": "SAP UI library: sap.suite.ui.commons",
@@ -24,43 +24,99 @@
       "sap_bluecrystal",
       "sap_fiori_3",
       "sap_fiori_3_dark",
-      "sap_hcb"
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
+      "sap_hcb",
+      "sap_horizon"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.22"
+          "minVersion": "1.93.2"
         },
         "sap.m": {
-          "minVersion": "1.71.22"
+          "minVersion": "1.93.2"
         },
         "sap.suite.ui.microchart": {
-          "minVersion": "1.71.22",
+          "minVersion": "1.93.2",
           "lazy": true
         },
         "sap.ui.ux3": {
-          "minVersion": "1.71.22",
+          "minVersion": "1.93.2",
           "lazy": true
         },
         "sap.ui.comp": {
-          "minVersion": "1.71.22",
+          "minVersion": "1.93.2",
           "lazy": true
         },
         "sap.viz": {
-          "minVersion": "1.71.22",
+          "minVersion": "1.93.2",
           "lazy": true
         },
         "sap.ui.commons": {
-          "minVersion": "1.71.22",
+          "minVersion": "1.93.2",
           "lazy": true
         }
       }
     },
     "library": {
-      "i18n": "messagebundle.properties",
+      "i18n": {
+        "bundleUrl": "messagebundle.properties",
+        "supportedLocales": [
+          "",
+          "ar",
+          "bg",
+          "ca",
+          "cs",
+          "cy",
+          "da",
+          "de",
+          "el",
+          "en",
+          "en-GB",
+          "en-US-sappsd",
+          "en-US-saprigi",
+          "en-US-saptrc",
+          "es",
+          "es-MX",
+          "et",
+          "fi",
+          "fr",
+          "fr-CA",
+          "hi",
+          "hr",
+          "hu",
+          "id",
+          "it",
+          "iw",
+          "ja",
+          "kk",
+          "ko",
+          "lt",
+          "lv",
+          "ms",
+          "nl",
+          "no",
+          "pl",
+          "pt",
+          "pt-PT",
+          "ro",
+          "ru",
+          "sh",
+          "sk",
+          "sl",
+          "sv",
+          "th",
+          "tr",
+          "uk",
+          "vi",
+          "zh-CN",
+          "zh-TW"
+        ]
+      },
       "content": {
         "controls": [
           "sap.suite.ui.commons.BulletChart",

@@ -41,7 +41,7 @@ sap.ui.define([
          * @class The ChartToolbarNew control creates a sap.m.OverflowToolbar based on metadata and the configuration specified.
          * @extends sap.m.OverflowToolbar
          * @author SAP SE
-         * @version 1.96.9
+         * @version 1.93.4
          * @constructor
          * @experimental As of version ...
          * @private
@@ -92,10 +92,7 @@ sap.ui.define([
 
             this.addEnd(this._oChartSelectionDetails);
 
-            //Check p13n mode property on the chart and enable only desired buttons
-			var aP13nMode = oMDCChart.getP13nMode() || [];
-
-            if (  aP13nMode.indexOf("Item") > -1 && (!oMDCChart.getIgnoreToolbarActions().length || oMDCChart.getIgnoreToolbarActions().indexOf(MDCLib.ChartToolbarActionType.DrillDownUp) < 0)) {
+            if (!oMDCChart.getIgnoreToolbarActions().length || oMDCChart.getIgnoreToolbarActions().indexOf(MDCLib.ChartToolbarActionType.DrillDownUp) < 0) {
                 this._oDrillDownBtn = new OverflowButton(oMDCChart.getId() + "-drillDown", {
                     icon: "sap-icon://drill-down",
                     tooltip: MDCRb.getText("chart.CHART_DRILLDOWN_TITLE"),
@@ -143,6 +140,9 @@ sap.ui.define([
                 this.addEnd(this.oZoomOutButton);
             }
 
+			//Check p13n mode property on the chart and enable only desired buttons
+			var aP13nMode = oMDCChart.getP13nMode() || [];
+
             if (aP13nMode.indexOf("Sort") > -1 || aP13nMode.indexOf("Item") > -1) {
                 this._oSettingsBtn = new OverflowButton(oMDCChart.getId() + "-chart_settings", {
                     icon: "sap-icon://action-settings",//TODO the right icon for P13n chart dialog
@@ -160,6 +160,10 @@ sap.ui.define([
                 this.addEnd(this._oChartTypeBtn);
             }
 
+            //Add initial actions from MDC Chart
+            oMDCChart._getInitialToolbarActions().forEach(function(oAction){
+                this.addAction(oAction);
+            }.bind(this));
         };
 
         ChartToolbar.prototype.toggleZoomButtons = function (oMDCChart) {
@@ -190,15 +194,7 @@ sap.ui.define([
         };
 
         ChartToolbar.prototype._getZoomEnablement = function (oMDCChart) {
-            var zoomInfo;
-
-            try {
-                zoomInfo = oMDCChart.getZoomState();
-            } catch (error) {
-                //Catch the case when an inner chart is not yet rendered
-                zoomInfo = {enabled: false};
-            }
-
+            var zoomInfo = oMDCChart.getZoomState();
 
             if (zoomInfo && zoomInfo.hasOwnProperty("currentZoomLevel") && zoomInfo.currentZoomLevel != null && zoomInfo.enabled) {
                 var toolbarZoomInfo = {enabled: true};

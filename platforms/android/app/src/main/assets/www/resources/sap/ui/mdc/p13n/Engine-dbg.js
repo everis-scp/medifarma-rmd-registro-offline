@@ -39,7 +39,7 @@ sap.ui.define([
 	 * @extends sap.ui.base.Object
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @ui5-restricted sap.ui.mdc
@@ -231,7 +231,6 @@ sap.ui.define([
 		aKeys = aKeys instanceof Array ? aKeys : [aKeys];
 
 		var oResetConfig = {
-			selectors: [oControl],
 			selector: oControl
 		};
 
@@ -958,7 +957,6 @@ sap.ui.define([
 	Engine.prototype._retrievePropertyHelper = function(vControl, aCustomPropertyInfo){
 
 		var oRegistryEntry = this._getRegistryEntry(vControl);
-		var oControl = Engine.getControlInstance(vControl);
 
 		if (aCustomPropertyInfo) {
 			if (oRegistryEntry.helper){
@@ -972,7 +970,7 @@ sap.ui.define([
 			return Promise.resolve(oRegistryEntry.helper);
 		}
 
-		return oControl.initPropertyHelper().then(function(oPropertyHelper){
+		return vControl.initPropertyHelper().then(function(oPropertyHelper){
 			oRegistryEntry.helper = oPropertyHelper;
 			return oPropertyHelper;
 		}, function(sHelperError){

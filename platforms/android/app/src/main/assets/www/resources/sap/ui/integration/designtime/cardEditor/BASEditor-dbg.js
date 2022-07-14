@@ -191,15 +191,9 @@ sap.ui.define([
 					for (var i = 0; i < aCurrentKeys.length; i++) {
 						var sNewItem = aCurrentKeys[i];
 						var oNewItem = mParameters[sNewItem];
-						var oNewItemType = "string";
-						if (oNewItem.type) {
-							oNewItemType = oNewItem.type;
-						} else if (mParametersInDesigntime[sNewItem] && mParametersInDesigntime[sNewItem].__value) {
-							oNewItemType = mParametersInDesigntime[sNewItem].__value.type;
-						}
 						oCopyConfig.form.items[sNewItem] = {
 							manifestpath: "/sap.card/configuration/parameters/" + sNewItem + "/value",
-							type: oNewItemType,
+							type: oNewItem.type || "string",
 							label: oNewItem.label,
 							translatable: false,
 							editable: oNewItem.editable,

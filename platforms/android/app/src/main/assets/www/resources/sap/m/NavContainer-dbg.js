@@ -43,7 +43,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -1815,48 +1815,31 @@ sap.ui.define([
 	 * Shows the placeholder if NavContainer is rendered.
 	 * Otherwise, registers the 'onAfterRendering' delegate which shows the placeholder.
 	 *
-	 * @param {object} [mSettings] Object containing the placeholder instance.
-	 *                             Can be omitted if a placeholder instance is already created by <code>sap.ui.core.routing.async.Target</code>.
-	 * @param {object} [mSettings.placeholder] The placeholder instance
+	 * @param {object} mSettings Object containing the placeholder instance
 	 * @param {sap.ui.core.Placeholder} mSettings.placeholder The placeholder instance
-	 * @return {Promise} Promise that resolves with the placeholder
-	 *
-	 * @private
-	 * @ui5-restricted SAPUI5 Distribution libraries only
+	 * @public
 	 * @since 1.91
 	 */
 	NavContainer.prototype.showPlaceholder = function(mSettings) {
-		var pLoaded;
-
-		if (!sap.ui.getCore().getConfiguration().getPlaceholder()) {
-			return;
-		}
-
 		if (this._placeholder) {
 			this.hidePlaceholder();
 		}
 
-		if (mSettings && mSettings.placeholder) {
+		if (mSettings.placeholder) {
 			this._placeholder = mSettings.placeholder;
-			pLoaded = this._placeholder._load();
-		} else {
-			pLoaded = Promise.resolve();
 		}
 
-		if (this.getDomRef() && this._placeholder) {
+		if (this.getDomRef()) {
 			this._placeholder.show(this);
 		}
 		// Add an event delegate to reinsert the placeholder after it's removed after a rerendering
 		this.addEventDelegate(oPlaceholderDelegate, this);
-
-		return pLoaded;
 	};
 
 	/**
 	 * Hides the placeholder and removes the 'onAfterRendering' placeholder delegate.
 	 *
-	 * @private
-	 * @ui5-restricted SAP internal apps
+	 * @public
 	 * @since 1.91
 	 */
 	NavContainer.prototype.hidePlaceholder = function() {
@@ -1881,7 +1864,7 @@ sap.ui.define([
 	 * @ui5-restricted sap.ui.core.routing
 	 */
 	NavContainer.prototype.needPlaceholder = function(sAggregationName, oObject) {
-		return !oObject || (this.getCurrentPage() !== oObject);
+		return this.getCurrentPage() !== oObject;
 	};
 
 	/**

@@ -69,7 +69,7 @@ sap.ui.define(["sap/ui/mdc/util/loadModules", "sap/base/Log"], function (loadMod
 	 * </ul>
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.mdc.mixin.DelegateMixin
 	 * @namespace
 	 * @since 1.76.0
@@ -334,7 +334,7 @@ sap.ui.define(["sap/ui/mdc/util/loadModules", "sap/base/Log"], function (loadMod
 			this._oPayload = null;
 			this._oTypeUtil = null;
 
-			if (this._oPropertyHelper && !this._oPropertyHelper.bIsDestroyed) {
+			if (this._oPropertyHelper) {
 				this._oPropertyHelper.destroy();
 			}
 			this._oPropertyHelper = null;

@@ -4,4 +4,4 @@
 		(c) Copyright 2009-2015 SAP SE. All rights reserved
 	
  */
-sap.ui.define(["sap/ui/core/Renderer","sap/m/OverflowToolbarRenderer"],function(R,O){"use strict";var T=R.extend(O);return T;},true);
+sap.ui.define(["sap/ui/core/Renderer","sap/m/OverflowToolbarRenderer"],function(R,O){"use strict";var T=R.extend(O);T.apiVersion=2;return T;},true);

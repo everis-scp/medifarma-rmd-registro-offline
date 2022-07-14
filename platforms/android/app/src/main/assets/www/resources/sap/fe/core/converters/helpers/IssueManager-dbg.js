@@ -1,0 +1,60 @@
+/*!
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ *      (c) Copyright 2009-2021 SAP SE. All rights reserved
+ */
+sap.ui.define([], function () {
+  "use strict";
+
+  var _exports = {};
+
+  var IssueSeverity;
+
+  (function (IssueSeverity) {
+    IssueSeverity[IssueSeverity["High"] = 0] = "High";
+    IssueSeverity[IssueSeverity["Low"] = 1] = "Low";
+    IssueSeverity[IssueSeverity["Medium"] = 2] = "Medium";
+  })(IssueSeverity || (IssueSeverity = {}));
+
+  _exports.IssueSeverity = IssueSeverity;
+  var IssueCategoryType = {
+    Facets: {
+      MissingID: "MissingID",
+      UnSupportedLevel: "UnsupportedLevel"
+    }
+  };
+  _exports.IssueCategoryType = IssueCategoryType;
+  var IssueCategory;
+
+  (function (IssueCategory) {
+    IssueCategory["Annotation"] = "Annotation";
+    IssueCategory["Template"] = "Template";
+    IssueCategory["Manifest"] = "Manifest";
+    IssueCategory["Facets"] = "Facets";
+  })(IssueCategory || (IssueCategory = {}));
+
+  _exports.IssueCategory = IssueCategory;
+  var IssueType = {
+    MISSING_LINEITEM: "We couldn't find a line item annotation for the current entitySet, you should consider adding one.",
+    MISSING_SELECTIONFIELD: "Defined Selection Field is not found",
+    MALFORMED_DATAFIELD_FOR_IBN: {
+      REQUIRESCONTEXT: "DataFieldForIntentBasedNavigation cannot use requires context in form/header.",
+      INLINE: "DataFieldForIntentBasedNavigation cannot use Inline in form/header."
+    },
+    MALFORMED_VISUALFILTERS: {
+      VALUELIST: "ValueList Path mentioned in the manifest is not found",
+      PRESENTATIONVARIANT: "Presentation Variant Annotation is missing for the VisualFilters",
+      CHART: "Chart Annotation is missing from the PV configured for the VisualFilters",
+      VALUELISTCONFIG: "ValueList is not been configured inside the Visual Filter Settings"
+    },
+    FULLSCREENMODE_NOT_ON_LISTREPORT: "enableFullScreenMode is not supported on list report pages.",
+    KPI_ISSUES: {
+      KPI_NOT_FOUND: "Couldn't find KPI with qualifier ",
+      KPI_DETAIL_NOT_FOUND: "Couldn't find KPI detail or default presentation variant for KPI ",
+      NO_ANALYTICS: "The following entitySet used in a KPI definition doesn't support $apply queries:",
+      MAIN_PROPERTY_NOT_AGGREGATABLE: "Main property used in KPI cannot be aggregated "
+    }
+  };
+  _exports.IssueType = IssueType;
+  return _exports;
+}, false);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIklzc3VlTWFuYWdlci50cyJdLCJuYW1lcyI6WyJJc3N1ZVNldmVyaXR5IiwiSXNzdWVDYXRlZ29yeVR5cGUiLCJGYWNldHMiLCJNaXNzaW5nSUQiLCJVblN1cHBvcnRlZExldmVsIiwiSXNzdWVDYXRlZ29yeSIsIklzc3VlVHlwZSIsIk1JU1NJTkdfTElORUlURU0iLCJNSVNTSU5HX1NFTEVDVElPTkZJRUxEIiwiTUFMRk9STUVEX0RBVEFGSUVMRF9GT1JfSUJOIiwiUkVRVUlSRVNDT05URVhUIiwiSU5MSU5FIiwiTUFMRk9STUVEX1ZJU1VBTEZJTFRFUlMiLCJWQUxVRUxJU1QiLCJQUkVTRU5UQVRJT05WQVJJQU5UIiwiQ0hBUlQiLCJWQUxVRUxJU1RDT05GSUciLCJGVUxMU0NSRUVOTU9ERV9OT1RfT05fTElTVFJFUE9SVCIsIktQSV9JU1NVRVMiLCJLUElfTk9UX0ZPVU5EIiwiS1BJX0RFVEFJTF9OT1RfRk9VTkQiLCJOT19BTkFMWVRJQ1MiLCJNQUlOX1BST1BFUlRZX05PVF9BR0dSRUdBVEFCTEUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7OztNQUFZQSxhOzthQUFBQSxhO0FBQUFBLElBQUFBLGEsQ0FBQUEsYTtBQUFBQSxJQUFBQSxhLENBQUFBLGE7QUFBQUEsSUFBQUEsYSxDQUFBQSxhO0tBQUFBLGEsS0FBQUEsYTs7O0FBTUwsTUFBTUMsaUJBQWlCLEdBQUc7QUFDaENDLElBQUFBLE1BQU0sRUFBRTtBQUNQQyxNQUFBQSxTQUFTLEVBQUUsV0FESjtBQUVQQyxNQUFBQSxnQkFBZ0IsRUFBRTtBQUZYO0FBRHdCLEdBQTFCOztNQU9LQyxhOzthQUFBQSxhO0FBQUFBLElBQUFBLGE7QUFBQUEsSUFBQUEsYTtBQUFBQSxJQUFBQSxhO0FBQUFBLElBQUFBLGE7S0FBQUEsYSxLQUFBQSxhOzs7QUFNTCxNQUFNQyxTQUFTLEdBQUc7QUFDeEJDLElBQUFBLGdCQUFnQixFQUFFLG9HQURNO0FBRXhCQyxJQUFBQSxzQkFBc0IsRUFBRSxzQ0FGQTtBQUd4QkMsSUFBQUEsMkJBQTJCLEVBQUU7QUFDNUJDLE1BQUFBLGVBQWUsRUFBRSwrRUFEVztBQUU1QkMsTUFBQUEsTUFBTSxFQUFFO0FBRm9CLEtBSEw7QUFPeEJDLElBQUFBLHVCQUF1QixFQUFFO0FBQ3hCQyxNQUFBQSxTQUFTLEVBQUUsdURBRGE7QUFFeEJDLE1BQUFBLG1CQUFtQixFQUFFLGtFQUZHO0FBR3hCQyxNQUFBQSxLQUFLLEVBQUUsMEVBSGlCO0FBSXhCQyxNQUFBQSxlQUFlLEVBQUU7QUFKTyxLQVBEO0FBYXhCQyxJQUFBQSxnQ0FBZ0MsRUFBRSw2REFiVjtBQWN4QkMsSUFBQUEsVUFBVSxFQUFFO0FBQ1hDLE1BQUFBLGFBQWEsRUFBRSxtQ0FESjtBQUVYQyxNQUFBQSxvQkFBb0IsRUFBRSxtRUFGWDtBQUdYQyxNQUFBQSxZQUFZLEVBQUUsa0ZBSEg7QUFJWEMsTUFBQUEsOEJBQThCLEVBQUU7QUFKckI7QUFkWSxHQUFsQiIsInNvdXJjZVJvb3QiOiIuIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGVudW0gSXNzdWVTZXZlcml0eSB7XG5cdEhpZ2gsXG5cdExvdyxcblx0TWVkaXVtXG59XG5cbmV4cG9ydCBjb25zdCBJc3N1ZUNhdGVnb3J5VHlwZSA9IHtcblx0RmFjZXRzOiB7XG5cdFx0TWlzc2luZ0lEOiBcIk1pc3NpbmdJRFwiLFxuXHRcdFVuU3VwcG9ydGVkTGV2ZWw6IFwiVW5zdXBwb3J0ZWRMZXZlbFwiXG5cdH1cbn07XG5cbmV4cG9ydCBlbnVtIElzc3VlQ2F0ZWdvcnkge1xuXHRBbm5vdGF0aW9uID0gXCJBbm5vdGF0aW9uXCIsXG5cdFRlbXBsYXRlID0gXCJUZW1wbGF0ZVwiLFxuXHRNYW5pZmVzdCA9IFwiTWFuaWZlc3RcIixcblx0RmFjZXRzID0gXCJGYWNldHNcIlxufVxuZXhwb3J0IGNvbnN0IElzc3VlVHlwZSA9IHtcblx0TUlTU0lOR19MSU5FSVRFTTogXCJXZSBjb3VsZG4ndCBmaW5kIGEgbGluZSBpdGVtIGFubm90YXRpb24gZm9yIHRoZSBjdXJyZW50IGVudGl0eVNldCwgeW91IHNob3VsZCBjb25zaWRlciBhZGRpbmcgb25lLlwiLFxuXHRNSVNTSU5HX1NFTEVDVElPTkZJRUxEOiBcIkRlZmluZWQgU2VsZWN0aW9uIEZpZWxkIGlzIG5vdCBmb3VuZFwiLFxuXHRNQUxGT1JNRURfREFUQUZJRUxEX0ZPUl9JQk46IHtcblx0XHRSRVFVSVJFU0NPTlRFWFQ6IFwiRGF0YUZpZWxkRm9ySW50ZW50QmFzZWROYXZpZ2F0aW9uIGNhbm5vdCB1c2UgcmVxdWlyZXMgY29udGV4dCBpbiBmb3JtL2hlYWRlci5cIixcblx0XHRJTkxJTkU6IFwiRGF0YUZpZWxkRm9ySW50ZW50QmFzZWROYXZpZ2F0aW9uIGNhbm5vdCB1c2UgSW5saW5lIGluIGZvcm0vaGVhZGVyLlwiXG5cdH0sXG5cdE1BTEZPUk1FRF9WSVNVQUxGSUxURVJTOiB7XG5cdFx0VkFMVUVMSVNUOiBcIlZhbHVlTGlzdCBQYXRoIG1lbnRpb25lZCBpbiB0aGUgbWFuaWZlc3QgaXMgbm90IGZvdW5kXCIsXG5cdFx0UFJFU0VOVEFUSU9OVkFSSUFOVDogXCJQcmVzZW50YXRpb24gVmFyaWFudCBBbm5vdGF0aW9uIGlzIG1pc3NpbmcgZm9yIHRoZSBWaXN1YWxGaWx0ZXJzXCIsXG5cdFx0Q0hBUlQ6IFwiQ2hhcnQgQW5ub3RhdGlvbiBpcyBtaXNzaW5nIGZyb20gdGhlIFBWIGNvbmZpZ3VyZWQgZm9yIHRoZSBWaXN1YWxGaWx0ZXJzXCIsXG5cdFx0VkFMVUVMSVNUQ09ORklHOiBcIlZhbHVlTGlzdCBpcyBub3QgYmVlbiBjb25maWd1cmVkIGluc2lkZSB0aGUgVmlzdWFsIEZpbHRlciBTZXR0aW5nc1wiXG5cdH0sXG5cdEZVTExTQ1JFRU5NT0RFX05PVF9PTl9MSVNUUkVQT1JUOiBcImVuYWJsZUZ1bGxTY3JlZW5Nb2RlIGlzIG5vdCBzdXBwb3J0ZWQgb24gbGlzdCByZXBvcnQgcGFnZXMuXCIsXG5cdEtQSV9JU1NVRVM6IHtcblx0XHRLUElfTk9UX0ZPVU5EOiBcIkNvdWxkbid0IGZpbmQgS1BJIHdpdGggcXVhbGlmaWVyIFwiLFxuXHRcdEtQSV9ERVRBSUxfTk9UX0ZPVU5EOiBcIkNvdWxkbid0IGZpbmQgS1BJIGRldGFpbCBvciBkZWZhdWx0IHByZXNlbnRhdGlvbiB2YXJpYW50IGZvciBLUEkgXCIsXG5cdFx0Tk9fQU5BTFlUSUNTOiBcIlRoZSBmb2xsb3dpbmcgZW50aXR5U2V0IHVzZWQgaW4gYSBLUEkgZGVmaW5pdGlvbiBkb2Vzbid0IHN1cHBvcnQgJGFwcGx5IHF1ZXJpZXM6XCIsXG5cdFx0TUFJTl9QUk9QRVJUWV9OT1RfQUdHUkVHQVRBQkxFOiBcIk1haW4gcHJvcGVydHkgdXNlZCBpbiBLUEkgY2Fubm90IGJlIGFnZ3JlZ2F0ZWQgXCJcblx0fVxufTtcbiJdfQ==

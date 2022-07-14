@@ -218,8 +218,7 @@ sap.ui.define(["sap/base/Log", "sap/base/util/defineLazyProperty", "sap/ui/third
 					name: sTargetName + sProperty
 				};
 			});
-
-			sap.ui.requireSync(sModule); // legacy-relevant: lazy loading stubs for legacy APIs
+			sap.ui.requireSync(sModule);
 			return oTarget[sProperty];
 		};
 	}

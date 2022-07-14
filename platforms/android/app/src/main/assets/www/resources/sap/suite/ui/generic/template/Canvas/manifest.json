@@ -8,7 +8,7 @@
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
 			"__comment": "applicationVersion oder componentversion??",
-			"version": "1.71.23"
+			"version": "1.93.4"
 		},
 		"title": "{{TITLE}}",
 		"description": "{{DESCRIPTION}}",
@@ -17,6 +17,7 @@
 		},
 		"ach": "CA-UI5-ST",
 		"offline": false,
+		"embeddedBy": "../",
 		"resources": "resources.json"
 	},
 
@@ -75,7 +76,7 @@
 			  	}
 			}
 		},
-
+		
 		"commands": {
 			"Save": {
 				"name": "Save",

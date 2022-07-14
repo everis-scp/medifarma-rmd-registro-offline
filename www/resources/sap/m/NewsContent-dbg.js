@@ -8,12 +8,11 @@ sap.ui.define([
 	'./library',
 	'sap/ui/core/Control',
 	'sap/m/Text',
-	'sap/m/FormattedText',
 	'sap/ui/Device',
 	'./NewsContentRenderer',
 	"sap/ui/events/KeyCodes"
 ],
-	function(library, Control, Text, FormattedText, Device, NewsContentRenderer, KeyCodes) {
+	function(library, Control, Text, Device, NewsContentRenderer, KeyCodes) {
 	"use strict";
 
 	/**
@@ -26,7 +25,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.34
 	 *
 	 * @public
@@ -57,11 +56,7 @@ sap.ui.define([
 				/**
 				 * The hidden aggregation for the content text.
 				 */
-				"_contentText" : {type : "sap.m.FormattedText", multiple : false, visibility : "hidden"},
-				/**
-				 * The hidden aggregation for the subHeader text.
-				 */
-				 "_subHeaderText" : {type : "sap.m.FormattedText", multiple : false, visibility : "hidden"}
+				"_contentText" : {type : "sap.m.Text", multiple : false, visibility : "hidden"}
 			},
 			events : {
 				/**
@@ -78,10 +73,11 @@ sap.ui.define([
 	* Init function for the control
 	*/
 	NewsContent.prototype.init = function() {
-		this._oContentText = new FormattedText(this.getId() + "-content-text");
-		this._oSubHeaderText = new FormattedText(this.getId() + "-subheader-text");
+		this._oContentText = new Text(this.getId() + "-content-text", {
+			maxLines : 2
+		});
+		this._oContentText.cacheLineHeight = false;
 		this.setAggregation("_contentText", this._oContentText, true);
-		this.setAggregation("_subHeaderText", this._oSubHeaderText, true);
 		this.setTooltip("{AltText}");
 	};
 
@@ -135,8 +131,8 @@ sap.ui.define([
 	NewsContent.prototype.getAltText = function() {
 		var sAltText = "";
 		var bIsFirst = true;
-		if (this.getContentText()) {
-			sAltText += this.getContentText();
+		if (this.getAggregation("_contentText").getText()) {
+			sAltText += this.getAggregation("_contentText").getText();
 			bIsFirst = false;
 		}
 		if (this.getSubheader()) {
@@ -164,13 +160,8 @@ sap.ui.define([
 	};
 
 	NewsContent.prototype.setContentText = function(text) {
-		this._oContentText.setHtmlText(text);
+		this._oContentText.setText(text);
 		return this.setProperty("contentText", text, true);
-	};
-
-	NewsContent.prototype.setSubheader = function(text) {
-		this._oSubHeaderText.setHtmlText(text);
-		return this.setProperty("subheader", text, true);
 	};
 
 	/* --- Event Handling --- */

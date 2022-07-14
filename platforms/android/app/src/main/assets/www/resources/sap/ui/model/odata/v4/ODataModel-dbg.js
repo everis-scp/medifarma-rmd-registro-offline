@@ -175,8 +175,6 @@ sap.ui.define([
 	 * @author SAP SE
 	 * @class Model implementation for OData V4.
 	 *
-	 *   This model is not prepared to be inherited from.
-	 *
 	 *   Every resource path (relative to the service root URL, no query options) according to
 	 *   "4 Resource Path" in specification "OData Version 4.0 Part 2: URL Conventions" is
 	 *   a valid data binding path within this model if a leading slash is added; for example
@@ -210,7 +208,7 @@ sap.ui.define([
 	 * @extends sap.ui.model.Model
 	 * @public
 	 * @since 1.37.0
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 */
 	var ODataModel = Model.extend("sap.ui.model.odata.v4.ODataModel",
 			/** @lends sap.ui.model.odata.v4.ODataModel.prototype */
@@ -223,7 +221,6 @@ sap.ui.define([
 						sParameter,
 						sServiceUrl,
 						oUri,
-						mUriParameters,
 						that = this;
 
 					// do not pass any parameters to Model
@@ -258,13 +255,7 @@ sap.ui.define([
 					}
 					this.sOperationMode = mParameters.operationMode;
 					// Note: strict checking for model's URI parameters, but "sap-*" is allowed
-					mUriParameters = this.buildQueryOptions(oUri.query(true), false, true);
-					// BEWARE: these are shared across all bindings!
-					this.mUriParameters = mUriParameters;
-					if (sap.ui.getCore().getConfiguration().getStatistics()) {
-						// Note: this way, "sap-statistics" is not sent within $batch
-						mUriParameters = Object.assign({"sap-statistics" : true}, mUriParameters);
-					}
+					this.mUriParameters = this.buildQueryOptions(oUri.query(true), false, true);
 					this.sServiceUrl = oUri.query("").toString();
 					this.sGroupId = mParameters.groupId;
 					if (this.sGroupId === undefined) {
@@ -306,7 +297,7 @@ sap.ui.define([
 					// BEWARE: do not share mHeaders between _MetadataRequestor and _Requestor!
 					this.oMetaModel = new ODataMetaModel(
 						_MetadataRequestor.create(this.mMetadataHeaders, sODataVersion,
-							Object.assign({}, mUriParameters, mParameters.metadataUrlParams)),
+							Object.assign({}, this.mUriParameters, mParameters.metadataUrlParams)),
 						this.sServiceUrl + "$metadata", mParameters.annotationURI, this,
 						mParameters.supportReferences);
 					this.oInterface = {
@@ -323,11 +314,11 @@ sap.ui.define([
 									that._submitBatch.bind(that, sGroupId, true));
 							}
 						},
-						reportStateMessages : this.reportStateMessages.bind(this),
-						reportTransitionMessages : this.reportTransitionMessages.bind(this)
+						reportBoundMessages : this.reportBoundMessages.bind(this),
+						reportUnboundMessages : this.reportUnboundMessages.bind(this)
 					};
 					this.oRequestor = _Requestor.create(this.sServiceUrl, this.oInterface,
-						this.mHeaders, mUriParameters, sODataVersion);
+						this.mHeaders, this.mUriParameters, sODataVersion);
 					this.changeHttpHeaders(mParameters.httpHeaders);
 					if (mParameters.earlyRequests) {
 						this.oMetaModel.fetchEntityContainer(true);
@@ -540,8 +531,8 @@ sap.ui.define([
 	 * @param {boolean} [mParameters.$$inheritExpandSelect]
 	 *   For operation bindings only: Whether $expand and $select from the parent binding are used
 	 *   in the request sent on {@link #execute}. If set to <code>true</code>, the binding must not
-	 *   set the $expand itself, the operation must be bound, and the return value and the binding
-	 *   parameter must belong to the same entity set.
+	 *   set the $expand or $select parameter itself, the operation must be bound, and the return
+	 *   value and the binding parameter must belong to the same entity set.
 	 * @param {boolean} [mParameters.$$ownRequest]
 	 *   Whether the binding always uses an own service request to read its data; only the value
 	 *   <code>true</code> is allowed.
@@ -561,7 +552,7 @@ sap.ui.define([
 	 * @throws {Error}
 	 *   If disallowed binding parameters are provided, for example if the binding parameter
 	 *   $$inheritExpandSelect is set to <code>true</code> and the binding is no operation binding
-	 *   or the binding has the parameter $expand.
+	 *   or the binding has one of the parameters $expand or $select.
 	 *
 	 * @public
 	 * @see sap.ui.model.Model#bindContext
@@ -608,7 +599,7 @@ sap.ui.define([
 	 * resolve to an absolute OData path for an entity set.
 	 *
 	 * @param {string} sPath
-	 *   The binding path in the model; must not end with a slash
+	 *   The binding path in the model; must not be empty or end with a slash
 	 * @param {sap.ui.model.Context} [oContext]
 	 *   The context which is required as base for a relative path
 	 * @param {sap.ui.model.Sorter|sap.ui.model.Sorter[]} [vSorters]
@@ -726,7 +717,8 @@ sap.ui.define([
 	 * transformed into a metadata context (see
 	 * {@link sap.ui.model.odata.v4.ODataMetaModel#getMetaContext}). The part following the
 	 * separator is then interpreted relative to this metadata context, even if it starts with
-	 * a '/'; see {@link sap.ui.model.odata.v4.ODataMetaModel#requestObject} for more details.
+	 * a '/'; a trailing '/' is allowed here, see
+	 * {@link sap.ui.model.odata.v4.ODataMetaModel#requestObject} for the effect it has.
 	 *
 	 * If the target type specified in the corresponding control property's binding info is "any"
 	 * and the binding is relative or points to metadata, the binding may have an object value;
@@ -734,20 +726,15 @@ sap.ui.define([
 	 * be {@link sap.ui.model.BindingMode.OneTime}.
 	 *
 	 * @param {string} sPath
-	 *   The binding path in the model; must not end with a slash
+	 *   The binding path in the model; must not be empty. Must not end with a '/' unless the
+	 *   binding points to metadata.
 	 * @param {sap.ui.model.Context} [oContext]
 	 *   The context which is required as base for a relative path
 	 * @param {object} [mParameters]
 	 *   Map of binding parameters which can be OData query options as specified in
-	 *   "OData Version 4.0 Part 2: URL Conventions" or the binding-specific parameters as specified
-	 *   below. The following OData query options are allowed:
-	 *   <ul>
-	 *     <li> All "5.2 Custom Query Options" except for those with a name starting with "sap-"
-	 *       (unless starting with "sap-valid-")
-	 *     <li> The $apply, $filter, and $search "5.1 System Query Options" if the path ends with a
-	 *       "$count" segment.
-	 *   </ul>
-	 *   All other query options lead to an error.
+	 *   "OData Version 4.0 Part 2: URL Conventions" or the binding-specific parameter "$$groupId".
+	 *   All "5.2 Custom Query Options" are allowed except for those with a name starting with
+	 *   "sap-" (unless starting with "sap-valid-"). All other query options lead to an error.
 	 *   Query options specified for the binding overwrite model query options.
 	 *   Note: The binding only creates its own data service request if it is absolute or if it is
 	 *   relative to a context created via {@link #createBindingContext}. The binding parameters are
@@ -1196,7 +1183,6 @@ sap.ui.define([
 		}
 
 		if (bIsBound) {
-			sResourcePath = sResourcePath && sResourcePath.split("?")[0]; // remove query string
 			aTargets = [resolveTarget(oRawMessage.target)];
 			if (oRawMessage.additionalTargets) {
 				oRawMessage.additionalTargets.forEach(function (sTarget) {
@@ -1213,7 +1199,7 @@ sap.ui.define([
 			code : oRawMessage.code,
 			descriptionUrl : sMessageLongtextUrl || undefined,
 			message : oRawMessage.message,
-			persistent : !bIsBound || oRawMessage.transition,
+			persistent : bIsBound ? oRawMessage.transition : true,
 			processor : this,
 			// Note: "" instead of undefined makes filtering easier (agreement with FE!)
 			target : bIsBound ? aTargets : "",
@@ -1673,67 +1659,8 @@ sap.ui.define([
 	};
 
 	/**
-	 * Reports a technical error by firing a <code>messageChange</code> event with a new message and
-	 * logging the error to the console. Takes care that the error is only reported once via the
-	 * <code>messageChange</code> event. Existing messages remain untouched.
-	 *
-	 * @param {string} sLogMessage
-	 *   The message to write to the console log
-	 * @param {string} sReportingClassName
-	 *   The name of the class reporting the error
-	 * @param {Error} oError
-	 *   The error, for example created by {@link sap.ui.model.odata.v4.lib._Helper.createError}
-	 * @param {boolean|string} [oError.canceled]
-	 *   A boolean value indicates whether the error is not reported but just logged to the
-	 *   console with level DEBUG; example: errors caused by cancellation of back-end requests.
-	 *   For the string value "noDebugLog", the method does nothing; example: errors caused by
-	 *   suspended bindings.
-	 * @param {object} [oError.error]
-	 *   An error response as sent from the OData server
-	 * @param {object[]} [oError.error.details]
-	 *   A list of detail messages sent from the OData server. These messages are reported, too.
-	 * @param {boolean} [oError.error.$ignoreTopLevel]
-	 *   Whether <code>oError.error</code> itself is not reported, but only the
-	 *   <code>oError.error.details</code>.
-	 * @param {string} [oError.requestUrl]
-	 *   The absolute request URL of the failed OData request; required to resolve a long text URL.
-	 * @param {string} [oError.resourcePath]
-	 *   The resource path by which the resource causing the error has originally been requested;
-	 *   required to resolve a target.
-	 *
-	 * @private
-	 */
-	ODataModel.prototype.reportError = function (sLogMessage, sReportingClassName, oError) {
-		var sDetails;
-
-		if (oError.canceled === "noDebugLog") {
-			return;
-		}
-
-		sDetails = oError.stack.includes(oError.message)
-			? oError.stack
-			: oError.message + "\n" + oError.stack;
-
-		if (oError.canceled) {
-			Log.debug(sLogMessage, sDetails, sReportingClassName);
-			return;
-		}
-
-		Log.error(sLogMessage, sDetails, sReportingClassName);
-		if (oError.$reported) {
-			return;
-		}
-		oError.$reported = true;
-
-		this.reportTransitionMessages(_Helper.extractMessages(oError), oError.resourcePath);
-	};
-
-	/**
-	 * Reports the given OData state messages by firing a <code>messageChange</code> event with
+	 * Reports the given bound OData messages by firing a <code>messageChange</code> event with
 	 * the new messages.
-	 *
-	 * Note that this method may also report transition messages that have been transported via the
-	 * messages property of an entity.
 	 *
 	 * @param {string} sResourcePath
 	 *   The resource path of the cache that saw the messages; used to resolve the targets and
@@ -1747,7 +1674,7 @@ sap.ui.define([
 	 *
 	 * @private
 	 */
-	 ODataModel.prototype.reportStateMessages = function (sResourcePath, mPathToODataMessages,
+	ODataModel.prototype.reportBoundMessages = function (sResourcePath, mPathToODataMessages,
 			aCachePaths) {
 		var sDataBindingPath = "/" + sResourcePath,
 			aNewMessages = [],
@@ -1779,7 +1706,73 @@ sap.ui.define([
 	};
 
 	/**
-	 * Reports the given OData transition messages by firing a <code>messageChange</code> event with
+	 * Reports a technical error by firing a <code>messageChange</code> event with a new message and
+	 * logging the error to the console. Takes care that the error is only reported once via the
+	 * <code>messageChange</code> event. Existing messages remain untouched.
+	 *
+	 * @param {string} sLogMessage
+	 *   The message to write to the console log
+	 * @param {string} sReportingClassName
+	 *   The name of the class reporting the error
+	 * @param {Error} oError
+	 *   The error, for example created by {@link sap.ui.model.odata.v4.lib._Helper.createError}
+	 * @param {boolean|string} [oError.canceled]
+	 *   A boolean value indicates whether the error is not reported but just logged to the
+	 *   console with level DEBUG; example: errors caused by cancellation of back-end requests.
+	 *   For the string value "noDebugLog", the method does nothing; example: errors caused by
+	 *   suspended bindings.
+	 * @param {object} [oError.error]
+	 *   An error response as sent from the OData server
+	 * @param {object[]} [oError.error.details]
+	 *   A list of detail messages sent from the OData server. These messages are reported, too.
+	 * @param {boolean} [oError.error.$ignoreTopLevel]
+	 *   Whether <code>oError.error</code> itself is not reported, but only the
+	 *   <code>oError.error.details</code>.
+	 * @param {string} [oError.requestUrl]
+	 *   The absolute request URL of the failed OData request; required to resolve a long text URL.
+	 * @param {string} [oError.resourcePath]
+	 *   The resource path by which the resource causing the error has originally been requested;
+	 *   required to resolve a target.
+	 *
+	 * @private
+	 */
+	ODataModel.prototype.reportError = function (sLogMessage, sReportingClassName, oError) {
+		var sDetails,
+			oRawMessages;
+
+		if (oError.canceled === "noDebugLog") {
+			return;
+		}
+
+		sDetails = oError.stack.includes(oError.message)
+			? oError.stack
+			: oError.message + "\n" + oError.stack;
+
+		if (oError.canceled) {
+			Log.debug(sLogMessage, sDetails, sReportingClassName);
+			return;
+		}
+
+		Log.error(sLogMessage, sDetails, sReportingClassName);
+		if (oError.$reported) {
+			return;
+		}
+		oError.$reported = true;
+
+		oRawMessages = _Helper.extractMessages(oError);
+		if (oRawMessages.bound.length) {
+			this.reportBoundMessages(
+				oError.resourcePath.split("?")[0],
+				{"" : oRawMessages.bound},
+				[]
+			);
+		}
+		// The longtextUrls are already absolute, so sResourcePath is not needed here
+		this.reportUnboundMessages(oRawMessages.unbound);
+	};
+
+	/**
+	 * Reports the given unbound OData messages by firing a <code>messageChange</code> event with
 	 * the new messages.
 	 *
 	 * @param {object[]} aMessages
@@ -1789,13 +1782,12 @@ sap.ui.define([
 	 *
 	 * @private
 	 */
-	ODataModel.prototype.reportTransitionMessages = function (aMessages, sResourcePath) {
+	ODataModel.prototype.reportUnboundMessages = function (aMessages, sResourcePath) {
 		var that = this;
 
 		if (aMessages && aMessages.length) {
 			this.fireMessageChange({
 				newMessages : aMessages.map(function (oMessage) {
-					oMessage.transition = true;
 					return that.createUI5Message(oMessage, sResourcePath);
 				})
 			});

@@ -6,13 +6,14 @@
 		"type": "component",
 		"i18n": "i18n/i18n.properties",
 		"applicationVersion": {
-			"version": "1.71.23"
+			"version": "1.93.4"
 		},
 		"title": "{{TITLE}}",
 		"description": "{{DESCRIPTION}}",
 		"tags": {
 			"keywords": ["{{TITLE}}"]
 		},
+		"embeddedBy": "../",
 		"offline": false,
 		"resources": "resources.json"
 	},

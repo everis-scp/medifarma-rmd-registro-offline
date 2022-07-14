@@ -1,0 +1,9 @@
+{
+"version":3,
+"file":"sap/ushell/plugins/rta/Component-h2-preload.js",
+"sourceroot":".",
+"sources":["Component-dbg.js","manifest.json"],
+"names":["BaseRTAPlugin","CheckConditions","Renderer","RTAPlugin","oConfig","bButtonIsVisible"],
+"mappings":";;AAEA,gBAAa,oCAAC,CACV,mCACA,4DACA,oDACJ,EAAG,QAAS,CACRA,CAAa,CACbC,CAAe,CACfC,CACJ,CAAE,CACE,aAEA,IAAIC,CAAU,CAAEH,CAAa,2CAA4C,CACrE,MAAO,MACP,SAAU,CACN,SAAU,OACV,QAAS,YACb,EAEA,KAAM,QAAS,EAAG,CACd,IAAII,CAAQ,CAAE,CACV,eAAgB,yBAChB,MAAO,WACP,cAAe,MACf,GAAI,0BACJ,KAAM,kBACN,KAAM,oBACN,QAAS,KACT,gBAAiB,IACrB,EACAJ,CAAa,0BAA2BI,CAAO,EAC/C,IAAIC,CAAiB,CAAE,oBAAqB,EAAGJ,CAAe,eAC9DC,CAAQ,yBAA0B,yBAA0BG,CAAgB,EAChF,CACJ,GACA,OAAOF,CAAS,CACpB,EAAG,IAAkB;;;;;;;;",
+"x_com_sap_openui5_sections":[61,820,885,2292]
+}

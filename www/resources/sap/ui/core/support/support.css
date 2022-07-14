@@ -183,15 +183,6 @@ button.sapUiSupportHelpButton:hover {
 	padding: 0.25rem 0.5rem;
 }
 
-.sapUiSupportLabel img {
-	vertical-align: middle;
-	margin-left: 3px;
-}
-
-.sapUiSupportLabelBold {
-	font-weight: bold;
-}
-
 .sapUiSupportToolbar {
 	background-color: #F2F2F2;
 	height: 31px;
@@ -252,26 +243,6 @@ button.sapUiSupportHelpButton:hover {
 	background-color: #346187;
 }
 
-.sapUiSupportTechInfoBorder .sapUiSupportRoundedButton {
-	margin-left: 10px;
-}
-
-.sapUiSupportTechInfoBorder table {
-	width: 100%;
-}
-
-.sapUiSupportTechInfoXMLOutput {
-	margin-top:5px;
-}
-
-.sapUiSupportTechInfoXMLOutput textarea {
-	width: 100%;
-	height: 50px;
-	margin-top: 5px;
-	resize: none;
-	box-sizing: border-box;
-}
-
 .sapUiSupportPerfHeaderFilters .sapUiSupportTxtFld,
 .sapUiSupportToolbar > .sapUiSupportTxtFld {
 	margin-top: 2px;
@@ -285,7 +256,7 @@ button.sapUiSupportHelpButton:hover {
 
 /** Plugins **/
 
-#sapUiSupportTechInfo, #sapUiSupportTrace {
+#sapUiSupportTechInfo {
 	height: 350px;
 }
 
@@ -303,7 +274,8 @@ button.sapUiSupportHelpButton:hover {
 	right: 15px;
 }
 
-#sapUiSupportTrace {
+#sapUiSupportTrace,
+#sapUiSupportMessageTest {
 	overflow: hidden;
 }
 
@@ -316,9 +288,14 @@ button.sapUiSupportHelpButton:hover {
 	padding: 5px;
 }
 
+#sapUiSupportMessageTest > .sapUiSupportToolbar > button {
+	margin-left: 5px;
+}
+
 #sapUiSupportPerf .sapUiSupportPerfCntnt,
 #sapUiSupportTechInfo .sapUiSupportTechInfoCntnt,
-#sapUiSupportTrace .sapUiSupportTraceCntnt {
+#sapUiSupportTrace .sapUiSupportTraceCntnt,
+#sapUiSupportMessageTest .sapUiSupportMessageCntnt {
 	overflow: auto;
 	position: absolute;
 	top: 33px;
@@ -343,29 +320,6 @@ button.sapUiSupportHelpButton:hover {
 	width: 70px;
 }
 
-.sapUiSupportTraceEntryLevel_unknown,
-.sapUiSupportTraceEntryLevel_unknown .sapUiSupportTraceEntryTime,
-.sapUiSupportTraceEntryLevel_TRACE,
-.sapUiSupportTraceEntryLevel_TRACE .sapUiSupportTraceEntryTime,
-.sapUiSupportTraceEntryLevel_DEBUG,
-.sapUiSupportTraceEntryLevel_DEBUG .sapUiSupportTraceEntryTime,
-.sapUiSupportTraceEntryLevel_INFO,
-.sapUiSupportTraceEntryLevel_INFO .sapUiSupportTraceEntryTime {
-	color: #000000
-}
-
-.sapUiSupportTraceEntryLevel_FATAL,
-.sapUiSupportTraceEntryLevel_FATAL .sapUiSupportTraceEntryTime,
-.sapUiSupportTraceEntryLevel_ERROR,
-.sapUiSupportTraceEntryLevel_ERROR .sapUiSupportTraceEntryTime {
-	color: #E60000;
-}
-
-.sapUiSupportTraceEntryLevel_WARNING,
-.sapUiSupportTraceEntryLevel_WARNING .sapUiSupportTraceEntryTime {
-	color: #FFAA00
-}
-
 #sapUiSupportTrace .sapUiSupportTraceEntry {
 	border-bottom: 1px solid #BFBFBF;
 	margin-top: 10px;
@@ -386,10 +340,6 @@ button.sapUiSupportHelpButton:hover {
 	overflow: hidden;
 }
 
-.sapUiSupportControlTreeTitle {
-	padding: 0.5rem;
-}
-
 .sapUISupportLabel {
 	margin: 0.25rem auto;
 }
@@ -406,11 +356,6 @@ button.sapUiSupportHelpButton:hover {
 	float: left;
 	position: relative;
 }
-
-#sapUiSupportControlPropertiesArea h2 {
-	padding-left: 5px;
-}
-
 .sapUiSupportContainer {
 	border: 0;
 	height: auto;
@@ -432,21 +377,19 @@ ul.sapUiSupportControlTreeList li {
 	padding: 0;
 }
 
-ul.sapUiSupportControlTreeList .sapUiSupportLabel {
-	vertical-align: middle;
-}
-
 #sapUiSupportControlTreeArea li {
 	overflow: hidden;
 	cursor: pointer;
 }
 
-#sapUiSupportControlTreeArea li img.sapUiControlTreeIcon {
+#sapUiSupportControlTreeArea li img.sapUiControlTreeIcon,
+#sapUiSupportControlTreeArea li img.sapUiControlPicture {
 	float: left;
+}
+
+#sapUiSupportControlTreeArea li img.sapUiControlTreeIcon {
 	margin-top: 5px;
 	margin-right: 3px;
-	width: 12px;
-	height: 12px;
 }
 
 #sapUiSupportControlTreeArea li div {
@@ -481,14 +424,6 @@ ul.sapUiSupportControlTreeList .sapUiSupportLabel {
 	padding-right: 8px;
 	overflow: auto;
 	float: right;
-}
-
-.sapUiSupportControlTabsHidden {
-	visibility: hidden;
-}
-
-.sapUiSupportItemHidden {
-	display: none;
 }
 
 #sapUiSupportControlPropertiesArea ul.sapUiSupportControlTreeList li span {
@@ -528,14 +463,6 @@ ul.sapUiSupportControlTreeList .sapUiSupportLabel {
 .sapUiSupportControlProperties select {
 	width: 100%;
 	box-sizing: border-box;
-}
-
-.sapUiSupportControlProperties .sapUiSupportModelPathInvalid {
-	color: red;
-}
-
-.sapUiSupportControlProperties .sapUiSupportModelPathUnverified {
-	color: orange;
 }
 
 #sapUiSupportPerf > .sapUiSupportToolbar > button {
@@ -1438,26 +1365,4 @@ html[data-sap-ui-browser^="cr"] .sapUiSupportIntFupInputMask > input {
 	position: relative;
 	vertical-align: middle;
 	bottom: 1px;
-}
-
-.remove-breakpoint,
-.remove-class {
-	cursor:pointer;
-	margin-left:5px;
-}
-
-.sapUiSupportRefreshBinding {
-	cursor: pointer;
-	margin-left: 5px;
-	vertical-align: middle;
-}
-
-#sapUiSupportDebuggingClassContainer .sapUISupportLabel,
-#sapUiSupportDebuggingMethodContainer .sapUISupportLabel {
-	margin-right: 5px;
-}
-
-#sapUiSupportDebuggingMethodContainer p {
-	text-align: center;
-	font-weight: bold;
 }

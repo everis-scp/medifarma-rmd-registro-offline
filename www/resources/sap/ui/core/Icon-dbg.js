@@ -9,7 +9,7 @@ sap.ui.define([
 	'sap/base/assert',
 	'../Device',
 	'./Control',
-	'./_IconRegistry',
+	'./IconPool',
 	'./InvisibleText',
 	'./library',
 	"./IconRenderer",
@@ -21,7 +21,7 @@ sap.ui.define([
 		assert,
 		Device,
 		Control,
-		_IconRegistry,
+		IconPool,
 		InvisibleText,
 		library,
 		IconRenderer,
@@ -70,7 +70,7 @@ sap.ui.define([
 	 * @implements sap.ui.core.IFormContent
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @since 1.11.1
@@ -395,7 +395,7 @@ sap.ui.define([
 	/* =========================================================== */
 
 	Icon.prototype.setSrc = function(sSrc) {
-		assert(sSrc == null || _IconRegistry.isIconURI(sSrc), this + ": Property 'src' (value: '" + sSrc + "') should be a valid Icon URI (sap-icon://...)");
+		assert(sSrc == null || IconPool.isIconURI(sSrc), this + ": Property 'src' (value: '" + sSrc + "') should be a valid Icon URI (sap-icon://...)");
 
 		return this.setProperty("src", sSrc);
 	};
@@ -503,9 +503,10 @@ sap.ui.define([
 		var sAlt = this.getAlt(),
 			sTooltip = this.getTooltip_AsString(),
 			bUseIconTooltip = this.getUseIconTooltip(),
-			sLabel = sAlt || sTooltip || (bUseIconTooltip && oIconInfo && (oIconInfo.text || oIconInfo.name));
+			sLabel = sAlt || sTooltip || (bUseIconTooltip && oIconInfo && (oIconInfo.text || oIconInfo.name)),
+			sOutputTitle = this._getOutputTitle(oIconInfo);
 
-		if (sLabel) {
+		if (sLabel && sLabel !== sOutputTitle) {
 			return sLabel;
 		}
 	};
@@ -566,7 +567,7 @@ sap.ui.define([
 		}
 
 		var bHasPressListeners = this.hasListeners("press");
-		var oIconInfo = _IconRegistry.getIconInfo(this.getSrc(), undefined, "sync");
+		var oIconInfo = IconPool.getIconInfo(this.getSrc(), undefined, "sync");
 
 		return {
 			role: bHasPressListeners ? "button" : "img",

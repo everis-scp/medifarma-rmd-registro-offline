@@ -21,7 +21,7 @@ sap.ui.define([
 	 *
 	 * @class
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @since 1.26
 	 * @alias sap.uxap.BlockBaseMetadata
 	 * @extends sap.ui.core.ElementMetadata

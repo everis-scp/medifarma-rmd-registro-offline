@@ -35,7 +35,7 @@
 									<customData>
 										<template:if test="{chart>Title}">
 										<!-- This is a prerequisite for the aria-label to reflect on DOM when updated in controller-->
-											<ovp:CustomData key="aria-label" writeToDom="true" />
+											<ovp:CustomData key="aria-label" value="" writeToDom="true" />
 										</template:if>
 									</customData>
 								</Text>

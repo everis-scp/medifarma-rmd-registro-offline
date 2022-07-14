@@ -1,11 +1,11 @@
 {
-  "_version": "1.9.0",
+  "_version": "1.21.0",
   "sap.app": {
     "id": "sap.ca.ui",
     "type": "library",
     "embeds": [],
     "applicationVersion": {
-      "version": "1.71.0"
+      "version": "1.93.1"
     },
     "title": "SAP UI library: Fiori Commons",
     "description": "SAP UI library: Fiori Commons",
@@ -17,21 +17,28 @@
     "supportedThemes": [
       "base",
       "sap_belize",
+      "sap_belize_hcb",
+      "sap_belize_hcw",
       "sap_belize_plus",
       "sap_bluecrystal",
+      "sap_fiori_3",
+      "sap_fiori_3_dark",
+      "sap_fiori_3_hcb",
+      "sap_fiori_3_hcw",
       "sap_hcb",
+      "sap_horizon",
       "sap_mvi"
     ]
   },
   "sap.ui5": {
     "dependencies": {
-      "minUI5Version": "1.71",
+      "minUI5Version": "1.93",
       "libs": {
         "sap.ui.core": {
-          "minVersion": "1.71.0"
+          "minVersion": "1.93.2"
         },
         "sap.m": {
-          "minVersion": "1.71.0"
+          "minVersion": "1.93.2"
         }
       }
     },

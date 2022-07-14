@@ -2,7 +2,7 @@
 	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
 	xmlns:smartlink="sap.ui.comp.navpopover"
 	xmlns="sap.m" xmlns:sfo="sap.ui.comp.smartform" xmlns:l="sap.ui.layout"
-	xmlns:core="sap.ui.core" xmlns:build="sap.build" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:f="sap.f">
+	xmlns:core="sap.ui.core" xmlns:build="sap.build" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" >
 
 	<!-- NEW title area which is mainly based on source entity information (text arrangement...) will always be shown-->
 	<!--replica of QuickViewPage header icon title description -->
@@ -12,8 +12,9 @@
 		class="navigationPopover navigationPopoverHeader sapMQuickViewPage sapSmartTemplatesSmartLinkNavPopoverContentTitleAreaTrunc">
 		<!--the icon comes from the target entity type header,
 		the binding context is set relatively to the the target, and an expand is added if the picture is behind a nav property-->
-		<f:Avatar
+		<Avatar
 			id="{:= ${parameter>/stableId}.getStableId({type: 'QuickView', subType: 'Avatar'})}"
+			tooltip="{path: 'header>Title/Value', formatter: 'sap.ui.model.odata.AnnotationHelper.format'}"
 			visible="{= (${path: 'header>ImageUrl'} || ${path: 'header>TypeImageUrl'}) ? 'true' : 'false'}"
 			binding="{parts:[{path: 'entitySet>'}, {path: 'quickView>/navigationPath'}, {path: 'header>ImageUrl'}, {path: 'header>TypeImageUrl'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getPathWithExpandFromHeader'}"
 			src="{parts:[{path: 'header>ImageUrl'}, {path: 'header>TypeImageUrl'}, {path: 'parameter>/appComponentName'}, {value: true}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.formatImageOrTypeUrl'}"
@@ -21,7 +22,7 @@
 			class="sapSmartTemplatesSmartLinkNavPopoverContentAvatar"
 			displaySize="M"
 			displayShape="Square">
-		</f:Avatar>
+		</Avatar>
 		<!--the title comes only from source entity type text arrangement,
 		the binding context is set relatively to the the source, there already the expand was performed if necessary, therefore here not required-->
 		<layout:VerticalLayout class="sapUiHLayoutNoWrap sapSmartTemplatesSmartLinkNavPopoverContentTitleDecreaseFirstMargin">

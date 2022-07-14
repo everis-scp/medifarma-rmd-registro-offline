@@ -37,7 +37,7 @@
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 12165,
+			"size": 11495,
 			"theme": "sap_fiori_3"
 		},
 		{
@@ -47,7 +47,7 @@
 		},
 		{
 			"name": "library.css",
-			"size": 12165,
+			"size": 11496,
 			"theme": "sap_fiori_3"
 		},
 		{
@@ -64,12 +64,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 12541,
+			"size": 11871,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 12541,
+			"size": 11872,
 			"theme": "sap_fiori_3"
 		}
 	]

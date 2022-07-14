@@ -16,7 +16,7 @@
 					<template:then>
 						<!-- ObjectPage -->
 						<template:with path="parameter>/" helper="sap.suite.ui.generic.template.js.StableIdHelper.preparePathForStableId" var="facetId">
-							<template:if test="{= ${facetId>}.buildFacetId(${facet>})}" />
+							<template:if test="{= ${facetId>}.buildStableId({type: 'ObjectPage', subType: 'Facet', sRecordType: ${facet>RecordType}, sAnnotationPath: ${facet>Target/AnnotationPath}, sAnnotationId: ${facet>ID/String}, bIsHeaderFacet: ${isHeaderFacet>value}})}"/>
 							<template:if test="{= ${columnListItemId>}.buildStableId({type: 'ObjectPageTable', subType: 'ColumnListItem', sFacet: ${facetId>id}})}" />
 						</template:with>
 					</template:then>
@@ -26,9 +26,10 @@
 					</template:else>
 				</template:if>
 				<ColumnListItem id="{columnListItemId>id}"
-								highlight="{parts: [{path: 'listEntityType>'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.setRowHighlight'}"
-								vAlign="{parameter>/settings/tableColumnVerticalAlignment}"
-								type="{parts: [{path: 'listEntitySet>'}, {path: 'parameter>/settings/subPages/'}, {path: 'parameter>/manifest/'}, {path: 'parameter>/settings/'}, {path:'parameter>/isDraftEnabled'}, {path: 'facet>Target/AnnotationPath'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getColumnListItemType'}">
+								highlight="{parts: [{path: 'listEntityType>'}, {path: 'parameter>/treeNode'}, {path: 'listEntitySet>name'}, {path: 'parameter>/checkIsDraftEnabled'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.setRowHighlight'}"
+								vAlign="{appSettings>/tableColumnVerticalAlignment}"
+								type="{parts: [{path: 'listEntitySet>'}, {path: 'parameter>/settings/subPages/'}, {path: 'parameter>/manifest/'}, {path: 'parameter>/treeNode/'}, {path:'parameter>/isDraftEnabled'}, {path: 'facet>Target/AnnotationPath'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getColumnListItemType'}"
+								navigated="{parts: [{path: &quot;_templPriv>/generic/currentActiveChildContext&quot;}, {path: &quot;&quot;}], formatter: &quot;sap.suite.ui.generic.template.js.RuntimeFormatters.setRowNavigated&quot;}" >
 					<customData>
 						<core:CustomData key="CrossNavigation"
 							value="{parts: [{path: 'listEntitySet>name'}, {path: 'parameter>/settings/subPages/'}, {path: 'facet>Target/AnnotationPath'}], formatter: 'sap.suite.ui.generic.template.js.AnnotationHelper.getDisplayNavigationIntent'}" />
@@ -63,7 +64,7 @@
 											<items>
 												<template:with path="lineItems>Target" helper="sap.ui.model.odata.AnnotationHelper.resolvePath" var="dataFieldTarget">
 													<template:repeat list="{dataFieldTarget>Data}" var="dataField">
-														<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.TableCells" type="XML"/>
+														<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.TableCell" type="XML"/>
 													</template:repeat>
 												</template:with>
 											</items>
@@ -71,7 +72,7 @@
 									</template:then>
 									<template:else>
 										<template:with path="lineItems>" var="dataField">
-											<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.TableCells" type="XML"/>
+											<core:Fragment fragmentName="sap.suite.ui.generic.template.fragments.TableCell" type="XML"/>
 										</template:with>
 									</template:else>
 								</template:if>

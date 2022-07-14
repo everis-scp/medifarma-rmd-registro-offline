@@ -140,7 +140,7 @@ function(
 		 * @extends sap.m.DateTimeField
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -531,8 +531,7 @@ function(
 		 * @returns {boolean} true if the icon is clicked.
 		 */
 		 TimePicker.prototype._isIconClicked = function (oEvent) {
-			return jQuery(oEvent.target).hasClass("sapUiIcon") || jQuery(oEvent.target).hasClass("sapMInputBaseIconContainer")
-				 || jQuery(oEvent.target).hasClass("sapUiIconTitle");
+			return jQuery(oEvent.target).hasClass("sapUiIcon") || jQuery(oEvent.target).hasClass("sapMInputBaseIconContainer");
 		};
 
 		/**
@@ -545,22 +544,18 @@ function(
 			/* Set the timevalues of the picker here to prevent user from seeing it */
 			var oClocks = this._getClocks(),
 				oDateValue = this.getDateValue(),
-				sFormat = this._getFormatter(true).oFormatOptions.pattern,
+				sInputValue = this._$input.val(),
+				sFormat = this.getValueFormat(),
 				iIndexOfHH = sFormat.indexOf("HH"),
-				iIndexOfH = sFormat.indexOf("H"),
-				sInputValue = TimePickerInternals._isHoursValue24(this._$input.val(), iIndexOfHH, iIndexOfH) ?
-					TimePickerInternals._replace24HoursWithZero(this._$input.val(), iIndexOfHH, iIndexOfH) : this._$input.val();
+				iIndexOfH = sFormat.indexOf("H");
 
-			var oCurrentDateValue = this._getFormatter(true).parse(sInputValue) || oDateValue;
-			var sDisplayFormattedValue = this._getFormatter(true).format(oCurrentDateValue);
-
-			oClocks.setValue(sDisplayFormattedValue);
+			oClocks.setValue(sInputValue);
 
 			if (this._shouldSetInitialFocusedDateValue()) {
 				oDateValue = this.getInitialFocusedDateValue();
 			}
 
-			oClocks._setTimeValues(oDateValue, TimePickerInternals._isHoursValue24(this._$input.val(), iIndexOfHH, iIndexOfH));
+			oClocks._setTimeValues(oDateValue, TimePickerInternals._isHoursValue24(sInputValue, iIndexOfHH, iIndexOfH));
 
 			/* Mark input as active */
 			this.$().addClass(InputBase.ICON_PRESSED_CSS_CLASS);
@@ -626,20 +621,17 @@ function(
 			var oInputs = this._getInputs(),
 				oDateValue = this.getDateValue(),
 				sInputValue = this._$input.val(),
-				sFormat = this._getFormatter(true).oFormatOptions.pattern,
+				sFormat = this.getValueFormat(),
 				iIndexOfHH = sFormat.indexOf("HH"),
 				iIndexOfH = sFormat.indexOf("H");
 
-			var oCurrentDateValue = this._getFormatter(true).parse(sInputValue) || oDateValue;
-			var sDisplayFormattedValue = this._getFormatter(true).format(oCurrentDateValue);
-
-			oInputs.setValue(sDisplayFormattedValue);
+			oInputs.setValue(sInputValue);
 
 			if (this._shouldSetInitialFocusedDateValue()) {
 				oDateValue = this.getInitialFocusedDateValue();
 			}
 
-			oInputs._setTimeValues(oDateValue, TimePickerInternals._isHoursValue24(sDisplayFormattedValue, iIndexOfHH, iIndexOfH));
+			oInputs._setTimeValues(oDateValue, TimePickerInternals._isHoursValue24(sInputValue, iIndexOfHH, iIndexOfH));
 		};
 
 		/**
@@ -692,13 +684,9 @@ function(
 				sThatValue,
 				bThatValue2400,
 				bEnabled2400,
-				sFormat = this.getValueFormat() || (this._sValueFormat && this._sValueFormat.oFormatOptions.pattern),
-				iIndexOfHH,
-				iIndexOfH;
-
-			sFormat = sFormat ? sFormat : "";
-			iIndexOfHH = sFormat.indexOf("HH");
-			iIndexOfH = sFormat.indexOf("H");
+				sFormat = this.getValueFormat(),
+				iIndexOfHH = sFormat.indexOf("HH"),
+				iIndexOfH = sFormat.indexOf("H");
 
 			sValue = sValue || this._$input.val();
 			sThatValue = sValue;
@@ -899,12 +887,9 @@ function(
 			this._initMask();
 
 			if (oClocks) {
-				oClocks.setValueFormat(sDisplayFormat);
 				oClocks.setDisplayFormat(sDisplayFormat);
 			}
-
 			if (oInputs) {
-				oInputs.setValueFormat(sDisplayFormat);
 				oInputs.setDisplayFormat(sDisplayFormat);
 			}
 
@@ -934,21 +919,13 @@ function(
 		 * @public
 		 */
 		TimePicker.prototype.setValue = function(sValue) {
-			if (sValue) {
-				this._getFormatter(); // initialise DateFormatter
-			}
-
 			var oDate,
 				sOutputValue,
-				sFormat = this.getValueFormat() || (this._sValueFormat && this._sValueFormat.oFormatOptions.pattern),
+				sFormat = this.getValueFormat(),
+				iIndexOfHH = sFormat.indexOf("HH"),
+				iIndexOfH = sFormat.indexOf("H"),
 				oClocks = this._getClocks(),
-				oInputs = this._getInputs(),
-				iIndexOfHH,
-				iIndexOfH;
-
-			sFormat = sFormat ? sFormat : "";
-			iIndexOfHH = sFormat.indexOf("HH");
-			iIndexOfH = sFormat.indexOf("H");
+				oInputs = this._getInputs();
 
 			sValue = this.validateProperty("value", sValue);
 
@@ -992,10 +969,10 @@ function(
 			}
 
 			if (oClocks) {
-				oClocks.setValue(this._formatValue(oDate));
+				oClocks.setValue(sValue);
 			}
 			if (oInputs) {
-				oInputs.setValue(this._formatValue(oDate));
+				oInputs.setValue(sValue);
 			}
 
 			// do not call InputBase.setValue because the displayed value and the output value might have different pattern
@@ -1377,7 +1354,7 @@ function(
 				this._sMinutes = oPicker.getContent()[0]._sMinutes;
 				this._sSeconds = oPicker.getContent()[0]._sSeconds;
 				oPicker.close();
-				this.getDomRef("inner").select();
+				document.getElementById(this.getId() + "-inner").select();
 			} else {
 				Log.warning("There is no picker to close.");
 			}
@@ -1417,7 +1394,7 @@ function(
 			oClocks = new TimePickerClocks(this.getId() + "-clocks", {
 				support2400: this.getSupport2400(),
 				displayFormat: sFormat,
-				valueFormat: sFormat,
+				valueFormat: this.getValueFormat(),
 				localeId: sLocaleId,
 				minutesStep: this.getMinutesStep(),
 				secondsStep: this.getSecondsStep()
@@ -1432,7 +1409,6 @@ function(
 				verticalScrolling: true,
 				title: sTitle,
 				placement: PlacementType.VerticalPreferredBottom,
-				contentWidth: "20rem",
 				beginButton: new Button(this.getId() + "-OK", {
 					text: sOKButtonText,
 					type: ButtonType.Emphasized,
@@ -1531,7 +1507,7 @@ function(
 					new TimePickerInputs(this.getId() + "-inputs", {
 						support2400: this.getSupport2400(),
 						displayFormat: sFormat,
-						valueFormat: sFormat,
+						valueFormat: this.getValueFormat(),
 						localeId: sLocaleId,
 						minutesStep: this.getMinutesStep(),
 						secondsStep: this.getSecondsStep()
@@ -1645,7 +1621,7 @@ function(
 			this.updateDomValue(sValue);
 			this._handleInputChange();
 
-			this.getDomRef("inner").select();
+			document.getElementById(this.getId() + "-inner").select();
 			this._closeNumericPicker();
 		};
 
@@ -1702,14 +1678,10 @@ function(
 		 */
 		TimePicker.prototype._formatValue = function(oDate, bValueFormat) {
 			var sValue = DateTimeField.prototype._formatValue.apply(this, arguments),
-				sFormat = this.getValueFormat() || (this._sValueFormat && this._sValueFormat.oFormatOptions.pattern),
-				iIndexOfHH,
-				iIndexOfH,
+				sFormat = this.getValueFormat(),
+				iIndexOfHH = sFormat.indexOf("HH"),
+				iIndexOfH = sFormat.indexOf("H"),
 				bFieldValueIs24;
-
-			sFormat = sFormat ? sFormat : "";
-			iIndexOfHH = sFormat.indexOf("HH");
-			iIndexOfH = sFormat.indexOf("H");
 
 			if (oDate) {
 				// in display format the formatter returns strings without the leading space
@@ -1724,8 +1696,7 @@ function(
 			}
 
 			if ((this._isNumericPicker && this.isNumericOpen() && this._getInputs() && this._getInputs()._getHoursInput() && this._getInputs()._getHoursInput().getValue() === "24") ||
-				(this._isClockPicker && this.isOpen() && this._getClocks() && this._getClocks()._getHoursClock() && this._getClocks()._getHoursClock().getSelectedValue() === 24) ||
-				(this._sLastChangeValue && this._sLastChangeValue.indexOf("24") > -1)) {
+				(this._isClockPicker && this.isOpen() && this._getClocks() && this._getClocks()._getHoursClock() && this._getClocks()._getHoursClock().getSelectedValue() === 24)) {
 					bFieldValueIs24 = true;
 			}
 
@@ -2189,7 +2160,7 @@ function(
 		 * @param {string} sValue
 		 */
 		TimePicker.prototype._getAlteredUserInputValue = function (sValue) {
-			return sValue ? this._formatValue(this._parseValue(sValue, true), true) : sValue;
+			return sValue ? this._formatValue(this._parseValue(sValue), true) : sValue;
 		};
 
 		/**

@@ -512,13 +512,12 @@ sap.ui.define([
 			return;
 		}
 
-		this._$spacer = oObjectPageLayout.$("spacer");
+		this._$spacer = jQuery(document.getElementById(oObjectPageLayout.getId() + "-spacer"));
 
-		if (this._bShouldFocusSeeMoreLessButton && document.activeElement === document.body) {
+		if (this._bShouldFocusSeeMoreLessButton) {
+			this._bShouldFocusSeeMoreLessButton = false;
 			this._oCurrentlyVisibleSeeMoreLessButton.focus();
 		}
-
-		this._bShouldFocusSeeMoreLessButton = false;
 	};
 
 	ObjectPageSubSection.prototype.onBeforeRendering = function () {

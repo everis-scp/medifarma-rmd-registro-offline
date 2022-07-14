@@ -1,0 +1,45 @@
+<core:FragmentDefinition
+	xmlns:template="http://schemas.sap.com/sapui5/extension/sap.ui.core.template/1"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	template:require="{
+		ID: 'sap/fe/core/helpers/StableIdHelper'
+	}"
+>
+<VBox class="sapUiSmallMarginBeginEnd">
+	<template:repeat list="{dataFieldModel>}" var="dataField">
+		<template:if test="{dataField>visible}">
+			<Label text="{dataField>label}" class="sapUiTinyMarginTop" required="{dataField>isFieldRequired}" />
+			<HBox>
+				<ComboBox
+						id="{= ID.generate(['MED_', ${dataField>entitySet}, ${dataField>dataProperty}]) }"
+						core:require="{MassEditRuntime: 'sap/fe/macros/massedit/MassEditRuntime'}"
+						items="{= '{path : \'fieldsInfo>/values/' + ${dataField>dataProperty} + '\'}' }"
+						change="MassEditRuntime.handleMassEditChange($event)"
+						selectedKey="{dataField>defaultSelectionPath}"
+						visible="{dataField>visible}"
+					>
+						<items>
+							<core:Item key="{fieldsInfo>key}" text="{fieldsInfo>text}" /> 
+						</items>
+					</ComboBox>
+				<template:if test="{dataField>unitProperty}">
+					<ComboBox
+							core:require="{MassEditRuntime: 'sap/fe/macros/massedit/MassEditRuntime'}"
+							id="{= ID.generate(['MED_', ${dataField>entitySet}, ${dataField>unitProperty}]) }"
+							class="sapUiTinyMarginBegin sapUiSmallMarginEnd"
+							items="{= '{path : \'fieldsInfo>/unitData/' + ${dataField>unitProperty} + '\'}' }"
+							change="MassEditRuntime.handleMassEditChange($event)"
+							selectedKey="{dataField>defaultSelectionUnitPath}"
+							visible="{dataField>visible}"
+						>
+						<items>
+							<core:Item key="{fieldsInfo>key}" text="{fieldsInfo>text}" /> 
+						</items>
+					</ComboBox>
+				</template:if>
+			</HBox>
+		</template:if>
+    </template:repeat>
+</VBox>
+</core:FragmentDefinition>

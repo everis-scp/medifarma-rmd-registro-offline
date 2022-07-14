@@ -27,7 +27,7 @@ sap.ui.define([
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @private
@@ -978,7 +978,7 @@ sap.ui.define([
 
 			$aItems.eq(this._iSelectedItemIndex).addClass("sapMTimePickerItemSelected");
 			//WAI-ARIA region
-			oDescriptionElement = this.getDomRef("valDescription");
+			oDescriptionElement = document.getElementById(this.getId() + "-valDescription");
 			if (oDescriptionElement.innerHTML !== sAriaLabel) {
 				oDescriptionElement.innerHTML = sAriaLabel;
 			}

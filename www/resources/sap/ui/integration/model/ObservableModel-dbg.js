@@ -27,7 +27,7 @@ sap.ui.define([
 	 * @extends sap.ui.model.json.JSONModel
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @alias sap.ui.integration.model.ObservableModel
@@ -78,7 +78,19 @@ sap.ui.define([
 	 * @private
 	 */
 	ObservableModel.prototype._fireChange = function () {
-		this.fireEvent("change");
+		var bDataChanged;
+
+		if (!this._oOldData) {
+			bDataChanged = true;
+		} else {
+			bDataChanged = !deepEqual(this.oData, this._oOldData, 100);
+		}
+
+		this._oOldData = deepClone(this.oData);
+
+		if (bDataChanged) {
+			this.fireEvent("change");
+		}
 	};
 
 	return ObservableModel;

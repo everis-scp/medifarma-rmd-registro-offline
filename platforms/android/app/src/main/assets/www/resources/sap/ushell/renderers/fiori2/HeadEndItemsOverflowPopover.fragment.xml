@@ -1,14 +1,16 @@
 <core:FragmentDefinition
-        xmlns="sap.m" xmlns:core="sap.ui.core">
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
     <Popover
-            id="headEndItemsOverflow"
-            placement="Bottom"
-            showHeader="false"
-            showArrow="true"
-            class="sapUshellPopupContainer sapUiSizeCompact"
-            afterClose=".destroyHeadEndItemsOverflow">
-       <content>
-           <List
+        id="headEndItemsOverflow"
+        placement="Bottom"
+        showHeader="false"
+        showArrow="true"
+        class="sapUshellPopupContainer sapContrastPlus"
+        afterClose=".destroyHeadEndItemsOverflow">
+        <content>
+            <List
+                id="headEndItemsOverflowList"
                 class="sapUshellPopoverList"
                 showSeparators="None"
                 items="{
@@ -18,8 +20,7 @@
                         test: '.isHeadEndItemInOverflow'
                     },
                     factory: '.headEndItemsOverflowItemFactory'
-                }"
-            />
-       </content>
+                }" />
+        </content>
     </Popover>
 </core:FragmentDefinition>

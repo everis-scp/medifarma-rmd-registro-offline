@@ -88,7 +88,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @alias sap.ui.mdc.field.DefineConditionPanel
@@ -169,12 +169,7 @@ sap.ui.define([
 					visibility: "hidden"
 				}
 			},
-			events: {
-				/**
-				 * Event is fired if the user processes a condition. (Not known if changed.)
-				 */
-				conditionProcessed: {}
-			}
+			events: {}
 		},
 		_oManagedObjectModel: null,
 
@@ -277,8 +272,6 @@ sap.ui.define([
 
 			aConditions.splice(iIndex, 1);
 			this.setProperty("conditions", aConditions, true); // do not invalidate whole DefineConditionPanel
-
-			this.fireConditionProcessed();
 		},
 
 		addCondition: function(oEvent) {
@@ -361,7 +354,7 @@ sap.ui.define([
 				var aConditions = this.getConditions();
 				var iIndex = FilterOperatorUtil.indexOfCondition(oCondition, aConditions);
 
-				if (!deepEqual(oOperator.valueTypes[0], oOperatorOld.valueTypes[0]) && oOperator.valueTypes[0] !== Operator.ValueType.Static ) {
+				if (!deepEqual(oOperator.valueTypes[0], oOperatorOld.valueTypes[0]) && oOperator.valueTypes[0] !== Operator.ValueType.Static) {
 					// type changed -> remove entered value (only if changed by user in Select)
 					// As Static text updated on condition change, don't delete it here.
 					if (iIndex >= 0) {
@@ -369,28 +362,17 @@ sap.ui.define([
 
 						oCondition.values.forEach(function(value, index) {
 							if (value !== null) {
-								if ((oOperator.valueTypes[index] === Operator.ValueType.Self && oOperatorOld.valueTypes[index] === Operator.ValueType.SelfNoParse) ||
-										(oOperator.valueTypes[index] === Operator.ValueType.SelfNoParse && oOperatorOld.valueTypes[index] === Operator.ValueType.Self)) {
-									// as for Decimal values the type might change we need to format and parse again
-									var oType = _getFieldType.call(this, oOperator.name, index);
-									var oTypeOld = _getFieldType.call(this, oOperatorOld.name, index);
-									var sValue = oTypeOld.formatValue(oCondition.values[index], "string");
-									var vValue = oType.parseValue(sValue, "string");
-									if (vValue !== oCondition.values[index]) {
-										oCondition.values[index] = oType.parseValue(sValue, "string");
-										bUpdate = true;
-									}
-								} else {
-									oCondition.values[index] = null;
-									bUpdate = true;
-								}
+								oCondition.values[index] = null;
+								bUpdate = true;
 							}
-						}.bind(this));
+						});
 					}
 				}
 
 				if (iIndex >= 0 && oOperator.valueDefaults) {
+					var bCheckEmpty = false;
 					// sets the default values for the operator back to default, if the condition is inital or the value is null
+
 					oCondition = aConditions[iIndex];
 
 					oCondition.values.forEach(function(value, index) {
@@ -399,8 +381,12 @@ sap.ui.define([
 							oCondition.values[index] = oOperator.valueDefaults[index];
 							oCondition.isInitial = true;
 							bUpdate = true;
+							bCheckEmpty = true;
 						}
 					});
+					if (bCheckEmpty) {
+						FilterOperatorUtil.checkConditionsEmpty(oCondition, _getOperators.call(this));
+					}
 				}
 
 
@@ -416,7 +402,6 @@ sap.ui.define([
 				}
 
 				if (bUpdate) {
-					FilterOperatorUtil.checkConditionsEmpty(oCondition, _getOperators.call(this));
 					this.setProperty("conditions", aConditions, true); // do not invalidate whole DefineConditionPanel
 				}
 			}
@@ -498,8 +483,6 @@ sap.ui.define([
 
 					FilterOperatorUtil.checkConditionsEmpty(aConditions);
 					this.setProperty("conditions", aConditions, true); // do not invalidate whole DefineConditionPanel
-
-					this.fireConditionProcessed();
 
 				}.bind(this), 0);
 			}
@@ -667,10 +650,8 @@ sap.ui.define([
 
 		var oControl;
 		if (oOperator.createControl) {
-			oControl = oOperator.createControl(oNullableType, "$this>", iIndex, sId); // the returned control can be null, in this case the default Field will be used
-		}
-
-		if (!oControl) {
+			oControl = oOperator.createControl(oNullableType, "$this>", iIndex, sId);
+		} else {
 			oControl = new Field(sId, {
 				delegate: _getDelegate.call(this),
 				value: { path: "$this>", type: oNullableType, mode: 'TwoWay', targetType: 'raw' },
@@ -744,9 +725,6 @@ sap.ui.define([
 				if (oDataType.getConstraints() && oDataType.getConstraints().hasOwnProperty("nullable") && oDataType.getConstraints().nullable === false) {
 					// "clone" type and make nullable
 					oNullableType = _createNullableType(oDataType);
-					if (oDataType._bCreatedByOperator) {
-						oNullableType = oOperator._createLocalType(oOperator.valueTypes[iIndex], oDataType);
-					}
 				} else {
 					oNullableType = oDataType; // use given type or default string type
 				}
@@ -1460,8 +1438,6 @@ sap.ui.define([
 
 		// check if at least one condition has an error
 		_checkInvalidInput.call(this, bInvalid);
-
-		this.fireConditionProcessed();
 
 	}
 

@@ -46,7 +46,7 @@ sap.ui.define([
 	 * @extends sap.ui.base.EventProvider
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.ui.core.message.MessageManager
@@ -404,14 +404,15 @@ sap.ui.define([
 	 * @public
 	 */
 	MessageManager.prototype.registerObject = function(oObject, bHandleValidation) {
-		if (!(oObject instanceof ManagedObject)) {
+		// eslint-disable-next-line no-unsafe-negation
+		if (!oObject instanceof ManagedObject) {
 			Log.error(this + " : " + oObject.toString() + " is not an instance of sap.ui.base.ManagedObject");
-		} else {
-			oObject.attachValidationSuccess(bHandleValidation, this._handleSuccess, this);
-			oObject.attachValidationError(bHandleValidation, this._handleError, this);
-			oObject.attachParseError(bHandleValidation, this._handleError, this);
-			oObject.attachFormatError(bHandleValidation, this._handleError, this);
+			return;
 		}
+		oObject.attachValidationSuccess(bHandleValidation, this._handleSuccess, this);
+		oObject.attachValidationError(bHandleValidation, this._handleError, this);
+		oObject.attachParseError(bHandleValidation, this._handleError, this);
+		oObject.attachFormatError(bHandleValidation, this._handleError, this);
 	};
 
 	/**
@@ -421,14 +422,15 @@ sap.ui.define([
 	 * @public
 	 */
 	MessageManager.prototype.unregisterObject = function(oObject) {
-		if (!(oObject instanceof ManagedObject)) {
+		// eslint-disable-next-line no-unsafe-negation
+		if (!oObject instanceof ManagedObject) {
 			Log.error(this + " : " + oObject.toString() + " is not an instance of sap.ui.base.ManagedObject");
-		} else {
-			oObject.detachValidationSuccess(this._handleSuccess, this);
-			oObject.detachValidationError(this._handleError, this);
-			oObject.detachParseError(this._handleError, this);
-			oObject.detachFormatError(this._handleError, this);
+			return;
 		}
+		oObject.detachValidationSuccess(this._handleSuccess, this);
+		oObject.detachValidationError(this._handleError, this);
+		oObject.detachParseError(this._handleError, this);
+		oObject.detachFormatError(this._handleError, this);
 	};
 
 	/**

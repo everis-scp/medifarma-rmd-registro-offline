@@ -3,10 +3,12 @@
 	"resources": [
 		{
 			"name": "Component-dbg.js",
+			"size": 24234,
 			"isDebug": true
 		},
 		{
-			"name": "Component.js"
+			"name": "Component.js",
+			"size": 8636
 		}
 	]
 }

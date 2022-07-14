@@ -113,7 +113,7 @@ sap.ui.define([
 		* @extends sap.ui.core.Control
 		* @implements sap.ui.core.PopupInterface
 		* @author SAP SE
-		* @version 1.96.9
+		* @version 1.93.4
 		*
 		* @public
 		* @alias sap.m.Popover
@@ -734,6 +734,8 @@ sap.ui.define([
 					this._marginTopInit = true;
 				}
 			}
+
+			this._repositionOffset();
 		};
 
 		/**
@@ -1100,8 +1102,6 @@ sap.ui.define([
 		Popover.prototype._handleOpened = function () {
 			var that = this;
 			this.oPopup.detachOpened(this._handleOpened, this);
-
-			this._repositionOffset();
 
 			//	recalculate the arrow position when the size of the popover changes.
 			if (!Device.support.touch) {
@@ -1868,9 +1868,9 @@ sap.ui.define([
 
 			var mPosition = {
 				top: iTop,
-				bottom: iBottom - oPosParams._fWindowTop,
+				bottom: iBottom,
 				left: iLeft,
-				right: typeof iRight === "number" ? iRight - oPosParams._fWindowLeft : iRight
+				right: iRight
 			};
 
 			return mPosition;
@@ -2294,9 +2294,9 @@ sap.ui.define([
 				oEndButton = this.getEndButton(),
 				sButtonId = "";
 
-			if (oBeginButton && oBeginButton.getVisible() && oBeginButton.getEnabled()) {
+			if (oBeginButton && oBeginButton.getVisible()) {
 				sButtonId = oBeginButton.getId();
-			} else if (oEndButton && oEndButton.getVisible() && oEndButton.getEnabled()) {
+			} else if (oEndButton && oEndButton.getVisible()) {
 				sButtonId = oEndButton.getId();
 			}
 

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
@@ -13,9 +12,6 @@
           - RFC5322 Internet Message Format (http://tools.ietf.org/html/rfc5322)
 		      - RFC6351 xCard (XML Representation for vCard)
         </String>
-      </Annotation>
-      <Annotation Term="Core.Description" Qualifier="Published">
-        <String>Copyright (c) 2009-2017 SAP SE, All Rights Reserved</String>
       </Annotation>
 
       <Term Name="Contact" Type="Communication.ContactData" AppliesTo="EntityType">

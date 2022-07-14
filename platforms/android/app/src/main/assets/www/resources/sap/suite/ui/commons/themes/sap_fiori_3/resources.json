@@ -3,58 +3,85 @@
 	"resources": [
 		{
 			"name": ".theming",
+			"size": 90,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "ProcessFlowConnection.less",
+			"size": 1563,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "ProcessFlowConnectionLabel.less",
+			"size": 6602,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "ProcessFlowLaneHeader.less",
+			"size": 3519,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "ProcessFlowNode.less",
+			"size": 22117,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
-			"name": "library-RTL-dbg.css",
-			"isDebug": true,
+			"name": "css_variables.css",
+			"size": 5798,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 101714,
+			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 101340,
+			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library-RTL.css",
-			"theme": "sap_fiori_3"
-		},
-		{
-			"name": "library-dbg.css",
-			"isDebug": true,
+			"size": 257139,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library-parameters.json",
+			"size": 2303,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.css",
+			"size": 256775,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.less",
+			"size": 34617,
 			"designtime": true,
 			"theme": "sap_fiori_3"
 		},
 		{
 			"name": "library.source.less",
+			"size": 451,
 			"designtime": true,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 274980,
+			"theme": "sap_fiori_3"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 274618,
 			"theme": "sap_fiori_3"
 		}
 	]

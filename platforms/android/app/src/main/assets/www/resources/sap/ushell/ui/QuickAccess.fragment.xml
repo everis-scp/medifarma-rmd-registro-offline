@@ -1,7 +1,7 @@
-<core:FragmentDefinition
-        xmlns="sap.m" xmlns:core="sap.ui.core">
-
-    <Dialog id="quickAccess"
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog
+        id="quickAccess"
+        class="sapContrastPlus"
         title="{i18n>quickAccessDialog_title}"
         verticalScrolling="false"
         contentWidth="25rem"

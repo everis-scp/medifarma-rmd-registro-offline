@@ -32,7 +32,7 @@ sap.ui.define([
 	 * If used inside the calendar the properties and aggregation are directly taken from the parent
 	 * (To not duplicate and sync DateRanges and so on...)
 	 * @extends sap.ui.unified.calendar.Month
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -77,8 +77,6 @@ sap.ui.define([
 		//holds objects describing the weeks of the currently displayed days
 		//example: [{ len: 3, number: 12 }, { len: 7, number: 13 }, ...]
 		this._aWeekNumbers = [];
-
-		this._bAlwaysShowSpecialDates = true;
 
 	};
 
@@ -199,6 +197,25 @@ sap.ui.define([
 		}
 
 		return this;
+
+	};
+
+	/**
+	 * Setter for property <code>firstDayOfWeek</code>.
+	 *
+	 * Property <code>firstDayOfWeek</code> is not supported in <code>sap.ui.unified.calendar.DatesRow</code> control.
+	 *
+	 * @protected
+	 * @param {int} iFirstDayOfWeek The first day of the week
+	 * @returns {this} <code>this</code> to allow method chaining
+	 */
+	DatesRow.prototype.setFirstDayOfWeek = function(iFirstDayOfWeek){
+
+		if (iFirstDayOfWeek == -1) {
+			return this.setProperty("firstDayOfWeek", iFirstDayOfWeek, false); // rerender
+		} else {
+			throw new Error("Property firstDayOfWeek not supported " + this);
+		}
 
 	};
 

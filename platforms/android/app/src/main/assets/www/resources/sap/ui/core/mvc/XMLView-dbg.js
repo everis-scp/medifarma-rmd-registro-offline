@@ -96,7 +96,7 @@ sap.ui.define([
 	 * control's dependents aggregation or add it by using {@link sap.ui.core.mvc.XMLView#addDependent}.
 	 *
 	 * @extends sap.ui.core.mvc.View
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.ui.core.mvc.XMLView
@@ -191,7 +191,7 @@ sap.ui.define([
 	 * @ui5-global-only
 	 */
 	sap.ui.xmlview = function(sId, vView) {
-		return sap.ui.view(sId, vView, ViewType.XML); // legacy-relevant
+		return sap.ui.view(sId, vView, ViewType.XML);
 	};
 
 	/**

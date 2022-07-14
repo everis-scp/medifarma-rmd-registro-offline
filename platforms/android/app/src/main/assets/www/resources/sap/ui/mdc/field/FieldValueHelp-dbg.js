@@ -74,7 +74,7 @@ sap.ui.define([
 	 * @param {object} [mSettings] Initial settings for the new control
 	 * @class A field help used in the <code>FieldHelp</code> association of controls based on {@link sap.ui.mdc.field.FieldBase FieldBase} that shows a value help dialog.
 	 * @extends sap.ui.mdc.field.FieldHelpBase
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @ui5-restricted sap.fe
@@ -1369,10 +1369,6 @@ sap.ui.define([
 				if (oWrapper) {
 					var oValueHelpPanel = oDialog.getContent()[0];
 					_setContentOnValueHelpPanel.call(this, oValueHelpPanel, oWrapper.getDialogContent());
-					if (!this._bApplyFilter && !this._bClosing && (this.isOpen() || this._bOpen) && !oWrapper.isSuspended()) {
-						// in case ListBinding changed or is not longer suspended
-						this._bApplyFilter = true;
-          }
 				}
 			}
 		}
@@ -2605,8 +2601,6 @@ sap.ui.define([
 					liveMode: !oWrapper.isSuspended(), // if suspended, no live search
 					showGoButton: false
 				});
-				oFilterBar.setInternalConditions(this._oConditions); // if already InParameter or SearchValue set, move it to FilterBar
-				this._oConditions = {};
 				this.setAggregation("_filterBar", oFilterBar, true);
 			}
 

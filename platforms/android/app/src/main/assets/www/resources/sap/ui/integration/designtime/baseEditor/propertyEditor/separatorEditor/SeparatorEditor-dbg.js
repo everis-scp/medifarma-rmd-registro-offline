@@ -47,7 +47,7 @@ sap.ui.define([
 	 * @alias sap.ui.integration.designtime.baseEditor.propertyEditor.separatorEditor.SeparatorEditor
 	 * @author SAP SE
 	 * @since 1.91
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @private
 	 * @experimental 1.91
@@ -65,9 +65,6 @@ sap.ui.define([
 		allowBindings: {
 			defaultValue: true,
 			mergeStrategy: "mostRestrictiveWins"
-		},
-		typeLabel: {
-			defaultValue: "BASE_EDITOR.TYPES.SEPARATOR"
 		}
 	});
 

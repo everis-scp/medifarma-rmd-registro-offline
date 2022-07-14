@@ -286,11 +286,8 @@ sap.ui.define([
 		this.bIncludeInfo = bIncludeInfo;
 		// list of custom bundles
 		this.aCustomBundles = [];
-		// declare list of property files that are loaded,
-		// along with a list of origins
+		// declare list of property files that are loaded
 		this.aPropertyFiles = [];
-		this.aPropertyOrigins = [];
-
 		this.aLocales = [];
 
 		// list of calculated fallbackLocales
@@ -372,7 +369,7 @@ sap.ui.define([
 		if (bIgnoreKeyFallback) {
 			return undefined;
 		} else {
-			assert(false, "could not find any translatable text for key '" + sKey + "' in bundle file(s): '" + this.aPropertyOrigins.join("', '") + "'");
+			assert(false, "could not find any translatable text for key '" + sKey + "' in bundle '" + this.oUrlInfo.url + "'");
 			return this._formatValue(sKey, sKey, aArgs);
 		}
 	};
@@ -579,7 +576,6 @@ sap.ui.define([
 			var addProperties = function(oProps) {
 				if ( oProps ) {
 					oBundle.aPropertyFiles.push(oProps);
-					oBundle.aPropertyOrigins.push(sUrl);
 					oBundle.aLocales.push(sLocale);
 				}
 				return oProps;

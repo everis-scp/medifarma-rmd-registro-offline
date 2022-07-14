@@ -5,10 +5,8 @@
  */
 sap.ui.define([
 	"sap/ui/integration/util/RequestDataProvider",
-	"sap/base/Log",
-	"sap/ui/core/Core",
-	"sap/base/util/merge"
-], function (RequestDataProvider, Log, Core, merge) {
+	"sap/base/Log"
+], function (RequestDataProvider, Log) {
 	"use strict";
 	/*global URL*/
 
@@ -36,32 +34,9 @@ sap.ui.define([
 	}
 
 	/**
-	 * Executes data requests with enabled caching based on the given settings.
 	 * @private
-	 * @ui5-restricted sap.ui.integration, shell-toolkit
-	 * @alias sap.ui.integration.util.CacheAndRequestDataProvider
 	 */
-	var CacheAndRequestDataProvider = RequestDataProvider.extend("sap.ui.integration.util.CacheAndRequestDataProvider", {
-		metadata: {
-			associations : {
-				/**
-				 * The host which is used for communication with the caching service worker.
-				 */
-				host: {
-					type : "sap.ui.integration.Host",
-					multiple: false
-				},
-
-				/**
-				 * Optionally the card which will be used as reference for the requests and for visual representation of cache timestamp and refresh.
-				 */
-				card: {
-					type : "sap.ui.integration.widgets.Card",
-					multiple: false
-				}
-			}
-		}
-	});
+	var CacheAndRequestDataProvider = RequestDataProvider.extend("sap.ui.integration.util.CacheAndRequestDataProvider");
 
 	/**
 	 * @override
@@ -79,24 +54,6 @@ sap.ui.define([
 		this._detachTimestampPress();
 
 		RequestDataProvider.prototype.destroy.apply(this, arguments);
-	};
-
-	CacheAndRequestDataProvider.prototype.getHostInstance = function () {
-		return Core.byId(this.getHost());
-	};
-
-	CacheAndRequestDataProvider.prototype.getCardInstance = function () {
-		return Core.byId(this.getCard());
-	};
-
-	CacheAndRequestDataProvider.prototype.getCardInstanceHeader = function () {
-		var oCard = this.getCardInstance();
-
-		if (!oCard) {
-			return null;
-		}
-
-		return oCard.getCardHeader();
 	};
 
 	CacheAndRequestDataProvider.prototype.onDataRequestComplete = function () {
@@ -127,7 +84,8 @@ sap.ui.define([
 	 */
 	CacheAndRequestDataProvider.prototype._request = function (oRequest) {
 		var pRequestPromise,
-			oCardHeader = this.getCardInstanceHeader();
+			oCard = this.getCardInstance(),
+			oCardHeader = oCard.getCardHeader();
 
 		this._sCurrentRequestFullUrl = getFullUrl(oRequest);
 
@@ -152,11 +110,9 @@ sap.ui.define([
 	 * Refresh the data without using cache.
 	 */
 	CacheAndRequestDataProvider.prototype.refreshWithoutCache = function () {
-		var oCardHeader = this.getCardInstanceHeader();
+		var oCardHeader = this.getCardInstance().getCardHeader();
 
-		if (oCardHeader) {
-			oCardHeader.setDataTimestampUpdating(true);
-		}
+		oCardHeader.setDataTimestampUpdating(true);
 
 		setTimeout(function () {
 			this._bCacheOnly = false;
@@ -169,11 +125,9 @@ sap.ui.define([
 	 * Refresh the data preferring any cache if available.
 	 */
 	CacheAndRequestDataProvider.prototype.refreshFromCache = function () {
-		var oCardHeader = this.getCardInstanceHeader();
+		var oCardHeader = this.getCardInstance().getCardHeader();
 
-		if (oCardHeader) {
-			oCardHeader.setDataTimestampUpdating(true);
-		}
+		oCardHeader.setDataTimestampUpdating(true);
 
 		setTimeout(function () {
 			this._bCacheOnly = true;
@@ -190,21 +144,18 @@ sap.ui.define([
 	 */
 	CacheAndRequestDataProvider.prototype._prepareHeaders = function (mHeaders, oSettings) {
 		var oCard = this.getCardInstance(),
-			oHost = this.getHostInstance(),
-			oDefault = {
-				enabled: true,
-				maxAge: 0,
-				staleWhileRevalidate: true
-			},
-			oNewSettings = merge({request: { cache: oDefault }}, oSettings),
+			oHost = oCard.getHostInstance(),
+			oNewSettings = Object.assign({}, oSettings),
 			oCache = oNewSettings.request.cache;
 
-		if (oCache.noStore) {
-			// temporary needed for backward compatibility
-			oCache.enabled = false;
+		if (!oCache) {
+			oCache = {
+				maxAge: 0,
+				staleWhileRevalidate: true
+			};
 		}
 
-		if (oCache.enabled) {
+		if (!oCache.noStore) {
 			if (this._bCacheOnly) {
 				oCache.maxAge = SECONDS_IN_YEAR;
 				oCache.staleWhileRevalidate = false;
@@ -227,7 +178,8 @@ sap.ui.define([
 	 * Starts to listen for messages from the host.
 	 */
 	CacheAndRequestDataProvider.prototype._subscribeToHostMessages = function () {
-		var oHost = this.getHostInstance();
+		var oCard = this.getCardInstance(),
+			oHost = oCard.getHostInstance();
 
 		if (this._bIsSubscribed) {
 			return;
@@ -246,7 +198,8 @@ sap.ui.define([
 	 * Stops to listen for messages from the host.
 	 */
 	CacheAndRequestDataProvider.prototype._unsubscribeFromHostMessages = function () {
-		var oHost = this.getHostInstance();
+		var oCard = this.getCardInstance(),
+			oHost = oCard.getHostInstance();
 
 		if (!oHost) {
 			return;
@@ -279,7 +232,7 @@ sap.ui.define([
 
 	CacheAndRequestDataProvider.prototype._attachTimestampPress = function (oEvent) {
 		var oCard = this.getCardInstance(),
-			oHeader = this.getCardInstanceHeader();
+			oHeader = oCard.getCardHeader();
 
 		if (this._oHeaderDelegate) {
 			return;
@@ -305,12 +258,8 @@ sap.ui.define([
 
 	CacheAndRequestDataProvider.prototype._detachTimestampPress = function (oEvent) {
 		var oCard = this.getCardInstance(),
-			oHeader = this.getCardInstanceHeader(),
-			$timestamp = oCard && oCard.$().find(".sapFCardDataTimestamp");
-
-		if (!oHeader) {
-			return;
-		}
+			oHeader = oCard.getCardHeader(),
+			$timestamp = this.getCardInstance().$().find(".sapFCardDataTimestamp");
 
 		$timestamp.off("click", this._oRefreshWithoutCacheBound);
 

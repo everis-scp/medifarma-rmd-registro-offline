@@ -8,7 +8,7 @@
 		},
 		{
 			"name": "AnalyticsCloudContent.less",
-			"size": 2289,
+			"size": 2214,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -38,13 +38,13 @@
 		},
 		{
 			"name": "ListContentItem.less",
-			"size": 3224,
+			"size": 2359,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "Microchart.less",
-			"size": 606,
+			"size": 628,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -68,7 +68,7 @@
 		},
 		{
 			"name": "css_variables.css",
-			"size": 263,
+			"size": 405,
 			"theme": "base"
 		},
 		{
@@ -79,28 +79,28 @@
 		},
 		{
 			"name": "css_variables.source.less",
-			"size": 91467,
+			"size": 91651,
 			"designtime": true,
 			"theme": "base"
 		},
 		{
 			"name": "library-RTL.css",
-			"size": 15768,
+			"size": 14498,
 			"theme": "base"
 		},
 		{
 			"name": "library-parameters.json",
-			"size": 65,
+			"size": 131,
 			"theme": "base"
 		},
 		{
 			"name": "library.css",
-			"size": 15765,
+			"size": 14498,
 			"theme": "base"
 		},
 		{
 			"name": "library.less",
-			"size": 15814,
+			"size": 14896,
 			"designtime": true,
 			"theme": "base"
 		},
@@ -112,12 +112,12 @@
 		},
 		{
 			"name": "library_skeleton-RTL.css",
-			"size": 16426,
+			"size": 15046,
 			"theme": "base"
 		},
 		{
 			"name": "library_skeleton.css",
-			"size": 16423,
+			"size": 15046,
 			"theme": "base"
 		}
 	]

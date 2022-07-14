@@ -159,7 +159,7 @@ function(
 	 *
 	 * @extends sap.m.InputBase
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -315,20 +315,7 @@ function(
 			 * <b>Note:</b> The autocomplete feature is disabled on Android devices due to a OS specific issue.
 			 * @since 1.61
 			 */
-			autocomplete: {type: "boolean", group: "Behavior", defaultValue: true},
-
-			/**
-			 * Specifies whether clear icon is shown.
-			 * Pressing the icon will clear input's value and fire the change and liveChange events.
-			 * @since 1.94
-			 */
-			showClearIcon: { type: "boolean", defaultValue: false },
-
-			/**
-			 * Specifies whether the clear icon should be shown/hidden on user interaction.
-			 * @private
-			 */
-			effectiveShowClearIcon: { type: "boolean", defaultValue: false, visibility: "hidden" }
+			autocomplete: {type: "boolean", group: "Behavior", defaultValue: true}
 		},
 		defaultAggregation : "suggestionItems",
 		aggregations : {
@@ -581,15 +568,6 @@ function(
 		// phase of the life cycle. Without this line, initially the condition fails and fires liveChange event
 		// even though there is no user input (check Input.prototype.onsapright).
 		this._setTypedInValue("");
-
-
-		// indicates whether input is clicked (on mobile) or the clear button
-		// used for identifying whether dialog should be open.
-		this._bClearButtonPressed = false;
-
-		// indicates whether input's popover has finished opening
-		// we asume that after open its content has been rendered => we don't have the power user scenario
-		this._bAfterOpenFinisihed = false;
 	};
 
 	/**
@@ -630,9 +608,10 @@ function(
 	 */
 	Input.prototype.onBeforeRendering = function() {
 		var sSelectedKey = this.getSelectedKey(),
-			bShowValueHelpIcon = this.getShowValueHelp() && this.getEnabled() && this.getEditable(),
-			bShowClearIcon = this.getProperty("effectiveShowClearIcon") && this.getEnabled() && this.getEditable(),
-			oIcon = this._oValueHelpIcon,
+			bShowIcon = this.getShowValueHelp() && this.getEnabled() && this.getEditable(),
+			aEndIcons = this.getAggregation("_endIcon") || [],
+
+			oIcon = aEndIcons[0],
 			oSuggestionsPopover = this._getSuggestionsPopover(),
 			bSuggestionsPopoverIsOpen = oSuggestionsPopover && this._isSuggestionsPopoverOpen(),
 			oPopupInput = oSuggestionsPopover && oSuggestionsPopover.getInput(),
@@ -641,15 +620,9 @@ function(
 
 		InputBase.prototype.onBeforeRendering.call(this);
 
-		if (this.getShowClearIcon()) {
-			this._getClearIcon().setProperty("visible", bShowClearIcon);
-		} else if (this._oClearButton) {
-			this._getClearIcon().setProperty("visible", false);
-		}
-
 		this._deregisterEvents();
 
-		if (sSelectedKey && !this.getSelectedItem() && this.getSuggestionItemByKey(sSelectedKey)) {
+		if (sSelectedKey) {
 			this.setSelectedKey(sSelectedKey);
 		}
 
@@ -666,7 +639,7 @@ function(
 			}
 		}
 
-		if (bShowValueHelpIcon) {
+		if (bShowIcon) {
 			// ensure the creation of an icon
 			oIcon = this._getValueHelpIcon();
 			oIcon.setProperty("visible", true, true);
@@ -1071,11 +1044,13 @@ function(
 	 */
 	Input.prototype._getValueHelpIcon = function () {
 		var that = this,
-			sIconSrc = this.getValueHelpIconSrc();
+			aEndIcons = this.getAggregation("_endIcon") || [],
+			sIconSrc = this.getValueHelpIconSrc(),
+			oValueStateIcon = aEndIcons[0];
 
 		// for backward compatibility - leave this method to return the instance
-		if (!this._oValueHelpIcon) {
-			this._oValueHelpIcon = this.addEndIcon({
+		if (!oValueStateIcon) {
+			oValueStateIcon = this.addEndIcon({
 				id: this.getId() + "-vhi",
 				src: sIconSrc,
 				useIconTooltip: false,
@@ -1104,53 +1079,13 @@ function(
 					}
 				}
 			});
-		} else if (this._oValueHelpIcon.getSrc() !== sIconSrc) {
-			this._oValueHelpIcon.setSrc(sIconSrc);
+		} else if (oValueStateIcon.getSrc() !== sIconSrc) {
+			oValueStateIcon.setSrc(sIconSrc);
 		}
 
-		return this._oValueHelpIcon;
+		return oValueStateIcon;
 	};
 
-	Input.prototype._getClearIcon = function () {
-		var that = this;
-
-		if (this._oClearButton) {
-			return this._oClearButton;
-		}
-
-		this._oClearButton = this.addEndIcon({
-			src: IconPool.getIconURI("decline"),
-			noTabStop: true,
-			visible: false,
-			alt: this._oRb.getText("INPUT_CLEAR_ICON_ALT"),
-			useIconTooltip: false,
-			decorative: false,
-			press: function () {
-				if (that.getValue() !== "") {
-					that.fireChange({
-						value: ""
-					});
-
-					that.fireLiveChange({
-						value: ""
-					});
-
-					that.setValue("");
-
-					that._bClearButtonPressed = true;
-
-					setTimeout(function() {
-						if (Device.system.desktop) {
-							that.focus();
-							that._closeSuggestionPopup();
-						}
-					}, 0);
-				}
-			}
-		}, 0);
-
-		return this._oClearButton;
-	};
 	/**
 	 * Fire valueHelpRequest event.
 	 *
@@ -1205,12 +1140,9 @@ function(
 			 && this.getEditable()
 			 && this.getEnabled()
 			 && this.getShowSuggestion()
-			 && (!this._bClearButtonPressed)
 			 && oEvent.target.id !== this.getId() + "-vhi") {
 				this._openSuggestionsPopover();
 		}
-
-		this._bClearButtonPressed = false;
 	};
 
 	/**
@@ -1467,7 +1399,7 @@ function(
 		// There's no typeahead for mobile devices.
 		// If the popup has been focused, then the list would take care of that functionality.
 		// There should be a matching item (proposed text in order to continue)
-		if (!this.isMobileDevice() && this._sProposedItemText && !this._bAfterOpenFinisihed) {
+		if (!this.isMobileDevice() && this._sProposedItemText) {
 			// Update selections for poweruser
 			var oSelectedItem = this.getSuggestionItems()
 				.filter(function (oItem) {
@@ -1656,7 +1588,7 @@ function(
 			// when compose a non ASCII character, in Chrome the value is updated in the next browser tick cycle
 			setTimeout(function () {
 				var sNewValue = this.getDOMValue() || '';
-				if (sNewValue.length < this.getStartSuggestion()) {
+				if (sNewValue < this.getStartSuggestion()) {
 					this._closeSuggestionPopup();
 				}
 			}.bind(this), 0);
@@ -1704,7 +1636,7 @@ function(
 	 * @param {jQuery.Event} oEvent The event.
 	 */
 	Input.prototype.onchange = function (oEvent) {
-		if (this.getShowValueHelp() || this.getShowSuggestion() || this.getProperty("effectiveShowClearIcon")) {
+		if (this.getShowValueHelp() || this.getShowSuggestion()) {
 			// can not handle browser change if value help or suggestions is enabled
 			// because change is fired before the value help is opened or when a link in suggestions is clicked
 			return;
@@ -1767,18 +1699,6 @@ function(
 	Input.prototype.onkeydown = function (oEvent) {
 		// disable the typeahead feature for android devices due to an issue on android soft keyboard, which always returns keyCode 229
 		this._bDoTypeAhead = !Device.os.android && this.getAutocomplete() && (oEvent.which !== KeyCodes.BACKSPACE) && (oEvent.which !== KeyCodes.DELETE);
-	};
-
-	Input.prototype.onkeyup = function (oEvent) {
-		var sValue = this.getValue();
-		var sLastValue = this.getLastValue();
-
-		if ([KeyCodes.BACKSPACE, KeyCodes.DELETE].indexOf(oEvent.which) !== -1 && !sValue) {
-			this.getShowSuggestion() && this.setSelectedKey(null);
-			(sLastValue !== sValue) && this.setLastValue(sLastValue);
-		}
-
-		this.getShowClearIcon() && this.setProperty("effectiveShowClearIcon", !!sValue);
 	};
 
 	/**
@@ -2405,9 +2325,6 @@ function(
 		InputBase.prototype.setValue.call(this, sValue);
 		this._onValueUpdated(sValue);
 		this._setTypedInValue("");
-
-		this.setProperty("effectiveShowClearIcon", !!sValue);
-
 		return this;
 	};
 
@@ -2476,7 +2393,6 @@ function(
 	 */
 	Input.prototype.getAccessibilityInfo = function() {
 		var oInfo = InputBase.prototype.getAccessibilityInfo.apply(this, arguments);
-
 		oInfo.description = ((oInfo.description || "") + " " + this.getDescription()).trim();
 		return oInfo;
 	};
@@ -2800,8 +2716,10 @@ function(
 				bPreviosFocusOnGroup = oPreviousItem && oPreviousItem.isA("sap.m.GroupHeaderListItem"),
 				iSelectionStart = calculateSelectionStart(selectionRange(oFocusDomRef, bPreviosFocusOnGroup), sNewValue, sTypedValue, bPreviosFocusOnGroup);
 
-			if (!oItem || bIsGroupItem) { // When out of the list or a GroupHeader item, reset to user's input
+			if (!oItem) { // When out of the list, reset to user's input
 				this.setDOMValue(sTypedValue);
+			} else if (bIsGroupItem) { // If it's a GroupHeader item, reset the input
+				this.setDOMValue("");
 			} else { // Replace the value and highlight it
 				this.setDOMValue(sNewValue);
 
@@ -2891,21 +2809,15 @@ function(
 				.attachBeforeOpen(function() {
 					var oSuggestionsInput = oSuggPopover.getInput();
 					// set the same placeholder and maxLength as the original input
-					["placeholder",
-						"maxLength",
-						"value",
-						"showClearIcon",
-						"effectiveShowClearIcon"
-					].forEach(function(sPropName) {
-							oSuggestionsInput.setProperty(sPropName, this.getProperty(sPropName));
-						}, this);
+					oSuggestionsInput.setPlaceholder(this.getPlaceholder());
+					oSuggestionsInput.setMaxLength(this.getMaxLength());
+					oSuggestionsInput.setValue(this.getValue());
 				}, this);
 		} else {
 			oPopover
 				.attachAfterClose(function() {
-					var oList = this._getSuggestionsPopover().getItemsContainer();
-					var oSelectedItem = oList && oList.getSelectedItem();
-					var oDomRef = this.getDomRef();
+					var oList = this._getSuggestionsPopover().getItemsContainer(),
+						oSelectedItem = oList && oList.getSelectedItem();
 
 					if (this.getSelectionUpdatedFromList()) {
 						this.updateSelectionFromList(oSelectedItem);
@@ -2914,8 +2826,6 @@ function(
 					if (!oList) {
 						return;
 					}
-
-					this._bAfterOpenFinisihed = false;
 
 					// only destroy items in simple suggestion mode
 					if (oList instanceof Table) {
@@ -2926,20 +2836,13 @@ function(
 					}
 
 					this._deregisterPopupResize();
-
-					if (oDomRef && oDomRef.contains(document.activeElement)) {
-						this.addStyleClass("sapMFocus");
-					}
+					this.addStyleClass("sapMFocus");
 				}, this)
 				.attachBeforeOpen(function () {
 					oSuggPopover._sPopoverContentWidth = this.getMaxSuggestionWidth();
 
 					oSuggPopover.resizePopup(this);
 					this._registerPopupResize();
-					this._bAfterOpenFinisihed = false;
-				}, this)
-				.attachAfterOpen(function () {
-					this._bAfterOpenFinisihed = true;
 				}, this);
 		}
 

@@ -4,6 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
+// Ensure that sap.ui.unified is loaded before the module dependencies will be required.
+// Loading it synchronously is the only compatible option and doesn't harm when sap.ui.unified
+// already has been loaded asynchronously (e.g. via a dependency declared in the manifest)
+sap.ui.getCore().loadLibrary("sap.ui.unified");
+
 // Provides control sap.m.PlanningCalendarHeader.
 sap.ui.define([
 	'sap/ui/core/Element',
@@ -92,7 +97,7 @@ function(
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -287,10 +292,8 @@ function(
 		this.setAggregation("_calendarPicker", oCalendarPicker);
 		this._oCalendarAfterRenderDelegate = {
 			onAfterRendering: function() {
-				if (this._oPopup && this._oPopup.isOpen()) {
-					oCalendarPicker.focus();
-				}
-			}.bind(this)
+				oCalendarPicker.focus();
+			}
 		};
 		oCalendarPicker.addDelegate(this._oCalendarAfterRenderDelegate);
 		this._oCalendar = oCalendarPicker;

@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2021 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-/*eslint-disable max-len */
+
 sap.ui.define([
 	"./_ODataMetaModelUtils",
 	"sap/base/Log",
@@ -88,8 +88,6 @@ sap.ui.define([
 	 * metadata and V4 annotations. It uses the existing {@link sap.ui.model.odata.ODataMetadata}
 	 * as a foundation and merges V4 annotations from the existing
 	 * {@link sap.ui.model.odata.ODataAnnotations} directly into the corresponding model element.
-	 *
-	 * This model is not prepared to be inherited from.
 	 *
 	 * Also, annotations from the "http://www.sap.com/Protocols/SAPData" namespace are lifted up
 	 * from the <code>extensions</code> array and transformed from objects into simple properties
@@ -208,7 +206,7 @@ sap.ui.define([
 	 * {@link #loaded loaded} has been resolved!
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @alias sap.ui.model.odata.ODataMetaModel
 	 * @extends sap.ui.model.MetaModel
 	 * @public
@@ -591,7 +589,7 @@ sap.ui.define([
 				oCodeListModel.read("/" + sCollectionPath, {
 					error : fnReject,
 					success : fnResolve,
-					urlParameters : {$skip : 0, $top : 5000} // avoid server-driven paging
+					urlParameters : {$skip : 0, $top : 5000} // avoid server side paging
 				});
 			});
 			oMappingPromise = new SyncPromise(function (fnResolve, fnReject) {

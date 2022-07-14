@@ -1,8 +1,14 @@
 {
-    "_version": "1.1.0",
+    "_version": "1.21.0",
     "sap.flp": {
         "type": "tile",
-        "tileSize": "1x1"
+        "tileSize": "1x1",
+        "vizOptions": {
+            "displayFormats": {
+                "supported": ["tile", "link", "flat", "flatWide"],
+                "default": "tile"
+            }
+        }
     },
     "sap.app": {
         "id": "sap.ushell.components.tiles.cdm.applauncherdynamic",
@@ -11,12 +17,12 @@
         "applicationVersion": {
             "version": "1.0.0"
         },
-        "title": "{{title}}",
+        "title": "",
         "description": "",
         "tags": {
             "keywords": []
         },
-        "ach": "CA-FE-FLP-EU"
+        "ach": "CA-FLP-FE-COR"
     },
     "sap.ui": {
         "_version": "1.1.0",
@@ -41,12 +47,6 @@
             "minUI5Version": "1.42",
             "libs": {
                 "sap.m": {}
-            }
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/i18n.properties"
             }
         },
         "rootView": {

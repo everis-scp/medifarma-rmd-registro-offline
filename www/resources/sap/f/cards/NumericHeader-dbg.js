@@ -28,7 +28,7 @@ sap.ui.define([
 	 * Displays general information in the header of the {@link sap.f.Card} and allows the
 	 * configuration of a numeric value visualization.
 	 *
-	 * You can configure the title, subtitle, and status text, using the provided properties.
+	 * You can configure the title, subtitle, status text and icon, using the provided properties.
 	 * To add more side number indicators, use the <code>sideIndicators</code> aggregation.
 	 *
 	 * <b>Notes:</b>
@@ -41,7 +41,7 @@ sap.ui.define([
 	 * @extends sap.f.cards.BaseHeader
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -103,12 +103,7 @@ sap.ui.define([
 				/**
 				 * Additional text which adds more details to what is shown in the numeric header.
 				 */
-				details: { "type": "string", group: "Appearance" },
-
-				/**
-				 * The alignment of the side indicators.
-				 */
-				 sideIndicatorsAlignment: { "type": "sap.f.cards.NumericHeaderSideIndicatorsAlignment", group: "Appearance", defaultValue : "Begin" }
+				details: { "type": "string", group: "Appearance" }
 			},
 			aggregations: {
 
@@ -169,6 +164,16 @@ sap.ui.define([
 		BaseHeader.prototype.exit.apply(this, arguments);
 
 		this._oRb = null;
+	};
+
+	/**
+	 * Called before the control is rendered.
+	 * @private
+	 */
+	NumericHeader.prototype.onBeforeRendering = function () {
+		BaseHeader.prototype.onBeforeRendering.apply(this, arguments);
+
+		this._setAccessibilityAttributes();
 	};
 
 	/**
@@ -405,46 +410,36 @@ sap.ui.define([
 	 * @private
 	 * @returns {string} IDs of controls
 	 */
-	NumericHeader.prototype._getAriaLabelledBy = function () {
-		var sCardTypeId = "",
-			sTitleId = "",
-			sSubtitleId = "",
-			sStatusTextId = "",
-			sUnitOfMeasureId = this._getUnitOfMeasurement().getId(),
-			sMainIndicatorId = "",
-			sSideIndicatorsIds = this._getSideIndicatorIds(),
-			sDetailsId = "",
-			sIds;
-
-		if (this.getParent() && this.getParent()._ariaText) {
-			sCardTypeId = this.getParent()._ariaText.getId();
-		}
-
-		if (this.getTitle()) {
-			sTitleId = this._getTitle().getId();
-		}
-
-		if (this.getSubtitle()) {
-			sSubtitleId = this._getSubtitle().getId();
-		}
-
-		if (this.getStatusText()) {
-			sStatusTextId = this.getId() + "-status";
-		}
-
-		if (this.getDetails()) {
-			sDetailsId = this._getDetails().getId();
-		}
-
-		if (this.getNumber() || this.getScale()) {
-			sMainIndicatorId = this._getMainIndicator().getId();
-		}
-
-		sIds = sCardTypeId + " " + sTitleId + " " + sSubtitleId + " " + sStatusTextId + " " + sUnitOfMeasureId + " " + sMainIndicatorId + " " + sSideIndicatorsIds + " " + sDetailsId;
+	NumericHeader.prototype._getHeaderAccessibility = function () {
+		var sTitleId = this.getTitle() ? this._getTitle().getId() : "",
+			sSubtitleId = this.getSubtitle() ? this._getSubtitle().getId() : "",
+			sStatusTextId = this.getStatusText() ? this.getId() + "-status" : "",
+			sUnitOfMeasureId = this._getUnitOfMeasurement() ? this._getUnitOfMeasurement().getId() : "",
+			sSideIndicatorsIds = this.getSideIndicators() ? this._getSideIndicatorIds() : "",
+			sDetailsId = this.getDetails() ? this._getDetails().getId() : "",
+			sMainIndicatorId = this.getNumber() || this.getScale() ? this._getMainIndicator().getId() : "",
+			sIds = sTitleId + " " + sSubtitleId + " " + sStatusTextId + " " + sUnitOfMeasureId + " " + sMainIndicatorId + sSideIndicatorsIds + " " + sDetailsId;
 
 		// remove whitespace from both sides
-		// and merge the consecutive spaces into one
+		// and merge the consecutive whitespaces into one
 		return sIds.replace(/ {2,}/g, ' ').trim();
+	};
+
+	/**
+	 * Sets accessibility to the header to the header.
+	 *
+	 * @private
+	 */
+	NumericHeader.prototype._setAccessibilityAttributes = function () {
+		if (this.hasListeners("press")) {
+			this._sAriaRole = "button";
+			this._sAriaHeadingLevel = undefined;
+			this._sAriaRoleDescritoion = this._oRb.getText("ARIA_ROLEDESCRIPTION_INTERACTIVE_CARD_HEADER");
+		} else {
+			this._sAriaRole = "heading";
+			this._sAriaHeadingLevel = "3";
+			this._sAriaRoleDescritoion = this._oRb.getText("ARIA_ROLEDESCRIPTION_CARD_HEADER");
+		}
 	};
 
 	/**
@@ -454,9 +449,12 @@ sap.ui.define([
 	 * @returns {string} IDs of controls
 	 */
 	NumericHeader.prototype._getSideIndicatorIds = function () {
-		return this.getSideIndicators()
-			.map(function(oSideIndicator) { return oSideIndicator.getId(); })
-			.join(" ");
+		var sSideIndicatorIds = "";
+		this.getSideIndicators().forEach(function(oSideIndicator) {
+			sSideIndicatorIds += " " + oSideIndicator.getId();
+		});
+
+		return sSideIndicatorIds;
 	};
 
 	NumericHeader.prototype.isLoading = function () {

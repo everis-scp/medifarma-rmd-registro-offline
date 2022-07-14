@@ -60,7 +60,7 @@ sap.ui.define([
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @public
@@ -388,7 +388,7 @@ sap.ui.define([
 	};
 
 	Breadcrumbs.prototype._getItemsForMobile = function () {
-		var oItems = this.getLinks().filter(function (oLink) { return oLink.getVisible(); });
+		var oItems = this.getLinks();
 
 		if (this.getCurrentLocationText()) {
 			oItems.push(this._getCurrentLocation());

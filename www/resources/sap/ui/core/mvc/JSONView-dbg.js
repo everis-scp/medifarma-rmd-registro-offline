@@ -43,7 +43,7 @@ sap.ui.define([
 	 * @class
 	 * A View defined using JSON.
 	 * @extends sap.ui.core.mvc.View
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @public
 	 * @alias sap.ui.core.mvc.JSONView
@@ -120,7 +120,7 @@ sap.ui.define([
 	 * @ui5-global-only
 	 */
 	sap.ui.jsonview = function(sId, vView) {
-		return sap.ui.view(sId, vView, ViewType.JSON); // legacy-relevant
+		return sap.ui.view(sId, vView, ViewType.JSON);
 	};
 
 	/**

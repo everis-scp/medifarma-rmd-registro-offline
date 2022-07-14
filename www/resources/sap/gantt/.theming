@@ -1,5 +1,5 @@
 {
-  "sEntity" : "Library",
-  "sId" : "sap/gantt",
-  "sVersion" : "1.71.14"
+  "sEntity": "Library",
+  "sId": "sap/gantt",
+  "sVersion": "1.93.3"
 }

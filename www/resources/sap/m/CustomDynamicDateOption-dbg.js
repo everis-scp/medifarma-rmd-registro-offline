@@ -20,7 +20,7 @@ sap.ui.define(['sap/m/DynamicDateOption'],
 		 * @extends sap.m.DynamicDateOption
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @public
 		 * @since 1.92
@@ -46,10 +46,6 @@ sap.ui.define(['sap/m/DynamicDateOption'],
 					 * getValueHelpUITypes is not enough to define the UI.
 					 */
 					createValueHelpUI: { type: "function" },
-					/**
-					 * Defines a method that can validate all controls from the value help UI related to a given option.
-					 */
-					validateValueHelpUI: { type: "function" },
 					/**
 					 * Defines a method that can collect the value from the value help UI.
 					 */
@@ -88,7 +84,7 @@ sap.ui.define(['sap/m/DynamicDateOption'],
 			return sString.charAt(0).toUpperCase() + sString.slice(1);
 		}
 
-		["getText", "getValueHelpUITypes", "createValueHelpUI", "getValueHelpOutput", "validateValueHelpUI",
+		["getText", "getValueHelpUITypes", "createValueHelpUI", "getValueHelpOutput",
 			"getGroup", "getGroupHeader", "format", "parse", "toDates", "enhanceFormattedValue"]
 			.forEach(function(sFnName) {
 				CustomDynamicDateOption.prototype[sFnName] = function() {
@@ -98,14 +94,6 @@ sap.ui.define(['sap/m/DynamicDateOption'],
 						: DynamicDateOption.prototype[sFnName].apply(this, arguments);
 				};
 			});
-
-		CustomDynamicDateOption.prototype.getGroupHeader = function() {
-			if ((this.getGroup() < 7 && this.getGroup() > -1) || !this.getGetGroupHeader()) {
-				return DynamicDateOption.prototype.getGroupHeader.apply(this, arguments);
-			} else {
-				return this.getGetGroupHeader().apply(this, arguments);
-			}
-		};
 
 		return CustomDynamicDateOption;
 	});

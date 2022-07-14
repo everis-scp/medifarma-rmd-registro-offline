@@ -20,14 +20,15 @@
 						smartVariant="template::PageVariant"
 						persistencyKey="visualFilterPersistencyKey"
 						lazyLoadVisualFilter="{parameter>/settings/lazyLoadVisualFilter}"
+						allFiltersAsInParameters="{parameter>/settings/allFiltersAsInParameters}"
 						showDividers="false"/>
 						<template:if test="{= ${parameter>/settings/showGoButtonOnFilterBar} || ${device>/system/phone}}">
 							<FlexBox alignItems="End" justifyContent="End">
 								<items>
+									<Button id="template::GoFilters" text="{i18n>GO_FILTERS}" type="Emphasized" press="cmd:VisualFilterSearch"/>
 									<Button class="sapUiCompFilterBarPaddingRightBtn" id="template::VisualFilterDialogButton" text="{path:'_templPriv>/alp/filtersLink', formatter: 'sap.suite.ui.generic.template.AnalyticalListPage.util.FilterUtil.formatFiltersLink'}" tooltip="{path:'_templPriv>/alp/filtersLink', formatter: 'sap.suite.ui.generic.template.AnalyticalListPage.util.FilterUtil.formatFiltersLink'}" type="Transparent"
-									press="._templateEventHandlers.onFilterPress">
+									ariaHasPopup="Dialog" press="._templateEventHandlers.onFilterPress">
 									</Button>
-									<Button id="template::GoFilters" text="{i18n>GO_FILTERS}" tooltip="{i18n>GO_FILTERS}" type="Emphasized" press="._templateEventHandlers.onGoPress"/>
 								</items>
 							</FlexBox>
 						</template:if>

@@ -27,12 +27,10 @@ sap.ui.define([
 	 * @param {object} [mSettings] Initial settings for the new control
 	 * @class A <code>FieldInfoBase</code> element is a base class that shows any kind of information related to the <code>Field</code> control, for example, navigation targets or contact details.
 	 * @extends sap.ui.mdc.Element
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 * @constructor
 	 * @private
 	 * @since 1.54.0
-	 * @experimental As of version 1.54
-	 * @ui5-restricted sap.ui.mdc
 	 * @alias sap.ui.mdc.field.FieldInfoBase
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */
@@ -41,13 +39,7 @@ sap.ui.define([
 		metadata: {
 			library: "sap.ui.mdc",
 			events: {
-				/**
-				 * This event is fired if the data was updated.
-				 */
 				dataUpdate: {},
-				/**
-				 * This event is fired after the popover is opened.
-				 */
 				popoverAfterOpen: {}
 			}
 		}

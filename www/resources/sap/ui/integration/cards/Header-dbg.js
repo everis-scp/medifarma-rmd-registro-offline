@@ -38,7 +38,7 @@ sap.ui.define([
 	 * @extends sap.f.Header
 	 *
 	 * @author SAP SE
-	 * @version 1.96.9
+	 * @version 1.93.4
 	 *
 	 * @constructor
 	 * @private
@@ -247,12 +247,6 @@ sap.ui.define([
 			this._oDataProvider.triggerDataUpdate();
 		} else {
 			this.fireEvent("_dataReady");
-		}
-	};
-
-	Header.prototype.refreshData = function () {
-		if (this._oDataProvider) {
-			this._oDataProvider.triggerDataUpdate();
 		}
 	};
 

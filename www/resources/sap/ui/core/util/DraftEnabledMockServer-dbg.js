@@ -4,10 +4,11 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 sap.ui.define([
+	"sap/ui/core/util/MockServer",
 	"sap/ui/thirdparty/jquery",
 	"sap/base/util/isEmptyObject",
 	"jquery.sap.sjax"
-], function(jQuery, isEmptyObject /*, jQuerySapSjax*/) {
+], function(MockServer, jQuery, isEmptyObject /*, jQuerySapSjax*/) {
 	"use strict";
 	return {
 
@@ -68,7 +69,6 @@ sap.ui.define([
 					}
 				}
 			};
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			if (oAnnotations && oAnnotations.EntityContainer) {
 				var oEntitySetsAnnotations = oAnnotations.EntityContainer[Object.keys(oAnnotations.EntityContainer)[0]];
 				//iterate over entitysets annotations
@@ -161,7 +161,6 @@ sap.ui.define([
 		 */
 		_prepareDraftMetadata: function(mEntitySets) {
 			var that = this;
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			this._oDraftMetadata.draftNodes = [];
 			this._oDraftMetadata.draftRootKey = mEntitySets[this._oDraftMetadata.draftRootName].keys.filter(function(x) {
 				return that._calcSemanticKeys(that._oDraftMetadata.draftRootName, mEntitySets).indexOf(x) < 0;
@@ -402,7 +401,6 @@ sap.ui.define([
 
 		setRequests: function(aRequests) {
 			var that = this;
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			aRequests.push({
 				method: "POST",
 				path: new RegExp(that._oDraftMetadata.draftRootActivationName),
@@ -612,21 +610,20 @@ sap.ui.define([
 		},
 
 		_generateMockdata: function(mEntitySets, sBaseUrl) {
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
+
 			MockServer.prototype._generateMockdata.apply(this, [mEntitySets, sBaseUrl]);
 
 			this._handleDraftArtifacts(mEntitySets);
 		},
 
 		_loadMockdata: function(mEntitySets, sBaseUrl) {
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
+
 			MockServer.prototype._loadMockdata.apply(this, [mEntitySets, sBaseUrl]);
 
 			this._handleDraftArtifacts(mEntitySets);
 		},
 
 		_resolveNavigation: function(sEntitySetName, oFromRecord, sNavProp, oEntry) {
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			var aEntries = MockServer.prototype._resolveNavigation.apply(this, [sEntitySetName, oFromRecord, sNavProp, oEntry]);
 			if (sNavProp === this._oConstants.SIBLINGENTITY_NAVIGATION) {
 				if (oEntry && oEntry.IsActiveEntity) {
@@ -647,14 +644,12 @@ sap.ui.define([
 		},
 
 		_findEntitySets: function(oMetadata) {
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			var mEntitySets = MockServer.prototype._findEntitySets.apply(this, [oMetadata]);
 			this._prepareDraftMetadata(mEntitySets);
 			return mEntitySets;
 		},
 
 		getEntitySetData: function(sEntitySet) {
-			var MockServer = sap.ui.require("sap/ui/core/util/MockServer");
 			var aEntitySet = MockServer.prototype.getEntitySetData.apply(this, [sEntitySet]);
 			var fnGetParameter = function() {
 				return aEntitySet;

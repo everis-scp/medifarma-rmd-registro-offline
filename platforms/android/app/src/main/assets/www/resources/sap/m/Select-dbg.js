@@ -79,9 +79,6 @@ function(
 		// shortcut for sap.ui.core.TextAlign
 		var TextAlign = coreLibrary.TextAlign;
 
-		// shortcut for sap.ui.core.OpenState
-		var OpenState = coreLibrary.OpenState;
-
 		// shortcut for sap.m.SelectType
 		var SelectType = library.SelectType;
 
@@ -103,7 +100,7 @@ function(
 		 * @implements sap.ui.core.IFormContent, sap.ui.core.ISemanticFormContent
 		 *
 		 * @author SAP SE
-		 * @version 1.96.9
+		 * @version 1.93.4
 		 *
 		 * @constructor
 		 * @public
@@ -459,15 +456,6 @@ function(
 							 */
 							selectedItem: {
 								type: "sap.ui.core.Item"
-							},
-
-
-							/**
-							 * The previous selected item.
-							 * @since 1.95
-							 */
-							 previousSelectedItem: {
-								type: "sap.ui.core.Item"
 							}
 						}
 					}
@@ -509,7 +497,7 @@ function(
 		};
 
 		Select.prototype.focus = function() {
-			this._getHiddenSelect().trigger("focus");
+			this._getHiddenSelect().focus();
 			Control.prototype.focus.call(this, arguments);
 		};
 
@@ -596,7 +584,7 @@ function(
 			var oItem = this.getSelectedItem();
 
 			if (this._oSelectionOnFocus !== oItem) {
-				this.fireChange({ selectedItem: oItem, previousSelectedItem: this._oSelectionOnFocus });
+				this.fireChange({ selectedItem: oItem });
 			}
 		};
 
@@ -1199,6 +1187,7 @@ function(
 				offsetX: 0,
 				offsetY: 0,
 				initialFocus: this,
+				bounce: false,
 				ariaLabelledBy: this._getPickerHiddenLabelId()
 			});
 
@@ -1528,12 +1517,10 @@ function(
 		 * @private
 		 */
 		Select.prototype.onSelectionChange = function(oControlEvent) {
-			var oItem = oControlEvent.getParameter("selectedItem"),
-				oPreviousSelectedItem = this.getSelectedItem();
-
+			var oItem = oControlEvent.getParameter("selectedItem");
 			this.close();
 			this.setSelection(oItem);
-			this.fireChange({ selectedItem: oItem, previousSelectedItem: oPreviousSelectedItem });
+			this.fireChange({ selectedItem: oItem });
 			// check and update icon
 			this.setValue(this._getSelectedItemText());
 		};
@@ -1623,7 +1610,7 @@ function(
 		 */
 		Select.prototype.onmousedown = function (oEvent) {
 			oEvent.preventDefault();
-			this._getHiddenSelect().trigger("focus");
+			this._getHiddenSelect().focus();
 		};
 
 		/**
@@ -2837,26 +2824,11 @@ function(
 		};
 
 		Select.prototype.setValueState = function(sValueState) {
-			var sOldValueState = this.getValueState(),
-				oPicker;
+			var sOldValueState = this.getValueState();
 
 			if (sValueState === sOldValueState) {
 				return this;
 			}
-
-			oPicker = this.getPicker();
-
-			if (oPicker && oPicker.isA("sap.m.Popover") && oPicker.isOpen() && oPicker.oPopup.getOpenState() === OpenState.CLOSING) {
-				oPicker.attachEventOnce("afterClose", function(oEvent) {
-					return this._finishSettingValueState(sValueState);
-				}, this);
-			} else {
-				return this._finishSettingValueState(sValueState);
-			}
-
-		};
-
-		Select.prototype._finishSettingValueState = function(sValueState) {
 
 			this.setProperty("valueState", sValueState);
 
@@ -3119,7 +3091,7 @@ function(
 				oInfo.type = Core.getLibraryResourceBundle("sap.m").getText("ACC_CTR_TYPE_BUTTON");
 				oInfo.description = sDesc;
 			} else if (this.getType() === "Default") {
-				oInfo.type = Core.getLibraryResourceBundle("sap.m").getText("SELECT_ROLE_DESCRIPTION");
+				oInfo.type = Core.getLibraryResourceBundle("sap.m").getText("ACC_CTR_TYPE_COMBO");
 				oInfo.description = this._getSelectedItemText();
 			}
 
