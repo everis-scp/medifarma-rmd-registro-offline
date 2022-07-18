@@ -65,9 +65,9 @@ sap.hybrid = {
 		if ("serverHost" in context && "serverPort" in context && "https" in context) {
 			// start SCPms logon
 			//sap.hybrid.kapsel.doLogonInit(context, appConfig.appID, sap.hybrid.startApp);
-			//sap.hybrid.kapsel.doLogonInit(context, appConfig.appID, sap.hybrid.openStore);
+			sap.hybrid.kapsel.doLogonInit(context, appConfig.appID, sap.hybrid.openStore);
 			
-			sap.hybrid.kapsel.doLogonInit(context,appConfig.appID , sap.hybrid.openStoreNewInitial);
+			//sap.hybrid.kapsel.doLogonInit(context,appConfig.appID , sap.hybrid.openStoreNewInitial);
 			
 		} else {
 			console.error("context data for logon are not complete");
@@ -115,6 +115,99 @@ sap.hybrid = {
 	openStore: function () {
 		console.log("In openStore");
 		jQuery.sap.require("sap.ui.thirdparty.datajs"); //Required when using SAPUI5 and the Kapsel Offline Store
+
+		///____________________________HANA____________-
+			var dFechaActual = new Date();
+			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-8);
+			dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
+
+			var HANAproperties = {
+				"name": "store_HANA",
+				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
+	
+				"definingRequests": {
+					"MD": "/MD?$expand=estadoIdRmd,nivelId,sucursalId,aReceta/recetaId&$filter=activo eq true or (mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' )",
+					"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",
+					"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
+					"MD_RECETA": "/MD_RECETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",
+					"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",
+					"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",
+					"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",
+					"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true",
+					"USUARIO":"/USUARIO?$filter=activo eq true",
+					"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
+					"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+					"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//471
+					"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",
+					"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",
+					"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//1000
+					"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//muchos
+					"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//687
+					"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//449
+					"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//1000
+					"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//MUCHOS
+					"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//muchos
+					"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true  and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//MUCHOS
+					"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//500
+					"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//muchos
+					"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//muchos
+					"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//MUCHOS
+					"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//Muchos
+					"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true",
+					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
+					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (rmdId_rmdId eq '57ab6d68-c13b-4890-b413-e0effec54f29' or rmdId_rmdId eq 'b6ff0e5a-7419-41b3-ae73-af3389e43eaa')",//346
+					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or (mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6' or mdId_mdId eq 'df171129-85c1-4b37-a173-cc3079e982f6')",//1000
+					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?",//178
+					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
+					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z or ( orden eq 300000444 or orden eq 300000499)",//620
+					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
+					"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",
+					"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true",
+					"IMPRESORA":"/IMPRESORA?$filter=activo eq true",
+					"ORDEN_OFFLINE":"/ORDEN_OFFLINE"
+	
+					//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
+					//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
+					//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
+					//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
+					//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
+					//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
+					//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
+					//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
+					//"ABAP_USUARIO": "/ABAP_USUARIO",
+					//"ABAP_ORDEN":"/ABAP_ORDEN",
+					//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
+				}
+			};
+	
+			storeHANA = sap.OData.createOfflineStore(HANAproperties);
+	
+			var openStoreErrorCallbackHana = function (error) {
+				//sap.hybrid.startApp();
+				console.log("In openStoreErrorCallback HANA RMD_SRV");
+				console.log(error);
+				alert("An error occurred HANA" + JSON.stringify(error));
+			}
+			//TEST TIEMPO
+			var fechaHana = new Date();
+			var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+                "autoFlush": true //enables automatic flush when the application goes into the background 
+			}; 
+			storeHANA.open(function (res){
+				var Tiempo = new Date().getTime() - fechaHana.getTime();
+				console.log("HANA: "+ Tiempo+ " ms")
+
+				console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
+				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+
+				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
+					sap.hybrid.startApp();
+				}
+			}, openStoreErrorCallbackHana,optionsHana);
 
 		///PRODUCCION_SRV  Y HANA PROPERTIES ------------------------------------------
 		var uriProduccion = sap.hybrid.kapsel.appContext.applicationEndpointURL + "_RMD_QAS_ONLINE/v2/browse/MAESTRA?$filter=oMaestraTipo_maestraTipoId eq 18";  //JSON format is less verbose than atom/xml
@@ -215,73 +308,74 @@ sap.hybrid = {
 					}
 				} , openStoreErrorCallbackProduccionERROR);
 
-				var HANAproperties = {
-					"name": "store_HANA",
-					"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-					"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-					"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-					"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
+				// var HANAproperties = {
+				// 	"name": "store_HANA",
+				// 	"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+				// 	"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+				// 	"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+				// 	"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
 		
-					"definingRequests": {
-						"MD": "/MD",
-						"RMD": "/RMD",
-						"MAESTRA": "/MAESTRA",
-						"MD_RECETA": "/MD_RECETA?$filter=activo eq true",
-						"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true",
-						"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true",
-						"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true",
-						"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true",
-						"USUARIO":"/USUARIO?$filter=activo eq true",
-						"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
-						"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
-						"MD_ES_EQUIPO":"/MD_ES_EQUIPO",//471
-						"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO",
-						"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true",
-						"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true",//1000
-						"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA",//muchos
-						"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true",//687
-						"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true",//449
-						"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true",//1000
-						"RMD_ES_EQUIPO":"RMD_ES_EQUIPO",//MUCHOS
-						"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO",//muchos
-						"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO",//MUCHOS
-						"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION",//500
-						"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO",//muchos
-						"RMD_ES_PASO":"/RMD_ES_PASO",//muchos
-						"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA",//MUCHOS
-						"RMD_LAPSO":"/RMD_LAPSO",//Muchos
-						"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true",
-						"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO",
-						"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true",//346
-						"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true",//1000
-						"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL",//178
-						"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
-						"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true",//620
-						"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true",//1000
-						"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true",
-						"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA",
-						"IMPRESORA":"/IMPRESORA?$filter=activo eq true"
+				// 	"definingRequests": {
+				// 		"MD": "/MD",
+				// 		"RMD": "/RMD",
+				// 		"MAESTRA": "/MAESTRA",
+				// 		"MD_RECETA": "/MD_RECETA?$filter=activo eq true",
+				// 		"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true",
+				// 		"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true",
+				// 		"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true",
+				// 		"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true",
+				// 		"USUARIO":"/USUARIO?$filter=activo eq true",
+				// 		"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
+				// 		"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+				// 		"MD_ES_EQUIPO":"/MD_ES_EQUIPO",//471
+				// 		"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO",
+				// 		"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true",
+				// 		"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true",//1000
+				// 		"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA",//muchos
+				// 		"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true",//687
+				// 		"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true",//449
+				// 		"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true",//1000
+				// 		"RMD_ES_EQUIPO":"RMD_ES_EQUIPO",//MUCHOS
+				// 		"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO",//muchos
+				// 		"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO",//MUCHOS
+				// 		"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION",//500
+				// 		"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO",//muchos
+				// 		"RMD_ES_PASO":"/RMD_ES_PASO",//muchos
+				// 		"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA",//MUCHOS
+				// 		"RMD_LAPSO":"/RMD_LAPSO",//Muchos
+				// 		"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true",
+				// 		"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO",
+				// 		"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true",//346
+				// 		"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true",//1000
+				// 		"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL",//178
+				// 		"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
+				// 		"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true",//620
+				// 		"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true",//1000
+				// 		"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true",
+				// 		"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA",
+				// 		"IMPRESORA":"/IMPRESORA?$filter=activo eq true",
+				// 		"ORDEN_OFFLINE":"/ORDEN_OFFLINE"
 
-					}
-				};
+				// 	}
+				// };
 		
-				storeHANA = sap.OData.createOfflineStore(HANAproperties);
+				// storeHANA = sap.OData.createOfflineStore(HANAproperties);
 		
-				var openStoreErrorCallbackHanaERROR = function (error) {
-					//sap.hybrid.startApp();
-					console.log("In openStoreErrorCallback HANA RMD_SRV");
-					console.log(error);
-					alert("An error occurred HANA" + JSON.stringify(error));
-				}
-				storeHANA.open(function (res){
-					console.log("In openStoreSuccessCallback HANA RMD_SRV SERVICIO CARGA COMPLETA 1");
-					sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-					sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+				// var openStoreErrorCallbackHanaERROR = function (error) {
+				// 	//sap.hybrid.startApp();
+				// 	console.log("In openStoreErrorCallback HANA RMD_SRV");
+				// 	console.log(error);
+				// 	alert("An error occurred HANA" + JSON.stringify(error));
+				// }
+				// storeHANA.open(function (res){
+				// 	console.log("In openStoreSuccessCallback HANA RMD_SRV SERVICIO CARGA COMPLETA 1");
+				// 	sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+				// 	sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
 					
-					if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
-						sap.hybrid.startApp();
-					}
-				}, openStoreErrorCallbackHanaERROR);
+				// 	if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
+				// 		sap.hybrid.startApp();
+				// 	}
+				// }, openStoreErrorCallbackHanaERROR);
 		});
 
 		//----------------------------------------------------------------------------------------------------------------------------------------
@@ -373,98 +467,99 @@ sap.hybrid = {
                 }
             }
 			///____________________________HANA____________-
-			var dFechaActual = new Date();
-			var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-9);
-			dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
+			// var dFechaActual = new Date();
+			// var dFechaLimiteHana = sap.hybrid.sumarDias(dFechaActual,-9);
+			// dFechaLimiteHana = sap.hybrid.convertFecha(dFechaLimiteHana);
 
-			var HANAproperties = {
-				"name": "store_HANA",
-				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
-				"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
-				"https": sap.hybrid.kapsel.appContext.registrationContext.https,
-				"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
+			// var HANAproperties = {
+			// 	"name": "store_HANA",
+			// 	"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
+			// 	"port": sap.hybrid.kapsel.appContext.registrationContext.serverPort,
+			// 	"https": sap.hybrid.kapsel.appContext.registrationContext.https,
+			// 	"serviceRoot": fiori_client_appConfig.appID + "_RMD_SRV_TEST/v2/browse/",
 	
-				"definingRequests": {
-					"MD": "/MD?$filter=activo eq true and ("+filterOrdenHanaMDIDnNew+")",
-					"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaRMDID+")",
-					"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
-					"MD_RECETA": "/MD_RECETA?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
-					"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true and ("+filterOrdenHana+")",
-					"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true and ("+filterOrdenHana+")",
-					"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true and ("+ filterOrdenHanaMDID+")",
-					"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true and ("+ filterOrdenHana+")",
-					"USUARIO":"/USUARIO?$filter=activo eq true",
-					"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
-					"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
-					"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//471
-					"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true and ("+filterOrdenHanaMDID+")",
-					"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
-					"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
-					"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and "+filterOrdenHana,//muchos
-					"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//687
-					"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//449
-					"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
-					"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
-					"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
-					"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true  and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+ filterOrdenHana+")",//MUCHOS
-					"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//500
-					"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
-					"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
-					"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
-					"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//Muchos
-					"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true and ("+filterOrdenHana+")",
-					"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
-					"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//346
-					"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
-					"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//178
-					"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
-					"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaOrden+")",//620
-					"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
-					"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",
-					"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true and ("+filterOrdenHana+")",
-					"IMPRESORA":"/IMPRESORA?$filter=activo eq true"
+			// 	"definingRequests": {
+			// 		"MD": "/MD?$filter=activo eq true and ("+filterOrdenHanaMDIDnNew+")",
+			// 		"RMD": "/RMD?$expand=mdId/estadoIdRmd,estadoIdRmd,aReceta/recetaId&$filter=activo eq true and estadoIdRmd_iMaestraId ne 478 and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaRMDID+")",
+			// 		"MAESTRA": "/MAESTRA?$expand=oMaestraTipo&$filter=activo eq true",
+			// 		"MD_RECETA": "/MD_RECETA?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+			// 		"RMD_RECETA": "/RMD_RECETA?$filter=activo eq true and ("+filterOrdenHana+")",
+			// 		"RMD_OBSERVACION": "/RMD_OBSERVACION?$filter=activo eq true and ("+filterOrdenHana+")",
+			// 		"MD_ESTRUCTURA": "/MD_ESTRUCTURA?$filter=activo eq true and ("+ filterOrdenHanaMDID+")",
+			// 		"RMD_USUARIO":"RMD_USUARIO?$expand=usuarioId&$filter=activo eq true and ("+ filterOrdenHana+")",
+			// 		"USUARIO":"/USUARIO?$filter=activo eq true",
+			// 		"UsuarioRol":"UsuarioRol?$expand=oRol&$filter=activo eq true",
+			// 		"RolAppAcciones":"/RolAppAcciones?$expand=oMaestraAccion&$filter=activo eq true",
+			// 		"MD_ES_EQUIPO":"/MD_ES_EQUIPO?$expand=mdId,estructuraId,equipoId($expand=tipoId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//471
+			// 		"MD_ES_UTENSILIO":"/MD_ES_UTENSILIO?$expand=mdId,estructuraId,utensilioId($expand=estadoId,tipoId)&$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+			// 		"MD_ES_ESPECIFICACION":"/MD_ES_ESPECIFICACION?$filter=activo eq true and ("+filterOrdenHanaMDID+")",
+			// 		"MD_ES_PASO":"/MD_ES_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+			// 		"RMD_ESTRUCTURA":"/RMD_ESTRUCTURA?$expand=rmdId($expand=estadoIdRmd),estructuraId($expand=tipoEstructuraId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and "+filterOrdenHana,//muchos
+			// 		"MD_ES_RE_INSUMO":"/MD_ES_RE_INSUMO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//687
+			// 		"MD_ES_ETIQUETA":"/MD_ES_ETIQUETA?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//449
+			// 		"MD_ES_PASO_INSUMO_PASO":"/MD_ES_PASO_INSUMO_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+			// 		"RMD_ES_EQUIPO":"RMD_ES_EQUIPO?$expand=rmdId,rmdEstructuraId,equipoId/tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
+			// 		"RMD_ES_UTENSILIO":"/RMD_ES_UTENSILIO?$expand=rmdId,rmdEstructuraId,utensilioId($expand=estadoId),utensilioId($expand=estadoId),agrupadorId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+			// 		"RMD_ES_RE_INSUMO":"/RMD_ES_RE_INSUMO?$expand=rmdEstructuraId,rmdRecetaId&$filter=activo eq true  and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+ filterOrdenHana+")",//MUCHOS
+			// 		"RMD_ES_ESPECIFICACION":"/RMD_ES_ESPECIFICACION?$expand=rmdEstructuraId,rmdId,ensayoPadreId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//500
+			// 		"RMD_ES_PASO_INSUMO_PASO":"/RMD_ES_PASO_INSUMO_PASO?$expand=rmdId,rmdEstructuraId,etiquetaId,pasoId($expand=tipoDatoId,pasoId($expand=estadoId)),pasoHijoId($expand=tipoDatoId,estadoId),rmdEstructuraRecetaInsumoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+			// 		"RMD_ES_PASO":"/RMD_ES_PASO?$expand=rmdId,rmdEstructuraId,tipoDatoId,pasoId($expand=tipoDatoId,estadoId,tipoLapsoId,tipoCondicionId,etiquetaId)&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//muchos
+			// 		"RMD_ES_ETIQUETA":"/RMD_ES_ETIQUETA?$expand=rmdId,rmdEstructuraId,etiquetaId($expand=estructuraId($expand=tipoEstructuraId))&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//MUCHOS
+			// 		"RMD_LAPSO":"/RMD_LAPSO?$expand=tipoLapsoId,pasoId,pasoIdFin,equipoId,aListCatalogFalla&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//Muchos
+			// 		"RMD_MOTIVO_EDIT_CIERRE_LAPSO":"/RMD_MOTIVO_EDIT_CIERRE_LAPSO?$filter=activo eq true and ("+filterOrdenHana+")",
+			// 		"RMD_ES_PASO_USUARIO":"/RMD_ES_PASO_USUARIO?$expand=rmdUsuarioId&$filter=activo eq true",
+			// 		"RMD_VERIFICACION_FIRMAS":"/RMD_VERIFICACION_FIRMAS?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHana+")",//346
+			// 		"MD_ES_FORMULA_PASO":"/MD_ES_FORMULA_PASO?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaMDID+")",//1000
+			// 		"RMD_TABLA_CONTROL":"/RMD_TABLA_CONTROL?$filter=activo eq true and ("+filterOrdenHanaOrden+")",//178
+			// 		"MOTIVO_LAPSO":"/MOTIVO_LAPSO?$filter=activo eq true",//104
+			// 		"ETIQUETAS_CONTROL":"/ETIQUETAS_CONTROL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z and ("+filterOrdenHanaOrden+")",//620
+			// 		"RMD_ES_HISTORIAL":"/RMD_ES_HISTORIAL?$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",//1000
+			// 		"UTENSILIO":"/UTENSILIO?$expand=estadoId,tipoId&$filter=activo eq true and fechaRegistro ge "+dFechaLimiteHana+"Z",
+			// 		"RMD_LAPSO_CATALOGO_FALLA":"/RMD_LAPSO_CATALOGO_FALLA?$filter=activo eq true and ("+filterOrdenHana+")",
+			// 		"IMPRESORA":"/IMPRESORA?$filter=activo eq true",
+			// 		"ORDEN_OFFLINE":"/ORDEN_OFFLINE"
 	
-					//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
-					//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
-					//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
-					//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
-					//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
-					//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
-					//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
-					//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
-					//"ABAP_USUARIO": "/ABAP_USUARIO",
-					//"ABAP_ORDEN":"/ABAP_ORDEN",
-					//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
-				}
-			};
+			// 		//"RMD_ES_PASO_HISTORIAL":"/RMD_ES_PASO_HISTORIAL",
+			// 		//"RMD_ES_ESPECIFICACION_HISTORIAL":"/RMD_ES_ESPECIFICACION_HISTORIAL",
+			// 		//"MIF_ADMIN_HDI_USUARIO":"/MIF_ADMIN_HDI_USUARIO",
+			// 		//"RMD_ES_EQUIPO_HISTORIAL":"/RMD_ES_EQUIPO_HISTORIAL",
+			// 		//"RMD_ESTRUCTURA_SKIP":"/RMD_ESTRUCTURA_SKIP",
+			// 		//"RMD_ES_INSUMO_HISTORIAL":"/RMD_ES_INSUMO_HISTORIAL",
+			// 		//"RMD_ES_PASO_INSUMO_PASO_HISTORIAL":"/RMD_ES_PASO_INSUMO_PASO_HISTORIAL",
+			// 		//"TABLAS_ARRAY_MD_SKIP":"/TABLAS_ARRAY_MD_SKIP",
+			// 		//"ABAP_USUARIO": "/ABAP_USUARIO",
+			// 		//"ABAP_ORDEN":"/ABAP_ORDEN",
+			// 		//"MAESTRA_ADMIN":"/MAESTRA_ADMIN",
+			// 	}
+			// };
 	
-			storeHANA = sap.OData.createOfflineStore(HANAproperties);
+			// storeHANA = sap.OData.createOfflineStore(HANAproperties);
 	
-			var openStoreErrorCallbackHana = function (error) {
-				//sap.hybrid.startApp();
-				console.log("In openStoreErrorCallback HANA RMD_SRV");
-				console.log(error);
-				alert("An error occurred HANA" + JSON.stringify(error));
-			}
-			//TEST TIEMPO
-			var fechaHana = new Date();
-			var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
-                "autoFlush": true //enables automatic flush when the application goes into the background 
-			}; 
-			storeHANA.open(function (res){
-				var Tiempo = new Date().getTime() - fechaHana.getTime();
-				console.log("HANA: "+ Tiempo+ " ms")
+			// var openStoreErrorCallbackHana = function (error) {
+			// 	//sap.hybrid.startApp();
+			// 	console.log("In openStoreErrorCallback HANA RMD_SRV");
+			// 	console.log(error);
+			// 	alert("An error occurred HANA" + JSON.stringify(error));
+			// }
+			// //TEST TIEMPO
+			// var fechaHana = new Date();
+			// var optionsHana = { "autoRefresh": true, //enables automatic refresh when the application enters foreground     
+            //     "autoFlush": true //enables automatic flush when the application goes into the background 
+			// }; 
+			// storeHANA.open(function (res){
+			// 	var Tiempo = new Date().getTime() - fechaHana.getTime();
+			// 	console.log("HANA: "+ Tiempo+ " ms")
 
-				console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
-				sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
-				sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
+			// 	console.log("In openStoreSuccessCallback HANA RMD_SRV SRVICIO CARGA COMPLETA 1 ");
+			// 	sap.OData.applyHttpClient(); //Offline OData calls can now be made against datajs.
+			// 	sap.Xhook.disable(); // temporary workaround to ensure the offline app can work in WKWebView
 
-				if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
-					sap.hybrid.startApp();
-				}
-			}, openStoreErrorCallbackHana,optionsHana);
+			// 	if(sap.OData.stores.length == 4){//Si cargaron correctamente las 4 tiendas fuera de linea inicializa
+			// 		sap.hybrid.startApp();
+			// 	}
+			// }, openStoreErrorCallbackHana,optionsHana);
 
-
+			//Impresion
 			var SAP_ImpresionOrd_properties = {
 				"name": "store_SAP_Impresion",
 				"host": sap.hybrid.kapsel.appContext.registrationContext.serverHost,
@@ -513,7 +608,7 @@ sap.hybrid = {
 				"serviceRoot": fiori_client_appConfig.appID + "_S4H_TEST/sap/opu/odata/sap/Z_PP_NECESIDADESRMD_SRV/",
 	
 				"definingRequests": {
-					"OrdenSet": "/OrdenSet?$filter=("+filterOrdenes+") and Charg eq ''",
+					"OrdenSet": "/OrdenSet",
 					"CalibracionSet": "/CalibracionSet",
 					//"HUSet": "/HUSet?$filter=Vpobjkey eq ''",
 					"HuOfflSet": "/HuOfflSet?$filter=Vpobjkey eq ''",
@@ -522,9 +617,9 @@ sap.hybrid = {
 					"NotificacionSet": "/NotificacionSet",
 					"NotificacionMensajeSet": "/NotificacionMensajeSet",
 					"FechaProdSet":"/FechaProdSet",
-					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades,
+					"ActividadOfflineSet":"/ActividadOfflineSet?$filter="+filterOrdenesActividades + " or Orderid eq '300000444' or Orderid eq '300000499'",
 					"NotificacionOfflineSet": "/NotificacionOfflineSet",
-					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + ") and Arbpl eq '' and Ktsch eq ''",
+					"FaseNotSet": "/FaseNotSet?$filter=(" +filterOrdenes + " or Aufnr eq '300000444' or Aufnr eq '300000499' ) and Arbpl eq '' and Ktsch eq ''",
 					"EquipoCalSet": "/EquipoCalSet?$filter=(Werks eq '1020' or Werks eq '1021') and Aufnr eq '' and Equnr eq ''",
 					"CatalogoSet":"/CatalogoSet",
 					"AvisoOfflSet":"/AvisoOfflSet"

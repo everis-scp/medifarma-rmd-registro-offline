@@ -2,7 +2,7 @@
     xmlns="sap.m"
     xmlns:layout="sap.ui.layout"
     xmlns:form="sap.ui.layout.form">
-    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlEmbalarEtiqueta}" contentWidth="40%">
+    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlEmbalarEtiqueta}" afterClose="onCancelEmbalarEtiqueta" contentWidth="40%">
         <content>
             <layout:VerticalLayout width="100%">
                 <form:Form width="100%" editable="true">

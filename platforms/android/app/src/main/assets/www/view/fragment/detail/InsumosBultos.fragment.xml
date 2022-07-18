@@ -2,7 +2,7 @@
     xmlns="sap.m"
     xmlns:layout="sap.ui.layout"
     xmlns:form="sap.ui.layout.form" xmlns:fb="sap.ui.comp.filterbar" xmlns:mvc="sap.ui.core.mvc" >
-    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlListInsumos}" contentWidth="60%" afterClose="onCerrarListInsumos">
+    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlListInsumos}" contentWidth="80%" afterClose="onCerrarListInsumos">
         <content>
             <form:Form width="100%" editable="true" visible="{visible>/state}">
                 <form:formContainers>
@@ -68,62 +68,63 @@
                     <form:ResponsiveGridLayout adjustLabelSpan="false" columnsL="2" labelSpanL="3" columnsM="2" labelSpanM="2" labelSpanS="12"/>
                 </form:layout>
             </form:Form>
-            <Table width="auto" sticky="ColumnHeaders" items="{path:'modelGeneral>/listaInsumos>/'}" updateFinished="onUpdateFinish" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd" mode="MultiSelect">
+            <Table width="auto" sticky="ColumnHeaders" items="{path:'aListPedidoConsolidado>/'}" updateFinished="onUpdateFinish" noDataText="{i18n>tblNoData}" itemPress="onDetailRmd" mode="None">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title text="{i18n>tblInsumos} ({=${modelGeneral>/listaInsumos>/}.length})"></Title>
+                        <Title text="{i18n>tblInsumos} ({=${aListPedidoConsolidado>/}.length})"></Title>
                         <ToolbarSpacer/>
                         <ToolbarSeparator/>
-                        <OverflowToolbarButton tooltip="{i18n>TbEPrint}" icon="sap-icon://print" press="onPrintTicket(0)" type="Transparent"/>
-                        <OverflowToolbarButton tooltip="{i18n>TbECierreMasivo}" icon="sap-icon://locked" press="onCierreEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
-                        <OverflowToolbarButton tooltip="{i18n>TbEDeleteTicket}" icon="sap-icon://delete" press="onDeleteEtiquetaMasivo" type="Transparent" enabled="{modelGeneral>/bFlagPendiente}"/>
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="7%" hAlign="Center" vAlign="Center" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                        <Text text="{i18n>clMasivo}" width="auto" wrapping="true"/>
+                    </Column>
+                    <Column width="10%" hAlign="Center" vAlign="Center" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clCantidadBultos}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="25%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clMaterial}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="13%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clLote}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="7%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clAdicional}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column  width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column  width="5%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clIFA}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="5%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clCantidadOP}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="10%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clCantDespachada}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="8%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clCantidadVerificada}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="5%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clUnidadMedida}" width="auto" wrapping="true"/>
                     </Column>
-                    <Column width="auto" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
+                    <Column width="5%" hAlign="Left" vAlign="Middle" minScreenWidth="Tablet" demandPopin="false" popinDisplay="WithoutHeader" mergeDuplicates="false" styleClass="cellBorderRight">
                         <Text text="{i18n>clFraccion}" width="auto" wrapping="true"/>
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem vAlign="Middle" type="Active">
+                    <ColumnListItem vAlign="Middle">
                         <cells>
-                            <Text text="{modelGeneral>cantidadBulto}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>material} - {modelGeneral>descrMaterial}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>insumoLote}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>adicional}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>ifa}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>cantidadOP}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>cantidadDespachada}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>cantidadVerificada}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>unidadMedidad}" width="auto" wrapping="true"/>
-                            <Text text="{modelGeneral>fraccion}" width="auto" wrapping="true"/>
+                            <CheckBox selected="{aListPedidoConsolidado>checkbox}"/>
+                            <Link text="{aListPedidoConsolidado>cantidadBulto}" press="onGetBultoDetalle" textAlign="Center"/>
+                            <Text text="{aListPedidoConsolidado>insumoCodigo} - {aListPedidoConsolidado>insumoDescrip}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>insumoLote}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>adicional}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>cantAtendidaIfa}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>cantidadOP}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>cantPedida}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>cantAtendida}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>insumoUmb}" width="auto" wrapping="true"/>
+                            <Text text="{aListPedidoConsolidado>fraccion}" width="auto" wrapping="true"/>
                         </cells>
                     </ColumnListItem>
                 </items>

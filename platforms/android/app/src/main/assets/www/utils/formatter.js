@@ -492,10 +492,14 @@ sap.ui.define([
 					sResponse = oPaso.estadoCC ? true : false; 
 				}
 				if (oFuncionUsuario.registroCP) {
-					sResponse = oPaso.estadoMov ? true : false; 
+					sResponse = oPaso.estadoCC ? true : false; 
 				}
-				if (oFuncionUsuario.registroP) {
-					sResponse = true; 
+				if (oFuncionUsuario.registroP && oPaso.estadoCC) {
+					sResponse = false; 
+				}
+
+				if (oFuncionUsuario.registroLector) {
+					sResponse = false;
 				}
 			}
 			return sResponse;
@@ -545,17 +549,14 @@ sap.ui.define([
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
 				sDato = aPaso.multiCheckUser === null || aPaso.multiCheckUser === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdVistobueno) {
-				//sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" ? false : true;
 				sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" || aPaso.vistoBueno === false ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdVerificacionCheck) {
-				//sDato = aPaso.verifCheck === null || aPaso.verifCheck === "" ? false : true;
-				sDato = aPaso.vistoBueno === null || aPaso.vistoBueno === "" || aPaso.vistoBueno === false ? false : true;
+				sDato = aPaso.verifCheck === null || aPaso.verifCheck === "" || aPaso.verifCheck === false ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdNotificacion) {
 				sDato = aPaso.fechaHora === null || aPaso.fechaHora === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === sIdRealizadoporyVistobueno) {
-				let sDato1 = aPaso.realizadoPorUser !== null || aPaso.realizadoPorUser !== "" ? true : false;
-				//let sDato2 = aPaso.vistoBueno !== null || aPaso.vistoBueno !== "" ? true : false;
-				let sDato2 = aPaso.vistoBueno !== null || aPaso.vistoBueno !== "" || aPaso.vistoBueno !== false ? true : false;
+				let sDato1 = aPaso.realizadoPorUser === null || aPaso.realizadoPorUser === "" ? false : true;
+				let sDato2 = aPaso.vistoBueno === null || aPaso.vistoBueno === "" || aPaso.vistoBueno === false ? false : true;
 				if (sDato1 && sDato2) {
 					sDato = true;
 				} else {
@@ -568,7 +569,6 @@ sap.ui.define([
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdLote) {
 				sDato = aPaso.texto === null || aPaso.texto === "" ? false : true;
 			} else if (aPaso.tipoDatoId_iMaestraId === iIdFechaVencimiento) {
-				//sDato = aPaso.fechaHora === null || aPaso.fechaHora === "" ? false : true;
 				sDato = aPaso.fecha === null || aPaso.fecha === "" ? false : true;
 			}
 
@@ -607,31 +607,33 @@ sap.ui.define([
 			let bFlagError = true;
 			aListPasosInterval.forEach(function(oPaso){
 				if (oPaso.tipoDatoId_iMaestraId === sIdRealizadopor) {
-					if (oPaso.realizadoPorUser) {
-						let aUsers = oPaso.realizadoPorUser.split(",");
-						aUsers.forEach(function(oUser){
-							let findUser = iNumberUser.find(itm=>itm === oUser);
-							if (!findUser){
-								iNumberUser.push(oUser);
-							}
-						});
-					} else {
-						bFlagError = false;
+					if (oPaso.aplica) {
+						if (oPaso.realizadoPorUser) {
+							let aUsers = oPaso.realizadoPorUser.split(",");
+							aUsers.forEach(function(oUser){
+								let findUser = iNumberUser.find(itm=>itm === oUser);
+								if (!findUser){
+									iNumberUser.push(oUser);
+								}
+							});
+						} else {
+							bFlagError = false;
+						}
 					}
 				} else if (oPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
-					//OFFLINE MULTICHECK
-					if(oPaso.multiCheckUser){
-					let aUsers = oPaso.multiCheckUser.split(",");
-					aUsers.forEach(function(oUser){
-						let findUser = iNumberUser.find(itm=>itm === oUser);
-						if (!findUser){
-							iNumberUser.push(oUser);
+					if (oPaso.aplica) {
+						if (oPaso.multiCheckUser) {
+							let aUsers = oPaso.multiCheckUser.split(",");
+							aUsers.forEach(function(oUser){
+								let findUser = iNumberUser.find(itm=>itm === oUser);
+								if (!findUser){
+									iNumberUser.push(oUser);
+								}
+							});
+						} else {
+							bFlagError = false;
 						}
-					});
 					}
-					//else {
-					//	bFlagError = false;
-					//}
 				} else {
 					if(oPaso.styleUser === "TextStyleAuxiliar"){
 						if (oPaso.usuarioActualiza) {
@@ -643,12 +645,59 @@ sap.ui.define([
 					}
 				}
 			});
-			//if(bFlagError){
+			if(bFlagError){
 				iNumberUser = iNumberUser.filter((value, index, self) => self.indexOf(value) === index);
 				return iNumberUser.length;
-			//} else {
-			//	return false;
-			//}
+			} else {
+				return false;
+			}
+			//OFFLINE SI NO FUNCIONA 
+			// let iNumberUser = [];
+			// let bFlagError = true;
+			// aListPasosInterval.forEach(function(oPaso){
+			// 	if (oPaso.tipoDatoId_iMaestraId === sIdRealizadopor) {
+			// 		if (oPaso.realizadoPorUser) {
+			// 			let aUsers = oPaso.realizadoPorUser.split(",");
+			// 			aUsers.forEach(function(oUser){
+			// 				let findUser = iNumberUser.find(itm=>itm === oUser);
+			// 				if (!findUser){
+			// 					iNumberUser.push(oUser);
+			// 				}
+			// 			});
+			// 		} else {
+			// 			bFlagError = false;
+			// 		}
+			// 	} else if (oPaso.tipoDatoId_iMaestraId === sIdMultiplecheck) {
+			// 		//OFFLINE MULTICHECK
+			// 		if(oPaso.multiCheckUser){
+			// 		let aUsers = oPaso.multiCheckUser.split(",");
+			// 		aUsers.forEach(function(oUser){
+			// 			let findUser = iNumberUser.find(itm=>itm === oUser);
+			// 			if (!findUser){
+			// 				iNumberUser.push(oUser);
+			// 			}
+			// 		});
+			// 		}
+			// 		//else {
+			// 		//	bFlagError = false;
+			// 		//}
+			// 	} else {
+			// 		if(oPaso.styleUser === "TextStyleAuxiliar"){
+			// 			if (oPaso.usuarioActualiza) {
+			// 				let findUser = iNumberUser.find(itm=>itm === oPaso.usuarioActualiza);
+			// 				if (!findUser){
+			// 					iNumberUser.push(oPaso.usuarioActualiza);
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// });
+			// //if(bFlagError){
+			// 	iNumberUser = iNumberUser.filter((value, index, self) => self.indexOf(value) === index);
+			// 	return iNumberUser.length;
+			// //} else {
+			// //	return false;
+			// //}
 		},
 
 		obtenerCorrelativoMuestra: function(iLastCorrelativo, width) {

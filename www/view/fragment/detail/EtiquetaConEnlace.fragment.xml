@@ -3,7 +3,7 @@
 	xmlns="sap.m"
     xmlns:layout="sap.ui.layout"
     xmlns:form="sap.ui.layout.form">
-    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlEtiquetaConEnlace}" contentWidth="40%">
+    <Dialog class="sapUiContentPadding sapUiSizeCompact" title="{i18n>tlEtiquetaConEnlace}" afterClose="onCancelConEnlace" contentWidth="40%">
 		<content>
 			<layout:VerticalLayout width="100%">
                 <form:Form width="100%" editable="true">

@@ -53,9 +53,18 @@ sap.ui.define([
                 (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
             );
         },
-        onConvertDateForSap:function(oDate){
+        onConvertDateForSap:function(oDate,flagUTC){
+            if(oDate === null){
+                oDate = new Date();
+                oDate.setDate(oDate.getDate()+7);
+            }
+
             var sDate = "";
-            var iDay = oDate.getDate();
+            if (flagUTC) {
+                var iDay = oDate.getUTCDate();
+            } else {
+                var iDay = oDate.getDate();
+            }
             var iMonth = oDate.getMonth() + 1;
 
             var sDay = this.onAddCeros(iDay);
@@ -64,7 +73,7 @@ sap.ui.define([
             var iAnio = oDate.getFullYear();
 
             sDate = iAnio + "-"+sMonth+"-"+sDay+"T00:00:00";
-
+            
             return sDate;
         },
         onAddCeros:function(num){
