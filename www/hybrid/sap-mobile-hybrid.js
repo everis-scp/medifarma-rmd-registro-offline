@@ -799,27 +799,54 @@ sap.hybrid = {
 			//sap.ui.core.BusyIndicator.show();
 			//storeSAPNecesidadesRMD.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
 			//storeHANA.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallback, null, sap.hybrid.progressCallback);
-			storeSAPImpresion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
-			storeSAPProduccion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
+			//storeSAPImpresion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
+			//storeSAPProduccion.flush(sap.hybrid.flushStoreCallback, sap.hybrid.errorCallbackFlush, null, sap.hybrid.progressCallback);
 
-			storeSAPNecesidadesRMD.flush(function () {
-				//console.log("Offline events: SAP flushStoreCallback");
+			storeSAPImpresion.flush(function(resImp){
 				
-				storeHANA.flush(function (res){
-					//console.log("Offline events: HANA flushStoreCallback");
-					resolve(true);
-					//sap.ui.core.BusyIndicator.hide();
+				storeSAPProduccion.flush(function(resPro){
+
+					storeHANA.flush(function (resHANA){
+
+						storeSAPNecesidadesRMD.flush(function (resNec) {
+						//console.log("Offline events: SAP flushStoreCallback");
+						
+							//console.log("Offline events: HANA flushStoreCallback");
+							resolve(true);
+							//sap.ui.core.BusyIndicator.hide();
+						}, function (err){
+							//console.log("Offline events: HANA flushStoreCallback");
+							storeSAPNecesidadesRMD.cancelDownload();
+							storeSAPNecesidadesRMD.cancelFlush();
+							reject(false);
+							//sap.ui.core.BusyIndicator.hide();	
+						}, null, sap.hybrid.progressCallback);
+		
+					}, function (error) {
+						//console.log("Offline events: SAP flushStoreCallback");
+						storeHANA.cancelDownload();
+						storeHANA.cancelFlush();
+
+						reject(false);
+						//sap.ui.core.BusyIndicator.hide();
+		
+					}, null, sap.hybrid.progressCallback);
+
 				}, function (err){
 					//console.log("Offline events: HANA flushStoreCallback");
+					storeSAPProduccion.cancelDownload();
+					storeSAPProduccion.cancelFlush();
 					reject(false);
 					//sap.ui.core.BusyIndicator.hide();	
 				}, null, sap.hybrid.progressCallback);
 
-			}, function (error) {
-				//console.log("Offline events: SAP flushStoreCallback");
-				reject(false);
-				//sap.ui.core.BusyIndicator.hide();
 
+			}, function (err){
+				//console.log("Offline events: HANA flushStoreCallback");
+				storeSAPImpresion.cancelDownload();
+				storeSAPImpresion.cancelFlush();	
+				reject(false);
+				//sap.ui.core.BusyIndicator.hide();	
 			}, null, sap.hybrid.progressCallback);
 		});
 	},

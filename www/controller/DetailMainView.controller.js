@@ -4734,7 +4734,7 @@ sap.ui.define([
                         }
                     }
                     if(bInterneInit === true){
-                        await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObjClear, id);
+                        await registroService.onUpdateDataGeneralOnline(oThat.mainModelv2Online, sEntity, oObjClear, id);
                     }else{//OFFLINE MODEL
                         await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObjClear, id);
                     }
@@ -4864,6 +4864,11 @@ sap.ui.define([
                                             if(bInterneInit === true){
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObjClear, id);
                                             }else{//MODEL OFFLINE
+                                                // let filter = [];
+                                                // filter.push(new Filter("rmdId_rmdId", "EQ", id));
+
+                                                // let aData = registroService.getDataFilter(oThat.mainModelv2,sEntity,filter);
+
                                                 await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObjClear, id);
                                             }
                                             
@@ -4889,7 +4894,12 @@ sap.ui.define([
                                             if (!oDataPaso.firstFechaActualiza) {
                                                 oObj.firstFechaActualiza = new Date();
                                             }
-                                            await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
+                                            if(bInterneInit === true){
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2Online, sEntity, oObj, id);
+                                            }else{//model OFfline
+                                                await registroService.onUpdateDataGeneral(oThat.mainModelv2, sEntity, oObj, id);
+                                            }
+                                           
                                             await sap.ui.controller("mif.rmd.registro.controller.MainView").onChangeEstructuraIndividual(oDataPaso);
                                             await oThat.onChangeEstructura();
                                             BusyIndicator.hide();

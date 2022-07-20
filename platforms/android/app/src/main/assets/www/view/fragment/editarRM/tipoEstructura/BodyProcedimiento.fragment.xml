@@ -34,7 +34,7 @@
 					<HBox>
 						<HBox alignItems="Center">
 							<Text text="{aListProcessAssignResponsive>generalInput}" visible="{aListProcessAssignResponsive>generalVisibleText}" width="auto"/>
-							<Input enabled="{=${aListProcessAssignResponsive>aplica} === true ? true : false &amp;&amp; ${generalModelState>/state} === true ? true : false}" value="{aListProcessAssignResponsive>generalInput}" type="{aListProcessAssignResponsive>generalType}" visible="{aListProcessAssignResponsive>generalVisibleInput}" width="auto" liveChange="onSaveLineaActual"/>
+							<Input enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state}}" value="{aListProcessAssignResponsive>generalInput}" type="{aListProcessAssignResponsive>generalType}" visible="{aListProcessAssignResponsive>generalVisibleInput}" width="auto" liveChange="onSaveLineaActual"/>
 							<!-- <Button icon="sap-icon://delete" tooltip="{i18n>btnDelete}" press="onDeleteNotifAuto" visible="{aListProcessAssignResponsive>generalVisibleDeleteAuto}" enabled="{=${aListProcessAssignResponsive>aplica} &amp;&amp; ${aListProcessAssignResponsive>generalInput} === '' ? false : true &amp;&amp; ${aListProcessAssignResponsive>generalEnabledPredecesor} &amp;&amp; ${aListProcessAssignResponsive>generalEnabledSaveButton} &amp;&amp; ${generalModelState>/state} &amp;&amp; ${modelGeneral>/oInfoUsuario/funcionUsuario/habilitarRMD}}"/> -->
 						</HBox>
 					</HBox>

@@ -354,6 +354,21 @@ sap.ui.define([
 				});
 			});
         },
+		onUpdateDataGeneralOnline: function (Owner, entity, oEntry, id) {
+            return new Promise(function (resolve, reject) {
+                var str = entity + "('" + id + "')";
+                Owner.update("/" + str, oEntry, {
+					//OFFLINE CAMBIO
+					//eTag:"*",
+					success: function (oResponse) {
+						resolve(oResponse);
+					},
+					error: function (oError) {
+						reject(oError);
+					}
+				});
+			});
+        },
         updateEsPasoInsumoRmd: function (oModel, entity, oEntry) {
 			return new Promise(function (resolve, reject) {
                 var str = entity + "('" + oEntry.rmdEstructuraPasoInsumoPasoId + "')";
