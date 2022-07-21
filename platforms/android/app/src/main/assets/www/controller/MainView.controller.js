@@ -4498,6 +4498,7 @@ sap.ui.define([
                                 sap.Logon.core.deleteRegistration(
                                     function (res) {
                                         console.log(res);
+                                        sap.Logon.core.loadStartPage();
                                         // //	sap.AppUpdate.reset();
                                         // function closeStore() {
                                         //     return new Promise(function (resolve, reject) {
