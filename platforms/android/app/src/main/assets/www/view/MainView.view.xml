@@ -12,6 +12,7 @@
           <Label text="{modelGeneral>/oInfoUsuario/data/nombre} {modelGeneral>/oInfoUsuario/data/apellidoPaterno} {modelGeneral>/oInfoUsuario/data/apellidoMaterno}"/>
           <core:Icon src="sap-icon://circle-task-2" color="{oModelOffline>/color}" class="sapUiSmallMarginEnd"></core:Icon>
           <Label text="{oModelOffline>/type}"/>
+          <Button icon="sap-icon://log" press="onCloseSession" tooltip="Cerrar Sesion"></Button>
         </headerContent>
         <content>
           <core:Fragment fragmentName="mif.rmd.registro.view.fragment.master.Filter" type="XML"/>

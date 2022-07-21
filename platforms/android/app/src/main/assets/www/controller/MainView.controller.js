@@ -4482,6 +4482,76 @@ sap.ui.define([
                     sap.hybrid.openStoreRegister(oOrdenesOfline.results);
                 }
                 
+            },
+            onCloseSession:function(){
+                MessageBox.confirm(
+                    "¿Desea cerrar sesión?", {
+                    styleClass: "sapUiSizeCompact",
+                    actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+                    onClose: async function (oAction) {
+                        if (oAction === "YES") {
+                            if (!navigator.onLine) {
+                                sap.m.MessageToast.show(this.getI18nText("closeSession"), {
+                                    duration: 20000
+                                });
+                            } else {
+                                sap.Logon.core.deleteRegistration(
+                                    function (res) {
+                                        console.log(res);
+                                        // //	sap.AppUpdate.reset();
+                                        // function closeStore() {
+                                        //     return new Promise(function (resolve, reject) {
+                                        //         store.close(function () {
+                                        //             var bValidateERP = false;
+                                        //             sap.hybrid.closeStoreSuccessCallback().then(function () {
+                                        //                 console.log("ERP store closed!");
+                
+                                        //                 localStorage.removeItem("Centers");
+                                        //                 localStorage.removeItem("PVSO_Uname");
+                                        //                 localStorage.removeItem("nextOrderIdOffline");
+                                        //                 localStorage.removeItem("userCurrent");
+                                        //                 //	localStorage.clear();
+                                        //                 console.log("doDeleteRegistration() Success");
+                                        //                 console.log("Unregister result: " + JSON.stringify(res));
+                                        //                 //Set appContext to null so the app will know it's not registered
+                                        //                 sap.hybrid.kapsel.appContext = null;
+                                        //                 //reset the app to its original packaged version
+                                        //                 //(remove all updates retrieved by the AppUpdate plugin)
+                
+                                        //                 sap.Logon.core.loadStartPage();
+                                        //                 console.log("success store clear");
+                                        //                 resolve(bValidateERP);
+                                        //             }, function (error) {
+                                        //                 console.log("error store clear");
+                                        //             });
+                
+                                        //         }, function (error) {
+                                        //             console.log("An error occurred: " + JSON.stringify(error));
+                                        //         }, null, sap.hybrid.progressCallback);
+                
+                                        //     });
+                                        // }
+                                        // closeStore().then(function (resolve) {
+                                        //     console.log("se cerro la tienda");
+                                        //     console.log(resolve);
+                                        // }, function (error) {
+                                        //     console.log("no se cerro la tienda");
+                                        //     console.log(error);
+                                        // });
+                
+                                    },function (errObj) {
+                                        //	localStorage.clear();
+                                        //sap.hybrid.kapsel.appContext = null;
+                                        //reset the app to its original packaged version
+                                        //(remove all updates retrieved by the AppUpdate plugin)
+                                        //sap.Logon.core.loadStartPage();
+                                        console.error("doDeleteRegistration() Error");
+                                        console.error(JSON.stringify(errObj));
+                                    });
+                            }
+                        }
+                    }
+                });
             }
             //storeHANA.cancelDownload()
             //storeHANA.cancelFlush()
